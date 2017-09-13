@@ -7,28 +7,25 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
-#include "ModulePlayer.h"
 
 class Application
 {
 public:
-	ModuleWindow* window;
-	ModuleInput* input;
-	ModuleAudio* audio;
-	ModuleSceneIntro* scene_intro;
-	ModuleRenderer3D* renderer3D;
-	ModuleCamera3D* camera;
-	ModulePhysics3D* physics;
-	ModulePlayer* player;
+
+	ModuleWindow*		window = nullptr;
+	ModuleInput*		input = nullptr;
+	ModuleAudio*		audio = nullptr;
+	ModuleRenderer3D*	renderer3D = nullptr;
+	ModuleCamera3D*		camera = nullptr;
+	ModulePhysics3D*	physics = nullptr;
 
 private:
 
-	Timer	ms_timer;
-	float	dt;
+	Timer			ms_timer;
+	float			dt = 0.0f;
 	p2List<Module*> list_modules;
 
 public:
@@ -36,9 +33,9 @@ public:
 	Application();
 	~Application();
 
-	bool Init();
-	update_status Update();
-	bool CleanUp();
+	bool			Init();
+	update_status	Update();
+	bool			CleanUp();
 
 private:
 

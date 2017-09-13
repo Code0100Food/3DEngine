@@ -31,7 +31,7 @@ bool ModuleCamera3D::Start()
 
 	camera_speed = 6.0f;
 
-	Target = App->player->vehicle;
+	//Target = App->player->vehicle;
 	CameraLocation = vec3(0.0f, 15.0f, 0.0f);
 	ViewVector = vec3(0.0f,10.05f, 0.0f);
 	camera_dist = 27;
@@ -130,7 +130,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		//16 element array (12 rotation(row major padded on the right by 1), and 3 translation 
 		mat4x4 vehicle_array;
-		Target->GetTransform(&vehicle_array);
+		//Target->GetTransform(&vehicle_array);
 		
 		
 		//Data In array:

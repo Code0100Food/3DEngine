@@ -16,9 +16,6 @@
     <Filter Include="Sources\Helpers">
       <UniqueIdentifier>{121f8e6b-df36-4ab0-be0d-601ddfc9e503}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Modules\Game">
-      <UniqueIdentifier>{83f46af7-e02f-40c0-9e56-41d76082527b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Color.h">
@@ -48,12 +45,6 @@
     <ClInclude Include="Engine\Primitive.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ModulePlayer.h">
-      <Filter>Sources\Modules\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ModuleSceneIntro.h">
-      <Filter>Sources\Modules\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Module.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -82,6 +73,9 @@
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Timer.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Quadtree.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
   </ItemGroup>
@@ -115,12 +109,6 @@
     </ClCompile>
     <ClCompile Include="Engine\ModuleInput.cpp">
       <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ModulePlayer.cpp">
-      <Filter>Sources\Modules\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ModuleSceneIntro.cpp">
-      <Filter>Sources\Modules\Game</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ModuleWindow.cpp">
       <Filter>Sources\Modules</Filter>

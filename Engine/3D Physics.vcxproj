@@ -93,9 +93,7 @@
     <ClInclude Include="Engine\ModuleCamera3D.h" />
     <ClInclude Include="Engine\ModuleInput.h" />
     <ClInclude Include="Engine\ModulePhysics3D.h" />
-    <ClInclude Include="Engine\ModulePlayer.h" />
     <ClInclude Include="Engine\ModuleRenderer3D.h" />
-    <ClInclude Include="Engine\ModuleSceneIntro.h" />
     <ClInclude Include="Engine\ModuleWindow.h" />
     <ClInclude Include="Engine\p2DynArray.h" />
     <ClInclude Include="Engine\p2List.h" />
@@ -103,6 +101,7 @@
     <ClInclude Include="Engine\PhysBody3D.h" />
     <ClInclude Include="Engine\PhysVehicle3D.h" />
     <ClInclude Include="Engine\Primitive.h" />
+    <ClInclude Include="Engine\Quadtree.h" />
     <ClInclude Include="Engine\Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -116,9 +115,7 @@
     <ClCompile Include="Engine\ModuleCamera3D.cpp" />
     <ClCompile Include="Engine\ModuleInput.cpp" />
     <ClCompile Include="Engine\ModulePhysics3D.cpp" />
-    <ClCompile Include="Engine\ModulePlayer.cpp" />
     <ClCompile Include="Engine\ModuleRenderer3D.cpp" />
-    <ClCompile Include="Engine\ModuleSceneIntro.cpp" />
     <ClCompile Include="Engine\ModuleWindow.cpp" />
     <ClCompile Include="Engine\PhysBody3D.cpp" />
     <ClCompile Include="Engine\PhysVehicle3D.cpp" />
