@@ -83,9 +83,6 @@
     <ClCompile Include="Engine\Color.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Main.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Primitive.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
@@ -127,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Timer.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\main.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

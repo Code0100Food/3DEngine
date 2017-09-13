@@ -110,7 +110,7 @@
     <ClCompile Include="Engine\glmath.cpp" />
     <ClCompile Include="Engine\Light.cpp" />
     <ClCompile Include="Engine\log.cpp" />
-    <ClCompile Include="Engine\Main.cpp" />
+    <ClCompile Include="Engine\main.cpp" />
     <ClCompile Include="Engine\ModuleAudio.cpp" />
     <ClCompile Include="Engine\ModuleCamera3D.cpp" />
     <ClCompile Include="Engine\ModuleInput.cpp" />
