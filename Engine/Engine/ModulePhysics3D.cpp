@@ -4,7 +4,7 @@
 #include "PhysBody3D.h"
 #include "PhysVehicle3D.h"
 #include "Primitive.h"
-#include "Engine\SDL\include\SDL.h"
+#include "SDL\include\SDL.h"
 
 #ifdef _DEBUG
 #pragma comment (lib, "Engine/Bullet/libx86/BulletDynamics_debug.lib")

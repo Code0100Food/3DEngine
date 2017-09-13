@@ -1,6 +1,6 @@
 
 #pragma once
-#include "Engine/Color.h"
+#include "Color.h"
 #include "glmath.h"
 
 struct Light

@@ -1,10 +1,10 @@
-#include"Application.h"
+#include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "Globals.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "Primitive.h"
-#include "Engine/glut/glut.h"
+#include "glut/glut.h"
 
 
 #pragma comment (lib, "Engine/glut/glut32.lib")
