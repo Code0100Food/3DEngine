@@ -13,7 +13,7 @@ ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, sta
 // Destructor
 ModuleInput::~ModuleInput()
 {
-	delete[] keyboard;
+	RELEASE_ARRAY(keyboard);
 }
 
 // Called before render is available

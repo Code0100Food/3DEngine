@@ -58,7 +58,7 @@ int main(int argc, char ** argv)
 
 		case MAIN_UPDATE:
 		{
-			int update_return = App->Update();
+			update_status update_return = App->Update();
 
 			if (update_return == UPDATE_ERROR)
 			{
@@ -67,7 +67,9 @@ int main(int argc, char ** argv)
 			}
 
 			if (update_return == UPDATE_STOP)
+			{
 				state = MAIN_FINISH;
+			}
 		}
 			break;
 
@@ -79,7 +81,9 @@ int main(int argc, char ** argv)
 				LOG("Application CleanUp exits with ERROR");
 			}
 			else
+			{
 				main_return = EXIT_SUCCESS;
+			}
 
 			state = MAIN_EXIT;
 
@@ -88,7 +92,9 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	delete App;
-	LOG("Exiting game '%s'...\n", TITLE);
+	RELEASE(App);
+
+	LOG("Exiting '%s'...\n", TITLE);
+
 	return main_return;
 }

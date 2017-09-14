@@ -53,7 +53,7 @@ PhysVehicle3D::PhysVehicle3D(btRigidBody* body, btRaycastVehicle* vehicle, const
 // ----------------------------------------------------------------------------
 PhysVehicle3D::~PhysVehicle3D()
 {
-	delete vehicle;
+	RELEASE(vehicle);
 }
 
 // ----------------------------------------------------------------------------

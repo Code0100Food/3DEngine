@@ -30,11 +30,11 @@ ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(
 // Destructor
 ModulePhysics3D::~ModulePhysics3D()
 {
-	delete debug_draw;
-	delete solver;
-	delete broad_phase;
-	delete dispatcher;
-	delete collision_conf;
+	RELEASE(debug_draw);
+	RELEASE(solver);
+	RELEASE(broad_phase);
+	RELEASE(dispatcher);
+	RELEASE(collision_conf);
 }
 
 // Render not available yet----------------------------------
@@ -54,18 +54,16 @@ bool ModulePhysics3D::Start()
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
 	world->setDebugDrawer(debug_draw);
 	world->setGravity(GRAVITY);
-	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
 
 	// Big rectangle as ground
-	{
+	/*{
 		btCollisionShape* colShape = new btBoxShape(btVector3(10.0f, 2.0f, 10.0f));
-
 		btDefaultMotionState* myMotionState = new btDefaultMotionState();
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
-
 		btRigidBody* body = new btRigidBody(rbInfo);
+		
 		world->addRigidBody(body);
-	}
+	}*/
 
 	return true;
 }
@@ -215,7 +213,7 @@ bool ModulePhysics3D::CleanUp()
 	bodies.clear();
 	LOG("Bodies Cleared!\n");
 
-	delete world;
+	RELEASE(world);
 
 	return true;
 }
@@ -286,65 +284,6 @@ PhysBody3D * ModulePhysics3D::AddBody(const Primitive* primitive, OBJECT_TYPE ob
 
 	return pbody;
 }
-
-PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
-{
-	btCompoundShape* comShape = new btCompoundShape();
-	shapes.add(comShape);
-
-	btCollisionShape* colShape = new btBoxShape(btVector3(info.chassis_size.x*0.5f, info.chassis_size.y*0.5f, info.chassis_size.z*0.5f));
-	shapes.add(colShape);
-
-	btTransform trans;
-	trans.setIdentity();
-	trans.setOrigin(btVector3(info.chassis_offset.x, info.chassis_offset.y, info.chassis_offset.z));
-
-	comShape->addChildShape(trans, colShape);
-
-	btTransform startTransform;
-	startTransform.setIdentity();
-
-	btVector3 localInertia(0, 0, 0);
-	comShape->calculateLocalInertia(info.mass, localInertia);
-
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(info.mass, myMotionState, comShape, localInertia);
-
-	btRigidBody* body = new btRigidBody(rbInfo);
-	body->setContactProcessingThreshold(BT_LARGE_FLOAT);
-	body->setActivationState(DISABLE_DEACTIVATION);
-
-	world->addRigidBody(body);
-
-	btRaycastVehicle::btVehicleTuning tuning;
-	tuning.m_frictionSlip = info.frictionSlip;
-	tuning.m_maxSuspensionForce = info.maxSuspensionForce;
-	tuning.m_maxSuspensionTravelCm = info.maxSuspensionTravelCm;
-	tuning.m_suspensionCompression = info.suspensionCompression;
-	tuning.m_suspensionDamping = info.suspensionDamping;
-	tuning.m_suspensionStiffness = info.suspensionStiffness;
-
-	btRaycastVehicle* vehicle = new btRaycastVehicle(tuning, body, vehicle_raycaster);
-
-	vehicle->setCoordinateSystem(0, 1, 2);
-
-	for (int i = 0; i < info.num_wheels; ++i)
-	{
-		btVector3 conn(info.wheels[i].connection.x, info.wheels[i].connection.y, info.wheels[i].connection.z);
-		btVector3 dir(info.wheels[i].direction.x, info.wheels[i].direction.y, info.wheels[i].direction.z);
-		btVector3 axis(info.wheels[i].axis.x, info.wheels[i].axis.y, info.wheels[i].axis.z);
-
-		vehicle->addWheel(conn, dir, axis, info.wheels[i].suspensionRestLength, info.wheels[i].radius, tuning, info.wheels[i].front);
-	}
-	// ---------------------
-
-	PhysVehicle3D* pvehicle = new PhysVehicle3D(body, vehicle, info);
-	world->addVehicle(vehicle);
-	vehicles.add(pvehicle);
-
-	return pvehicle;
-}
-
 
 btPoint2PointConstraint* ModulePhysics3D::Add_P2P_Constraint(btRigidBody& rbA, btRigidBody& rbB, const btVector3& pivotInA, const btVector3& pivotInB)
 {

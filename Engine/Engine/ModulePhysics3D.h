@@ -37,8 +37,7 @@ public:
 
 	//Methods to add bodies to the world
 	PhysBody3D* AddBody(const Primitive* primitive, enum OBJECT_TYPE object_type, float mass = 1.0f, BODY_MASK I_am = NOTHING);
-	PhysVehicle3D* AddVehicle(const VehicleInfo& info);
-
+	
 	//Methods for constrains
 	btPoint2PointConstraint*	Add_P2P_Constraint(btRigidBody& rbA, btRigidBody& rbB, const btVector3& pivotInA, const btVector3& pivotInB);
 	btHingeConstraint*			Add_Hinge_Constraint(btRigidBody & rbA, btRigidBody & rbB, const btVector3& pivotInA, const btVector3& pivotInB, btVector3& axisInA, btVector3& axisInB);

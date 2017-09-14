@@ -90,6 +90,9 @@
     <ClInclude Include="Engine\imgui\imgui_impl_sdl.h">
       <Filter>Sources\Tools\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ModuleImgui.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -152,5 +155,10 @@
     <ClCompile Include="Engine\imgui\imgui_impl_sdl.cpp">
       <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Snippets\CodeShortcuts.snippet">
+      <Filter>Sources\Tools</Filter>
+    </None>
   </ItemGroup>
 </Project>

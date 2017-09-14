@@ -98,6 +98,7 @@
     <ClInclude Include="Engine\Module.h" />
     <ClInclude Include="Engine\ModuleAudio.h" />
     <ClInclude Include="Engine\ModuleCamera3D.h" />
+    <ClInclude Include="Engine\ModuleImgui.h" />
     <ClInclude Include="Engine\ModuleInput.h" />
     <ClInclude Include="Engine\ModulePhysics3D.h" />
     <ClInclude Include="Engine\ModuleRenderer3D.h" />
@@ -132,6 +133,9 @@
     <ClCompile Include="Engine\PhysVehicle3D.cpp" />
     <ClCompile Include="Engine\Primitive.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Snippets\CodeShortcuts.snippet" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
