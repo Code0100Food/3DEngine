@@ -9,11 +9,10 @@
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 // https://github.com/ocornut/imgui
 
-
-#include "../SDL/include/SDL.h"
-#include "../SDL/include/SDL_syswm.h"
-#include "../SDL/include/SDL_opengl.h"
-#include "imgui.h"
+#include <SDL.h>
+#include <SDL_syswm.h>
+#include <SDL_opengl.h>
+#include <imgui.h>
 #include "imgui_impl_sdl.h"
 
 // Data

@@ -2,13 +2,15 @@
 #include "Application.h"
 #include "Globals.h"
 
-//Imgui includes
+#include "SDL/include/SDL.h"
+#include "SDL/include/SDL_opengl.h"
+
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 
-#include "SDL/include/SDL.h"
 #pragma comment( lib, "Engine/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "Engine/SDL/libx86/SDL2main.lib" )
+
 
 enum main_states
 {
