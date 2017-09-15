@@ -8,6 +8,7 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
+	imgui = new ModuleImgui(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -18,7 +19,8 @@ Application::Application()
 	AddModule(input);
 	AddModule(audio);
 	AddModule(physics);
-	
+	AddModule(imgui);
+
 	// Scenes
 	AddModule(camera);
 
@@ -107,6 +109,9 @@ update_status Application::Update()
 	}
 
 	FinishUpdate();
+
+	if (want_to_quit)ret = update_status::UPDATE_STOP;
+
 	return ret;
 }
 
@@ -126,4 +131,9 @@ bool Application::CleanUp()
 void Application::AddModule(Module* mod)
 {
 	list_modules.add(mod);
+}
+
+void Application::SetQuit()
+{
+	want_to_quit = true;
 }

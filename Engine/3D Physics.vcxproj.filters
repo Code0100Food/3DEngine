@@ -155,6 +155,9 @@
     <ClCompile Include="Engine\imgui\imgui_impl_sdl.cpp">
       <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ModuleImgui.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

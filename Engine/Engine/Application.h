@@ -10,6 +10,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
+#include "ModuleImgui.h"
 
 class Application
 {
@@ -21,12 +22,15 @@ public:
 	ModuleRenderer3D*	renderer3D = nullptr;
 	ModuleCamera3D*		camera = nullptr;
 	ModulePhysics3D*	physics = nullptr;
+	ModuleImgui*		imgui = nullptr;
 
 private:
 
 	Timer			ms_timer;
 	float			dt = 0.0f;
 	p2List<Module*> list_modules;
+	
+	bool			want_to_quit = false;
 
 public:
 
@@ -42,4 +46,9 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+public:
+
+	void SetQuit();
+
 };

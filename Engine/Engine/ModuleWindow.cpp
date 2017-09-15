@@ -2,6 +2,9 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdl.h"
+
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	window = NULL;
@@ -66,6 +69,9 @@ bool ModuleWindow::Init()
 		{
 			//Get window surface
 			screen_surface = SDL_GetWindowSurface(window);
+
+			//Setup ImGui binding
+			ImGui_ImplSdl_Init(window);
 		}
 	}
 
