@@ -36,8 +36,12 @@ public:
 	{}
 	vec2(float x, float y) : x(x), y(y)
 	{}
+	
 	vec2(const vec2 &u) : x(u.x), y(u.y)
-	{}
+	{
+	
+	}
+	
 	vec2& operator = (const vec2 &u)
 	{
 		x = u.x; y = u.y; return *this;

@@ -27,7 +27,7 @@ public:
 
 private:
 
-	Mix_Music*			music;
+	Mix_Music*			music = nullptr;
 	p2List<Mix_Chunk*>	fx;
 };
 
