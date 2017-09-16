@@ -80,29 +80,28 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 	// TODO 6: Detect collisions:
 	uint manifolds_num = world->getDispatcher()->getNumManifolds();
 	// - Iterate all manifolds
-	for (uint k = 0; k < manifolds_num; k++) {
+	for (uint k = 0; k < manifolds_num; k++) 
+	{
 		// - Count the number of contacts
 		btPersistentManifold* current_mainfold = world->getDispatcher()->getManifoldByIndexInternal(k);
-		if ((current_mainfold->getNumContacts()) > 0) {
+		if ((current_mainfold->getNumContacts()) > 0)
+		{
 			// - If we have contacts, get both PhysBody3D from userpointers
 			PhysBody3D* bodyA =  ((PhysBody3D*)current_mainfold->getBody0()->getUserPointer());
 			PhysBody3D* bodyB = ((PhysBody3D*)current_mainfold->getBody1()->getUserPointer());
 			// - If iterate all contact listeners and call them
-			if (bodyA != NULL && bodyB != NULL) {
-				
-				uint listeneres_num = bodyA->collision_listeners.count();
-				Module* current_listener = nullptr;
-				for (uint g = 0; g < listeneres_num; g++) {
-					bodyA->collision_listeners.at(g, current_listener);
-					current_listener->OnCollision(bodyA,bodyB);
+			if (bodyA != NULL && bodyB != NULL)
+			{
+				for (std::list<Module*>::iterator it = bodyA->collision_listeners.begin(); it != bodyA->collision_listeners.end(); it++)
+				{
+					(*it)->OnCollision(bodyA, bodyB);
 				}
-				
-				listeneres_num = bodyB->collision_listeners.count();
-				current_listener = nullptr;
-				for (uint g = 0; g < listeneres_num; g++) {
-					bodyB->collision_listeners.at(g, current_listener);
-					current_listener->OnCollision(bodyA, bodyB);
+
+				for (std::list<Module*>::iterator it = bodyB->collision_listeners.begin(); it != bodyB->collision_listeners.end(); it++)
+				{
+					(*it)->OnCollision(bodyA, bodyB);
 				}
+
 			}
 		}
 	}
@@ -193,26 +192,17 @@ bool ModulePhysics3D::CleanUp()
 
 	
 	//Free the shapes
-	p2List_item<btCollisionShape*>* temp = shapes.getFirst();
-	p2List_item<btCollisionShape*>* temp_next;
-	if(temp) temp_next = shapes.getFirst()->next;
-	while (temp != NULL) {
-		shapes.del(temp);
-		temp = temp_next;
-		if(temp_next)temp_next = temp_next->next;
+	for (std::list<btCollisionShape*>::iterator it = shapes.begin(); it != shapes.end(); it++)
+	{
+		RELEASE((*it));
 	}
 	shapes.clear();
 	LOG("Shapes Cleared!\n");
 
 	//Free the bodies
-	p2List_item<PhysBody3D*>* body_temp = bodies.getFirst();
-	p2List_item<PhysBody3D*>* body_temp_next;
-	if(body_temp)body_temp_next = bodies.getFirst()->next;
-	while (body_temp != NULL) {
-		bodies.del(body_temp);
-		body_temp = body_temp_next;
-		if(body_temp_next)body_temp_next = body_temp_next->next;
-		
+	for (std::list<PhysBody3D*>::iterator it = bodies.begin(); it != bodies.end(); it++)
+	{
+		RELEASE((*it));
 	}
 	bodies.clear();
 	LOG("Bodies Cleared!\n");
@@ -280,7 +270,7 @@ PhysBody3D * ModulePhysics3D::AddBody(const Primitive* primitive, OBJECT_TYPE ob
 
 	PhysBody3D* pbody = new PhysBody3D(body);
 	if (object_type == SENSOR_CUBE || object_type == SENSOR_SPHERE || object_type == SENSOR_CYLINDER || object_type == SENSOR_PLANE)pbody->SetAsSensor(true);
-	bodies.add(pbody);
+	bodies.push_back(pbody);
 	//Put body pointers in user & world data
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
@@ -294,7 +284,7 @@ btPoint2PointConstraint* ModulePhysics3D::Add_P2P_Constraint(btRigidBody& rbA, b
 
 	btPoint2PointConstraint* constrain = new btPoint2PointConstraint(rbA, rbB, pivotInA, pivotInB);
 	world->addConstraint(constrain);
-	constrains.add(constrain);
+	constrains.push_back(constrain);
 	return constrain;
 }
 
@@ -302,7 +292,7 @@ btHingeConstraint* ModulePhysics3D::Add_Hinge_Constraint(btRigidBody & rbA, btRi
 {
 	btHingeConstraint* constrain = new btHingeConstraint(rbA, rbB, pivotInA, pivotInB, axisInA, axisInB);
 	world->addConstraint(constrain);
-	constrains.add(constrain);
+	constrains.push_back(constrain);
 	return constrain;
 }
 
@@ -313,7 +303,7 @@ btHingeConstraint * ModulePhysics3D::Add_EnginedHinge_Constraint(btRigidBody & r
 	//constrain-
 	constrain->setDbgDrawSize(2.0f);
 	world->addConstraint(constrain, true);
-	constrains.add(constrain);
+	constrains.push_back(constrain);
 	return constrain;
 }
 
@@ -322,7 +312,7 @@ btFixedConstraint * ModulePhysics3D::Add_Fixed_Constraint(btRigidBody & rbA, btR
 
 	btFixedConstraint* constrain = new btFixedConstraint(rbA, rbB, frameA, frameB);
 	world->addConstraint(constrain);
-	constrains.add(constrain);
+	constrains.push_back(constrain);
 	return constrain;
 }
 

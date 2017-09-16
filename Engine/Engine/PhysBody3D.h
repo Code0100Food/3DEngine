@@ -1,8 +1,10 @@
 #ifndef __PhysBody3D_H__
 #define __PhysBody3D_H__
 
-#include "p2List.h"
+#include <list>
 #include "glmath.h"
+
+using namespace std;
 
 class btRigidBody;
 class Module;
@@ -36,7 +38,7 @@ public:
 
 public:
 
-	p2List<Module*> collision_listeners;
+	list<Module*> collision_listeners;
 
 private:
 

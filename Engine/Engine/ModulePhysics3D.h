@@ -1,8 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "p2List.h"
 #include "Primitive.h"
+#include <list>
 
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
@@ -50,11 +50,10 @@ private:
 	btDefaultVehicleRaycaster*				vehicle_raycaster = nullptr;
 	DebugDrawer*							debug_draw = nullptr;
 
-	p2List<btCollisionShape*>			shapes;
-	p2List<PhysBody3D*>					bodies;
-	p2List<btTypedConstraint*>			constrains;
-	p2List<PhysVehicle3D*>				vehicles;
-	p2List<btDefaultMotionState*>		motions;
+	list<btCollisionShape*>			shapes;
+	list<PhysBody3D*>				bodies;
+	list<btTypedConstraint*>		constrains;
+	list<btDefaultMotionState*>		motions;
 
 public:
 
