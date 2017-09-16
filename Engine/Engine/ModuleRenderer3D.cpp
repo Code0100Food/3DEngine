@@ -76,7 +76,7 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 		
-		GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		GLfloat LightModelAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 		
 		lights[0].ref = GL_LIGHT0;

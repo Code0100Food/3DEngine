@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Globals.h"
+#include <list>
+#include <vector>
 
 class Application;
 struct PhysBody3D;

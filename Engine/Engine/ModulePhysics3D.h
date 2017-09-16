@@ -2,7 +2,6 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Primitive.h"
-#include <list>
 
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
