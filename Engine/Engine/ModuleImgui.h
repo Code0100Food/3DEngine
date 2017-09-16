@@ -8,13 +8,13 @@ class ModuleImgui : public Module
 {
 public:
 
-	ModuleImgui(Application* parent, bool start_enabled = true) : Module(parent, start_enabled) {}
+	ModuleImgui(Application* parent, bool start_enabled = true);
 
 public:
 
-	bool Start();
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	bool			Start();
+	update_status	Update(float dt);
+	update_status	PostUpdate(float dt);
 
 private:
 

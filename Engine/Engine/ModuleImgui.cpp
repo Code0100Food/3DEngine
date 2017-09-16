@@ -1,9 +1,16 @@
 #include "ModuleImgui.h"
 #include "Application.h"
-
+#include "ModuleWindow.h"
 #include "SDL/include/SDL_opengl.h"
 #include "imgui/imgui_impl_sdl.h"
 
+// Constructors =================================
+ModuleImgui::ModuleImgui(Application * parent, bool start_enabled) : Module(parent, start_enabled)
+{
+
+}
+
+// Game Loop ====================================
 bool ModuleImgui::Start()
 {
 	show_test_window = false;

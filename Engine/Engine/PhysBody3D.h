@@ -2,10 +2,11 @@
 #define __PhysBody3D_H__
 
 #include "p2List.h"
+#include "glmath.h"
 
 class btRigidBody;
 class Module;
-#include "glmath.h"
+
 enum OBJECT_TYPE
 {
 	DINAMIC_CUBE,
@@ -29,8 +30,20 @@ enum OBJECT_TYPE
 struct PhysBody3D
 {
 public:
+
 	PhysBody3D(btRigidBody* body);
 	~PhysBody3D();
+
+public:
+
+	p2List<Module*> collision_listeners;
+
+private:
+
+	btRigidBody*	body = nullptr;
+	bool			is_sensor = false;
+
+public:
 
 	void			Push(float x, float y, float z);
 	void			GetTransform(float* matrix) const;
@@ -38,18 +51,9 @@ public:
 	void			SetPos(float x, float y, float z);
 	vec3			GetPos()const;
 	btRigidBody*	get_rigid_body() const;
+	void			SetAsSensor(bool is_sensor);
+	bool			IsSensor() const;
 
-	void SetAsSensor(bool is_sensor);
-	bool IsSensor() const;
-
-private:
-
-	btRigidBody* body = nullptr;
-	bool is_sensor = false;
-
-public:
-
-	p2List<Module*> collision_listeners;
 };
 
 #endif // __PhysBody3D_H__

@@ -9,19 +9,22 @@ class Timer
 {
 public:
 
-	// Constructor
 	Timer();
-
-	void Start();
-	void Stop();
-
-	Uint32 Read();
+	~Timer();
 
 private:
 
-	bool	running;
-	Uint32	started_at;
-	Uint32	stopped_at;
+	bool	running = false;
+	Uint32	started_at = 0;
+	Uint32	stopped_at = 0;
+
+public:
+
+
+	void	Start();
+	void	Stop();
+	Uint32	Read();
+
 };
 
 #endif //__TIMER_H__

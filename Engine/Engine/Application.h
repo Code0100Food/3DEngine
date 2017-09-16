@@ -3,17 +3,31 @@
 #include "p2List.h"
 #include "Globals.h"
 #include "Timer.h"
-#include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
-#include "ModuleImgui.h"
+
+class Module;
+class ModuleWindow;
+class ModuleInput;
+class ModuleAudio;
+class ModuleRenderer3D;
+class ModuleCamera3D;
+class ModulePhysics3D;
+class ModuleImgui;
 
 class Application
 {
+public:
+
+	Application();
+	~Application();
+
+public:
+
+	bool			Init();
+	void			PrepareUpdate();
+	update_status	Update();
+	void			FinishUpdate();
+	bool			CleanUp();
+
 public:
 
 	ModuleWindow*		window = nullptr;
@@ -29,26 +43,14 @@ private:
 	Timer			ms_timer;
 	float			dt = 0.0f;
 	p2List<Module*> list_modules;
-	
 	bool			want_to_quit = false;
 
 public:
 
-	Application();
-	~Application();
-
-	bool			Init();
-	update_status	Update();
-	bool			CleanUp();
+	void SetQuit();
 
 private:
 
 	void AddModule(Module* mod);
-	void PrepareUpdate();
-	void FinishUpdate();
-
-public:
-
-	void SetQuit();
 
 };

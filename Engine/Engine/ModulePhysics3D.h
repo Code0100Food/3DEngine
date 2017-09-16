@@ -25,15 +25,38 @@ enum BODY_MASK
 class ModulePhysics3D : public Module
 {
 public:
+
 	ModulePhysics3D(Application* app, bool start_enabled = true);
 	~ModulePhysics3D();
 
-	bool Init();
-	bool Start();
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
-	bool CleanUp();
+public:
+
+	bool			Init();
+	bool			Start();
+	update_status	PreUpdate(float dt);
+	update_status	Update(float dt);
+	update_status	PostUpdate(float dt);
+	bool			CleanUp();
+
+private:
+
+	bool debug = false;
+
+	btDefaultCollisionConfiguration*		collision_conf = nullptr;
+	btCollisionDispatcher*					dispatcher = nullptr;
+	btBroadphaseInterface*					broad_phase = nullptr;
+	btSequentialImpulseConstraintSolver*	solver = nullptr;
+	btDiscreteDynamicsWorld*				world = nullptr;
+	btDefaultVehicleRaycaster*				vehicle_raycaster = nullptr;
+	DebugDrawer*							debug_draw = nullptr;
+
+	p2List<btCollisionShape*>			shapes;
+	p2List<PhysBody3D*>					bodies;
+	p2List<btTypedConstraint*>			constrains;
+	p2List<PhysVehicle3D*>				vehicles;
+	p2List<btDefaultMotionState*>		motions;
+
+public:
 
 	//Methods to add bodies to the world
 	PhysBody3D* AddBody(const Primitive* primitive, enum OBJECT_TYPE object_type, float mass = 1.0f, BODY_MASK I_am = NOTHING);
@@ -44,31 +67,21 @@ public:
 	btHingeConstraint*			Add_EnginedHinge_Constraint(btRigidBody & rbA, btRigidBody & rbB, const btVector3& pivotInA, const btVector3& pivotInB, btVector3& axisInA, btVector3& axisInB);
 	btFixedConstraint*			Add_Fixed_Constraint(btRigidBody& rbA, btRigidBody& rbB, const btTransform& frameA, const btTransform& frameB);
 
-private:
-
-	bool debug;
-
-	btDefaultCollisionConfiguration*		collision_conf;
-	btCollisionDispatcher*					dispatcher;
-	btBroadphaseInterface*					broad_phase;
-	btSequentialImpulseConstraintSolver*	solver;
-	btDiscreteDynamicsWorld*				world;
-	btDefaultVehicleRaycaster*				vehicle_raycaster;
-	DebugDrawer*							debug_draw;
-
-	p2List<btCollisionShape*>			shapes;
-	p2List<PhysBody3D*>					bodies;
-	p2List<btTypedConstraint*>			constrains;
-	p2List<PhysVehicle3D*>				vehicles;
-	p2List<btDefaultMotionState*>		motions;
-
 };
 
 class DebugDrawer : public btIDebugDraw
 {
 public:
-	DebugDrawer() : line(0,0,0)
-	{}
+	
+	DebugDrawer();
+	
+public:
+
+	DebugDrawModes	mode;
+	Line			line;
+	Primitive		point;
+
+public:
 
 	void drawLine(const btVector3& from, const btVector3& to, const btVector3& color);
 	void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color);
@@ -77,7 +90,4 @@ public:
 	void setDebugMode(int debugMode);
 	int	 getDebugMode() const;
 
-	DebugDrawModes mode;
-	Line line;
-	Primitive point;
 };

@@ -4,13 +4,13 @@
 
 #pragma comment( lib, "Engine/SDL_mixer/libx86/SDL2_mixer.lib" )
 
+// Constructors =================================
 ModuleAudio::ModuleAudio(Application* app, bool start_enabled) : Module(app, start_enabled), music(NULL)
-{}
+{
 
-// Destructor
-ModuleAudio::~ModuleAudio()
-{}
+}
 
+// Game Loop ====================================
 // Called before render is available
 bool ModuleAudio::Init()
 {
@@ -68,6 +68,7 @@ bool ModuleAudio::CleanUp()
 	return true;
 }
 
+// Functionality ================================
 // Play a music file
 bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 {

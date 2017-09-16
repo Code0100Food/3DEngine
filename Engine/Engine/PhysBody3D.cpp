@@ -2,14 +2,13 @@
 #include "glmath.h"
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
-
-// ---------------------------------------------------------
+// Constructors =================================
 PhysBody3D::PhysBody3D(btRigidBody* body):body(body)
 {
 	body->setUserPointer(this);
 }
 
-// ---------------------------------------------------------
+// Destructors ==================================
 PhysBody3D::~PhysBody3D()
 {}
 
@@ -18,7 +17,8 @@ void PhysBody3D::Push(float x, float y, float z)
 	body->applyCentralImpulse(btVector3(x, y, z));
 }
 
-// ---------------------------------------------------------
+
+// Functionality ================================
 void PhysBody3D::GetTransform(float* matrix) const
 {
 	//Get the PhysBody3D transformation matrix
@@ -27,7 +27,6 @@ void PhysBody3D::GetTransform(float* matrix) const
 	}
 }
 
-// ---------------------------------------------------------
 void PhysBody3D::SetTransform(const float* matrix) const
 {
 	//Set the PhysBody3D transformation matrix
@@ -38,7 +37,6 @@ void PhysBody3D::SetTransform(const float* matrix) const
 	}
 }
 
-// ---------------------------------------------------------
 void PhysBody3D::SetPos(float x, float y, float z)
 {
 	//Set the position of the body

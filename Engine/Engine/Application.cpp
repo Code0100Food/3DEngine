@@ -1,5 +1,15 @@
 #include "Application.h"
+#include "Module.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+#include "ModuleImgui.h"
 
+
+// Constructors =================================
 Application::Application()
 {
 	window = new ModuleWindow(this);
@@ -28,6 +38,7 @@ Application::Application()
 	AddModule(renderer3D);
 }
 
+// Destructors ==================================
 Application::~Application()
 {
 	p2List_item<Module*>* item = list_modules.getLast();
@@ -39,6 +50,7 @@ Application::~Application()
 	}
 }
 
+// Game Loop ====================================
 bool Application::Init()
 {
 	bool ret = true;
@@ -66,16 +78,15 @@ bool Application::Init()
 	return ret;
 }
 
-// ---------------------------------------------
 void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.Read() / 1000.0f;
 	ms_timer.Start();
 }
 
-// ---------------------------------------------
 void Application::FinishUpdate()
 {
+
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -128,12 +139,14 @@ bool Application::CleanUp()
 	return ret;
 }
 
+// Functionality ================================
+void Application::SetQuit()
+{
+	want_to_quit = true;
+}
+
 void Application::AddModule(Module* mod)
 {
 	list_modules.add(mod);
 }
 
-void Application::SetQuit()
-{
-	want_to_quit = true;
-}

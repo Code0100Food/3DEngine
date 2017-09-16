@@ -3,7 +3,10 @@
 #include "ModuleCamera3D.h"
 #include "PhysVehicle3D.h"
 #include "ModuleAudio.h"
+#include "ModuleInput.h"
 
+
+// Constructors =================================
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	CalculateViewMatrix();
@@ -20,10 +23,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	ViewVector = vec3(0.0f, 0.0f, 0.0f);
 }
 
-ModuleCamera3D::~ModuleCamera3D()
-{}
-
-// -----------------------------------------------------------------
+// Game Loop ====================================
 bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
@@ -39,7 +39,6 @@ bool ModuleCamera3D::Start()
 	return ret;
 }
 
-// -----------------------------------------------------------------
 bool ModuleCamera3D::CleanUp()
 {
 	LOG("Cleaning camera");
@@ -47,7 +46,6 @@ bool ModuleCamera3D::CleanUp()
 	return true;
 }
 
-// -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
 	//Change Camera Mode =======================================
@@ -162,7 +160,7 @@ update_status ModuleCamera3D::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-// -----------------------------------------------------------------
+// Functionality ================================
 void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
 {
 	this->Position = Position;
@@ -181,7 +179,6 @@ void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool Rota
 	CalculateViewMatrix();
 }
 
-// -----------------------------------------------------------------
 void ModuleCamera3D::LookAt( const vec3 &Spot)
 {
 	Reference = Spot;
@@ -193,8 +190,6 @@ void ModuleCamera3D::LookAt( const vec3 &Spot)
 	CalculateViewMatrix();
 }
 
-
-// -----------------------------------------------------------------
 void ModuleCamera3D::Move(const vec3 &Movement)
 {
 	Position += Movement;
@@ -203,13 +198,11 @@ void ModuleCamera3D::Move(const vec3 &Movement)
 	CalculateViewMatrix();
 }
 
-// -----------------------------------------------------------------
 float* ModuleCamera3D::GetViewMatrix()
 {
 	return &ViewMatrix;
 }
 
-// -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);

@@ -11,6 +11,10 @@ Timer::Timer()
 	Start();
 }
 
+Timer::~Timer()
+{
+}
+
 // ---------------------------------------------
 void Timer::Start()
 {

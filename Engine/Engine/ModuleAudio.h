@@ -11,24 +11,26 @@ class ModuleAudio : public Module
 public:
 
 	ModuleAudio(Application* app, bool start_enabled = true);
-	~ModuleAudio();
+
+public:
 
 	bool Init();
 	bool CleanUp();
-
-	// Play a music file
-	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
-
-	// Load a WAV in memory
-	unsigned int LoadFx(const char* path);
-
-	// Play a previously loaded WAV
-	bool PlayFx(unsigned int fx,int channel = -1, int repeat = 0);
 
 private:
 
 	Mix_Music*			music = nullptr;
 	p2List<Mix_Chunk*>	fx;
+
+public:
+
+	// Play a music file
+	bool			PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
+	// Load a WAV in memory
+	unsigned int	LoadFx(const char* path);
+	// Play a previously loaded WAV
+	bool			PlayFx(unsigned int fx,int channel = -1, int repeat = 0);
+
 };
 
 #endif // __ModuleAudio_H__

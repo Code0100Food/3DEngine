@@ -5,6 +5,8 @@
 #include "PhysVehicle3D.h"
 #include "Primitive.h"
 #include "SDL\include\SDL.h"
+#include "ModuleInput.h"
+#include "ModuleCamera3D.h"
 
 #ifdef _DEBUG
 #pragma comment (lib, "Engine/Bullet/libx86/BulletDynamics_debug.lib")
@@ -16,6 +18,8 @@
 #pragma comment (lib, "Engine/Bullet/libx86/LinearMath.lib")
 #endif
 
+
+// Constructors =================================
 ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	debug = false;
@@ -27,7 +31,7 @@ ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(
 	debug_draw = new DebugDrawer();
 }
 
-// Destructor
+// Destructors ==================================
 ModulePhysics3D::~ModulePhysics3D()
 {
 	RELEASE(debug_draw);
@@ -37,7 +41,8 @@ ModulePhysics3D::~ModulePhysics3D()
 	RELEASE(collision_conf);
 }
 
-// Render not available yet----------------------------------
+// Game Loop ====================================
+// Render not available yet
 bool ModulePhysics3D::Init()
 {
 	LOG("Creating 3D Physics simulation");
@@ -218,7 +223,7 @@ bool ModulePhysics3D::CleanUp()
 	return true;
 }
 
-// ---------------------------------------------------------
+// Functionality ================================
 PhysBody3D * ModulePhysics3D::AddBody(const Primitive* primitive, OBJECT_TYPE object_type, float mass, BODY_MASK I_am)
 {
 	btCollisionShape* colShape = nullptr;
@@ -323,7 +328,15 @@ btFixedConstraint * ModulePhysics3D::Add_Fixed_Constraint(btRigidBody & rbA, btR
 }
 
 
-// =============================================
+
+/// DebugDrawer ---------------------------------
+// Constructors =================================
+DebugDrawer::DebugDrawer() : line(0, 0, 0)
+{
+
+}
+
+// Functionality ================================
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
 	line.origin.Set(from.getX(), from.getY(), from.getZ());
@@ -358,3 +371,4 @@ int	 DebugDrawer::getDebugMode() const
 {
 	return mode;
 }
+/// ---------------------------------------------
