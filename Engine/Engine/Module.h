@@ -2,28 +2,30 @@
 
 #include "Globals.h"
 
+#include <string>
+
 class Application;
 struct PhysBody3D;
 
 class Module
 {
-private :
+public:
 
-	bool enabled;
+	Module(Application* parent, bool start_enabled = true) : App(parent)
+	{
+	
+	}
+
+	virtual ~Module()
+	{
+	
+	}
 
 public:
 
-	Application* App;
-
-	Module(Application* parent, bool start_enabled = true) : App(parent)
-	{}
-
-	virtual ~Module()
-	{}
-
-	virtual bool Init() 
+	virtual bool Init()
 	{
-		return true; 
+		return true;
 	}
 
 	virtual bool Start()
@@ -46,9 +48,9 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual bool CleanUp() 
-	{ 
-		return true; 
+	virtual bool CleanUp()
+	{
+		return true;
 	}
 
 
@@ -56,4 +58,17 @@ public:
 
 
 	}
+
+protected:
+
+	std::string name = "undef";
+
+private:
+
+	bool enabled = true;
+
+public:
+
+	Application* App = nullptr;
+
 };

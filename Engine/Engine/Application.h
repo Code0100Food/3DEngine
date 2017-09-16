@@ -13,6 +13,12 @@ class ModuleCamera3D;
 class ModulePhysics3D;
 class ModuleImgui;
 
+enum APP_CONTEXT
+{
+	BUILD_CONTEXT = 0,
+	PLAY_CONTEXT
+};
+
 class Application
 {
 public:

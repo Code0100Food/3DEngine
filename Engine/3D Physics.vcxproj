@@ -107,7 +107,6 @@
     <ClInclude Include="Engine\p2List.h" />
     <ClInclude Include="Engine\p2Point.h" />
     <ClInclude Include="Engine\PhysBody3D.h" />
-    <ClInclude Include="Engine\PhysVehicle3D.h" />
     <ClInclude Include="Engine\Primitive.h" />
     <ClInclude Include="Engine\Quadtree.h" />
     <ClInclude Include="Engine\Timer.h" />
@@ -131,7 +130,6 @@
     <ClCompile Include="Engine\ModuleRenderer3D.cpp" />
     <ClCompile Include="Engine\ModuleWindow.cpp" />
     <ClCompile Include="Engine\PhysBody3D.cpp" />
-    <ClCompile Include="Engine\PhysVehicle3D.cpp" />
     <ClCompile Include="Engine\Primitive.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
   </ItemGroup>

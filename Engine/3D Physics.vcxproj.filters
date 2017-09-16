@@ -19,6 +19,9 @@
     <Filter Include="Sources\Tools\Imgui">
       <UniqueIdentifier>{9b539853-c6e5-453b-8105-11ca9c60e654}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\Input">
+      <UniqueIdentifier>{b2a7af03-f4b6-4235-a81c-23a2ee41b7c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Color.h">
@@ -42,9 +45,6 @@
     <ClInclude Include="Engine\PhysBody3D.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\PhysVehicle3D.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Primitive.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
@@ -55,9 +55,6 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModuleCamera3D.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ModuleInput.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModulePhysics3D.h">
@@ -93,6 +90,9 @@
     <ClInclude Include="Engine\ModuleImgui.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ModuleInput.h">
+      <Filter>Sources\Modules\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -119,9 +119,6 @@
     <ClCompile Include="Engine\ModuleCamera3D.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ModuleInput.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ModuleWindow.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
@@ -132,9 +129,6 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Engine\PhysBody3D.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\PhysVehicle3D.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Timer.cpp">
@@ -157,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="Engine\ModuleImgui.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ModuleInput.cpp">
+      <Filter>Sources\Modules\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
