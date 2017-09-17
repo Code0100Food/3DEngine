@@ -1,8 +1,10 @@
 #pragma once
 
-#include "p2List.h"
+#include <list>
 #include "Globals.h"
 #include "Timer.h"
+
+using namespace std;
 
 class Module;
 class ModuleWindow;
@@ -48,7 +50,7 @@ private:
 
 	Timer			ms_timer;
 	float			dt = 0.0f;
-	p2List<Module*> list_modules;
+	list<Module*>	list_modules;
 	bool			want_to_quit = false;
 
 public:
