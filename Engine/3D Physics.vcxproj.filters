@@ -30,12 +30,6 @@
     <ClInclude Include="Engine\glmath.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\p2DynArray.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\p2List.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\p2Point.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>

@@ -29,7 +29,7 @@ class Primitive
 public:
 
 	Primitive();
-	Primitive(float posX, float posY, float posZ);
+	Primitive(float _posX, float _posY, float _posZ);
 
 public:
 
@@ -66,9 +66,9 @@ class Cube : public Primitive
 public:
 
 	Cube();
-	Cube(const Cube* copy);
-	Cube(float sizeX, float sizeY, float sizeZ);
-	Cube(float sizeX, float sizeY, float sizeZ, float posX, float posY, float posZ);
+	Cube(const Cube* _copy);
+	Cube(float _sizeX, float _sizeY, float _sizeZ);
+	Cube(float _sizeX, float _sizeY, float _sizeZ, float _posX, float _posY, float _posZ);
 
 public:
 
@@ -87,8 +87,8 @@ class Sphere : public Primitive
 public:
 
 	Sphere();
-	Sphere(float radius);
-	Sphere(float radius, float posX, float posY, float posZ);
+	Sphere(float _radius);
+	Sphere(float _radius, float _posX, float _posY, float _posZ);
 
 public:
 
@@ -106,8 +106,8 @@ class Cylinder : public Primitive
 public:
 
 	Cylinder();
-	Cylinder(float radius, float height);
-	Cylinder(float radius, float height, float posX, float posY, float posZ);
+	Cylinder(float _radius, float _height);
+	Cylinder(float _radius, float _height, float _posX, float _posY, float _posZ);
 
 public:
 
@@ -126,7 +126,7 @@ class Line : public Primitive
 public:
 
 	Line();
-	Line(float x, float y, float z);
+	Line(float x, float _y, float _z);
 
 public:
 
@@ -145,7 +145,7 @@ class Plane : public Primitive
 public:
 
 	Plane();
-	Plane(float x, float y, float z, float d);
+	Plane(float _x, float _y, float _z, float _d);
 
 public:
 

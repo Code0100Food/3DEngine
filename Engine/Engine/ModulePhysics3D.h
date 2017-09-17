@@ -32,12 +32,12 @@ public:
 
 public:
 
-	bool			Init();
-	bool			Start();
-	update_status	PreUpdate(float dt);
-	update_status	Update(float dt);
-	update_status	PostUpdate(float dt);
-	bool			CleanUp();
+	bool			Init() final;
+	bool			Start() final;
+	update_status	PreUpdate(float dt) final;
+	update_status	Update(float dt) final;
+	update_status	PostUpdate(float dt) final;
+	bool			CleanUp() final;
 
 private:
 

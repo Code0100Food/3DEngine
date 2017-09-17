@@ -16,10 +16,10 @@ public:
 
 public:
 
-	bool			Init();
-	update_status	PreUpdate(float dt);
-	update_status	PostUpdate(float dt);
-	bool			CleanUp();
+	bool			Init() final;
+	update_status	PreUpdate(float dt) final;
+	update_status	PostUpdate(float dt) final;
+	bool			CleanUp() final;
 
 public:
 

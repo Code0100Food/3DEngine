@@ -103,8 +103,6 @@
     <ClInclude Include="Engine\ModulePhysics3D.h" />
     <ClInclude Include="Engine\ModuleRenderer3D.h" />
     <ClInclude Include="Engine\ModuleWindow.h" />
-    <ClInclude Include="Engine\p2DynArray.h" />
-    <ClInclude Include="Engine\p2List.h" />
     <ClInclude Include="Engine\p2Point.h" />
     <ClInclude Include="Engine\PhysBody3D.h" />
     <ClInclude Include="Engine\Primitive.h" />

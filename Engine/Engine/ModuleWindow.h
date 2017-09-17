@@ -11,14 +11,12 @@ class ModuleWindow : public Module
 public:
 
 	ModuleWindow(Application* app, bool start_enabled = true);
+	~ModuleWindow();
 
-	// Destructor
-	virtual ~ModuleWindow();
+public:
 
-	bool Init();
-	bool CleanUp();
-
-	void SetTitle(const char* title);
+	bool Init() final;
+	bool CleanUp() final;
 	
 public:
 
@@ -27,6 +25,10 @@ public:
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface = nullptr;
+
+public:
+	
+	void SetTitle(const char* title);
 };
 
 #endif // __ModuleWindow_H__

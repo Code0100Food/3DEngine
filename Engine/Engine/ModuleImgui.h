@@ -12,9 +12,9 @@ public:
 
 public:
 
-	bool			Start();
-	update_status	Update(float dt);
-	update_status	PostUpdate(float dt);
+	bool			Start() final;
+	update_status	Update(float dt) final;
+	update_status	PostUpdate(float dt) final;
 
 private:
 

@@ -1,5 +1,5 @@
-#ifndef __ModuleAudio_H__
-#define __ModuleAudio_H__
+#ifndef __MODULE_AUDIO_H__
+#define __MODULE_AUDIO_H__
 
 #include "Module.h"
 #include "SDL_mixer\include\SDL_mixer.h"
@@ -14,8 +14,8 @@ public:
 
 public:
 
-	bool Init();
-	bool CleanUp();
+	bool Init() final;
+	bool CleanUp() final;
 
 private:
 
@@ -33,4 +33,4 @@ public:
 
 };
 
-#endif // __ModuleAudio_H__
+#endif // __MODULE_AUDIO_H__

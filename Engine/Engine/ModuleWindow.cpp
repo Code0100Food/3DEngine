@@ -5,17 +5,22 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 
+
+// Constructors =================================
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	name = "module_window";
 	window = NULL;
 	screen_surface = NULL;
 }
 
-// Destructor
+// Destructors ==================================
 ModuleWindow::~ModuleWindow()
 {
+
 }
 
+// Game Loop ====================================
 // Called before render is available
 bool ModuleWindow::Init()
 {
@@ -94,6 +99,7 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
+// Functionality ================================
 void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);

@@ -16,9 +16,9 @@ public:
 
 public:
 
-	bool			Start();
-	update_status	Update(float dt);
-	bool			CleanUp();
+	bool			Start() final;
+	update_status	Update(float dt) final;
+	bool			CleanUp() final;
 
 public:
 

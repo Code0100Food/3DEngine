@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include <list>
 #include <vector>
+#include <string>
 
 class Application;
 struct PhysBody3D;
@@ -14,17 +15,22 @@ class Module
 {
 private:
 
-	bool enabled;
+	bool enabled = false;
 
 public:
 
-	Application* App;
 
 	Module(Application* parent, bool start_enabled = true) : App(parent)
-	{}
+	{
+	
+	}
 
 	virtual ~Module()
-	{}
+	{
+	
+	}
+
+public:
 
 	virtual bool Init()
 	{
@@ -61,6 +67,12 @@ public:
 
 
 	}
+
+public:
+
+	Application* App = nullptr;
+	std::string name = "undef_module";
+
 };
 
 #endif // !_MODULE_H_

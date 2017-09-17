@@ -12,9 +12,9 @@
 Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), rotations({0,0,0}),type(PrimitiveTypes::Primitive_Point)
 {}
 
-Primitive::Primitive(float posX, float posY, float posZ) : transform(IdentityMatrix), color(White), wire(false), axis(false), rotations({ 0,0,0 }), type(PrimitiveTypes::Primitive_Point)
+Primitive::Primitive(float _posX, float _posY, float _posZ) : transform(IdentityMatrix), color(White), wire(false), axis(false), rotations({ 0,0,0 }), type(PrimitiveTypes::Primitive_Point)
 {
-	transform.translate(posX, posY, posZ);
+	transform.translate(_posX, _posY, _posZ);
 }
 
 // ------------------------------------------------------------
@@ -267,23 +267,23 @@ Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
-Cube::Cube(const Cube * copy)
+Cube::Cube(const Cube * _copy)
 {
-	this->transform = copy->transform;
-	this->type = copy->type;
-	this->axis = copy->axis;
-	this->color = copy->color;
-	this->rotations = copy->rotations;
-	this->size = copy->size;
-	this->wire = copy->wire;
+	this->transform = _copy->transform;
+	this->type = _copy->type;
+	this->axis = _copy->axis;
+	this->color = _copy->color;
+	this->rotations = _copy->rotations;
+	this->size = _copy->size;
+	this->wire = _copy->wire;
 }
 
-Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
+Cube::Cube(float _sizeX, float _sizeY, float _sizeZ) : Primitive(), size(_sizeX, _sizeY, _sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
-Cube::Cube(float sizeX, float sizeY, float sizeZ, float posX, float posY, float posZ) : Primitive(posX,posY,posZ), size(sizeX, sizeY, sizeZ)
+Cube::Cube(float _sizeX, float _sizeY, float _sizeZ, float _posX, float _posY, float _posZ) : Primitive(_posX, _posY, _posZ), size(_sizeX, _sizeY, _sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
@@ -348,12 +348,12 @@ Sphere::Sphere() : Primitive(), radius(1.0f)
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-Sphere::Sphere(float radius) : Primitive(), radius(radius)
+Sphere::Sphere(float _radius) : Primitive(), radius(_radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-Sphere::Sphere(float radius, float posX, float posY, float posZ) : Primitive(posX, posY, posZ), radius(radius)
+Sphere::Sphere(float _radius, float _posX, float _posY, float _posZ) : Primitive(_posX, _posY, _posZ), radius(_radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
@@ -370,12 +370,12 @@ Cylinder::Cylinder() : Primitive(), radius(1.0f), height(1.0f)
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-Cylinder::Cylinder(float radius, float height) : Primitive(), radius(radius), height(height)
+Cylinder::Cylinder(float _radius, float _height) : Primitive(), radius(_radius), height(_height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-Cylinder::Cylinder(float radius, float height, float posX, float posY, float posZ) : Primitive(posX, posY, posZ), radius(radius), height(height)
+Cylinder::Cylinder(float _radius, float _height, float _posX, float _posY, float _posZ) : Primitive(_posX, _posY, _posZ), radius(_radius), height(_height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
@@ -422,7 +422,7 @@ Line::Line() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
 	type = PrimitiveTypes::Primitive_Line;
 }
 
-Line::Line(float x, float y, float z) : Primitive(), origin(0, 0, 0), destination(x, y, z)
+Line::Line(float _x, float _y, float _z) : Primitive(), origin(0, 0, 0), destination(_x, _y, _z)
 {
 	type = PrimitiveTypes::Primitive_Line;
 }
@@ -447,7 +447,7 @@ Plane::Plane() : Primitive(), normal(0, 1, 0), constant(1)
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-Plane::Plane(float x, float y, float z, float d) : Primitive(), normal(x, y, z), constant(d)
+Plane::Plane(float _x, float _y, float _z, float _d) : Primitive(), normal(_x, _y, _z), constant(_d)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }

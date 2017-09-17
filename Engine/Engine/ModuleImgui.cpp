@@ -7,7 +7,7 @@
 // Constructors =================================
 ModuleImgui::ModuleImgui(Application * parent, bool start_enabled) : Module(parent, start_enabled)
 {
-
+	name = "module_imgui";
 }
 
 // Game Loop ====================================

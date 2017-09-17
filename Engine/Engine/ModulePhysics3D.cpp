@@ -21,6 +21,8 @@
 // Constructors =================================
 ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	name = "module_physics";
+
 	debug = false;
 
 	collision_conf = new btDefaultCollisionConfiguration();
