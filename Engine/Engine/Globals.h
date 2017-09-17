@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _GLOBALS_H_
+#define _GLOBALS_H_
 
 // Warning disabled ---
 #pragma warning( disable : 4577 ) // Warning that exceptions are disabled
@@ -46,3 +47,7 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "3D Engine"
+
+#endif // !_GLOBALS_H_
+
+

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PRIMITIVE_H_
+#define _PRIMITIVE_H_
+
 #include "glmath.h"
 #include "Color.h"
 
@@ -30,11 +32,11 @@ public:
 	Primitive(float posX, float posY, float posZ);
 
 public:
-	
+
 	Color	color;
 	mat4x4	transform;
 	vec3	rotations;
-	bool	axis,wire;
+	bool	axis, wire;
 
 protected:
 
@@ -61,7 +63,7 @@ public:
 // ============================================
 class Cube : public Primitive
 {
-public :
+public:
 
 	Cube();
 	Cube(const Cube* copy);
@@ -108,7 +110,7 @@ public:
 	Cylinder(float radius, float height, float posX, float posY, float posZ);
 
 public:
-	
+
 	float radius = 0.0f;
 	float height = 0.0f;
 
@@ -127,7 +129,7 @@ public:
 	Line(float x, float y, float z);
 
 public:
-	
+
 	vec3 origin;
 	vec3 destination;
 
@@ -144,9 +146,9 @@ public:
 
 	Plane();
 	Plane(float x, float y, float z, float d);
-	
+
 public:
-	
+
 	vec3	normal;
 	float	constant = 0.0;
 
@@ -155,3 +157,7 @@ public:
 	void InnerRender() const;
 
 };
+
+#endif // !_PRIMITIVE_H_
+
+

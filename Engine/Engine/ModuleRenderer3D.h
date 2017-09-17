@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MODULE_RENDER_3D_H_
+#define _MODULE_RENDER_3D_H_
+
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
@@ -30,3 +32,8 @@ public:
 
 	void OnResize(int width, int height);
 };
+
+
+#endif // !_MODULE_RENDER_3D_H_
+
+

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _MODULE_H_
+#define _MODULE_H_
 
 #include "Globals.h"
 #include <list>
@@ -11,7 +12,7 @@ using namespace std;
 
 class Module
 {
-private :
+private:
 
 	bool enabled;
 
@@ -25,9 +26,9 @@ public:
 	virtual ~Module()
 	{}
 
-	virtual bool Init() 
+	virtual bool Init()
 	{
-		return true; 
+		return true;
 	}
 
 	virtual bool Start()
@@ -50,9 +51,9 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual bool CleanUp() 
-	{ 
-		return true; 
+	virtual bool CleanUp()
+	{
+		return true;
 	}
 
 
@@ -61,3 +62,7 @@ public:
 
 	}
 };
+
+#endif // !_MODULE_H_
+
+

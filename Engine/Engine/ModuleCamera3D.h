@@ -1,4 +1,7 @@
-#pragma once
+#ifndef _MODULE_CAMERA_3D_H_
+#define _MODULE_CAMERA_3D_H_
+
+
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
@@ -23,7 +26,7 @@ public:
 	vec3	X, Y, Z, Position, Reference;
 
 private:
-	
+
 	float			camera_speed = 0.0f;
 	PhysVehicle3D*	Target = nullptr;
 	vec3			CameraLocation;
@@ -45,3 +48,7 @@ private:
 	void	CalculateViewMatrix();
 
 };
+
+
+#endif // !_MODULE_CAMERA_3D_H_
+

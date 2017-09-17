@@ -1,9 +1,10 @@
-#pragma once
+#ifndef  _COLOR_H_
+#define	 _COLOR_H_
 
 struct Color
 {
 	float r, g, b, a;
-	
+
 	Color() : r(0.0f), g(0.0f), b(0.0f), a(1.0f)
 	{}
 
@@ -36,3 +37,10 @@ extern Color Gray;
 extern Color White;
 extern Color Column_Color;
 extern Color Checkpoint_Color;
+
+
+
+#endif // ! _COLOR_H_
+
+
+

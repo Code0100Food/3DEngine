@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MODULE_PHYSICS_3D_H_
+#define _MODULE_PHYSICS_3D_H_
+
 #include "Module.h"
 #include "Globals.h"
 #include "Primitive.h"
@@ -89,3 +91,5 @@ public:
 	int	 getDebugMode() const;
 
 };
+
+#endif
