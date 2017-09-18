@@ -90,6 +90,9 @@
     <ClInclude Include="Engine\Scene.h">
       <Filter>Sources\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\MathGeoLib\Time\Clock.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Scene.cpp">
       <Filter>Sources\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MathGeoLib\Time\Clock.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
