@@ -6,6 +6,7 @@
 #include "Primitive.h"
 
 #include "Bullet/include/btBulletDynamicsCommon.h"
+#include "MathGeoLib/MathGeoLib.h"
 
 // Recommended scale is 1.0f == 1 meter, no less than 0.2 objects
 #define GRAVITY btVector3(0.0f, -20.0f, 0.0f) 
@@ -59,8 +60,11 @@ private:
 public:
 
 	//Methods to add bodies to the world
-	PhysBody3D* AddBody(const Primitive* primitive, enum OBJECT_TYPE object_type, float mass = 1.0f, BODY_MASK I_am = NOTHING);
+	PhysBody3D* AddBody(const _Primitive* primitive, enum OBJECT_TYPE object_type, float mass = 1.0f, BODY_MASK I_am = NOTHING);/*Old one*/
 	
+	math::Sphere* CreateCylinder();
+
+
 	//Methods for constrains
 	btPoint2PointConstraint*	Add_P2P_Constraint(btRigidBody& rbA, btRigidBody& rbB, const btVector3& pivotInA, const btVector3& pivotInB);
 	btHingeConstraint*			Add_Hinge_Constraint(btRigidBody & rbA, btRigidBody & rbB, const btVector3& pivotInA, const btVector3& pivotInB, btVector3& axisInA, btVector3& axisInB);
@@ -78,8 +82,8 @@ public:
 public:
 
 	DebugDrawModes	mode;
-	Line			line;
-	Primitive		point;
+	_Line			line;
+	_Primitive		point;
 
 public:
 

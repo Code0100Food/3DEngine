@@ -9,21 +9,21 @@
 #pragma comment (lib, "Engine/glut/glut32.lib")
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), rotations({0,0,0}),type(PrimitiveTypes::Primitive_Point)
+_Primitive::_Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), rotations({0,0,0}),type(PrimitiveTypes::Primitive_Point)
 {}
 
-Primitive::Primitive(float _posX, float _posY, float _posZ) : transform(IdentityMatrix), color(White), wire(false), axis(false), rotations({ 0,0,0 }), type(PrimitiveTypes::Primitive_Point)
+_Primitive::_Primitive(float _posX, float _posY, float _posZ) : transform(IdentityMatrix), color(White), wire(false), axis(false), rotations({ 0,0,0 }), type(PrimitiveTypes::Primitive_Point)
 {
 	transform.translate(_posX, _posY, _posZ);
 }
 
 // ------------------------------------------------------------
-PrimitiveTypes Primitive::GetType() const
+PrimitiveTypes _Primitive::GetType() const
 {
 	return type;
 }
 
-void Primitive::FadeColor(float r, float g, float b)
+void _Primitive::FadeColor(float r, float g, float b)
 {
 	color.r += r;
 	color.g += g;
@@ -31,7 +31,7 @@ void Primitive::FadeColor(float r, float g, float b)
 }
 
 // ------------------------------------------------------------
-void Primitive::Render() const
+void _Primitive::Render() const
 {
 	glPushMatrix();
 	glMultMatrixf(transform.M);
@@ -81,7 +81,7 @@ void Primitive::Render() const
 }
 
 // ------------------------------------------------------------
-void Primitive::InnerRender() const
+void _Primitive::InnerRender() const
 {
 	glPointSize(5.0f);
 
@@ -95,25 +95,25 @@ void Primitive::InnerRender() const
 }
 
 // ------------------------------------------------------------
-void Primitive::SetPos(float x, float y, float z)
+void _Primitive::SetPos(float x, float y, float z)
 {
 	transform.translate(x, y, z);
 }
 
-void Primitive::SetPosFrom(Primitive * origin, float x, float y, float z)
+void _Primitive::SetPosFrom(_Primitive * origin, float x, float y, float z)
 {
 	vec3 org = origin->transform.translation();
 	transform.translate(org.x + x, org.y + y, org.z + z);
 }
 
 // ------------------------------------------------------------
-void Primitive::SetRotation(float angle, const vec3 &u)
+void _Primitive::SetRotation(float angle, const vec3 &u)
 {
 	transform.rotate(angle, u);
 
 }
 
-void Primitive::SetMultiRotation(float x, float y, float z)
+void _Primitive::SetMultiRotation(float x, float y, float z)
 {
 
 	mat4x4 rot_x = transform.rotate(x, { -1,0,0 });
@@ -122,7 +122,7 @@ void Primitive::SetMultiRotation(float x, float y, float z)
 	transform = rot_x* rot_y *rot_z;
 }
 
-void Primitive::AddAdjacentBody(Primitive * target, float angle, AXIS axis, float x, float y, float z)
+void _Primitive::AddAdjacentBody(_Primitive * target, float angle, AXIS axis, float x, float y, float z)
 {
 	//Calculate the point of the parent object
 	vec3 Apoint;
@@ -251,18 +251,18 @@ void Primitive::AddAdjacentBody(Primitive * target, float angle, AXIS axis, floa
 }
 
 // ------------------------------------------------------------
-void Primitive::Scale(float x, float y, float z)
+void _Primitive::Scale(float x, float y, float z)
 {
 	transform.scale(x, y, z);
 }
 
-void Primitive::SetColor(const Color & color)
+void _Primitive::SetColor(const Color & color)
 {
 	this->color = color;
 }
 
 // CUBE ============================================
-Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
+Cube::Cube() : _Primitive(), size(1.0f, 1.0f, 1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
@@ -278,12 +278,12 @@ Cube::Cube(const Cube * _copy)
 	this->wire = _copy->wire;
 }
 
-Cube::Cube(float _sizeX, float _sizeY, float _sizeZ) : Primitive(), size(_sizeX, _sizeY, _sizeZ)
+Cube::Cube(float _sizeX, float _sizeY, float _sizeZ) : _Primitive(), size(_sizeX, _sizeY, _sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
-Cube::Cube(float _sizeX, float _sizeY, float _sizeZ, float _posX, float _posY, float _posZ) : Primitive(_posX, _posY, _posZ), size(_sizeX, _sizeY, _sizeZ)
+Cube::Cube(float _sizeX, float _sizeY, float _sizeZ, float _posX, float _posY, float _posZ) : _Primitive(_posX, _posY, _posZ), size(_sizeX, _sizeY, _sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
@@ -343,44 +343,44 @@ void Cube::ReSize(float x, float y, float z)
 }
 
 // SPHERE ============================================
-Sphere::Sphere() : Primitive(), radius(1.0f)
+_Sphere::_Sphere() : _Primitive(), radius(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-Sphere::Sphere(float _radius) : Primitive(), radius(_radius)
+_Sphere::_Sphere(float _radius) : _Primitive(), radius(_radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-Sphere::Sphere(float _radius, float _posX, float _posY, float _posZ) : Primitive(_posX, _posY, _posZ), radius(_radius)
+_Sphere::_Sphere(float _radius, float _posX, float _posY, float _posZ) : _Primitive(_posX, _posY, _posZ), radius(_radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-void Sphere::InnerRender() const
+void _Sphere::InnerRender() const
 {
 	glutSolidSphere(radius, 25, 25);
 }
 
 
 // CYLINDER ============================================
-Cylinder::Cylinder() : Primitive(), radius(1.0f), height(1.0f)
+_Cylinder::_Cylinder() : _Primitive(), radius(1.0f), height(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-Cylinder::Cylinder(float _radius, float _height) : Primitive(), radius(_radius), height(_height)
+_Cylinder::_Cylinder(float _radius, float _height) : _Primitive(), radius(_radius), height(_height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-Cylinder::Cylinder(float _radius, float _height, float _posX, float _posY, float _posZ) : Primitive(_posX, _posY, _posZ), radius(_radius), height(_height)
+_Cylinder::_Cylinder(float _radius, float _height, float _posX, float _posY, float _posZ) : _Primitive(_posX, _posY, _posZ), radius(_radius), height(_height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-void Cylinder::InnerRender() const
+void _Cylinder::InnerRender() const
 {
 	int n = 30;
 
@@ -417,17 +417,17 @@ void Cylinder::InnerRender() const
 }
 
 // LINE ==================================================
-Line::Line() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
+_Line::_Line() : _Primitive(), origin(0, 0, 0), destination(1, 1, 1)
 {
 	type = PrimitiveTypes::Primitive_Line;
 }
 
-Line::Line(float _x, float _y, float _z) : Primitive(), origin(0, 0, 0), destination(_x, _y, _z)
+_Line::_Line(float _x, float _y, float _z) : _Primitive(), origin(0, 0, 0), destination(_x, _y, _z)
 {
 	type = PrimitiveTypes::Primitive_Line;
 }
 
-void Line::InnerRender() const
+void _Line::InnerRender() const
 {
 	glLineWidth(2.0f);
 
@@ -442,17 +442,17 @@ void Line::InnerRender() const
 }
 
 // PLANE ==================================================
-Plane::Plane() : Primitive(), normal(0, 1, 0), constant(1)
+_Plane::_Plane() : _Primitive(), normal(0, 1, 0), constant(1)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-Plane::Plane(float _x, float _y, float _z, float _d) : Primitive(), normal(_x, _y, _z), constant(_d)
+_Plane::_Plane(float _x, float _y, float _z, float _d) : _Primitive(), normal(_x, _y, _z), constant(_d)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-void Plane::InnerRender() const
+void _Plane::InnerRender() const
 {
 	glLineWidth(1.0f);
 

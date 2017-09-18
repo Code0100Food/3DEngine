@@ -7,6 +7,9 @@
 #include "ModuleInput.h"
 #include "ModuleCamera3D.h"
 
+//Math lib include
+#include "MathGeoLib/Geometry/GeometryAll.h"
+
 #ifdef _DEBUG
 #pragma comment (lib, "Engine/Bullet/libx86/BulletDynamics_debug.lib")
 #pragma comment (lib, "Engine/Bullet/libx86/BulletCollision_debug.lib")
@@ -137,9 +140,9 @@ update_status ModulePhysics3D::Update(float dt)
 		//Create a Sphere with debug mode
 		if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		{
-			Sphere s(1);
+			_Sphere s(1);
 			s.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-			AddBody(((Primitive*)&s), DINAMIC_SPHERE);
+			AddBody(((_Primitive*)&s), DINAMIC_SPHERE);
 		}
 
 		//Create a Cube with debug mode
@@ -147,23 +150,23 @@ update_status ModulePhysics3D::Update(float dt)
 		{
 			Cube c(0.5f,0.5f,0.5f);
 			c.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-			AddBody(((Primitive*)&c), DINAMIC_CUBE);
+			AddBody(((_Primitive*)&c), DINAMIC_CUBE);
 		}
 
 		//Create a Plane with debug mode
 		if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 		{
-			Plane p(0, 1.0f, 0,0);
+			_Plane p(0, 1.0f, 0,0);
 			p.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-			AddBody(((Primitive*)&p), DINAMIC_PLANE);
+			AddBody(((_Primitive*)&p), DINAMIC_PLANE);
 		}
 
 		//Create a Cylinder with debug mode
 		if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 		{
-			Cylinder c(1.0f, 0.5f);
+			_Cylinder c(1.0f, 0.5f);
 			c.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-			AddBody(((Primitive*)&c), DINAMIC_CYLINDER);
+			AddBody(((_Primitive*)&c), DINAMIC_CYLINDER);
 		}
 
 	}
@@ -215,16 +218,16 @@ bool ModulePhysics3D::CleanUp()
 }
 
 // Functionality ================================
-PhysBody3D * ModulePhysics3D::AddBody(const Primitive* primitive, OBJECT_TYPE object_type, float mass, BODY_MASK I_am)
+PhysBody3D * ModulePhysics3D::AddBody(const _Primitive* primitive, OBJECT_TYPE object_type, float mass, BODY_MASK I_am)
 {
 	btCollisionShape* colShape = nullptr;
 
 	switch (object_type)
 	{
 	case DINAMIC_CUBE:		case STATIC_CUBE:		case SENSOR_CUBE:		colShape = new btBoxShape(btVector3(((Cube*)primitive)->size.x / 2.0f, ((Cube*)primitive)->size.y / 2.0f, ((Cube*)primitive)->size.z / 2.0f));								break;
-	case DINAMIC_CYLINDER:	case STATIC_CYLINDER:	case SENSOR_CYLINDER:	colShape = new btCylinderShape(btVector3(((Cylinder*)primitive)->radius, ((Cylinder*)primitive)->height, ((Cylinder*)primitive)->radius));									break;
-	case DINAMIC_PLANE:		case STATIC_PLANE:		case SENSOR_PLANE:		colShape = new btStaticPlaneShape(btVector3(((Plane*)primitive)->normal.x, ((Plane*)primitive)->normal.y, ((Plane*)primitive)->normal.z), ((Plane*)primitive)->constant);	break;
-	case DINAMIC_SPHERE:	case STATIC_SPHERE:		case SENSOR_SPHERE:		colShape = new btSphereShape(((Sphere*)primitive)->radius);		break;
+	case DINAMIC_CYLINDER:	case STATIC_CYLINDER:	case SENSOR_CYLINDER:	colShape = new btCylinderShape(btVector3(((_Cylinder*)primitive)->radius, ((_Cylinder*)primitive)->height, ((_Cylinder*)primitive)->radius));									break;
+	case DINAMIC_PLANE:		case STATIC_PLANE:		case SENSOR_PLANE:		colShape = new btStaticPlaneShape(btVector3(((Plane*)primitive)->normal.x, ((Plane*)primitive)->normal.y, ((Plane*)primitive)->normal.z), ((_Plane*)primitive)->constant);	break;
+	case DINAMIC_SPHERE:	case STATIC_SPHERE:		case SENSOR_SPHERE:		colShape = new btSphereShape(((_Sphere*)primitive)->radius);		break;
 	}
 
 	//Set body transform matrix
@@ -279,6 +282,13 @@ PhysBody3D * ModulePhysics3D::AddBody(const Primitive* primitive, OBJECT_TYPE ob
 
 
 	return pbody;
+}
+
+math::Sphere * ModulePhysics3D::CreateCylinder()
+{
+	math::Sphere* new_sphere = new Sphere();
+	
+	return new_sphere;
 }
 
 btPoint2PointConstraint* ModulePhysics3D::Add_P2P_Constraint(btRigidBody& rbA, btRigidBody& rbB, const btVector3& pivotInA, const btVector3& pivotInB)

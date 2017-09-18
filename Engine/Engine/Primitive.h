@@ -24,12 +24,12 @@ enum AXIS {
 	NEG_Z
 };
 
-class Primitive
+class _Primitive
 {
 public:
 
-	Primitive();
-	Primitive(float _posX, float _posY, float _posZ);
+	_Primitive();
+	_Primitive(float _posX, float _posY, float _posZ);
 
 public:
 
@@ -49,10 +49,10 @@ public:
 
 	//Map building functions ------------------------------------------------
 	void			SetPos(float x, float y, float z);
-	void			SetPosFrom(Primitive* origin, float x, float y, float z);
+	void			SetPosFrom(_Primitive* origin, float x, float y, float z);
 	void			SetRotation(float angle, const vec3 &u);
 	void			SetMultiRotation(float x, float y, float z);
-	void			AddAdjacentBody(Primitive* target, float angle, AXIS, float x = 0, float y = 0, float z = 0);
+	void			AddAdjacentBody(_Primitive* target, float angle, AXIS, float x = 0, float y = 0, float z = 0);
 	void			Scale(float x, float y, float z);
 	void			SetColor(const Color& color);
 	PrimitiveTypes	GetType() const;
@@ -61,7 +61,7 @@ public:
 };
 
 // ============================================
-class Cube : public Primitive
+class Cube : public _Primitive
 {
 public:
 
@@ -82,13 +82,13 @@ public:
 };
 
 // ============================================
-class Sphere : public Primitive
+class _Sphere : public _Primitive
 {
 public:
 
-	Sphere();
-	Sphere(float _radius);
-	Sphere(float _radius, float _posX, float _posY, float _posZ);
+	_Sphere();
+	_Sphere(float _radius);
+	_Sphere(float _radius, float _posX, float _posY, float _posZ);
 
 public:
 
@@ -101,13 +101,13 @@ public:
 };
 
 // ============================================
-class Cylinder : public Primitive
+class _Cylinder : public _Primitive
 {
 public:
 
-	Cylinder();
-	Cylinder(float _radius, float _height);
-	Cylinder(float _radius, float _height, float _posX, float _posY, float _posZ);
+	_Cylinder();
+	_Cylinder(float _radius, float _height);
+	_Cylinder(float _radius, float _height, float _posX, float _posY, float _posZ);
 
 public:
 
@@ -121,12 +121,12 @@ public:
 };
 
 // ============================================
-class Line : public Primitive
+class _Line : public _Primitive
 {
 public:
 
-	Line();
-	Line(float x, float _y, float _z);
+	_Line();
+	_Line(float x, float _y, float _z);
 
 public:
 
@@ -140,12 +140,12 @@ public:
 };
 
 // ============================================
-class Plane : public Primitive
+class _Plane : public _Primitive
 {
 public:
 
-	Plane();
-	Plane(float _x, float _y, float _z, float _d);
+	_Plane();
+	_Plane(float _x, float _y, float _z, float _d);
 
 public:
 
