@@ -19,8 +19,8 @@
     <Filter Include="Sources\Tools\Imgui">
       <UniqueIdentifier>{9b539853-c6e5-453b-8105-11ca9c60e654}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Modules\Input">
-      <UniqueIdentifier>{b2a7af03-f4b6-4235-a81c-23a2ee41b7c6}</UniqueIdentifier>
+    <Filter Include="Sources\Scene">
+      <UniqueIdentifier>{9b7b5b08-7a3a-4d01-aa00-c98fa2a1925f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -85,7 +85,10 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModuleInput.h">
-      <Filter>Sources\Modules\Input</Filter>
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Scene.h">
+      <Filter>Sources\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +150,10 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ModuleInput.cpp">
-      <Filter>Sources\Modules\Input</Filter>
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Scene.cpp">
+      <Filter>Sources\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
