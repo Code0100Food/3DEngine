@@ -153,6 +153,7 @@
     <ClInclude Include="Engine\Module.h" />
     <ClInclude Include="Engine\ModuleAudio.h" />
     <ClInclude Include="Engine\ModuleCamera3D.h" />
+    <ClInclude Include="Engine\ModuleConsole.h" />
     <ClInclude Include="Engine\ModuleImgui.h" />
     <ClInclude Include="Engine\ModuleInput.h" />
     <ClInclude Include="Engine\ModulePhysics3D.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="Engine\MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="Engine\ModuleAudio.cpp" />
     <ClCompile Include="Engine\ModuleCamera3D.cpp" />
+    <ClCompile Include="Engine\ModuleConsole.cpp" />
     <ClCompile Include="Engine\ModuleImgui.cpp" />
     <ClCompile Include="Engine\ModuleInput.cpp" />
     <ClCompile Include="Engine\ModulePhysics3D.cpp" />

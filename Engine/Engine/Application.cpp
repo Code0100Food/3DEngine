@@ -7,6 +7,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleImgui.h"
+#include "ModuleConsole.h"
 #include "Scene.h"
 
 // Constructors =================================
@@ -19,6 +20,8 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
 	imgui = new ModuleImgui(this);
+	console = new ModuleConsole(this);
+
 	scene = new Scene(this);
 
 	// The order of calls is very important!
@@ -31,6 +34,7 @@ Application::Application()
 	AddModule(audio);
 	AddModule(physics);
 	AddModule(imgui);
+	AddModule(console);
 
 	// Scenes
 	AddModule(scene);

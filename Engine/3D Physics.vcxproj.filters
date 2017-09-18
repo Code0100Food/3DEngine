@@ -270,6 +270,9 @@
     <ClInclude Include="Engine\MathGeoLib\Geometry\TriangleMesh.h">
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ModuleConsole.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -424,6 +427,9 @@
     </ClCompile>
     <ClCompile Include="Engine\MathGeoLib\Geometry\TriangleMesh.cpp">
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ModuleConsole.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
