@@ -23,4 +23,4 @@ private:
 	ImVec4	clear_color = ImColor(255, 255, 255);
 
 };
-#endif // !_ModuleImgui_H_
+#endif // _ModuleImgui_H_

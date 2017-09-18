@@ -226,7 +226,7 @@ PhysBody3D * ModulePhysics3D::AddBody(const _Primitive* primitive, OBJECT_TYPE o
 	{
 	case DINAMIC_CUBE:		case STATIC_CUBE:		case SENSOR_CUBE:		colShape = new btBoxShape(btVector3(((Cube*)primitive)->size.x / 2.0f, ((Cube*)primitive)->size.y / 2.0f, ((Cube*)primitive)->size.z / 2.0f));								break;
 	case DINAMIC_CYLINDER:	case STATIC_CYLINDER:	case SENSOR_CYLINDER:	colShape = new btCylinderShape(btVector3(((_Cylinder*)primitive)->radius, ((_Cylinder*)primitive)->height, ((_Cylinder*)primitive)->radius));									break;
-	case DINAMIC_PLANE:		case STATIC_PLANE:		case SENSOR_PLANE:		colShape = new btStaticPlaneShape(btVector3(((Plane*)primitive)->normal.x, ((Plane*)primitive)->normal.y, ((Plane*)primitive)->normal.z), ((_Plane*)primitive)->constant);	break;
+	case DINAMIC_PLANE:		case STATIC_PLANE:		case SENSOR_PLANE:		colShape = new btStaticPlaneShape(btVector3(((_Plane*)primitive)->normal.x, ((_Plane*)primitive)->normal.y, ((_Plane*)primitive)->normal.z), ((_Plane*)primitive)->constant);	break;
 	case DINAMIC_SPHERE:	case STATIC_SPHERE:		case SENSOR_SPHERE:		colShape = new btSphereShape(((_Sphere*)primitive)->radius);		break;
 	}
 
@@ -276,6 +276,7 @@ PhysBody3D * ModulePhysics3D::AddBody(const _Primitive* primitive, OBJECT_TYPE o
 	PhysBody3D* pbody = new PhysBody3D(body);
 	if (object_type == SENSOR_CUBE || object_type == SENSOR_SPHERE || object_type == SENSOR_CYLINDER || object_type == SENSOR_PLANE)pbody->SetAsSensor(true);
 	bodies.push_back(pbody);
+	
 	//Put body pointers in user & world data
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
@@ -286,7 +287,7 @@ PhysBody3D * ModulePhysics3D::AddBody(const _Primitive* primitive, OBJECT_TYPE o
 
 math::Sphere * ModulePhysics3D::CreateCylinder()
 {
-	math::Sphere* new_sphere = new Sphere();
+	math::Sphere* new_sphere = new math::Sphere();
 	
 	return new_sphere;
 }

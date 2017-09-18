@@ -19,10 +19,8 @@ public:
 
 public: 
 
-	math::Clock clock;
-	//math::LCG* test = nullptr;
-
-	/*Scene data*/
+	math::LCG*	rand_num_generator = nullptr;
+	std::string	rand_num_string = "NaN";
 
 };
 #endif
