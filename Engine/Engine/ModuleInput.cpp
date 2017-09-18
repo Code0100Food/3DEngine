@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleConsole.h"
 
 #define MAX_KEYS 300
 
@@ -90,6 +91,13 @@ update_status ModuleInput::PreUpdate(float dt)
 	{
 		switch(e.type)
 		{
+			case SDL_KEYDOWN:
+			if (e.key.keysym.scancode == SDL_SCANCODE_GRAVE)
+			{
+				App->console->SwapConsoleState();
+			}
+			break;
+			
 			case SDL_MOUSEWHEEL:
 			mouse_z = e.wheel.y;
 			break;

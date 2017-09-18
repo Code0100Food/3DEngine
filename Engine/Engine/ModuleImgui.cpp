@@ -21,7 +21,7 @@ bool ModuleImgui::Start()
 	debug_text = false;
 #endif
 	
-	clear_color = ImColor(144, 244, 255, 200);
+	clear_color = ImColor(144, 044, 155, 200);
 	
 	ImGui::GetStyle().Alpha = 1.0;
 	ImGui::GetStyle().WindowTitleAlign = ImVec2(0.5, 0.5);

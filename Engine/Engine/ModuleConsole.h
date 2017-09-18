@@ -15,5 +15,16 @@ public:
 	bool			Start()final;
 	update_status	Update(float dt)final;
 
+private:
+
+	/*Console Data*/
+	std::string console_buffer;
+	bool		open = true;
+
+public:
+
+	// Functionality --------
+	void SwapConsoleState();
+
 };
 #endif // !_CONSOLE_H_
