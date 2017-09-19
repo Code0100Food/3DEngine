@@ -21,9 +21,24 @@ public:
 	ModuleInput(Application* app, bool start_enabled = true);
 	~ModuleInput();
 
+public:
+
 	bool			Init();
 	update_status	PreUpdate(float dt);
 	bool			CleanUp();
+
+public:
+
+	int last_key_pressed = -1;
+
+	char GetLastKeyStr()const
+	{
+		if (last_key_pressed == -1)return '/0';
+		/*char bf[2];
+		itoa(last_key_pressed, bf, 10);*/
+
+		return '0' + last_key_pressed;
+	}
 
 	KEY_STATE GetKey(int id) const
 	{

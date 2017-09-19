@@ -68,6 +68,8 @@ private:
 
 };
 
+extern Application* _Application;
+
 #endif // !_APPLICATION_H_
 
 

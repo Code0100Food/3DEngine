@@ -17,13 +17,15 @@ enum main_states
 	MAIN_EXIT
 };
 
+Application* _Application = NULL;
+
 int main(int argc, char ** argv)
 {
 	LOG("Starting game '%s'...", TITLE);
 
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
-	Application* App = NULL;
+
 
 	while (state != MAIN_EXIT)
 	{
@@ -32,14 +34,14 @@ int main(int argc, char ** argv)
 		case MAIN_CREATION:
 
 			LOG("-------------- Application Creation --------------");
-			App = new Application();
+			_Application = new Application();
 			state = MAIN_START;
 			break;
 
 		case MAIN_START:
 
 			LOG("-------------- Application Init --------------");
-			if (App->Init() == false)
+			if (_Application->Init() == false)
 			{
 				LOG("Application Init exits with ERROR");
 				state = MAIN_EXIT;
@@ -54,7 +56,7 @@ int main(int argc, char ** argv)
 
 		case MAIN_UPDATE:
 		{
-			update_status update_return = App->Update();
+			update_status update_return = _Application->Update();
 
 			if (update_return == UPDATE_ERROR)
 			{
@@ -72,7 +74,7 @@ int main(int argc, char ** argv)
 		case MAIN_FINISH:
 
 			LOG("-------------- Application CleanUp --------------");
-			if (App->CleanUp() == false)
+			if (_Application->CleanUp() == false)
 			{
 				LOG("Application CleanUp exits with ERROR");
 			}
@@ -88,7 +90,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	RELEASE(App);
+	RELEASE(_Application);
 
 	LOG("Exiting '%s'...\n", TITLE);
 

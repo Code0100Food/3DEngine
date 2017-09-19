@@ -20,7 +20,7 @@ private:
 
 	/*Console Data*/
 	std::string console_buffer;
-	bool		open = true;
+	bool		open = false;
 
 public:
 

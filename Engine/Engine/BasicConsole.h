@@ -202,13 +202,13 @@ struct BasicConsole
 		{
 		case ImGuiInputTextFlags_CallbackAlways:
 		{
-			LOG("ALL_BACK!");
-			static_buffer = "hola";
-			InputBuf[0] = 'h';
-			InputBuf[1] = 'h';
-			InputBuf[2] = 'h';
-			InputBuf[3] = 'h';
-			
+			if (_Application->input->last_key_pressed != -1)
+			{
+				char c = _Application->input->GetLastKeyStr();
+				static_buffer.push_back('g');
+				//strcat(static_buffer.c_str(), _Application->input->GetLastKeyStr());
+				//static_buffer += _Application->input->GetLastKeyStr();
+			}			
 		}
 		break;
 

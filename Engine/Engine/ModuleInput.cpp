@@ -39,6 +39,7 @@ update_status ModuleInput::PreUpdate(float dt)
 {
 	SDL_PumpEvents();
 
+	last_key_pressed = -1;
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 	
 	for(int i = 0; i < MAX_KEYS; ++i)
@@ -98,9 +99,15 @@ update_status ModuleInput::PreUpdate(float dt)
 			}
 			case SDL_EventType::SDL_TEXTINPUT:
 			{
-				ImWchar id = e.key.keysym.scancode;
-				if (id < 256)ImGui::GetIO().AddInputCharacter(id);
-				ImGui::GetIO().WantTextInput = true;
+				int id = e.key.keysym.scancode;
+				if (id < 256 && id > 0)
+				{
+					last_key_pressed = id;
+				}
+				
+				//ImWchar id = e.key.keysym.scancode;
+				/*if (id < 256)ImGui::GetIO().AddInputCharacter(id);
+				ImGui::GetIO().WantTextInput = true;*/
 			}
 			break;
 			
