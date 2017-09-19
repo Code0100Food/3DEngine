@@ -56,6 +56,9 @@ bool Scene::Start()
 	tri_b.b.Set(0, 0, 0);
 	tri_b.c.Set(0, 0, 0);
 
+	plane_a.Set({ 0,0,0 }, { 0,0,0 });
+	plane_b.Set({ 0,0,0 }, { 0,0,0 });
+
 	return true;
 }
 
@@ -97,9 +100,6 @@ update_status Scene::Update(float dt)
 	ImGui::Begin("Primitives", &open, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
 	
 
-	//Primitives Test
-	//if (ImGui::BeginMenu("Vectors")) { ImGui::EndMenu(); };
-	
 	//Vectors
 	if (ImGui::CollapsingHeader("Vectors", false))
 	{
@@ -150,7 +150,7 @@ update_status Scene::Update(float dt)
 				capsule_1 = false;
 				aabb_1 = false;
 				triangle_1 = false;
-				frustrum_1 = false;
+				plane_1 = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::TreeNode("Sphere##node"))
@@ -170,7 +170,7 @@ update_status Scene::Update(float dt)
 				sphere_1 = false;
 				aabb_1 = false;
 				triangle_1 = false;
-				frustrum_1 = false;
+				plane_1 = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::TreeNode("Capsule##node"))
@@ -201,7 +201,7 @@ update_status Scene::Update(float dt)
 				sphere_1 = false;
 				capsule_1 = false;
 				triangle_1 = false;
-				frustrum_1 = false;
+				plane_1 = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::TreeNode("AABB##node"))
@@ -238,7 +238,7 @@ update_status Scene::Update(float dt)
 				sphere_1 = false;
 				capsule_1 = false;
 				aabb_1 = false;
-				frustrum_1 = false;
+				plane_1 = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::TreeNode("Triangle##node"))
@@ -273,6 +273,40 @@ update_status Scene::Update(float dt)
 				ImGui::TreePop();
 			}
 
+			//Plane
+			if (ImGui::Checkbox("##plane1", &plane_1))
+			{
+				sphere_1 = false;
+				capsule_1 = false;
+				aabb_1 = false;
+				triangle_1 = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode("Plane##node"))
+			{
+				ImGui::Text("Point");
+				ImGui::SameLine(0, 100);
+				ImGui::Text("Normal");
+
+				static math::float3 tmp_point = { 0,0,0 };
+
+				ImGui::PushItemWidth(100);
+				ImGui::InputFloat("X##9", &tmp_point.x , 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("X##9", &plane_a.normal.x, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Y##9", &tmp_point.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Y##9", &plane_a.normal.y, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Z##9", &tmp_point.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Z##9", &plane_a.normal.z, 0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+
+				ImGui::TreePop();
+			}
+
 			ImGui::TreePop();
 		}
 
@@ -284,7 +318,7 @@ update_status Scene::Update(float dt)
 				capsule_2 = false;
 				aabb_2 = false;
 				triangle_2 = false;
-				frustrum_2 = false;
+				plane_2 = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::TreeNode("Sphere##node2"))
@@ -304,7 +338,7 @@ update_status Scene::Update(float dt)
 				sphere_2 = false;
 				aabb_2 = false;
 				triangle_2 = false;
-				frustrum_2 = false;
+				plane_2 = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::TreeNode("Capsule##node2"))
@@ -334,7 +368,7 @@ update_status Scene::Update(float dt)
 				sphere_2 = false;
 				capsule_2 = false;
 				triangle_2 = false;
-				frustrum_2 = false;
+				plane_2 = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::TreeNode("AABB##node2"))
@@ -371,7 +405,7 @@ update_status Scene::Update(float dt)
 				sphere_2 = false;
 				capsule_2 = false;
 				aabb_2 = false;
-				frustrum_2 = false;
+				plane_2 = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::TreeNode("Triangle##node2"))
@@ -406,6 +440,40 @@ update_status Scene::Update(float dt)
 				ImGui::TreePop();
 			}
 
+			//Plane 2
+			if (ImGui::Checkbox("##plane1", &plane_2))
+			{
+				sphere_2 = false;
+				capsule_2 = false;
+				aabb_2 = false;
+				triangle_2 = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode("Plane##node2"))
+			{
+				ImGui::Text("Point");
+				ImGui::SameLine(0, 100);
+				ImGui::Text("Normal");
+
+				static math::float3 tmp_point = { 0,0,0 };
+
+				ImGui::PushItemWidth(100);
+				ImGui::InputFloat("X##10", &tmp_point.x, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("X##10", &plane_b.normal.x, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Y##10", &tmp_point.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Y##10", &plane_b.normal.y, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Z##10", &tmp_point.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Z##10", &plane_b.normal.z, 0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+
+				ImGui::TreePop();
+			}
+
 			ImGui::TreePop();
 		}
 
@@ -435,6 +503,11 @@ update_status Scene::Update(float dt)
 					if (sphere_a.Intersects(tri_b)) collide_test = "true";
 					else collide_test = "false";
 				}
+				if (plane_2)
+				{
+					if (sphere_a.Intersects(plane_b)) collide_test = "true";
+					else collide_test = "false";
+				}
 			}
 			if (capsule_1)
 			{
@@ -456,6 +529,11 @@ update_status Scene::Update(float dt)
 				if (triangle_2)
 				{
 					if (capsule_a.Intersects(tri_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (plane_2)
+				{
+					if (capsule_a.Intersects(plane_b)) collide_test = "true";
 					else collide_test = "false";
 				}
 			}
@@ -481,6 +559,11 @@ update_status Scene::Update(float dt)
 					if (box_a.Intersects(tri_b)) collide_test = "true";
 					else collide_test = "false";
 				}
+				if (plane_2)
+				{
+					if (box_a.Intersects(plane_b)) collide_test = "true";
+					else collide_test = "false";
+				}
 			}
 			if (triangle_1)
 			{
@@ -504,8 +587,40 @@ update_status Scene::Update(float dt)
 					if (tri_a.Intersects(tri_b)) collide_test = "true";
 					else collide_test = "false";
 				}
+				if (plane_2)
+				{
+					if (tri_a.Intersects(plane_b)) collide_test = "true";
+					else collide_test = "false";
+				}
 			}
-
+			if (plane_1)
+			{
+				if (sphere_2)
+				{
+					if (plane_a.Intersects(sphere_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (capsule_2)
+				{
+					if (plane_a.Intersects(capsule_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (aabb_2)
+				{
+					if (plane_a.Intersects(box_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (triangle_2)
+				{
+					if (plane_a.Intersects(tri_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (plane_2)
+				{
+					if (plane_a.Intersects(plane_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+			}
 		}
 		ImGui::SameLine();
 		ImGui::Text("%s", collide_test.c_str());

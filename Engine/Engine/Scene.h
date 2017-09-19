@@ -40,13 +40,13 @@ public:
 	bool capsule_1 = false;
 	bool aabb_1 = false;
 	bool triangle_1 = false;
-	bool frustrum_1 = false;
+	bool plane_1 = false;
 
 	bool sphere_2 = false;
 	bool capsule_2 = false;
 	bool aabb_2 = false;
 	bool triangle_2 = false;
-	bool frustrum_2 = false;
+	bool plane_2 = false;
 
 	math::Sphere sphere_a;
 	math::Sphere sphere_b;
@@ -60,6 +60,8 @@ public:
 	math::Triangle tri_a;
 	math::Triangle tri_b;
 
+	math::Plane plane_a;
+	math::Plane plane_b;
 
 	std::string collide_test;
 	
