@@ -47,6 +47,9 @@ public:
 	math::Sphere sphere_a;
 	math::Sphere sphere_b;
 
+	math::Capsule capsule_a;
+	math::Capsule capsule_b;
+
 	std::string collide_test;
 	
 

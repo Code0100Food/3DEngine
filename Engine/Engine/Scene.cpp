@@ -37,6 +37,13 @@ bool Scene::Start()
 	sphere_b.pos = { 0,0,0 };
 	sphere_b.r = 0.0f;
 
+	capsule_a.r = 0.0f;
+	capsule_a.l.a.Set(0, 0, 0);
+	capsule_a.l.b.Set(0, 0, 0);
+
+	capsule_b.r = 0.0f;
+	capsule_b.l.a.Set(0, 0, 0);
+	capsule_b.l.b.Set(0, 0, 0);
 
 	return true;
 }
@@ -155,6 +162,23 @@ update_status Scene::Update(float dt)
 			ImGui::SameLine();
 			if (ImGui::TreeNode("Capsule##node"))
 			{
+
+				ImGui::PushItemWidth(100);
+				ImGui::InputFloat("A X##4", &capsule_a.l.a.x, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("B Z##4", &capsule_a.l.b.x, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("A Y##4", &capsule_a.l.a.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("B Z##4", &capsule_a.l.b.y, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("A Z##4", &capsule_a.l.a.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("B Z##4", &capsule_a.l.b.z, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Radius", &capsule_a.r, 0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+
 				ImGui::TreePop();
 			}
 			
@@ -174,11 +198,32 @@ update_status Scene::Update(float dt)
 				ImGui::InputFloat("X##3", &sphere_b.pos.x, 0.1, 1.0, 2);
 				ImGui::InputFloat("Y##3", &sphere_b.pos.y, 0.1, 1.0, 2);
 				ImGui::InputFloat("Z##3", &sphere_b.pos.z, 0.1, 1.0, 2);
-				ImGui::InputFloat("Radius##1", &sphere_a.r, 0.1, 1.0, 2);
+				ImGui::InputFloat("Radius##1", &sphere_b.r, 0.1, 1.0, 2);
 				ImGui::PopItemWidth();
 				ImGui::TreePop();
 			}
 
+			if (ImGui::TreeNode("Capsule##node2"))
+			{
+
+				ImGui::PushItemWidth(100);
+				ImGui::InputFloat("A X##5", &capsule_b.l.a.x, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("B Z##5", &capsule_b.l.b.x, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("A Y##5", &capsule_b.l.a.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("B Z##5", &capsule_b.l.b.y, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("A Z##5", &capsule_b.l.a.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("B Z##5", &capsule_b.l.b.z, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Radius", &capsule_b.r, 0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+
+				ImGui::TreePop();
+			}
 			
 			ImGui::TreePop();
 		}
@@ -194,7 +239,17 @@ update_status Scene::Update(float dt)
 					if (sphere_a.Intersects(sphere_b)) collide_test = "true";
 					else collide_test = "false";
 				}
+
 			}
+			if (capsule_1)
+			{
+				if (sphere_2)
+				{
+					if(capsule_a.Intersects(sphere_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+			}
+
 		}
 		ImGui::SameLine();
 		ImGui::Text("%s", collide_test.c_str());
