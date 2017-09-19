@@ -31,5 +31,8 @@ public:
 	math::Line line_a;
 	math::Line line_b;
 
+	float	   dot_product = 0;
+	math::Line cross_product;
+
 };
 #endif

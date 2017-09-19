@@ -25,6 +25,12 @@ bool Scene::Start()
 	line_a.pos = { 0,0,0 };
 	line_a.dir = { 0,0,0 };
 
+	line_b.pos = { 0,0,0 };
+	line_b.dir = { 0,0,0 };
+
+	cross_product.pos = { 0,0,0 };
+	cross_product.dir = { 0,0,0 };
+
 	return true;
 }
 
@@ -65,8 +71,56 @@ update_status Scene::Update(float dt)
 	ImGui::SetNextWindowSize(ImVec2(400, 400));
 	ImGui::Begin("Primitives", &open, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
 	
+
 	//Primitives Test
-	ImGui::InputFloat("X", &line_a.pos.x, 0.1, 1.0);
+	//if (ImGui::BeginMenu("Vectors")) { ImGui::EndMenu(); };
+	
+	//Vectors
+	if (ImGui::CollapsingHeader("Vectors", false))
+	{
+		ImGui::Text("Vector 1");
+		ImGui::SameLine(120);
+		ImGui::Text("Vector 2");
+
+		ImGui::PushItemWidth(100);
+		ImGui::InputFloat("X", &line_a.dir.x, 0.1, 1.0, 2);
+		ImGui::SameLine();
+		ImGui::InputFloat("X##1", &line_b.dir.x, 0.1, 1.0, 2);
+
+		ImGui::InputFloat("Y", &line_a.dir.y, 0.1, 1.0, 2);
+		ImGui::SameLine();
+		ImGui::InputFloat("Y##1", &line_b.dir.y, 0.1, 1.0, 2);
+
+		ImGui::InputFloat("Z", &line_a.dir.z, 0.1, 1.0, 2);
+		ImGui::SameLine();
+		ImGui::InputFloat("Z##1", &line_b.dir.z, 0.1, 1.0, 2);
+		ImGui::PopItemWidth();
+
+		if (ImGui::Button("Dot Product", ImVec2(100, 20)))
+		{
+			dot_product = line_a.dir.Dot(line_b.dir);
+		}
+
+		ImGui::SameLine();
+		ImGui::Text("%.2f", dot_product);
+
+		if (ImGui::Button("Cross Product", ImVec2(100, 20)))
+		{
+			cross_product.dir = line_a.dir.Cross(line_b.dir);
+		}
+
+		ImGui::SameLine();
+		ImGui::Text(" X: %.2f Y: %.2f Z: %.2f", cross_product.dir.x, cross_product.dir.y, cross_product.dir.z);
+
+
+	}
+
+	//Spheres
+	if (ImGui::CollapsingHeader("Spheres", false))
+	{
+
+	}
+	
 	//ImGui::Text("Line A: Pos(%.2f,%.2f,%.2f) || Dir(%.2f, %.2f, %.2f)", line_a.pos.x, line_a.pos.y, line_a.pos.z, line_a.dir.x, line_a.dir.y, line_a.dir.z);
 	
 	ImGui::End();
