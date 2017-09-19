@@ -21,6 +21,10 @@ bool Scene::Start()
 	//Starts the random number generator
 	rand_num_generator = new math::LCG((u32)5);
 
+	//Initialize all the primitives
+	line_a.pos = { 0,0,0 };
+	line_a.dir = { 0,0,0 };
+
 	return true;
 }
 
@@ -57,24 +61,14 @@ update_status Scene::Update(float dt)
 	ImGui::End();
 
 	//Primitives output window
-	ImGui::SetNextWindowPos(ImVec2(1070, 100));
-	ImGui::SetNextWindowSize(ImVec2(200, 100));
+	ImGui::SetNextWindowPos(ImVec2(850, 100));
+	ImGui::SetNextWindowSize(ImVec2(400, 400));
 	ImGui::Begin("Primitives", &open, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
 	
 	//Primitives Test
+	ImGui::InputFloat("X", &line_a.pos.x, 0.1, 1.0);
+	//ImGui::Text("Line A: Pos(%.2f,%.2f,%.2f) || Dir(%.2f, %.2f, %.2f)", line_a.pos.x, line_a.pos.y, line_a.pos.z, line_a.dir.x, line_a.dir.y, line_a.dir.z);
 	
-	math::Sphere* test = App->physics->CreateSphere({ 0,0,0 }, 5);
-	math::Sphere* test_2 = App->physics->CreateSphere({ 2,2,2 }, 5);
-
-
-	ImGui::LabelText("SPHERE", "Value");
-	ImGui::LabelText("SPHERE", "Value");
-
-	if (test->Intersects(*test_2))
-	{
-		ImGui::Text("Intersects");
-	}
-
 	ImGui::End();
 
 	return update_status::UPDATE_CONTINUE;
