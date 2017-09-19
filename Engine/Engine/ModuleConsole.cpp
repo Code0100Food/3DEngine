@@ -23,8 +23,10 @@ bool ModuleConsole::Start()
 
 update_status ModuleConsole::Update(float dt)
 {
-	bool open = true;
-	ShowExampleAppConsole(&open);
+	if (open)
+	{
+		console._Draw("Console", &open);
+	}
 
 	return update_status::UPDATE_CONTINUE;
 }

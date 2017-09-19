@@ -24,9 +24,12 @@ private:
 
 public:
 
+	BasicConsole console;
+
+public:
+	
 	// Functionality --------
 	void SwapConsoleState();
-
-
+	
 };
 #endif // !_CONSOLE_H_

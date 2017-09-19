@@ -30,7 +30,7 @@ struct BasicConsole
 		Commands.push_back("HISTORY");
 		Commands.push_back("CLEAR");
 		Commands.push_back("CLASSIFY");  // "classify" is here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
-		AddLog("Welcome to ImGui!");
+		AddLog("--- Console Ready!");
 	}
 	~BasicConsole()
 	{
@@ -66,17 +66,13 @@ struct BasicConsole
 
 	void    _Draw(const char* title, bool* p_open)
 	{
-		ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-		if (!ImGui::Begin(title, p_open))
+		ImGui::SetNextWindowSize(ImVec2(520, 300), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(0, 1000), ImGuiCond_FirstUseEver);
+		if (!ImGui::Begin(title, p_open,ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar))
 		{
 			ImGui::End();
 			return;
 		}
-
-		ImGui::TextWrapped("This example implements a console with basic coloring, completion and history. A more elaborate implementation may want to store entries along with extra data such as timestamp, emitter, etc.");
-		ImGui::TextWrapped("Enter 'HELP' for help, press TAB to use text completion.");
-
-		// TODO: display items starting from the bottom
 
 		if (ImGui::SmallButton("Add Dummy Text")) { AddLog("%d some text", Items.Size); AddLog("some more text"); AddLog("display very important message here!"); } ImGui::SameLine();
 		if (ImGui::SmallButton("Add Dummy Error")) AddLog("[error] something went wrong"); ImGui::SameLine();
@@ -87,11 +83,11 @@ struct BasicConsole
 
 		ImGui::Separator();
 
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 		static ImGuiTextFilter filter;
-		filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
+		//filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
 		ImGui::PopStyleVar();
-		ImGui::Separator();
+		//ImGui::Separator();
 
 		ImGui::BeginChild("ScrollingRegion", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()), false, ImGuiWindowFlags_HorizontalScrollbar);
 		if (ImGui::BeginPopupContextWindow())
@@ -145,7 +141,7 @@ struct BasicConsole
 				ExecCommand(InputBuf);
 			strcpy(InputBuf, "");*/
 		}
-		ImGui::Text(InputBuf);
+		//ImGui::Text(InputBuf);
 
 		// Demonstrate keeping auto focus on the input box
 		if (ImGui::IsItemHovered() || (ImGui::IsRootWindowOrAnyChildFocused() && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0)))
