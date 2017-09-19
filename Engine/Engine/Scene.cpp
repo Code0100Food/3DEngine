@@ -31,6 +31,13 @@ bool Scene::Start()
 	cross_product.pos = { 0,0,0 };
 	cross_product.dir = { 0,0,0 };
 
+	sphere_a.pos = { 0,0,0 };
+	sphere_a.r = 0.0f;
+
+	sphere_b.pos = { 0,0,0 };
+	sphere_b.r = 0.0f;
+
+
 	return true;
 }
 
@@ -111,14 +118,86 @@ update_status Scene::Update(float dt)
 
 		ImGui::SameLine();
 		ImGui::Text(" X: %.2f Y: %.2f Z: %.2f", cross_product.dir.x, cross_product.dir.y, cross_product.dir.z);
-
-
 	}
 
 	//Spheres
-	if (ImGui::CollapsingHeader("Spheres", false))
+	if (ImGui::CollapsingHeader("Intersection Test", false))
 	{
+		
+		if (ImGui::TreeNode("Test Item 1"))
+		{
+			if (ImGui::Checkbox("##sphere1", &sphere_1))
+			{
+				capsule_1 = false;
+				aabb_1 = false;
+				cylinder_1 = false;
+				frustrum_1 = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode("Sphere##node"))
+			{
+				ImGui::PushItemWidth(100);
+				ImGui::InputFloat("X##2", &sphere_a.pos.x, 0.1, 1.0, 2);
+				ImGui::InputFloat("Y##2", &sphere_a.pos.y, 0.1, 1.0, 2);
+				ImGui::InputFloat("Z##2", &sphere_a.pos.z, 0.1, 1.0, 2);
+				ImGui::InputFloat("Radius", &sphere_a.r,   0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+				ImGui::TreePop();
+			}
 
+			if (ImGui::Checkbox("##capsule1", &capsule_1))
+			{
+				sphere_1 = false;
+				aabb_1 = false;
+				cylinder_1 = false;
+				frustrum_1 = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode("Capsule##node"))
+			{
+				ImGui::TreePop();
+			}
+			
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Test Item 2"))
+		{
+			if (ImGui::Checkbox("##sphere2", &sphere_2))
+			{
+				LOG("%i", sphere_2);
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode("Sphere##node2"))
+			{
+				ImGui::PushItemWidth(100);
+				ImGui::InputFloat("X##3", &sphere_b.pos.x, 0.1, 1.0, 2);
+				ImGui::InputFloat("Y##3", &sphere_b.pos.y, 0.1, 1.0, 2);
+				ImGui::InputFloat("Z##3", &sphere_b.pos.z, 0.1, 1.0, 2);
+				ImGui::InputFloat("Radius##1", &sphere_a.r, 0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+				ImGui::TreePop();
+			}
+
+			
+			ImGui::TreePop();
+		}
+
+
+
+		if (ImGui::Button("Collide?"))
+		{
+			if (sphere_1)
+			{
+				if (sphere_2)
+				{
+					if (sphere_a.Intersects(sphere_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+			}
+		}
+		ImGui::SameLine();
+		ImGui::Text("%s", collide_test.c_str());
 	}
 	
 	//ImGui::Text("Line A: Pos(%.2f,%.2f,%.2f) || Dir(%.2f, %.2f, %.2f)", line_a.pos.x, line_a.pos.y, line_a.pos.z, line_a.dir.x, line_a.dir.y, line_a.dir.z);

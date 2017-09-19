@@ -28,11 +28,27 @@ public:
 	float		random_float = 0;
 
 	// Primitives Screen
+	//Vector
 	math::Line line_a;
 	math::Line line_b;
 
 	float	   dot_product = 0;
 	math::Line cross_product;
+
+	//Spheres
+	bool sphere_1 = false;
+	bool capsule_1 = false;
+	bool aabb_1 = false;
+	bool cylinder_1 = false;
+	bool frustrum_1 = false;
+
+	bool sphere_2 = false;
+
+	math::Sphere sphere_a;
+	math::Sphere sphere_b;
+
+	std::string collide_test;
+	
 
 };
 #endif
