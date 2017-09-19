@@ -2,6 +2,7 @@
 #define _CONSOLE_H_
 
 #include "Module.h"
+#include "BasicConsole.h"
 
 class ModuleConsole : public Module
 {
@@ -25,6 +26,7 @@ public:
 
 	// Functionality --------
 	void SwapConsoleState();
+
 
 };
 #endif // !_CONSOLE_H_

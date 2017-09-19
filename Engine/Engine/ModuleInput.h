@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "Globals.h"
-
+#include "imgui/imgui.h"
 #define MAX_MOUSE_BUTTONS 5
 
 enum KEY_STATE
@@ -62,14 +62,15 @@ public:
 
 private:
 
-	KEY_STATE* keyboard;
-	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
-	int mouse_x;
-	int mouse_y;
-	int mouse_z;
-	int mouse_x_motion;
-	int mouse_y_motion;
-	//int mouse_z_motion;
+	KEY_STATE*	keyboard = nullptr;
+	KEY_STATE	mouse_buttons[MAX_MOUSE_BUTTONS];
+	int			mouse_x = 0;
+	int			mouse_y = 0;
+	int			mouse_z = 0;
+	int			mouse_x_motion = 0;
+	int			mouse_y_motion = 0;
+	int			mouse_z_motion = 0;
+
 };
 
 #endif // !_MODULE_INPUT_H_

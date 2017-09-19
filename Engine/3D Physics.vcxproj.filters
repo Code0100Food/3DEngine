@@ -37,6 +37,9 @@
     <Filter Include="Sources\Tools\MathGeoLib\Time">
       <UniqueIdentifier>{899f36bf-64d1-47e5-b96f-0140ea72e9e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\Console">
+      <UniqueIdentifier>{c5082f5b-7f74-4e45-8b79-5a3052a5a3b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Color.h">
@@ -271,7 +274,10 @@
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModuleConsole.h">
-      <Filter>Sources\Modules</Filter>
+      <Filter>Sources\Modules\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\BasicConsole.h">
+      <Filter>Sources\Modules\Console</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -318,9 +324,6 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="Engine\imgui\imgui.cpp">
-      <Filter>Sources\Tools\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\imgui\imgui_demo.cpp">
       <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\imgui\imgui_draw.cpp">
@@ -429,7 +432,10 @@
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ModuleConsole.cpp">
-      <Filter>Sources\Modules</Filter>
+      <Filter>Sources\Modules\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\imgui\imgui_demo.cpp">
+      <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -96,6 +96,12 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				App->console->SwapConsoleState();
 			}
+			case SDL_EventType::SDL_TEXTINPUT:
+			{
+				ImWchar id = e.key.keysym.scancode;
+				if (id < 256)ImGui::GetIO().AddInputCharacter(id);
+				ImGui::GetIO().WantTextInput = true;
+			}
 			break;
 			
 			case SDL_MOUSEWHEEL:
