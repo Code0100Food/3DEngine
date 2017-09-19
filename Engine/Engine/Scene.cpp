@@ -48,6 +48,14 @@ bool Scene::Start()
 	box_a.SetFromCenterAndSize({ 0,0,0 }, { 0,0,0 });
 	box_b.SetFromCenterAndSize({ 0,0,0 }, { 0,0,0 });
 
+	tri_a.a.Set(0, 0, 0);
+	tri_a.b.Set(0, 0, 0);
+	tri_a.c.Set(0, 0, 0);
+
+	tri_b.a.Set(0, 0, 0);
+	tri_b.b.Set(0, 0, 0);
+	tri_b.c.Set(0, 0, 0);
+
 	return true;
 }
 
@@ -141,7 +149,7 @@ update_status Scene::Update(float dt)
 			{
 				capsule_1 = false;
 				aabb_1 = false;
-				cylinder_1 = false;
+				triangle_1 = false;
 				frustrum_1 = false;
 			}
 			ImGui::SameLine();
@@ -161,7 +169,7 @@ update_status Scene::Update(float dt)
 			{
 				sphere_1 = false;
 				aabb_1 = false;
-				cylinder_1 = false;
+				triangle_1 = false;
 				frustrum_1 = false;
 			}
 			ImGui::SameLine();
@@ -192,7 +200,7 @@ update_status Scene::Update(float dt)
 			{
 				sphere_1 = false;
 				capsule_1 = false;
-				cylinder_1 = false;
+				triangle_1 = false;
 				frustrum_1 = false;
 			}
 			ImGui::SameLine();
@@ -224,6 +232,47 @@ update_status Scene::Update(float dt)
 				ImGui::TreePop();
 			}
 
+			//Triangle
+			if (ImGui::Checkbox("##triangle1", &triangle_1))
+			{
+				sphere_1 = false;
+				capsule_1 = false;
+				aabb_1 = false;
+				frustrum_1 = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode("Triangle##node"))
+			{
+
+				ImGui::Text("A");
+				ImGui::SameLine(0, 100);
+				ImGui::Text("B");
+				ImGui::SameLine(0, 110);
+				ImGui::Text("C");
+
+				ImGui::PushItemWidth(90);
+				ImGui::InputFloat("X##7", &tri_a.a.x, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("X##7", &tri_a.b.x, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("X##7", &tri_a.c.x, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Y##7", &tri_a.a.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Y##7", &tri_a.b.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Y##7", &tri_a.c.y, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Z##7", &tri_a.a.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Z##7", &tri_a.b.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Z##7", &tri_a.c.z, 0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+
+				ImGui::TreePop();
+			}
+
 			ImGui::TreePop();
 		}
 
@@ -234,7 +283,7 @@ update_status Scene::Update(float dt)
 			{
 				capsule_2 = false;
 				aabb_2 = false;
-				cylinder_2 = false;
+				triangle_2 = false;
 				frustrum_2 = false;
 			}
 			ImGui::SameLine();
@@ -254,7 +303,7 @@ update_status Scene::Update(float dt)
 			{
 				sphere_2 = false;
 				aabb_2 = false;
-				cylinder_2 = false;
+				triangle_2 = false;
 				frustrum_2 = false;
 			}
 			ImGui::SameLine();
@@ -280,12 +329,11 @@ update_status Scene::Update(float dt)
 			}
 			
 			//AABB 2
-			//AABB
-			if (ImGui::Checkbox("##box1", &aabb_2))
+			if (ImGui::Checkbox("##box2", &aabb_2))
 			{
 				sphere_2 = false;
 				capsule_2 = false;
-				cylinder_2 = false;
+				triangle_2 = false;
 				frustrum_2 = false;
 			}
 			ImGui::SameLine();
@@ -317,11 +365,52 @@ update_status Scene::Update(float dt)
 				ImGui::TreePop();
 			}
 
+			//Triangle 2
+			if (ImGui::Checkbox("##triangle2", &triangle_2))
+			{
+				sphere_2 = false;
+				capsule_2 = false;
+				aabb_2 = false;
+				frustrum_2 = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode("Triangle##node2"))
+			{
+
+				ImGui::Text("A");
+				ImGui::SameLine(0, 100);
+				ImGui::Text("B");
+				ImGui::SameLine(0, 110);
+				ImGui::Text("C");
+
+				ImGui::PushItemWidth(90);
+				ImGui::InputFloat("X##8", &tri_b.a.x, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("X##8", &tri_b.b.x, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("X##8", &tri_b.c.x, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Y##8", &tri_b.a.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Y##8", &tri_b.b.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Y##8", &tri_b.c.y, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Z##8", &tri_b.a.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Z##8", &tri_b.b.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Z##8", &tri_b.c.z, 0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+
+				ImGui::TreePop();
+			}
+
 			ImGui::TreePop();
 		}
 
 
-
+		//Look for intersections
 		if (ImGui::Button("Collide?"))
 		{
 			if (sphere_1)
@@ -341,7 +430,11 @@ update_status Scene::Update(float dt)
 					if (sphere_a.Intersects(box_b)) collide_test = "true";
 					else collide_test = "false";
 				}
-
+				if (triangle_2)
+				{
+					if (sphere_a.Intersects(tri_b)) collide_test = "true";
+					else collide_test = "false";
+				}
 			}
 			if (capsule_1)
 			{
@@ -360,6 +453,11 @@ update_status Scene::Update(float dt)
 					if (capsule_a.Intersects(box_b)) collide_test = "true";
 					else collide_test = "false";
 				}
+				if (triangle_2)
+				{
+					if (capsule_a.Intersects(tri_b)) collide_test = "true";
+					else collide_test = "false";
+				}
 			}
 			if (aabb_1)
 			{
@@ -376,6 +474,34 @@ update_status Scene::Update(float dt)
 				if (aabb_2)
 				{
 					if (box_a.Intersects(box_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (triangle_2)
+				{
+					if (box_a.Intersects(tri_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+			}
+			if (triangle_1)
+			{
+				if (sphere_2)
+				{
+					if (tri_a.Intersects(sphere_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (capsule_2)
+				{
+					if (tri_a.Intersects(capsule_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (aabb_2)
+				{
+					if (tri_a.Intersects(box_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (triangle_2)
+				{
+					if (tri_a.Intersects(tri_b)) collide_test = "true";
 					else collide_test = "false";
 				}
 			}

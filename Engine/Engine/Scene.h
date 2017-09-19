@@ -39,13 +39,13 @@ public:
 	bool sphere_1 = false;
 	bool capsule_1 = false;
 	bool aabb_1 = false;
-	bool cylinder_1 = false;
+	bool triangle_1 = false;
 	bool frustrum_1 = false;
 
 	bool sphere_2 = false;
 	bool capsule_2 = false;
 	bool aabb_2 = false;
-	bool cylinder_2 = false;
+	bool triangle_2 = false;
 	bool frustrum_2 = false;
 
 	math::Sphere sphere_a;
@@ -56,6 +56,10 @@ public:
 
 	math::AABB box_a;
 	math::AABB box_b;
+
+	math::Triangle tri_a;
+	math::Triangle tri_b;
+
 
 	std::string collide_test;
 	
