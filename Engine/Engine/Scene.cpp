@@ -45,6 +45,9 @@ bool Scene::Start()
 	capsule_b.l.a.Set(0, 0, 0);
 	capsule_b.l.b.Set(0, 0, 0);
 
+	box_a.SetFromCenterAndSize({ 0,0,0 }, { 0,0,0 });
+	box_b.SetFromCenterAndSize({ 0,0,0 }, { 0,0,0 });
+
 	return true;
 }
 
@@ -127,12 +130,13 @@ update_status Scene::Update(float dt)
 		ImGui::Text(" X: %.2f Y: %.2f Z: %.2f", cross_product.dir.x, cross_product.dir.y, cross_product.dir.z);
 	}
 
-	//Spheres
+	//Intersects
 	if (ImGui::CollapsingHeader("Intersection Test", false))
 	{
 		
 		if (ImGui::TreeNode("Test Item 1"))
 		{
+			//Sphere
 			if (ImGui::Checkbox("##sphere1", &sphere_1))
 			{
 				capsule_1 = false;
@@ -152,6 +156,7 @@ update_status Scene::Update(float dt)
 				ImGui::TreePop();
 			}
 
+			//Capsule
 			if (ImGui::Checkbox("##capsule1", &capsule_1))
 			{
 				sphere_1 = false;
@@ -166,11 +171,11 @@ update_status Scene::Update(float dt)
 				ImGui::PushItemWidth(100);
 				ImGui::InputFloat("A X##4", &capsule_a.l.a.x, 0.1, 1.0, 2);
 				ImGui::SameLine();
-				ImGui::InputFloat("B Z##4", &capsule_a.l.b.x, 0.1, 1.0, 2);
+				ImGui::InputFloat("B X##4", &capsule_a.l.b.x, 0.1, 1.0, 2);
 
 				ImGui::InputFloat("A Y##4", &capsule_a.l.a.y, 0.1, 1.0, 2);
 				ImGui::SameLine();
-				ImGui::InputFloat("B Z##4", &capsule_a.l.b.y, 0.1, 1.0, 2);
+				ImGui::InputFloat("B Y##4", &capsule_a.l.b.y, 0.1, 1.0, 2);
 
 				ImGui::InputFloat("A Z##4", &capsule_a.l.a.z, 0.1, 1.0, 2);
 				ImGui::SameLine();
@@ -182,14 +187,55 @@ update_status Scene::Update(float dt)
 				ImGui::TreePop();
 			}
 			
+			//AABB
+			if (ImGui::Checkbox("##box1", &aabb_1))
+			{
+				sphere_1 = false;
+				capsule_1 = false;
+				cylinder_1 = false;
+				frustrum_1 = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode("AABB##node"))
+			{
+				ImGui::Text("Centre");
+				ImGui::SameLine(0,75);
+				ImGui::Text("Size in:");
+
+				static math::float3 tmp = { 0,0,0 };
+				static math::float3 size = { 0,0,0 };
+
+				ImGui::PushItemWidth(100);
+				ImGui::InputFloat("X##6", &tmp.x , 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("X##6", &size.x, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Y##6", &tmp.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Y##6", &size.y, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Z##6", &tmp.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Z##6", &size.z, 0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+
+				box_a.SetFromCenterAndSize(tmp, size);
+
+				ImGui::TreePop();
+			}
+
 			ImGui::TreePop();
 		}
 
 		if (ImGui::TreeNode("Test Item 2"))
 		{
+			//Sphere 2
 			if (ImGui::Checkbox("##sphere2", &sphere_2))
 			{
-				LOG("%i", sphere_2);
+				capsule_2 = false;
+				aabb_2 = false;
+				cylinder_2 = false;
+				frustrum_2 = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::TreeNode("Sphere##node2"))
@@ -203,9 +249,17 @@ update_status Scene::Update(float dt)
 				ImGui::TreePop();
 			}
 
+			//Capsule 2
+			if (ImGui::Checkbox("##capsule2", &capsule_2))
+			{
+				sphere_2 = false;
+				aabb_2 = false;
+				cylinder_2 = false;
+				frustrum_2 = false;
+			}
+			ImGui::SameLine();
 			if (ImGui::TreeNode("Capsule##node2"))
 			{
-
 				ImGui::PushItemWidth(100);
 				ImGui::InputFloat("A X##5", &capsule_b.l.a.x, 0.1, 1.0, 2);
 				ImGui::SameLine();
@@ -225,6 +279,44 @@ update_status Scene::Update(float dt)
 				ImGui::TreePop();
 			}
 			
+			//AABB 2
+			//AABB
+			if (ImGui::Checkbox("##box1", &aabb_2))
+			{
+				sphere_2 = false;
+				capsule_2 = false;
+				cylinder_2 = false;
+				frustrum_2 = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode("AABB##node2"))
+			{
+				ImGui::Text("Centre");
+				ImGui::SameLine(0, 75);
+				ImGui::Text("Size in:");
+
+				static math::float3 tmp_2 = { 0,0,0 };
+				static math::float3 size_2 = { 0,0,0 };
+
+				ImGui::PushItemWidth(100);
+				ImGui::InputFloat("X##6", &tmp_2.x, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("X##6", &size_2.x, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Y##6", &tmp_2.y, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Y##6", &size_2.y, 0.1, 1.0, 2);
+
+				ImGui::InputFloat("Z##6", &tmp_2.z, 0.1, 1.0, 2);
+				ImGui::SameLine();
+				ImGui::InputFloat("Z##6", &size_2.z, 0.1, 1.0, 2);
+				ImGui::PopItemWidth();
+
+				box_b.SetFromCenterAndSize(tmp_2, size_2);
+
+				ImGui::TreePop();
+			}
+
 			ImGui::TreePop();
 		}
 
@@ -239,6 +331,16 @@ update_status Scene::Update(float dt)
 					if (sphere_a.Intersects(sphere_b)) collide_test = "true";
 					else collide_test = "false";
 				}
+				if (capsule_2)
+				{
+					if (sphere_a.Intersects(capsule_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (aabb_2)
+				{
+					if (sphere_a.Intersects(box_b)) collide_test = "true";
+					else collide_test = "false";
+				}
 
 			}
 			if (capsule_1)
@@ -246,6 +348,34 @@ update_status Scene::Update(float dt)
 				if (sphere_2)
 				{
 					if(capsule_a.Intersects(sphere_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (capsule_2)
+				{
+					if (capsule_a.Intersects(capsule_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (aabb_2)
+				{
+					if (capsule_a.Intersects(box_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+			}
+			if (aabb_1)
+			{
+				if (sphere_2)
+				{
+					if (box_a.Intersects(sphere_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (capsule_2)
+				{
+					if (box_a.Intersects(capsule_b)) collide_test = "true";
+					else collide_test = "false";
+				}
+				if (aabb_2)
+				{
+					if (box_a.Intersects(box_b)) collide_test = "true";
 					else collide_test = "false";
 				}
 			}

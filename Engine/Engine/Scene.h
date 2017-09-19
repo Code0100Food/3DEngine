@@ -43,12 +43,19 @@ public:
 	bool frustrum_1 = false;
 
 	bool sphere_2 = false;
+	bool capsule_2 = false;
+	bool aabb_2 = false;
+	bool cylinder_2 = false;
+	bool frustrum_2 = false;
 
 	math::Sphere sphere_a;
 	math::Sphere sphere_b;
 
 	math::Capsule capsule_a;
 	math::Capsule capsule_b;
+
+	math::AABB box_a;
+	math::AABB box_b;
 
 	std::string collide_test;
 	
