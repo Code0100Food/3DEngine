@@ -62,7 +62,7 @@ public:
 	//Methods to add bodies to the world
 	PhysBody3D* AddBody(const _Primitive* primitive, enum OBJECT_TYPE object_type, float mass = 1.0f, BODY_MASK I_am = NOTHING);/*Old one*/
 	
-	math::Sphere* CreateCylinder();
+	math::Sphere* CreateSphere(math::float3 position, float rad);
 
 
 	//Methods for constrains

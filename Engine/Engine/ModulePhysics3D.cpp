@@ -285,10 +285,10 @@ PhysBody3D * ModulePhysics3D::AddBody(const _Primitive* primitive, OBJECT_TYPE o
 	return pbody;
 }
 
-math::Sphere * ModulePhysics3D::CreateCylinder()
+math::Sphere * ModulePhysics3D::CreateSphere(math::float3 position, float rad)
 {
-	math::Sphere* new_sphere = new math::Sphere();
-	
+	math::Sphere* new_sphere = new math::Sphere(position, rad);
+
 	return new_sphere;
 }
 

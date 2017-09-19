@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "MathGeoLib/Algorithm/Random/LCG.h"
-#include "MathGeoLib/Time/Clock.h"
+
 
 class Scene : public Module
 {
@@ -21,6 +21,10 @@ public:
 
 	math::LCG*	rand_num_generator = nullptr;
 	std::string	rand_num_string = "NaN";
+	int		val_a = 0;
+	int		val_b = 0;
+	int		random_int = 0;
+	float	random_float = 0;
 
 };
 #endif
