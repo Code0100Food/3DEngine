@@ -8,6 +8,8 @@
 
 ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
 {
+	name = "module_input";
+
 	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
 }

@@ -2,6 +2,7 @@
 #define _MODULE_H_
 
 #include "Globals.h"
+#include "Parson/parson.h"
 #include <list>
 #include <vector>
 #include <string>
@@ -31,6 +32,17 @@ public:
 	}
 
 public:
+
+	virtual bool Awake(const JSON_Object* data_root)
+	{
+		bool ret = false;
+		if (json_object_get_number(data_root, "test") == 5)
+		{
+			LOG("%s correctly_awake!", this->name.c_str());
+			ret = true;
+		}
+		return ret;
+	}
 
 	virtual bool Init()
 	{

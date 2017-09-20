@@ -1,0 +1,33 @@
+{
+  "application": {
+    "test": 5
+  },
+
+  "module_audio": {
+    "test": 5
+  },
+
+  "module_camera": {
+    "test": 5
+  },
+
+  "module_imgui": {
+    "test": 5
+  },
+
+  "module_input": {
+    "test": 5
+  },
+
+  "module_physics": {
+    "test": 5
+  },
+
+  "module_renderer": {
+    "test": 5
+  },
+
+  "module_window": {
+    "test": 5
+  }
+}

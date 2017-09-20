@@ -9,6 +9,7 @@
 #include "ModuleImgui.h"
 #include "ModuleConsole.h"
 #include "Scene.h"
+#include "Parson/parson.h"
 
 // Constructors =================================
 Application::Application()
@@ -55,6 +56,25 @@ Application::~Application()
 }
 
 // Game Loop ====================================
+bool Application::Awake()
+{
+	bool ret = true;
+
+	//Load config json file
+	JSON_Value *config_data = json_parse_file("config.json");
+	JSON_Object *root_object = json_value_get_object(config_data);
+	assert(config_data != NULL);
+	
+	// Call Awake() in all modules
+	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret; item++)
+	{
+		const JSON_Object* module_object = json_object_dotget_object(root_object, item._Ptr->_Myval->name.c_str());
+		ret = (*item)->Awake(module_object);
+	}
+
+	return ret;
+}
+
 bool Application::Init()
 {
 	bool ret = true;

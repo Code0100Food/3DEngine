@@ -33,6 +33,7 @@ public:
 
 public:
 
+	bool			Awake();
 	bool			Init();
 	void			PrepareUpdate();
 	update_status	Update();

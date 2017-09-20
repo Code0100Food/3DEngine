@@ -36,7 +36,6 @@ bool ModuleCamera3D::Start()
 	CameraLocation = vec3(0.0f, 15.0f, 0.0f);
 	ViewVector = vec3(0.0f,10.05f, 0.0f);
 	camera_dist = 27;
-	camera_fx = App->audio->LoadFx("Game/Audio/camera_fx.wav");
 	return ret;
 }
 
@@ -52,7 +51,6 @@ update_status ModuleCamera3D::Update(float dt)
 	//Change Camera Mode =======================================
 	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) {
 		camera_debug = !camera_debug;
-		App->audio->PlayFx(camera_fx);
 	}
 	// Free Camera =============================================
 	if (camera_debug) {
@@ -123,7 +121,6 @@ update_status ModuleCamera3D::Update(float dt)
 			{
 				camera_dist -= 24;
 			}
-			App->audio->PlayFx(camera_fx);
 
 		}
 

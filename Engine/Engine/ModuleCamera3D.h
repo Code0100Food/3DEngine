@@ -33,7 +33,6 @@ private:
 	vec3			ViewVector;
 	int				camera_dist = 0;
 	vec3			VehicleLocation;
-	uint			camera_fx = 0;
 	mat4x4			ViewMatrix, ViewMatrixInverse;
 
 public:

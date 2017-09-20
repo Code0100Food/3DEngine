@@ -27,7 +27,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -161,6 +161,7 @@
     <ClInclude Include="Engine\ModuleRenderer3D.h" />
     <ClInclude Include="Engine\ModuleWindow.h" />
     <ClInclude Include="Engine\p2Point.h" />
+    <ClInclude Include="Engine\Parson\parson.h" />
     <ClInclude Include="Engine\PhysBody3D.h" />
     <ClInclude Include="Engine\Primitive.h" />
     <ClInclude Include="Engine\Quadtree.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="Engine\ModulePhysics3D.cpp" />
     <ClCompile Include="Engine\ModuleRenderer3D.cpp" />
     <ClCompile Include="Engine\ModuleWindow.cpp" />
+    <ClCompile Include="Engine\Parson\parson.c" />
     <ClCompile Include="Engine\PhysBody3D.cpp" />
     <ClCompile Include="Engine\Primitive.cpp" />
     <ClCompile Include="Engine\Scene.cpp" />

@@ -46,7 +46,7 @@ enum update_status
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
-#define TITLE "3D Engine"
+#define TITLE "Fiesta Engine"
 
 #endif // !_GLOBALS_H_
 

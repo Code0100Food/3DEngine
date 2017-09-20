@@ -40,6 +40,9 @@
     <Filter Include="Sources\Modules\Console">
       <UniqueIdentifier>{c5082f5b-7f74-4e45-8b79-5a3052a5a3b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Parson">
+      <UniqueIdentifier>{01b7e46b-cf9f-4e2c-ac90-c69c9fd88c91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Color.h">
@@ -276,6 +279,9 @@
     <ClInclude Include="Engine\BasicConsole.h">
       <Filter>Sources\Modules\Console</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Parson\parson.h">
+      <Filter>Sources\Tools\Parson</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Module.h">
       <Filter>Sources</Filter>
     </ClInclude>
@@ -436,6 +442,9 @@
     </ClCompile>
     <ClCompile Include="Engine\imgui\imgui_demo.cpp">
       <Filter>Sources\Tools\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Parson\parson.c">
+      <Filter>Sources\Tools\Parson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
