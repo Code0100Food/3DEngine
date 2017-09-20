@@ -60,9 +60,6 @@
     <ClInclude Include="Engine\Primitive.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Module.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ModuleAudio.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -278,6 +275,9 @@
     </ClInclude>
     <ClInclude Include="Engine\BasicConsole.h">
       <Filter>Sources\Modules\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module.h">
+      <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

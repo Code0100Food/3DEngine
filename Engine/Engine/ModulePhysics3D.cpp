@@ -22,7 +22,7 @@
 
 
 // Constructors =================================
-ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModulePhysics3D::ModulePhysics3D(bool start_enabled) : Module(start_enabled)
 {
 	name = "module_physics";
 

@@ -12,7 +12,7 @@ class ModuleRenderer3D : public Module
 {
 public:
 
-	ModuleRenderer3D(Application* app, bool start_enabled = true);
+	ModuleRenderer3D(bool start_enabled = true);
 
 public:
 

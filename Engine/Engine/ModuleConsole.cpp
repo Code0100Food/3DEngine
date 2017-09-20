@@ -2,7 +2,7 @@
 #include "imgui/imgui.h"
 
 // Constructors =================================
-ModuleConsole::ModuleConsole(Application * parent, bool start_enabled) :Module(parent, start_enabled)
+ModuleConsole::ModuleConsole(bool start_enabled) :Module(start_enabled)
 {
 	name = "module_console";
 }

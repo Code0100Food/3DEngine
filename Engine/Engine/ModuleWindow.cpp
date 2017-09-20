@@ -7,7 +7,7 @@
 
 
 // Constructors =================================
-ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 {
 	name = "module_window";
 	window = NULL;

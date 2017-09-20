@@ -13,16 +13,16 @@
 // Constructors =================================
 Application::Application()
 {
-	window = new ModuleWindow(this);
-	input = new ModuleInput(this);
-	audio = new ModuleAudio(this, true);
-	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
-	physics = new ModulePhysics3D(this);
-	imgui = new ModuleImgui(this);
-	console = new ModuleConsole(this);
+	window = new ModuleWindow();
+	input = new ModuleInput();
+	audio = new ModuleAudio();
+	renderer3D = new ModuleRenderer3D();
+	camera = new ModuleCamera3D();
+	physics = new ModulePhysics3D();
+	imgui = new ModuleImgui();
+	console = new ModuleConsole();
 
-	scene = new Scene(this);
+	scene = new Scene();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order

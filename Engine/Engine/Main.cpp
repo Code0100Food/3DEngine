@@ -17,7 +17,7 @@ enum main_states
 	MAIN_EXIT
 };
 
-Application* _Application = NULL;
+Application* App = NULL;
 
 int main(int argc, char ** argv)
 {
@@ -34,14 +34,14 @@ int main(int argc, char ** argv)
 		case MAIN_CREATION:
 
 			LOG("-------------- Application Creation --------------");
-			_Application = new Application();
+			App = new Application();
 			state = MAIN_START;
 			break;
 
 		case MAIN_START:
 
 			LOG("-------------- Application Init --------------");
-			if (_Application->Init() == false)
+			if (App->Init() == false)
 			{
 				LOG("Application Init exits with ERROR");
 				state = MAIN_EXIT;
@@ -56,7 +56,7 @@ int main(int argc, char ** argv)
 
 		case MAIN_UPDATE:
 		{
-			update_status update_return = _Application->Update();
+			update_status update_return = App->Update();
 
 			if (update_return == UPDATE_ERROR)
 			{
@@ -74,7 +74,7 @@ int main(int argc, char ** argv)
 		case MAIN_FINISH:
 
 			LOG("-------------- Application CleanUp --------------");
-			if (_Application->CleanUp() == false)
+			if (App->CleanUp() == false)
 			{
 				LOG("Application CleanUp exits with ERROR");
 			}
@@ -90,7 +90,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	RELEASE(_Application);
+	RELEASE(App);
 
 	LOG("Exiting '%s'...\n", TITLE);
 

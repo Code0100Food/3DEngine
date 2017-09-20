@@ -4,7 +4,7 @@
 #include "imgui/imgui.h"
 
 // Constructors =================================
-Scene::Scene(Application * parent, bool start_enabled) : Module(parent, start_enabled)
+Scene::Scene(bool start_enabled) : Module(start_enabled)
 {
 
 }

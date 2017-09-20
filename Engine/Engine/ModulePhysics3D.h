@@ -28,7 +28,7 @@ class ModulePhysics3D : public Module
 {
 public:
 
-	ModulePhysics3D(Application* app, bool start_enabled = true);
+	ModulePhysics3D(bool start_enabled = true);
 	~ModulePhysics3D();
 
 public:

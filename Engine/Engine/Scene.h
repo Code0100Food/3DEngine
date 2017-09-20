@@ -10,7 +10,7 @@ class Scene : public Module
 {
 public:
 
-	Scene(Application* parent, bool start_enabled = true);
+	Scene(bool start_enabled = true);
 	~Scene();
 
 public:

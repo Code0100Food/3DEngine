@@ -5,7 +5,7 @@
 #include "imgui/imgui_impl_sdl.h"
 
 // Constructors =================================
-ModuleImgui::ModuleImgui(Application * parent, bool start_enabled) : Module(parent, start_enabled)
+ModuleImgui::ModuleImgui(bool start_enabled) : Module(start_enabled)
 {
 	name = "module_imgui";
 }

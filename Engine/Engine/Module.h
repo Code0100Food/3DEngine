@@ -20,7 +20,7 @@ private:
 public:
 
 
-	Module(Application* parent, bool start_enabled = true) : App(parent)
+	Module(bool start_enabled = true)
 	{
 	
 	}
@@ -70,7 +70,6 @@ public:
 
 public:
 
-	Application* App = nullptr;
 	std::string name = "undef_module";
 
 };

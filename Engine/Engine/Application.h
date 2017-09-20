@@ -68,7 +68,7 @@ private:
 
 };
 
-extern Application* _Application;
+extern Application* App;
 
 #endif // !_APPLICATION_H_
 

@@ -8,7 +8,7 @@ class ModuleImgui : public Module
 {
 public:
 
-	ModuleImgui(Application* parent, bool start_enabled = true);
+	ModuleImgui(bool start_enabled = true);
 
 public:
 
