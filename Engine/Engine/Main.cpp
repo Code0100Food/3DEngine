@@ -21,7 +21,7 @@ Application* App = NULL;
 
 int main(int argc, char ** argv)
 {
-	LOG("Starting game '%s'...", TITLE);
+	LOG("Starting the engine!");
 
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
@@ -97,9 +97,11 @@ int main(int argc, char ** argv)
 		}
 	}
 
+	LOG("Exiting '%s'...\n", App->app_name.c_str());
+
 	RELEASE(App);
 
-	LOG("Exiting '%s'...\n", TITLE);
+
 
 	return main_return;
 }

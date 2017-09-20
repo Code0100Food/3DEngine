@@ -1,6 +1,7 @@
 {
   "application": {
-    "test": 5
+    "name": "Party Engine",
+    "organization": "Code0100Food"
   },
 
   "module_audio": {

@@ -61,6 +61,11 @@ private:
 
 public:
 
+	std::string		app_name;
+	std::string		organization;
+
+public:
+
 	void SetQuit();
 
 private:

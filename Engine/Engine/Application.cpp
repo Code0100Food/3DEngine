@@ -61,10 +61,15 @@ bool Application::Awake()
 	bool ret = true;
 
 	//Load config json file
-	JSON_Value *config_data = json_parse_file("config.json");
-	JSON_Object *root_object = json_value_get_object(config_data);
+	const JSON_Value *config_data = json_parse_file("config.json");
 	assert(config_data != NULL);
+	const JSON_Object *root_object = json_value_get_object(config_data);
 	
+	//Load data from config application child
+	const JSON_Object* app_object = json_object_dotget_object(root_object, "application");
+	app_name = json_object_get_string(app_object, "name");
+	organization = json_object_get_string(app_object, "organization");
+
 	// Call Awake() in all modules
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret; item++)
 	{
