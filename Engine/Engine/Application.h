@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "Timer.h"
 
+#define GRAPH_ARRAY_SIZE 30
+
 using namespace std;
 
 class Module;
@@ -70,6 +72,8 @@ private:
 	list<Module*>	list_modules;
 	bool			want_to_quit = false;
 
+	float			fps_array[GRAPH_ARRAY_SIZE];
+	float			miliseconds_array[GRAPH_ARRAY_SIZE];
 
 public:
 

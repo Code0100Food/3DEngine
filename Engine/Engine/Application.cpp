@@ -81,6 +81,8 @@ bool Application::Awake()
 	const JSON_Object* app_object = json_object_dotget_object(root_object, "application");
 	app_name = json_object_get_string(app_object, "name");
 	organization = json_object_get_string(app_object, "organization");
+	max_fps = json_object_get_number(app_object, "max_fps");
+	capped_ms = 1000 / (float)max_fps;
 
 	// Call Awake() in all modules
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
@@ -112,6 +114,9 @@ bool Application::Init()
 	{
 		ret = (*item)->Start();
 	}
+
+	//Initialize values
+	memset(fps_array, 0, 30);
 
 	PERF_PEEK(ms_timer);
 	ms_timer.Start();	
@@ -228,6 +233,29 @@ void Application::BlitConfigWindow()
 		ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue);
 		ImGui::InputText("Organization", (char*)organization.c_str(), 20);
 		ImGui::SliderInt("Max FPS", &max_fps, 0, 120);
+		
+		//Update framerate graphic
+		for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
+		{
+			fps_array[k] = fps_array[k + 1];
+		}
+		fps_array[GRAPH_ARRAY_SIZE - 1] = ImGui::GetIO().Framerate;
+		//Blit framerate graphic
+		char fps_title[25];
+		sprintf_s(fps_title, 25, "Framerate %.1f", fps_array[29]);
+		ImGui::PlotHistogram("Lines", fps_array, IM_ARRAYSIZE(fps_array), 30, fps_title, 0.0f,120.0f, ImVec2(0, 80));
+		
+		//Update framerate graphic
+		for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
+		{
+			miliseconds_array[k] = miliseconds_array[k + 1];
+		}
+		miliseconds_array[GRAPH_ARRAY_SIZE - 1] = dt * 1000;
+		//Blit milliseconds graphic
+		char mili_title[25];
+		sprintf_s(mili_title, 25, "Milliseconds %.1f", miliseconds_array[29]);
+		ImGui::PlotHistogram("Lines", miliseconds_array, IM_ARRAYSIZE(miliseconds_array), 30, mili_title, 0.0f, 100.0f, ImVec2(0, 80));
+
 		if (ImGui::Button("Apply##1", ImVec2(50, 20)))
 		{
 			//Load config json file
