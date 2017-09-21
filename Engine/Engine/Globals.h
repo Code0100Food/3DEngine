@@ -28,7 +28,13 @@ void log(const char file[], int line, const char* format, ...);
 #define GET_CURVE_X(w_size,angle) (w_size * (sinf(angle *DEGTORAD)))
 #define GET_CURVE_Z(h_size,angle) (h_size * (sinf(angle *DEGTORAD)))
 
+#define PERF_START(timer) timer.Start()
+#define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.Read())
+
 typedef unsigned int uint;
+typedef unsigned __int32 uint32;
+typedef unsigned __int64 uint64;
+typedef unsigned char uchar;
 
 enum update_status
 {
@@ -45,7 +51,7 @@ enum update_status
 #define WIN_RESIZABLE true
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
-#define VSYNC true
+#define VSYNC false
 
 #endif // !_GLOBALS_H_
 

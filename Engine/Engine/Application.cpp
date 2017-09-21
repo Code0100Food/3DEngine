@@ -17,6 +17,9 @@
 // Constructors =================================
 Application::Application()
 {
+
+	PERF_START(ms_timer);
+
 	window = new ModuleWindow();
 	fs = new FileSystem();
 	input = new ModuleInput();
@@ -49,6 +52,8 @@ Application::Application()
 
 	// Renderer last!
 	AddModule(renderer3D);
+
+	PERF_PEEK(ms_timer);
 }
 
 // Destructors ==================================
@@ -63,6 +68,8 @@ Application::~Application()
 // Game Loop ====================================
 bool Application::Awake()
 {
+	PERF_START(ms_timer);
+
 	bool ret = true;
 
 	//Load config json file
@@ -76,17 +83,21 @@ bool Application::Awake()
 	organization = json_object_get_string(app_object, "organization");
 
 	// Call Awake() in all modules
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret; item++)
+	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
 		const JSON_Object* module_object = json_object_dotget_object(root_object, item._Ptr->_Myval->name.c_str());
-		ret = (*item)->Awake(module_object);
+		(*item)->Awake(module_object);
 	}
+
+	PERF_PEEK(ms_timer);
 
 	return ret;
 }
 
 bool Application::Init()
 {
+	PERF_START(ms_timer);
+
 	bool ret = true;
 
 	// Call Init() in all modules
@@ -102,14 +113,20 @@ bool Application::Init()
 		ret = (*item)->Start();
 	}
 
-	ms_timer.Start();
+	PERF_PEEK(ms_timer);
+	ms_timer.Start();	
+
 	return ret;
 }
 
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
+	frame_count++;
+	last_sec_frame_count++;
+
+	dt = (float)ms_timer.ReadSec();
 	ms_timer.Start();
+	frame_time.Start();
 
 	//Generate the imgui frame
 	ImGui_ImplSdl_NewFrame(App->window->window);
@@ -117,7 +134,23 @@ void Application::PrepareUpdate()
 
 void Application::FinishUpdate()
 {
+	if (last_sec_frame_time.Read() > 1000)
+	{
+		last_sec_frame_time.Start();
+		prev_last_sec_frame_count = last_sec_frame_count;
+		last_sec_frame_count = 0;
+	}
 
+	float avg_fps = float(frame_count) / startup_time.ReadSec();
+	float seconds_since_startup = startup_time.ReadSec();
+	uint32 last_frame_ms = frame_time.Read();
+	uint32 frames_on_last_update = prev_last_sec_frame_count;
+
+	if (capped_ms > 0 && last_frame_ms < capped_ms)
+	{
+		Timer t;
+		SDL_Delay(capped_ms - last_frame_ms);
+	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -153,12 +186,16 @@ update_status Application::Update()
 
 bool Application::CleanUp()
 {
+	PERF_START(ms_timer);
+
 	bool ret = true;
 
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
 	{
 		(*item)->CleanUp();
 	}
+
+	PERF_PEEK(ms_timer);
 
 	return ret;
 }
@@ -188,25 +225,23 @@ void Application::BlitConfigWindow()
 	//Build application header
 	if (ImGui::CollapsingHeader("Application"))
 	{
-		if (ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+		ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::InputText("Organization", (char*)organization.c_str(), 20);
+		ImGui::SliderInt("Max FPS", &max_fps, 0, 120);
+		if (ImGui::Button("Apply##1", ImVec2(50, 20)))
 		{
 			//Load config json file
 			const JSON_Value *config_data = fs->LoadJSONFile("config.json");
 			assert(config_data != NULL);
 			//Save the new variable
 			json_object_set_string(fs->AccessObject(config_data, 1, "application"), "name", app_name.c_str());
-			//Save the file
-			fs->SaveJSONFile(config_data, "config.json");
-		}
-		if (ImGui::InputText("Organization", (char*)organization.c_str(), 20))
-		{
-			//Load config json file
-			const JSON_Value *config_data = fs->LoadJSONFile("config.json");
-			assert(config_data != NULL);
-			//Save the new variable
 			json_object_set_string(fs->AccessObject(config_data, 1, "application"), "organization", organization.c_str());
+			json_object_set_number(fs->AccessObject(config_data, 1, "application"), "max_fps", max_fps);
 			//Save the file
 			fs->SaveJSONFile(config_data, "config.json");
+			//Update window title
+			App->window->SetTitle(app_name.c_str());
+			capped_ms = 1000 / (float)max_fps;
 		}
 	}
 

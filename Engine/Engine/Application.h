@@ -57,7 +57,16 @@ public:
 private:
 
 	Timer			ms_timer;
+	uint64			frame_count = 0;
+	Timer			startup_time;
+	Timer			frame_time;
+	Timer			last_sec_frame_time;
+	uint32			last_sec_frame_count = 0;
+	uint32			prev_last_sec_frame_count = 0;
 	float			dt = 0.0f;
+	int				capped_ms = -1;
+	int				max_fps = 0;
+
 	list<Module*>	list_modules;
 	bool			want_to_quit = false;
 
