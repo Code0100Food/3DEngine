@@ -708,6 +708,14 @@ typedef double		GLclampd;	/* double precision float in [0,1] */
 #define GL_VERSION				0x1F02
 #define GL_EXTENSIONS				0x1F03
 
+//Vide Memory
+#define GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX			0x9047
+#define GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX		0x9048
+#define GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX    0x9049
+#define GPU_MEMORY_INFO_EVICTION_COUNT_NVX				0x904A
+#define GPU_MEMORY_INFO_EVICTED_MEMORY_NVX				0x904B
+
+
 /* Errors */
 #define GL_NO_ERROR 				0
 #define GL_INVALID_ENUM				0x0500
