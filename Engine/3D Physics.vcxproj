@@ -90,6 +90,7 @@
     <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Engine\BasicConsole.h" />
     <ClInclude Include="Engine\Color.h" />
+    <ClInclude Include="Engine\FileSystem.h" />
     <ClInclude Include="Engine\glmath.h" />
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\imgui\imgui.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Engine\BasicConsole.cpp" />
     <ClCompile Include="Engine\Color.cpp" />
+    <ClCompile Include="Engine\FileSystem.cpp" />
     <ClCompile Include="Engine\glmath.cpp" />
     <ClCompile Include="Engine\imgui\imgui.cpp" />
     <ClCompile Include="Engine\imgui\imgui_demo.cpp" />

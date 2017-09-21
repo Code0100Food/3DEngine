@@ -9,6 +9,7 @@ using namespace std;
 
 class Module;
 class ModuleWindow;
+class FileSystem;
 class ModuleInput;
 class ModuleAudio;
 class ModuleRenderer3D;
@@ -43,6 +44,7 @@ public:
 public:
 
 	ModuleWindow*		window = nullptr;
+	FileSystem*			fs = nullptr;
 	ModuleInput*		input = nullptr;
 	ModuleAudio*		audio = nullptr;
 	ModuleRenderer3D*	renderer3D = nullptr;
@@ -58,9 +60,11 @@ private:
 	float			dt = 0.0f;
 	list<Module*>	list_modules;
 	bool			want_to_quit = false;
-	bool			show_config_window = false;
+
 
 public:
+
+	bool			show_config_window = false;
 
 	std::string		app_name;
 	std::string		organization;
@@ -70,10 +74,10 @@ public:
 	void SetQuit();
 	void RequestBrowser(const char* link);
 	void ShowConfiguration();
+	void BlitConfigWindow();
 
 private:
 
-	void BlitConfigWindow();
 	void AddModule(Module* mod);
 
 };

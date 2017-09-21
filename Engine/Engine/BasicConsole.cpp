@@ -61,19 +61,20 @@ void BasicConsole::_Draw(const char * title, bool * p_open)
 		return;
 	}
 
+	//Console Buttons
 	if (ImGui::SmallButton("Clear"))
 	{
 		ClearLog();
-		ImGui::SameLine();
 	}
+	ImGui::SameLine();
 	if (ImGui::SmallButton("Scroll to bottom"))
 	{
 		ScrollToBottom = true;
 	}
+	ImGui::SameLine();
 	if (ImGui::SmallButton("Exit"))
 	{
 		App->console->SwapConsoleState();
-		ImGui::SameLine();
 	}
 
 	//bool copy_to_clipboard = ImGui::SmallButton("Copy"); ImGui::SameLine();

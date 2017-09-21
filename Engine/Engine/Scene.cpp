@@ -65,6 +65,7 @@ bool Scene::Start()
 update_status Scene::Update(float dt)
 {
 	//Prepare random number window
+	if (App->show_config_window)App->BlitConfigWindow();
 
 	if (random_window)
 	{

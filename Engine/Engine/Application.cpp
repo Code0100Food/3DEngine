@@ -8,7 +8,9 @@
 #include "ModulePhysics3D.h"
 #include "ModuleImgui.h"
 #include "ModuleConsole.h"
+#include "FileSystem.h"
 #include "Scene.h"
+#include "FileSystem.h"
 #include "Parson/parson.h"
 #include "imgui/imgui_impl_sdl.h"
 
@@ -16,6 +18,7 @@
 Application::Application()
 {
 	window = new ModuleWindow();
+	fs = new FileSystem();
 	input = new ModuleInput();
 	audio = new ModuleAudio();
 	renderer3D = new ModuleRenderer3D();
@@ -32,6 +35,7 @@ Application::Application()
 
 	// Main Modules
 	AddModule(imgui);
+	AddModule(fs);
 	AddModule(window);
 	AddModule(input);
 	AddModule(audio);
@@ -130,9 +134,6 @@ update_status Application::Update()
 		ret = (*item)->PreUpdate(dt);
 	}
 
-	//Generate Config Window 
-	if (show_config_window)BlitConfigWindow();
-
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
 		ret = (*item)->Update(dt);
@@ -187,9 +188,25 @@ void Application::BlitConfigWindow()
 	//Build application header
 	if (ImGui::CollapsingHeader("Application"))
 	{
-		if (ImGui::InputText("Title", (char*)app_name.c_str(), 50))
+		if (ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			
+			//Load config json file
+			const JSON_Value *config_data = fs->LoadJSONFile("config.json");
+			assert(config_data != NULL);
+			//Save the new variable
+			json_object_set_string(fs->AccessObject(config_data, 1, "application"), "name", app_name.c_str());
+			//Save the file
+			fs->SaveJSONFile(config_data, "config.json");
+		}
+		if (ImGui::InputText("Organization", (char*)organization.c_str(), 20))
+		{
+			//Load config json file
+			const JSON_Value *config_data = fs->LoadJSONFile("config.json");
+			assert(config_data != NULL);
+			//Save the new variable
+			json_object_set_string(fs->AccessObject(config_data, 1, "application"), "organization", organization.c_str());
+			//Save the file
+			fs->SaveJSONFile(config_data, "config.json");
 		}
 	}
 
