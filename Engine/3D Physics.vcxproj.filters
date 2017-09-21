@@ -288,6 +288,9 @@
     <ClInclude Include="Engine\FileSystem.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ModuleHardware.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -453,6 +456,9 @@
       <Filter>Sources\Modules\Console</Filter>
     </ClCompile>
     <ClCompile Include="Engine\FileSystem.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ModuleHardware.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
