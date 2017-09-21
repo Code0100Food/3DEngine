@@ -58,10 +58,11 @@ private:
 	float			dt = 0.0f;
 	list<Module*>	list_modules;
 	bool			want_to_quit = false;
-	bool			show_config_window = true;
+	bool			show_config_window = false;
 
 public:
 
+	char test[50];
 	std::string		app_name;
 	std::string		organization;
 
@@ -69,6 +70,7 @@ public:
 
 	void SetQuit();
 	void RequestBrowser(const char* link);
+	void ShowConfiguration();
 
 private:
 

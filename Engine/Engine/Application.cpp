@@ -173,11 +173,28 @@ void Application::RequestBrowser(const char* link)
 	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWNORMAL);
 }
 
+void Application::ShowConfiguration()
+{
+	show_config_window = !show_config_window;
+}
+
 void Application::BlitConfigWindow()
 {
+	//Build configuration base window
 	ImGui::SetNextWindowPos(ImVec2(900, 100));
 	ImGui::SetNextWindowSize(ImVec2(350, 600));
 	ImGui::Begin("Configuration", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	//Build application header
+	if (ImGui::CollapsingHeader("Application"))
+	{
+		if (ImGui::InputText("Title", (char*)test, 50))
+		{
+			LOG("ED");
+		}
+		LOG("%s", app_name.c_str());
+	}
+
+	//Build headers for the rest of modules
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
 	{
 		if (ImGui::CollapsingHeader((*item)->name.c_str()))

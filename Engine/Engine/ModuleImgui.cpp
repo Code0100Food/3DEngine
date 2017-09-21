@@ -68,6 +68,9 @@ update_status ModuleImgui::Update(float dt)
 		if (ImGui::MenuItem("Maths Tests"))
 			App->scene->ShowMaths();
 
+		if (ImGui::MenuItem("Configuration"))
+			App->ShowConfiguration();
+
 		ImGui::EndMenu();
 	}
 

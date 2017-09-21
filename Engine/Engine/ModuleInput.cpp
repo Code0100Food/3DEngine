@@ -3,6 +3,8 @@
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleConsole.h"
+#include "ModuleWindow.h"
+#include "imgui/imgui_impl_sdl.h"
 
 #define MAX_KEYS 300
 
@@ -40,7 +42,7 @@ bool ModuleInput::Init()
 update_status ModuleInput::PreUpdate(float dt)
 {
 	SDL_PumpEvents();
-
+	
 	last_key_pressed = -1;
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 	
@@ -92,6 +94,8 @@ update_status ModuleInput::PreUpdate(float dt)
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
+		ImGui_ImplSdl_ProcessEvent(&e);
+
 		switch(e.type)
 		{
 			case SDL_KEYDOWN:
