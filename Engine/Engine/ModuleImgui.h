@@ -19,9 +19,13 @@ public:
 private:
 
 	bool	show_test_window = false;
+	bool	show_about_window = false;
+
 	bool	debug_text = false;
 	ImVec4	clear_color = ImColor(255, 255, 255);
 
+	void	BlitAboutWindow();
+	void	ShowAbout();
 
 };
 #endif // _ModuleImgui_H_

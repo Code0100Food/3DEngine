@@ -88,8 +88,8 @@ update_status ModuleImgui::Update(float dt)
 		if (ImGui::MenuItem("Report a Bug"))
 			App->RequestBrowser("https://github.com/Code0100Food/3DEngine/issues");
 
-		if (ImGui::MenuItem("About"));
-
+		if (ImGui::MenuItem("About"))
+			show_about_window = !show_about_window;
 
 		ImGui::EndMenu();
 	}
@@ -103,6 +103,12 @@ update_status ModuleImgui::Update(float dt)
 		ImGui::ShowTestWindow(&show_test_window);
 	}
 
+	//About Window
+	if (show_about_window)
+	{
+		BlitAboutWindow();
+	}
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -113,5 +119,19 @@ update_status ModuleImgui::PostUpdate(float dt)
 	ImGui::Render();
 
 	return update_status::UPDATE_CONTINUE;
+}
+
+void ModuleImgui::BlitAboutWindow()
+{
+	ImGui::SetNextWindowSize(ImVec2(100, 100));
+	ImGui::Begin("About us", &show_about_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
+
+
+	ImGui::End();
+}
+
+void ModuleImgui::ShowAbout()
+{
+	show_about_window = !show_about_window;
 }
 
