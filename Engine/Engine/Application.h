@@ -19,6 +19,7 @@ class ModuleCamera3D;
 class ModulePhysics3D;
 class ModuleImgui;
 class ModuleConsole;
+class ModuleHardware;
 class Scene;
 
 enum APP_CONTEXT
@@ -54,6 +55,7 @@ public:
 	ModulePhysics3D*	physics = nullptr;
 	ModuleImgui*		imgui = nullptr;
 	ModuleConsole*		console = nullptr;
+	ModuleHardware*		hard = nullptr;
 	Scene*				scene = nullptr;
 
 private:

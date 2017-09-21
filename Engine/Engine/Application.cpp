@@ -9,6 +9,7 @@
 #include "ModuleImgui.h"
 #include "ModuleConsole.h"
 #include "FileSystem.h"
+#include "ModuleHardware.h"
 #include "Scene.h"
 #include "FileSystem.h"
 #include "Parson/parson.h"
@@ -29,6 +30,7 @@ Application::Application()
 	physics = new ModulePhysics3D();
 	imgui = new ModuleImgui();
 	console = new ModuleConsole();
+	hard = new ModuleHardware();
 
 	scene = new Scene();
 
@@ -44,6 +46,7 @@ Application::Application()
 	AddModule(audio);
 	AddModule(physics);
 	AddModule(console);
+	AddModule(hard);
 
 	// Scenes
 	AddModule(scene);
