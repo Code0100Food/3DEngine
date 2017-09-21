@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "SDL/include/SDL_opengl.h"
 #include "imgui/imgui_impl_sdl.h"
+#include "Bullet/include/LinearMath/btScalar.h"
 
 // Constructors =================================
 ModuleImgui::ModuleImgui(bool start_enabled) : Module(start_enabled)
@@ -26,6 +27,8 @@ bool ModuleImgui::Start()
 	
 	ImGui::GetStyle().Alpha = 1.0;
 	ImGui::GetStyle().WindowTitleAlign = ImVec2(0.5, 0.5);
+
+	SDL_GetVersion(&sdl_version);
 
 	return true;
 }
@@ -123,9 +126,23 @@ update_status ModuleImgui::PostUpdate(float dt)
 
 void ModuleImgui::BlitAboutWindow()
 {
-	ImGui::SetNextWindowSize(ImVec2(100, 100));
+	ImGui::SetNextWindowSize(ImVec2(500, 500));
 	ImGui::Begin("About us", &show_about_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
 
+	ImGui::Text("Welcome to Fiesta Engine");
+	ImGui::Text("This is an engine made by educational purpouse");
+	ImGui::Text("We are: Eric Sola and Ferran Martin\n\n");
+
+	ImGui::Text("This engine uses:");
+	ImGui::Text("-SDL version: %i.%i.%i", sdl_version.major, sdl_version.minor, sdl_version.patch);
+	ImGui::Text("-MathGeoLib version: 1.5");
+	ImGui::Text("-ImGui version: %s", ImGui::GetVersion());
+	ImGui::Text("-Bullet version: %i", btGetVersion());
+	ImGui::Text("-Parson");
+	
+	ImGui::Text("\nWe don't own all this libraries and are not made by us");
+	ImGui::Text("The engine is under MIT License");
+	
 
 	ImGui::End();
 }

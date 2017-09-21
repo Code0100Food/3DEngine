@@ -2,6 +2,7 @@
 #define _ModuleImgui_H_
 
 #include "Module.h"
+#include "SDL\include\SDL_version.h"
 #include "imgui/imgui.h"
 
 class ModuleImgui : public Module
@@ -26,6 +27,9 @@ private:
 
 	void	BlitAboutWindow();
 	void	ShowAbout();
+
+	//To know sdl version
+	SDL_version sdl_version;
 
 };
 #endif // _ModuleImgui_H_
