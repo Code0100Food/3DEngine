@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Application.cpp" />
+    <ClCompile Include="Engine\BasicConsole.cpp" />
     <ClCompile Include="Engine\Color.cpp" />
     <ClCompile Include="Engine\glmath.cpp" />
     <ClCompile Include="Engine\imgui\imgui.cpp" />

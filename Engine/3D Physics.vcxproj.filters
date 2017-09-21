@@ -446,6 +446,9 @@
     <ClCompile Include="Engine\Parson\parson.c">
       <Filter>Sources\Tools\Parson</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\BasicConsole.cpp">
+      <Filter>Sources\Modules\Console</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

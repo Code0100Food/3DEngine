@@ -62,7 +62,6 @@ private:
 
 public:
 
-	char test[50];
 	std::string		app_name;
 	std::string		organization;
 

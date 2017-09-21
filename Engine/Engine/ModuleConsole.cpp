@@ -35,3 +35,8 @@ void ModuleConsole::SwapConsoleState()
 {
 	open = !open;
 }
+
+void ModuleConsole::AddLabel(const char * str)
+{
+	console.AddLog(str);
+}

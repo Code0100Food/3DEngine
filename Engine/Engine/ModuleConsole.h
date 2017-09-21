@@ -30,6 +30,7 @@ public:
 	
 	// Functionality --------
 	void SwapConsoleState();
-	
+	void AddLabel(const char* str);
+
 };
 #endif // !_CONSOLE_H_

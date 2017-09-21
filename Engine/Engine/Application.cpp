@@ -125,13 +125,13 @@ update_status Application::Update()
 	//Start frame timer & ImGui new frame
 	PrepareUpdate();
 	
-	//Generate Config Window 
-	if (show_config_window)BlitConfigWindow();
-
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
 		ret = (*item)->PreUpdate(dt);
 	}
+
+	//Generate Config Window 
+	if (show_config_window)BlitConfigWindow();
 
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
@@ -187,11 +187,10 @@ void Application::BlitConfigWindow()
 	//Build application header
 	if (ImGui::CollapsingHeader("Application"))
 	{
-		if (ImGui::InputText("Title", (char*)test, 50))
+		if (ImGui::InputText("Title", (char*)app_name.c_str(), 50))
 		{
-			LOG("ED");
+			
 		}
-		LOG("%s", app_name.c_str());
 	}
 
 	//Build headers for the rest of modules

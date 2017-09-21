@@ -31,7 +31,7 @@ bool ModuleInput::Init()
 
 	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
-		LOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
+		LOG("[error] SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 
@@ -103,19 +103,6 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				App->console->SwapConsoleState();
 			}
-			case SDL_EventType::SDL_TEXTINPUT:
-			{
-				int id = e.key.keysym.scancode;
-				if (id < 256 && id > 0)
-				{
-					last_key_pressed = id;
-				}
-				
-				//ImWchar id = e.key.keysym.scancode;
-				/*if (id < 256)ImGui::GetIO().AddInputCharacter(id);
-				ImGui::GetIO().WantTextInput = true;*/
-			}
-			break;
 			
 			case SDL_MOUSEWHEEL:
 			mouse_z = e.wheel.y;
