@@ -16,6 +16,8 @@ public:
 
 	bool Init() final;
 	bool CleanUp() final;
+	
+	void BlitConfigInfo();
 
 private:
 

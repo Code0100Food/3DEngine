@@ -32,9 +32,6 @@ bool ModuleImgui::Start()
 
 update_status ModuleImgui::Update(float dt)
 {
-	//Generate the imgui frame
-	ImGui_ImplSdl_NewFrame(App->window->window);
-
 	//Shows if the program has been compiled in debug or release
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::Begin("win", &debug_text, { 200, 200 }, 0.0, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);

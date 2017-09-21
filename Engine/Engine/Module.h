@@ -21,11 +21,13 @@ private:
 public:
 
 
+	// Constructors =================================
 	Module(bool start_enabled = true)
 	{
 	
 	}
 
+	// Destructors ==================================
 	virtual ~Module()
 	{
 	
@@ -33,6 +35,7 @@ public:
 
 public:
 
+	// Game Loop ====================================
 	virtual bool Awake(const JSON_Object* data_root)
 	{
 		bool ret = false;
@@ -74,9 +77,13 @@ public:
 		return true;
 	}
 
+	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2) 
+	{
 
-	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2) {
+	}
 
+	virtual void BlitConfigInfo()
+	{
 
 	}
 

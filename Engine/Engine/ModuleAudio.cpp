@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleAudio.h"
+#include "imgui/imgui.h"
 
 #pragma comment( lib, "Engine/SDL_mixer/libx86/SDL2_mixer.lib" )
 
@@ -64,6 +65,11 @@ bool ModuleAudio::CleanUp()
 	Mix_Quit();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	return true;
+}
+
+void ModuleAudio::BlitConfigInfo()
+{
+	ImGui::Text("Holi :v");
 }
 
 // Functionality ================================

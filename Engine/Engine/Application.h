@@ -58,6 +58,7 @@ private:
 	float			dt = 0.0f;
 	list<Module*>	list_modules;
 	bool			want_to_quit = false;
+	bool			show_config_window = true;
 
 public:
 
@@ -71,6 +72,7 @@ public:
 
 private:
 
+	void BlitConfigWindow();
 	void AddModule(Module* mod);
 
 };

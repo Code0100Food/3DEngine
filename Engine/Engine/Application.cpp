@@ -10,6 +10,7 @@
 #include "ModuleConsole.h"
 #include "Scene.h"
 #include "Parson/parson.h"
+#include "imgui/imgui_impl_sdl.h"
 
 // Constructors =================================
 Application::Application()
@@ -30,11 +31,11 @@ Application::Application()
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	AddModule(imgui);
 	AddModule(window);
 	AddModule(input);
 	AddModule(audio);
 	AddModule(physics);
-	AddModule(imgui);
 	AddModule(console);
 
 	// Scenes
@@ -105,6 +106,9 @@ void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.Read() / 1000.0f;
 	ms_timer.Start();
+
+	//Generate the imgui frame
+	ImGui_ImplSdl_NewFrame(App->window->window);
 }
 
 void Application::FinishUpdate()
@@ -115,9 +119,15 @@ void Application::FinishUpdate()
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
+
 	update_status ret = UPDATE_CONTINUE;
+
+	//Start frame timer & ImGui new frame
 	PrepareUpdate();
 	
+	//Generate Config Window 
+	if (show_config_window)BlitConfigWindow();
+
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
 		ret = (*item)->PreUpdate(dt);
@@ -161,6 +171,21 @@ void Application::SetQuit()
 void Application::RequestBrowser(const char* link)
 {
 	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWNORMAL);
+}
+
+void Application::BlitConfigWindow()
+{
+	ImGui::SetNextWindowPos(ImVec2(900, 100));
+	ImGui::SetNextWindowSize(ImVec2(350, 600));
+	ImGui::Begin("Configuration", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
+	{
+		if (ImGui::CollapsingHeader((*item)->name.c_str()))
+		{
+			(*item)->BlitConfigInfo();
+		}
+	}
+	ImGui::End();
 }
 
 void Application::AddModule(Module* mod)
