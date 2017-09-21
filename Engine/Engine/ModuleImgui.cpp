@@ -35,8 +35,8 @@ update_status ModuleImgui::Update(float dt)
 	ImGui_ImplSdl_NewFrame(App->window->window);
 
 	//Shows if the program has been compiled in debug or release
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::Begin("win", &debug_text, { 200, 200 }, 0.0, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
-	ImGui::SetWindowPos(ImVec2(0, 0));
 
 	//Debug or release mode text
 	if (debug_text)
@@ -50,8 +50,7 @@ update_status ModuleImgui::Update(float dt)
 	ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 
-	//Exit button
-	if (ImGui::Button("Exit", ImVec2(200, 50))) App->SetQuit();
+
 	//Show hide button
 	if (ImGui::Button("Show/Hide Demo", ImVec2(200, 50)))show_test_window = !show_test_window;
 
@@ -64,6 +63,31 @@ update_status ModuleImgui::Update(float dt)
 		ImGui::ShowTestWindow(&show_test_window);
 		
 	}
+
+	//Top Menu [File, view, help...]
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("File"))
+	{
+		//Exit button
+		if (ImGui::MenuItem("Exit"))
+			App->SetQuit();
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("View"))
+	{
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Help"))
+	{
+
+		ImGui::EndMenu();
+	}
+
+	ImGui::EndMainMenuBar();
 
 	return update_status::UPDATE_CONTINUE;
 }
