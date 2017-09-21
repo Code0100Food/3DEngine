@@ -6,17 +6,19 @@
 #include "SDL/include/SDL_opengl.h"
 
 
+
 class ModuleHardware : public Module
 {
 public:
 	ModuleHardware();
 
 public:
-	~ModuleHardware();
+	~ModuleHardware() {};
 	
 public:
 
 	bool Start();
+	update_status Update(float dt);
 	void BlitConfigInfo() {};
 
 private:
@@ -38,6 +40,10 @@ private:
 	//GPU
 	const GLubyte* vendor;
 	const GLubyte* gpu_name;
+
+	GLint memory_usage = 0;
+	GLint total_memory_kb = 0;
+	GLint current_available_memory_kb = 0;
 
 	// Get Methods ==================================
 

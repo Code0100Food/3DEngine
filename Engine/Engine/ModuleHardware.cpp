@@ -1,4 +1,11 @@
 #include "ModuleHardware.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
+
+ModuleHardware::ModuleHardware()
+{
+	name = "module_hardware";
+}
 
 bool ModuleHardware::Start()
 {
@@ -18,7 +25,14 @@ bool ModuleHardware::Start()
 	vendor = glGetString(GL_VENDOR);
 	gpu_name = glGetString(GL_RENDERER);
 
+	return true;
+}
 
+update_status ModuleHardware::Update(float dt)
+{
+	glGetIntegerv(GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &total_memory_kb);
+	glGetIntegerv(GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &current_available_memory_kb);
+	memory_usage = total_memory_kb - current_available_memory_kb;
 
-	return false;
+	return UPDATE_CONTINUE;
 }
