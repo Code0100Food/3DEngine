@@ -79,6 +79,18 @@ update_status ModuleImgui::Update(float dt)
 		if(ImGui::MenuItem("Gui Demo"))
 			show_test_window = !show_test_window;
 
+		if (ImGui::MenuItem("GitHub Repository"))
+			App->RequestBrowser("https://github.com/Code0100Food/3DEngine");
+
+		if (ImGui::MenuItem("Download Last"))
+			App->RequestBrowser("https://github.com/Code0100Food/3DEngine/releases");
+
+		if (ImGui::MenuItem("Report a Bug"))
+			App->RequestBrowser("https://github.com/Code0100Food/3DEngine/issues");
+
+		if (ImGui::MenuItem("About"));
+
+
 		ImGui::EndMenu();
 	}
 

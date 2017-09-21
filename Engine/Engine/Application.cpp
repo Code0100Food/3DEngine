@@ -158,6 +158,11 @@ void Application::SetQuit()
 	want_to_quit = true;
 }
 
+void Application::RequestBrowser(const char* link)
+{
+	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWNORMAL);
+}
+
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);

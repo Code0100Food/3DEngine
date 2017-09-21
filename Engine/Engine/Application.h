@@ -67,6 +67,7 @@ public:
 public:
 
 	void SetQuit();
+	void RequestBrowser(const char* link);
 
 private:
 
