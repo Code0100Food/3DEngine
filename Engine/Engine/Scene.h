@@ -5,7 +5,6 @@
 #include "MathGeoLib/Algorithm/Random/LCG.h"
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
-
 class Scene : public Module
 {
 public:
@@ -19,6 +18,10 @@ public:
 	update_status	Update(float dt)final;
 
 public: 
+
+	//Windows management
+	bool random_window = false;
+	bool maths_window = false;
 
 	//Random Screen
 	math::LCG*	rand_num_generator = nullptr;
@@ -65,6 +68,12 @@ public:
 
 	std::string collide_test;
 	
+public:
+
+	void ShowRandom();
+	void ShowMaths();
+
+
 
 };
 #endif

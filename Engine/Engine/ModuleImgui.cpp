@@ -1,6 +1,7 @@
 #include "ModuleImgui.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "Scene.h"
 #include "SDL/include/SDL_opengl.h"
 #include "imgui/imgui_impl_sdl.h"
 
@@ -49,20 +50,7 @@ update_status ModuleImgui::Update(float dt)
 	}
 	ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-
-
-	//Show hide button
-	if (ImGui::Button("Show/Hide Demo", ImVec2(200, 50)))show_test_window = !show_test_window;
-
 	ImGui::End();
-
-	//Test window
-	if (show_test_window)
-	{
-		ImGui::SetNextWindowPos(ImVec2(650, 0), ImGuiCond_FirstUseEver);
-		ImGui::ShowTestWindow(&show_test_window);
-		
-	}
 
 	//Top Menu [File, view, help...]
 	ImGui::BeginMainMenuBar();
@@ -77,17 +65,31 @@ update_status ModuleImgui::Update(float dt)
 
 	if (ImGui::BeginMenu("View"))
 	{
+		if (ImGui::MenuItem("Random Generator"))
+			App->scene->ShowRandom();
+
+		if (ImGui::MenuItem("Maths Tests"))
+			App->scene->ShowMaths();
 
 		ImGui::EndMenu();
 	}
 
 	if (ImGui::BeginMenu("Help"))
 	{
+		if(ImGui::MenuItem("Gui Demo"))
+			show_test_window = !show_test_window;
 
 		ImGui::EndMenu();
 	}
 
 	ImGui::EndMainMenuBar();
+
+	//Test window
+	if (show_test_window)
+	{
+		ImGui::SetNextWindowPos(ImVec2(650, 0), ImGuiCond_FirstUseEver);
+		ImGui::ShowTestWindow(&show_test_window);
+	}
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -100,3 +102,4 @@ update_status ModuleImgui::PostUpdate(float dt)
 
 	return update_status::UPDATE_CONTINUE;
 }
+

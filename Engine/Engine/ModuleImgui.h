@@ -22,5 +22,6 @@ private:
 	bool	debug_text = false;
 	ImVec4	clear_color = ImColor(255, 255, 255);
 
+
 };
 #endif // _ModuleImgui_H_
