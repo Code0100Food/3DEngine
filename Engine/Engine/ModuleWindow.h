@@ -15,9 +15,22 @@ public:
 
 public:
 
+	bool Awake(const JSON_Object* data_root)final;
 	bool Init() final;
 	bool CleanUp() final;
-	
+	void BlitConfigInfo()final;
+
+private:
+
+	float	brightness = 1.0f;
+	int		width = 0;
+	int		height = 0;
+
+	bool	full_screen = false;
+	bool	resizable = false;
+	bool	borderless = false;
+	bool	full_desktop = false;
+
 public:
 
 	//The window we'll be rendering to
@@ -28,7 +41,12 @@ public:
 
 public:
 	
+	//Set Methods =====================
 	void SetTitle(const char* title);
+
+	//Get Methods =====================
+	float GetBrightness()const;
+
 };
 
 #endif // __ModuleWindow_H__
