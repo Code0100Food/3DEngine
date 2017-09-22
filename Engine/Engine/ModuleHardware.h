@@ -19,7 +19,7 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
-	void BlitConfigInfo() {};
+	void BlitConfigInfo();
 
 private:
 
@@ -38,10 +38,12 @@ private:
 	bool avx = false;
 
 	//GPU
-	const GLubyte* vendor;
-	const GLubyte* gpu_name;
+	const GLubyte* vendor = nullptr;
+	const GLubyte* gpu_name = nullptr;
+	const GLubyte* version = nullptr;
 
 	GLint memory_usage = 0;
+	GLint dedicated_memory_kb = 0;
 	GLint total_memory_kb = 0;
 	GLint current_available_memory_kb = 0;
 
