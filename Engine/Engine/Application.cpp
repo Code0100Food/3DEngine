@@ -14,6 +14,7 @@
 #include "FileSystem.h"
 #include "Parson/parson.h"
 #include "imgui/imgui_impl_sdl.h"
+#include "mmgr/mmgr.h"
 
 // Constructors =================================
 Application::Application()
@@ -230,6 +231,7 @@ void Application::BlitConfigWindow()
 	ImGui::SetNextWindowPos(ImVec2(900, 100));
 	ImGui::SetNextWindowSize(ImVec2(350, 600));
 	ImGui::Begin("Configuration", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	
 	//Build application header
 	if (ImGui::CollapsingHeader("Application"))
 	{
@@ -237,6 +239,8 @@ void Application::BlitConfigWindow()
 		ImGui::InputText("Organization", (char*)organization.c_str(), 20);
 		ImGui::SliderInt("Max FPS", &max_fps, 0, 120);
 		
+		ImGui::Separator();
+
 		//Update framerate graphic
 		for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
 		{
@@ -246,7 +250,7 @@ void Application::BlitConfigWindow()
 		//Blit framerate graphic
 		char fps_title[25];
 		sprintf_s(fps_title, 25, "Framerate %.1f", fps_array[29]);
-		ImGui::PlotHistogram("Lines", fps_array, IM_ARRAYSIZE(fps_array), 30, fps_title, 0.0f,120.0f, ImVec2(0, 80));
+		ImGui::PlotHistogram("", fps_array, IM_ARRAYSIZE(fps_array), 30, fps_title, 0.0f,120.0f, ImVec2(0, 80));
 		
 		//Update framerate graphic
 		for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
@@ -257,7 +261,58 @@ void Application::BlitConfigWindow()
 		//Blit milliseconds graphic
 		char mili_title[25];
 		sprintf_s(mili_title, 25, "Milliseconds %.1f", miliseconds_array[29]);
-		ImGui::PlotHistogram("Lines", miliseconds_array, IM_ARRAYSIZE(miliseconds_array), 30, mili_title, 0.0f, 100.0f, ImVec2(0, 80));
+		ImGui::PlotHistogram("", miliseconds_array, IM_ARRAYSIZE(miliseconds_array), 30, mili_title, 0.0f, 100.0f, ImVec2(0, 80));
+
+		ImGui::Separator();
+
+		//Blit memory data
+		sMStats memory_stats = 	m_getMemoryStatistics();
+		//Total reported memory
+		char total_rep_mem[35];
+		sprintf_s(total_rep_mem, 35, "Total Reported Mem: %i", memory_stats.totalReportedMemory);
+		ImGui::Text("%s", total_rep_mem);
+
+		//Total actual memory
+		char total_actual_mem[35];
+		sprintf_s(total_actual_mem, 35, "Total Actual Mem: %i", memory_stats.totalActualMemory);
+		ImGui::Text("%s", total_actual_mem);
+
+		//Peak reported memory
+		char peak_reported_mem[35];
+		sprintf_s(peak_reported_mem, 35, "Peak Reported Mem: %i", memory_stats.peakReportedMemory);
+		ImGui::Text("%s", peak_reported_mem);
+
+		//Peak actual memory
+		char peak_actual_mem[35];
+		sprintf_s(peak_actual_mem, 35, "Peak Actual Mem: %i", memory_stats.peakActualMemory);
+		ImGui::Text("%s", peak_actual_mem);
+
+		//Accumulated reported memory
+		char accumulated_reported_mem[35];
+		sprintf_s(accumulated_reported_mem, 35, "Accumulated Reported Mem: %i", memory_stats.accumulatedReportedMemory);
+		ImGui::Text("%s", accumulated_reported_mem);
+
+		//Accumulated reported memory
+		char accumulated_actual_mem[35];
+		sprintf_s(accumulated_actual_mem, 35, "Accumulated Actual Mem: %i", memory_stats.accumulatedActualMemory);
+		ImGui::Text("%s", accumulated_actual_mem);
+
+		//Accumulated alloc unit count
+		char accumulated_alloc_unit_count[35];
+		sprintf_s(accumulated_alloc_unit_count, 35, "Accumulated Alloc Unit Count: %i", memory_stats.accumulatedAllocUnitCount);
+		ImGui::Text("%s", accumulated_alloc_unit_count);
+
+		//Total alloc unit count
+		char total_alloc_unit_count[35];
+		sprintf_s(total_alloc_unit_count, 35, "Total Alloc Unit Count: %i", memory_stats.totalAllocUnitCount);
+		ImGui::Text("%s", total_alloc_unit_count);
+
+		//Peak alloc unit count
+		char peak_alloc_unit_count[35];
+		sprintf_s(peak_alloc_unit_count, 35, "Peak Alloc Unit Count: %i", memory_stats.peakAllocUnitCount);
+		ImGui::Text("%s", peak_alloc_unit_count);
+
+		ImGui::Separator();
 
 		if (ImGui::Button("Apply##1", ImVec2(50, 20)))
 		{
