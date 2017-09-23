@@ -7,6 +7,7 @@
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
 #include "FileSystem.h"
+#include "ModuleAudio.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -183,6 +184,9 @@ void ModuleRenderer3D::BlitConfigInfo()
 			}
 		}
 		else SDL_GL_SetSwapInterval(0);
+
+		//Play save fx
+		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 	}
 }
 

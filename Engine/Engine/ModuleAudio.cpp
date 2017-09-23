@@ -8,7 +8,7 @@
 // Constructors =================================
 ModuleAudio::ModuleAudio(bool start_enabled) : Module(start_enabled), music(NULL)
 {
-	name = "module_audio";
+	name = "Audio";
 }
 
 // Game Loop ====================================
@@ -17,6 +17,7 @@ bool ModuleAudio::Awake(const JSON_Object * data_root)
 {
 	//Load master volume
 	master_volume = json_object_get_number(data_root, "master_volume");
+	fx_on_input = json_object_get_boolean(data_root, "fx_on_input");
 
 	config_menu = true;
 
@@ -55,6 +56,18 @@ bool ModuleAudio::Init()
 	return true;
 }
 
+bool ModuleAudio::Start()
+{
+	//Apply the loaded master volume
+	SetMasterVolume(master_volume);
+
+	//Load all the engine fx
+	std::string fx_dir = name + "/camera_fx.wav";
+	LoadFx(fx_dir.c_str(), APPLY_FX);
+
+	return true;
+}
+
 // Called before quitting
 bool ModuleAudio::CleanUp()
 {
@@ -65,9 +78,9 @@ bool ModuleAudio::CleanUp()
 		Mix_FreeMusic(music);
 	}
 
-	for (std::list<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); it++)
+	for (std::list<FX_Chunk>::iterator it = fx.begin(); it != fx.end(); it++)
 	{
-		Mix_FreeChunk((*it));
+		Mix_FreeChunk((*it).data);
 	}
 
 	fx.clear();
@@ -83,6 +96,9 @@ void ModuleAudio::BlitConfigInfo()
 	//Master volume slice
 	ImGui::SliderInt("Master Volume", &master_volume, 0, MAX_VOLUME);
 	
+	//Input FX check box
+	ImGui::Checkbox("Input FX", &fx_on_input);
+
 	ImGui::Separator();
 
 	//Apply button
@@ -96,12 +112,17 @@ void ModuleAudio::BlitConfigInfo()
 
 		//Save the new variables
 		json_object_set_number(App->fs->AccessObject(config_data, 1, name.c_str()), "master_volume", master_volume);
-		
+		json_object_set_boolean(App->fs->AccessObject(config_data, 1, name.c_str()), "fx_on_input", fx_on_input);
+
 		//Save the file
 		App->fs->SaveJSONFile(config_data, "config.json");
+		json_value_free((JSON_Value*)config_data);
 
 		//Apply immediate effects
 		SetMasterVolume(master_volume);
+
+		//Play save fx
+		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 	}
 }
 
@@ -158,7 +179,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 }
 
 // Load WAV
-unsigned int ModuleAudio::LoadFx(const char* path)
+unsigned int ModuleAudio::LoadFx(const char* path, FX_ID id)
 {
 	unsigned int ret = 0;
 
@@ -170,7 +191,8 @@ unsigned int ModuleAudio::LoadFx(const char* path)
 	}
 	else
 	{
-		fx.push_back(chunk);
+		FX_Chunk new_fx(chunk, id);
+		fx.push_back(new_fx);
 		ret = fx.size();
 	}
 
@@ -178,21 +200,44 @@ unsigned int ModuleAudio::LoadFx(const char* path)
 }
 
 // Play WAV
-bool ModuleAudio::PlayFx(unsigned int id,int channel, int repeat)
+bool ModuleAudio::PlayFx(FX_ID id,int channel, int repeat)
 {
 	bool ret = false;
 
-	std::list<Mix_Chunk*>::iterator it = fx.begin();
-
-	for (int i = 0; i < id; i++)
+	std::list<FX_Chunk>::iterator it = fx.begin();
+	while (it != fx.end())
 	{
-		if(it != fx.end())
-			it++;
-		else return ret;
+		if (it._Ptr->_Myval.id == id)
+		{
+			ret = true;
+			break;
+		}
+		it++;
+	}
+	
+	if (ret)Mix_PlayChannel(channel, (*it).data, repeat);
+	
+	return ret;
+}
+
+bool ModuleAudio::PlayFxForInput(FX_ID id)
+{
+	if (!fx_on_input)return false;
+
+	bool ret = false;
+
+	std::list<FX_Chunk>::iterator it = fx.begin();
+	while (it != fx.end())
+	{
+		if (it._Ptr->_Myval.id == id)
+		{
+			ret = true;
+			break;
+		}
+		it++;
 	}
 
-	Mix_PlayChannel(channel, (*it), repeat);
-	ret = true;
+	if (ret)Mix_PlayChannel(-1, (*it).data, 0);
 
 	return ret;
 }

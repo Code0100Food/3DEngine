@@ -5,6 +5,7 @@
 #include "imgui/imgui_impl_sdl.h"
 #include "SDL/include/SDL_opengl.h"
 #include "FileSystem.h"
+#include "ModuleAudio.h"
 
 // Constructors =================================
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
@@ -166,6 +167,8 @@ void ModuleWindow::BlitConfigInfo()
 		//Save the file
 		App->fs->SaveJSONFile(config_data, "config.json");
 
+		//Play save fx
+		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 	}
 }
 

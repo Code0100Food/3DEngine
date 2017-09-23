@@ -328,6 +328,9 @@ void Application::BlitConfigWindow()
 			//Update window title
 			App->window->SetTitle(app_name.c_str());
 			capped_ms = 1000 / (float)max_fps;
+
+			//Play save fx
+			App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 		}
 	}
 
