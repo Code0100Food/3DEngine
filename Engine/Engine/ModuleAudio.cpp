@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleAudio.h"
+#include "FileSystem.h"
 
 #pragma comment( lib, "Engine/SDL_mixer/libx86/SDL2_mixer.lib" )
 
@@ -12,6 +13,16 @@ ModuleAudio::ModuleAudio(bool start_enabled) : Module(start_enabled), music(NULL
 
 // Game Loop ====================================
 // Called before render is available
+bool ModuleAudio::Awake(const JSON_Object * data_root)
+{
+	//Load master volume
+	master_volume = json_object_get_number(data_root, "master_volume");
+
+	config_menu = true;
+
+	return true;
+}
+
 bool ModuleAudio::Init()
 {
 	LOG("Loading Audio Mixer");
@@ -63,12 +74,35 @@ bool ModuleAudio::CleanUp()
 	Mix_CloseAudio();
 	Mix_Quit();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+
 	return true;
 }
 
 void ModuleAudio::BlitConfigInfo()
 {
-	ImGui::Text("Holi :v");
+	//Master volume slice
+	ImGui::SliderInt("Master Volume", &master_volume, 0, MAX_VOLUME);
+	
+	ImGui::Separator();
+
+	//Apply button
+	if (ImGui::Button("Apply##audio_apply", ImVec2(50, 20)))
+	{
+		
+		//Save values
+		//Load config json file
+		const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
+		assert(config_data != NULL);
+
+		//Save the new variables
+		json_object_set_number(App->fs->AccessObject(config_data, 1, name.c_str()), "master_volume", master_volume);
+		
+		//Save the file
+		App->fs->SaveJSONFile(config_data, "config.json");
+
+		//Apply immediate effects
+		SetMasterVolume(master_volume);
+	}
 }
 
 // Functionality ================================
@@ -161,4 +195,11 @@ bool ModuleAudio::PlayFx(unsigned int id,int channel, int repeat)
 	ret = true;
 
 	return ret;
+}
+
+void ModuleAudio::SetMasterVolume(int volume)
+{
+	master_volume = volume;
+	Mix_Volume(-1, master_volume);
+	Mix_VolumeMusic(master_volume);
 }
