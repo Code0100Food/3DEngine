@@ -15,10 +15,17 @@ BasicConsole::BasicConsole()
 	memset(InputBuf, 0, sizeof(InputBuf));
 	HistoryPos = -1;
 	Commands.push_back("HELP");
+	commands_str.push_back("HELP");
+	commands_desc_str.push_back("Show all the console commands");
 	Commands.push_back("QUIT");
+	commands_str.push_back("QUIT");
+	commands_desc_str.push_back("Quit the engine");
 	Commands.push_back("HISTORY");
+	commands_str.push_back("HISTORY");
+	commands_desc_str.push_back("Show the console history");
 	Commands.push_back("CLEAR");
-	Commands.push_back("CLASSIFY");  // "classify" is here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
+	commands_str.push_back("CLEAR");
+	commands_desc_str.push_back("Clear the console labels");
 	AddLog("--- Console Ready!");
 }
 

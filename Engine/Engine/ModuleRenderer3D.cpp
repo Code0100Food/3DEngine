@@ -162,7 +162,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 	//Vsync check box
 	ImGui::Checkbox("VSync", &vsync);
 	ImGui::SameLine();
-	if (ImGui::Button("Apply##5", ImVec2(50, 20)))
+	if (ImGui::Button("Apply##renderer_apply", ImVec2(50, 20)))
 	{
 		//Save values
 		//Load config json file

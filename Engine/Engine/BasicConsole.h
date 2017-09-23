@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string>
 #include "Globals.h"
+#include <string>
+#include <vector>
 
 #ifndef _BASIC_CONSOLE_H_
 #define _BASIC_CONSOLE_H_
@@ -31,6 +33,10 @@ public:
 	ImVector<const char*>	Commands;
 	uint					callback_flag = 0;
 
+	//Commands data
+	std::vector<std::string>	commands_str;
+	std::vector<std::string>	commands_desc_str;
+
 public:
 
 	// Portable helpers
@@ -38,12 +44,12 @@ public:
 	static int   Strnicmp(const char* str1, const char* str2, int n) { int d = 0; while (n > 0 && (d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; n--; } return d; }
 	static char* Strdup(const char *str) { size_t len = strlen(str) + 1; void* buff = malloc(len); return (char*)memcpy(buff, (const void*)str, len); }
 
-	void		ClearLog();
-	void		AddLog(const char* fmt, ...);
-	void		_Draw(const char* title, bool* p_open);
-	void		ExecCommand(const char* command_line);
-	static int	_TextEditCallbackStub(ImGuiTextEditCallbackData* data); // In C++11 you are better off using lambdas for this sort of forwarding callbacks
-	int			_TextEditCallback(ImGuiTextEditCallbackData* data);
+	void					ClearLog();
+	void					AddLog(const char* fmt, ...);
+	void					_Draw(const char* title, bool* p_open);
+	void					ExecCommand(const char* command_line);
+	static int				_TextEditCallbackStub(ImGuiTextEditCallbackData* data); // In C++11 you are better off using lambdas for this sort of forwarding callbacks
+	int						_TextEditCallback(ImGuiTextEditCallbackData* data);
 		
 };
 

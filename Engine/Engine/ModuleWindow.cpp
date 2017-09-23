@@ -143,7 +143,7 @@ void ModuleWindow::BlitConfigInfo()
 	ImGui::Separator();
 
 	//Apply button
-	if (ImGui::Button("Apply##1", ImVec2(50, 20)))
+	if (ImGui::Button("Apply##window_apply", ImVec2(50, 20)))
 	{
 		//Apply brightness
 		GLfloat LightModelAmbient[] = { brightness, brightness, brightness, brightness };
