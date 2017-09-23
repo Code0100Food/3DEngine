@@ -16,10 +16,16 @@ public:
 
 public:
 
+	bool			Awake(const JSON_Object* data_root)final;
 	bool			Init() final;
 	update_status	PreUpdate(float dt) final;
 	update_status	PostUpdate(float dt) final;
 	bool			CleanUp() final;
+	void			BlitConfigInfo()final;
+
+private:
+
+	bool	vsync = true;
 
 public:
 

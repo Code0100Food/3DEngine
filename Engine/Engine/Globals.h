@@ -29,7 +29,7 @@ void log(const char file[], int line, const char* format, ...);
 #define GET_CURVE_Z(h_size,angle) (h_size * (sinf(angle *DEGTORAD)))
 
 #define PERF_START(timer) timer.Start()
-#define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.Read())
+#define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadSec())
 
 typedef unsigned int uint;
 typedef unsigned __int32 uint32;
@@ -47,11 +47,6 @@ enum update_status
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 1024
 #define SCREEN_SIZE 1
-#define WIN_FULLSCREEN false
-#define WIN_RESIZABLE true
-#define WIN_BORDERLESS false
-#define WIN_FULLSCREEN_DESKTOP false
-#define VSYNC false
 
 #endif // !_GLOBALS_H_
 

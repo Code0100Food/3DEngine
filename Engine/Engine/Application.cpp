@@ -157,7 +157,6 @@ void Application::FinishUpdate()
 
 	if (capped_ms > 0 && last_frame_ms < capped_ms)
 	{
-		Timer t;
 		SDL_Delay(capped_ms - last_frame_ms);
 	}
 }
@@ -185,10 +184,11 @@ update_status Application::Update()
 	{
 		ret = (*item)->PostUpdate(dt);
 	}
-
+	
 	FinishUpdate();
 
 	if (want_to_quit)ret = update_status::UPDATE_STOP;
+
 
 	return ret;
 }
@@ -250,7 +250,7 @@ void Application::BlitConfigWindow()
 		//Blit framerate graphic
 		char fps_title[25];
 		sprintf_s(fps_title, 25, "Framerate %.1f", fps_array[29]);
-		ImGui::PlotHistogram("", fps_array, IM_ARRAYSIZE(fps_array), 30, fps_title, 0.0f,120.0f, ImVec2(0, 80));
+		ImGui::PlotHistogram("", fps_array, IM_ARRAYSIZE(fps_array), 30, fps_title, 0.0f,130.0f, ImVec2(0, 80));
 		
 		//Update framerate graphic
 		for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
@@ -334,6 +334,8 @@ void Application::BlitConfigWindow()
 	//Build headers for the rest of modules
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
 	{
+		if (!(*item)->config_menu)continue;
+
 		if (ImGui::CollapsingHeader((*item)->name.c_str()))
 		{
 			(*item)->BlitConfigInfo();

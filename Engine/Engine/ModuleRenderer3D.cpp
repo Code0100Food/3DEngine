@@ -6,6 +6,7 @@
 #include <gl/GLU.h>
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
+#include "FileSystem.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -18,6 +19,15 @@ ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 }
 
 // Game Loop ====================================
+bool ModuleRenderer3D::Awake(const JSON_Object * data_root)
+{
+	vsync = json_object_get_boolean(data_root, "vsync");
+
+	config_menu = true;
+
+	return true;
+}
+
 // Called before render is available
 bool ModuleRenderer3D::Init()
 {
@@ -35,8 +45,14 @@ bool ModuleRenderer3D::Init()
 	if(ret == true)
 	{
 		//Use Vsync
-		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if (vsync && SDL_GL_SetSwapInterval(1) < 0)
+		{
 			LOG("[error] Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+		}
+		else if(!vsync)
+		{
+			SDL_GL_SetSwapInterval(0);
+		}
 
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
@@ -139,6 +155,35 @@ bool ModuleRenderer3D::CleanUp()
 	SDL_GL_DeleteContext(context);
 
 	return true;
+}
+
+void ModuleRenderer3D::BlitConfigInfo()
+{
+	//Vsync check box
+	ImGui::Checkbox("VSync", &vsync);
+	ImGui::SameLine();
+	if (ImGui::Button("Apply##5", ImVec2(50, 20)))
+	{
+		//Save values
+		//Load config json file
+		const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
+		assert(config_data != NULL);
+
+		//Save the new variables
+		json_object_set_boolean(App->fs->AccessObject(config_data, 1, name.c_str()), "vsync", vsync);
+		
+		//Save the file
+		App->fs->SaveJSONFile(config_data, "config.json");
+
+		if (vsync)
+		{
+			if (SDL_GL_SetSwapInterval(1) < 0)
+			{
+				LOG("[error] Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+			}
+		}
+		else SDL_GL_SetSwapInterval(0);
+	}
 }
 
 // Functionality ================================

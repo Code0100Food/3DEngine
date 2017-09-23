@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "SDL\include\SDL_version.h"
-#include "imgui/imgui.h"
 
 class ModuleImgui : public Module
 {

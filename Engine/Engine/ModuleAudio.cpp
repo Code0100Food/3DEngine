@@ -1,7 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleAudio.h"
-#include "imgui/imgui.h"
 
 #pragma comment( lib, "Engine/SDL_mixer/libx86/SDL2_mixer.lib" )
 

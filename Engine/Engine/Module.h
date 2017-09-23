@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include "Parson/parson.h"
+#include "imgui/imgui.h"
 #include <list>
 #include <vector>
 #include <string>
@@ -90,6 +91,7 @@ public:
 public:
 
 	std::string name = "undef_module";
+	bool		config_menu = false;
 
 };
 

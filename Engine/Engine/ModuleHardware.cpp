@@ -1,5 +1,4 @@
 #include "ModuleHardware.h"
-#include "imgui/imgui.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -28,6 +27,8 @@ bool ModuleHardware::Start()
 	version = glGetString(GL_VERSION);
 
 	glGetIntegerv(GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &total_memory_kb);
+
+	config_menu = true;
 
 	return true;
 }

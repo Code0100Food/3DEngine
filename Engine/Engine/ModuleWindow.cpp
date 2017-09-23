@@ -2,11 +2,9 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 
-#include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "SDL/include/SDL_opengl.h"
 #include "FileSystem.h"
-#include "Parson/parson.h"
 
 // Constructors =================================
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
@@ -32,6 +30,8 @@ bool ModuleWindow::Awake(const JSON_Object * data_root)
 	resizable = json_object_get_boolean(data_root, "resizable");
 	borderless = json_object_get_boolean(data_root, "borderless");
 	full_desktop = json_object_get_boolean(data_root, "full_desktop");
+
+	config_menu = true;
 
 	return true;
 }
@@ -122,7 +122,11 @@ void ModuleWindow::BlitConfigInfo()
 	ImGui::SliderInt("width", &width, 0, SCREEN_WIDTH);
 	//Height slice bar
 	ImGui::SliderInt("height", &height, 0, SCREEN_HEIGHT);
-
+	//Framerate 
+	ImGui::Text("Framerate: ");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%.1f", ImGui::GetIO().Framerate);
+	
 	ImGui::Separator();
 
 	//Full Screen checkbox
@@ -131,7 +135,7 @@ void ModuleWindow::BlitConfigInfo()
 	//Resizable checkbox
 	ImGui::Checkbox("Resizable", &resizable);
 	//Broderless checkbox
-	ImGui::Checkbox("Broderless", &borderless);
+	ImGui::Checkbox("Broderless ", &borderless);
 	ImGui::SameLine();
 	//Full Desktop checkbox
 	ImGui::Checkbox("Full Desktop", &full_desktop);
