@@ -10,7 +10,10 @@
 enum FX_ID
 {
 	UNDEF_FX= 0,
-	APPLY_FX
+	APPLY_FX,
+	SLICE_TICK_FX,
+	CHECKBOX_FX,
+	WINDOW_FX
 };
 
 /// FX_Chunk --------------------------

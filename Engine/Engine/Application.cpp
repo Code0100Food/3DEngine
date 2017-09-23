@@ -233,11 +233,20 @@ void Application::BlitConfigWindow()
 	ImGui::Begin("Configuration", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
 	
 	//Build application header
+	bool cpy = config_opened;
 	if (ImGui::CollapsingHeader("Application"))
 	{
+		//Play fx on first open
+		config_opened = true;
+		if (cpy != config_opened)App->audio->PlayFxForInput(WINDOW_FX);
+
 		ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue);
 		ImGui::InputText("Organization", (char*)organization.c_str(), 20);
-		ImGui::SliderInt("Max FPS", &max_fps, 0, 120);
+		
+		if (ImGui::SliderInt("Max FPS", &max_fps, 0, 120))
+		{
+			App->audio->PlayFxForInput(SLICE_TICK_FX);
+		}
 		
 		ImGui::Separator();
 
@@ -333,17 +342,35 @@ void Application::BlitConfigWindow()
 			App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 		}
 	}
+	//Play fx when is closed
+	else if (config_opened)
+	{
+		config_opened = false;
+		App->audio->PlayFxForInput(WINDOW_FX);
+	}
 
 	//Build headers for the rest of modules
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
 	{
 		if (!(*item)->config_menu)continue;
 
-		if (ImGui::CollapsingHeader((*item)->name.c_str()))
+		bool cpy = (*item)->config_open;
+		if (ImGui::CollapsingHeader((*item)->name.c_str(),ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_NoTreePushOnOpen))
 		{
+			//Play fx on first open
+			(*item)->config_open = true;
+			if (cpy != (*item)->config_open)App->audio->PlayFxForInput(WINDOW_FX);
+
 			(*item)->BlitConfigInfo();
 		}
+		//Play fx when is closed
+		else if ((*item)->config_open)
+		{
+			App->audio->PlayFxForInput(WINDOW_FX);
+			(*item)->config_open = false;
+		}
 	}
+	
 	ImGui::End();
 }
 

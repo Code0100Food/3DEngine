@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "Scene.h"
+#include "ModuleAudio.h"
 #include "SDL/include/SDL_opengl.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "Bullet/include/LinearMath/btScalar.h"
@@ -54,47 +55,96 @@ update_status ModuleImgui::Update(float dt)
 
 	//Top Menu [File, view, help...]
 	ImGui::BeginMainMenuBar();
+
+	// File ---------------------------
+	bool cpy = file_menu_open;
 	if (ImGui::BeginMenu("File"))
 	{
+		//Play fx when the menu is opened
+		file_menu_open = true;
+		if (file_menu_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
+
 		//Exit button
 		if (ImGui::MenuItem("Exit"))
 			App->SetQuit();
 
 		ImGui::EndMenu();
 	}
+	else if (file_menu_open)
+	{
+		file_menu_open = false;
+		App->audio->PlayFxForInput(WINDOW_FX);
+	}
 
+	//View ----------------------------
+	cpy = view_menu_open;
 	if (ImGui::BeginMenu("View"))
 	{
+		//Play fx when the menu is opened
+		view_menu_open = true;
+		if (view_menu_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
+
 		if (ImGui::MenuItem("Random Generator"))
+		{
 			App->scene->ShowRandom();
+		}
 
 		if (ImGui::MenuItem("Maths Tests"))
+		{
 			App->scene->ShowMaths();
+		}
 
 		if (ImGui::MenuItem("Configuration"))
+		{
 			App->ShowConfiguration();
+		}
+		ImGui::EndMenu();
+	}
+	else if (view_menu_open)
+	{
+		view_menu_open = false;
+		App->audio->PlayFxForInput(WINDOW_FX);
+	}
+
+	//Help ----------------------------
+	cpy = help_menu_open;
+	if (ImGui::BeginMenu("Help"))
+	{
+		//Play fx when the menu is opened
+		help_menu_open = true;
+		if (help_menu_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
+
+		if (ImGui::MenuItem("Gui Demo"))
+		{
+			show_test_window = !show_test_window;
+		}
+
+		if (ImGui::MenuItem("GitHub Repository"))
+		{
+			App->RequestBrowser("https://github.com/Code0100Food/3DEngine");
+		}
+
+		if (ImGui::MenuItem("Download Last"))
+		{
+			App->RequestBrowser("https://github.com/Code0100Food/3DEngine/releases");
+		}
+
+		if (ImGui::MenuItem("Report a Bug"))
+		{
+			App->RequestBrowser("https://github.com/Code0100Food/3DEngine/issues");
+		}
+
+		if (ImGui::MenuItem("About"))
+		{
+			show_about_window = !show_about_window;
+		}
 
 		ImGui::EndMenu();
 	}
-
-	if (ImGui::BeginMenu("Help"))
+	else if (help_menu_open)
 	{
-		if(ImGui::MenuItem("Gui Demo"))
-			show_test_window = !show_test_window;
-
-		if (ImGui::MenuItem("GitHub Repository"))
-			App->RequestBrowser("https://github.com/Code0100Food/3DEngine");
-
-		if (ImGui::MenuItem("Download Last"))
-			App->RequestBrowser("https://github.com/Code0100Food/3DEngine/releases");
-
-		if (ImGui::MenuItem("Report a Bug"))
-			App->RequestBrowser("https://github.com/Code0100Food/3DEngine/issues");
-
-		if (ImGui::MenuItem("About"))
-			show_about_window = !show_about_window;
-
-		ImGui::EndMenu();
+		help_menu_open = false;
+		App->audio->PlayFxForInput(WINDOW_FX);
 	}
 
 	ImGui::EndMainMenuBar();

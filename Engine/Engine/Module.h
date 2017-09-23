@@ -92,6 +92,7 @@ public:
 
 	std::string name = "undef_module";
 	bool		config_menu = false;
+	bool		config_open = false;
 
 };
 

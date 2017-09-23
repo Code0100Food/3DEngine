@@ -76,6 +76,7 @@ private:
 
 	float			fps_array[GRAPH_ARRAY_SIZE];
 	float			miliseconds_array[GRAPH_ARRAY_SIZE];
+	bool			config_opened = false;
 
 public:
 

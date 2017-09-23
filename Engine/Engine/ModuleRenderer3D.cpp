@@ -161,7 +161,10 @@ bool ModuleRenderer3D::CleanUp()
 void ModuleRenderer3D::BlitConfigInfo()
 {
 	//Vsync check box
-	ImGui::Checkbox("VSync", &vsync);
+	if (ImGui::Checkbox("VSync", &vsync))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+	}
 	ImGui::SameLine();
 	if (ImGui::Button("Apply##renderer_apply", ImVec2(50, 20)))
 	{

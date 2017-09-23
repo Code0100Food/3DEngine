@@ -118,11 +118,21 @@ bool ModuleWindow::CleanUp()
 void ModuleWindow::BlitConfigInfo()
 {
 	//Brightness slice bar
-	ImGui::SliderFloat("brightness", &brightness, 0.0f, 1.0f);
+	if (ImGui::SliderFloat("brightness", &brightness, 0.0f, 1.0f))
+	{
+		App->audio->PlayFxForInput(SLICE_TICK_FX);
+	}
 	//Width slice bar
-	ImGui::SliderInt("width", &width, 0, SCREEN_WIDTH);
+	if (ImGui::SliderInt("width", &width, 0, SCREEN_WIDTH))
+	{
+		App->audio->PlayFxForInput(SLICE_TICK_FX);
+	}
 	//Height slice bar
-	ImGui::SliderInt("height", &height, 0, SCREEN_HEIGHT);
+	if (ImGui::SliderInt("height", &height, 0, SCREEN_HEIGHT))
+	{
+		App->audio->PlayFxForInput(SLICE_TICK_FX);
+	}
+
 	//Framerate 
 	ImGui::Text("Framerate: ");
 	ImGui::SameLine();
@@ -131,15 +141,27 @@ void ModuleWindow::BlitConfigInfo()
 	ImGui::Separator();
 
 	//Full Screen checkbox
-	ImGui::Checkbox("Full Screen", &full_screen);
+	if (ImGui::Checkbox("Full Screen", &full_screen))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+	}
 	ImGui::SameLine();
 	//Resizable checkbox
-	ImGui::Checkbox("Resizable", &resizable);
-	//Broderless checkbox
-	ImGui::Checkbox("Broderless ", &borderless);
+	if (ImGui::Checkbox("Resizable", &resizable))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+	}
+	//Borderless checkbox
+	if(ImGui::Checkbox("Borderless ", &borderless))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+	}
 	ImGui::SameLine();
 	//Full Desktop checkbox
-	ImGui::Checkbox("Full Desktop", &full_desktop);
+	if(ImGui::Checkbox("Full Desktop", &full_desktop))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+	}
 
 	ImGui::Separator();
 
