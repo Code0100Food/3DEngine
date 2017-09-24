@@ -1,0 +1,1 @@
+{"Application":{"name":"Party Engine","organization":"Code0100Food","max_fps":55},"Audio":{"master_volume":75,"fx_on_input":true},"Camera":{"camera_location":[5,2,5],"view_vector":[0,0,0],"camera_distance":2},"Renderer":{"vsync":false},"Window":{"brightness":1,"width":1280,"height":1024,"full_screen":false,"resizable":true,"borderless":false,"full_desktop":false}}

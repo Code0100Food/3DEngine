@@ -77,8 +77,7 @@ bool Application::Awake()
 	bool ret = true;
 
 	//Load config json file
-	std::string dir = App->fs->data_folder + "/" + "config.json";
-	const JSON_Value *config_data = json_parse_file(dir.c_str());
+	const JSON_Value *config_data = json_parse_file("config.json");
 	assert(config_data != NULL);
 	const JSON_Object *root_object = json_value_get_object(config_data);
 	
@@ -332,15 +331,17 @@ void Application::BlitConfigWindow()
 		if (ImGui::Button("Apply##1", ImVec2(50, 20)))
 		{
 			//Load config json file
-			const JSON_Value *config_data = fs->LoadJSONFile("config.json");
+			//Load config json file
+			const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
 			assert(config_data != NULL);
+
 			//Save the new variable
-			JSON_Object * app_value = fs->AccessObject(config_data, 1, "application");
+			JSON_Object * app_value = fs->AccessObject(config_data, 1, "Application");
 			json_object_set_string(app_value, "name", app_name.c_str());
 			json_object_set_string(app_value, "organization", organization.c_str());
 			json_object_set_number(app_value, "max_fps", max_fps);
 			//Save the file
-			fs->SaveJSONFile(config_data, "config.json");
+			bool ret = fs->SaveJSONFile(config_data, "config.json");
 			json_value_free((JSON_Value*)config_data);
 			//Update window title
 			App->window->SetTitle(app_name.c_str());

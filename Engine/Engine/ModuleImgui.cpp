@@ -130,7 +130,7 @@ update_status ModuleImgui::Update(float dt)
 
 		if (ImGui::MenuItem("Download Last"))
 		{
-			App->RequestBrowser("https://github.com/Code0100Food/3DEngine/releases");
+			App->RequestBrowser("https://github.com/Code0100Food/3DEngine/releases/tag/0.1.5");
 		}
 
 		if (ImGui::MenuItem("Report a Bug"))
