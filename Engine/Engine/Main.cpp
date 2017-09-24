@@ -7,6 +7,8 @@
 #pragma comment( lib, "Engine/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "Engine/SDL/libx86/SDL2main.lib" )
 
+#include <direct.h>
+#define GetCurrentDir _getcwd
 
 enum main_states
 {
@@ -16,6 +18,45 @@ enum main_states
 	MAIN_FINISH,
 	MAIN_EXIT
 };
+enum LAUNCHER_STATE
+{
+	START_ENGINE = 0,
+	CLOSE_ENGINE
+};
+
+int StartLauncher()
+{
+	int ret = -1;
+
+	STARTUPINFO si = { 0 };
+	PROCESS_INFORMATION pi = { 0 };
+
+	char myPath[_MAX_PATH + 1];
+	GetCurrentDir(myPath, sizeof(myPath));
+
+	string launcher_path = myPath;
+	launcher_path += "/Launcher.exe";
+	
+	int res = CreateProcess(launcher_path.c_str(), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+
+	if (!res)
+	{
+		LOG("Error in test call!");
+	}
+	else
+	{
+		DWORD exit;
+		LOG("Process correctly started");
+		while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, INFINITE));
+
+		GetExitCodeProcess(pi.hProcess, &exit);
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+		ret = (int)exit;
+		
+	}
+	return ret;
+}
 
 Application* App = NULL;
 
@@ -26,6 +67,10 @@ int main(int argc, char ** argv)
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 
+	LAUNCHER_STATE launch = (LAUNCHER_STATE)StartLauncher();
+
+	if (launch == LAUNCHER_STATE::CLOSE_ENGINE)
+		return main_return;
 
 	while (state != MAIN_EXIT)
 	{
