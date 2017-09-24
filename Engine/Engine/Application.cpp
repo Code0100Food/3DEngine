@@ -77,7 +77,8 @@ bool Application::Awake()
 	bool ret = true;
 
 	//Load config json file
-	const JSON_Value *config_data = json_parse_file("DATA/config.json");
+	std::string dir = App->fs->data_folder + "/" + "config.json";
+	const JSON_Value *config_data = json_parse_file(dir.c_str());
 	assert(config_data != NULL);
 	const JSON_Object *root_object = json_value_get_object(config_data);
 	

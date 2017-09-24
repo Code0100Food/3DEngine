@@ -257,6 +257,10 @@ static		void		doCleanupLogOnFirstRun();
 
 static	void	log(const char *format, ...)
 {
+#ifndef RELEASE
+	return;
+#endif // !RELEASE
+
 	// Cleanup the log?
 
 	if (cleanupLogOnFirstRun) doCleanupLogOnFirstRun();
@@ -299,7 +303,7 @@ static	void	doCleanupLogOnFirstRun()
 		time_t	t = time(NULL);
 		log("--------------------------------------------------------------------------------");
 		log("");
-		log("      %s - Memory logging file created on %s", memoryLogFile, asctime(localtime(&t)));
+		//log("      %s - Memory logging file created on %s", memoryLogFile, asctime(localtime(&t)));
 		log("--------------------------------------------------------------------------------");
 		log("");
 		log("This file contains a log of all memory operations performed during the last run.");
@@ -531,6 +535,10 @@ static	void	dumpAllocations(FILE *fp)
 // ---------------------------------------------------------------------------------------------------------------------------------
 static	void	dumpLeakReport()
 {
+#ifndef RELEASE
+	return;
+#endif // !RELEASE
+
 	// Open the report file
 
 	FILE	*fp = fopen(memoryLeakLogFile, "w+b");

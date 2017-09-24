@@ -12,6 +12,10 @@ public:
 
 public:
 
+	std::string data_folder = "DATA";
+
+public:
+
 	const JSON_Value*	LoadJSONFile(const char* str);
 	bool				SaveJSONFile(const JSON_Value* data, const char* name);
 	JSON_Object*		AccessObject(const JSON_Value* config_data, uint str_num, ...);
