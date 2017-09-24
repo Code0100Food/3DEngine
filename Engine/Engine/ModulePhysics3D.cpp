@@ -141,7 +141,7 @@ update_status ModulePhysics3D::Update(float dt)
 		if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		{
 			_Sphere s(1);
-			s.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+			s.SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
 			AddBody(((_Primitive*)&s), DINAMIC_SPHERE);
 		}
 
@@ -149,7 +149,7 @@ update_status ModulePhysics3D::Update(float dt)
 		if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 		{
 			Cube c(0.5f,0.5f,0.5f);
-			c.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+			c.SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
 			AddBody(((_Primitive*)&c), DINAMIC_CUBE);
 		}
 
@@ -157,7 +157,7 @@ update_status ModulePhysics3D::Update(float dt)
 		if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 		{
 			_Plane p(0, 1.0f, 0,0);
-			p.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+			p.SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
 			AddBody(((_Primitive*)&p), DINAMIC_PLANE);
 		}
 
@@ -165,7 +165,7 @@ update_status ModulePhysics3D::Update(float dt)
 		if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 		{
 			_Cylinder c(1.0f, 0.5f);
-			c.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+			c.SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
 			AddBody(((_Primitive*)&c), DINAMIC_CYLINDER);
 		}
 

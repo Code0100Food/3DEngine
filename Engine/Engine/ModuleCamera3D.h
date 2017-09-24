@@ -18,17 +18,18 @@ public:
 	bool			Start() final;
 	update_status	Update(float dt) final;
 	bool			CleanUp() final;
+	void			BlitConfigInfo();
 
 public:
 
-	vec3	X, Y, Z, Position, Reference;
+	vec3	X, Y, Z, position, reference;
 
 private:
 
-	vec3	CameraLocation;
-	vec3	ViewVector;
-	int		camera_dist = 0;
-	mat4x4	ViewMatrix, ViewMatrixInverse;
+	vec3	camera_location;
+	vec3	view_vector;
+	float	camera_dist = 0;
+	mat4x4	view_matrix, view_matrix_inverse;
 
 public:
 
