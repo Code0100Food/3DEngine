@@ -112,7 +112,7 @@ void ModuleHardware::BlitConfigInfo()
 	}
 		
 	//GPU
-	ImGui::Text("-------------------------------------------");
+	ImGui::Separator();
 	ImGui::Text("GPU: ");
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s", vendor);

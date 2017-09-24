@@ -105,9 +105,11 @@ void ModuleAudio::BlitConfigInfo()
 	{
 		PlayFxForInput(SLICE_TICK_FX);
 	}
-	
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the master audio volume");
+
 	//Input FX check box
 	ImGui::Checkbox("Input FX", &fx_on_input);
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF all the input audio effects.");
 
 	ImGui::Separator();
 
@@ -134,6 +136,7 @@ void ModuleAudio::BlitConfigInfo()
 		//Play save fx
 		PlayFxForInput(FX_ID::APPLY_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
 }
 
 // Functionality ================================

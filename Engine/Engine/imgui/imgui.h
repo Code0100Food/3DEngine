@@ -477,6 +477,8 @@ namespace ImGui
     IMGUI_API ImGuiContext* GetCurrentContext();
     IMGUI_API void          SetCurrentContext(ImGuiContext* ctx);
 
+	IMGUI_API void MyShowHelpMarker(const char* name, const char* desc);
+
     // Obsolete functions (Will be removed! Also see 'API BREAKING CHANGES' section in imgui.cpp)
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
     static inline bool      IsItemHoveredRect() { return IsItemRectHovered(); }                // OBSOLETE 1.51+

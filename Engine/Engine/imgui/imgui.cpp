@@ -2068,6 +2068,22 @@ void ImGui::SetCurrentContext(ImGuiContext* ctx)
 #endif
 }
 
+IMGUI_API void ImGui::MyShowHelpMarker(const char * name, const char * desc)
+{
+	{
+		ImGui::TextDisabled(name);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::PushTextWrapPos(450.0f);
+			ImGui::TextUnformatted(desc);
+			ImGui::PopTextWrapPos();
+			ImGui::EndTooltip();
+		}
+	}
+	return;
+}
+
 ImGuiContext* ImGui::CreateContext(void* (*malloc_fn)(size_t), void (*free_fn)(void*))
 {
     if (!malloc_fn) malloc_fn = malloc;

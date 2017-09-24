@@ -45,13 +45,13 @@ update_status ModuleImgui::Update(float dt)
 	//Debug or release mode text
 	if (debug_text)
 	{
-		ImGui::Text("Compiled in: Debug");
+		ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "Compiled in: Debug");
 	}
 	else
 	{
-		ImGui::Text("Compiled in: Release");
+		ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "Compiled in: Release");
 	}
-	ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 	ImGui::End();
 

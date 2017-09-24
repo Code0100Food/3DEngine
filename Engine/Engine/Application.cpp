@@ -230,8 +230,8 @@ void Application::ShowConfiguration()
 void Application::BlitConfigWindow()
 {
 	//Build configuration base window
-	ImGui::SetNextWindowPos(ImVec2(900, 100));
-	ImGui::SetNextWindowSize(ImVec2(350, 600));
+	ImGui::SetNextWindowPos(ImVec2(850, 100));
+	ImGui::SetNextWindowSize(ImVec2(420, 600));
 	ImGui::Begin("Configuration", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
 	
 	//Build application header
@@ -243,13 +243,16 @@ void Application::BlitConfigWindow()
 		if (cpy != config_opened)App->audio->PlayFxForInput(WINDOW_FX);
 
 		ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application title.");
 		ImGui::InputText("Organization", (char*)organization.c_str(), 20);
-		
+		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application organization.");
+
 		if (ImGui::SliderInt("Max FPS", &max_fps, 0, 120))
 		{
 			App->audio->PlayFxForInput(SLICE_TICK_FX);
 		}
-		
+		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Limit max FPS.");
+
 		ImGui::Separator();
 
 		//Update framerate graphic
@@ -345,6 +348,7 @@ void Application::BlitConfigWindow()
 			//Play save fx
 			App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 		}
+		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
 	}
 	//Play fx when is closed
 	else if (config_opened)

@@ -62,13 +62,16 @@ void ModuleCamera3D::BlitConfigInfo()
 {
 	//Camera location ui
 	ImGui::InputFloat3("Camera Location", &camera_location, 2);
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)","Change main camera location.");
 	//View vector ui
 	ImGui::InputFloat3("View Vector", &view_vector, 2);
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change main camera view vector.");
 	//Camera dist ui
-	if (ImGui::InputFloat("Camera Distance", &camera_dist, 0.1, 0.5, 1))
+	if (ImGui::DragFloat("Camera Distance", &camera_dist, 0.1, NULL, NULL, "%.1f"))
 	{
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change main camera distance from the view target.");
 
 	ImGui::Separator();
 
@@ -104,6 +107,7 @@ void ModuleCamera3D::BlitConfigInfo()
 		//Play save fx
 		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
 }
 
 update_status ModuleCamera3D::Update(float dt)

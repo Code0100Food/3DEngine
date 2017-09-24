@@ -165,7 +165,10 @@ void ModuleRenderer3D::BlitConfigInfo()
 	{
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
-	ImGui::SameLine();
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF VSync.");
+	
+	ImGui::Separator();
+
 	if (ImGui::Button("Apply##renderer_apply", ImVec2(50, 20)))
 	{
 		//Save values
@@ -192,6 +195,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 		//Play save fx
 		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
 }
 
 // Functionality ================================

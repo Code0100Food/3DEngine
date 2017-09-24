@@ -118,20 +118,25 @@ bool ModuleWindow::CleanUp()
 void ModuleWindow::BlitConfigInfo()
 {
 	//Brightness slice bar
-	if (ImGui::SliderFloat("brightness", &brightness, 0.0f, 1.0f))
+	if (ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f))
 	{
 		App->audio->PlayFxForInput(SLICE_TICK_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the global light brightness.");
+
 	//Width slice bar
-	if (ImGui::SliderInt("width", &width, 0, SCREEN_WIDTH))
+	if (ImGui::SliderInt("Width", &width, 0, SCREEN_WIDTH))
 	{
 		App->audio->PlayFxForInput(SLICE_TICK_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the window width [NEED RESTART]");
+
 	//Height slice bar
-	if (ImGui::SliderInt("height", &height, 0, SCREEN_HEIGHT))
+	if (ImGui::SliderInt("Height", &height, 0, SCREEN_HEIGHT))
 	{
 		App->audio->PlayFxForInput(SLICE_TICK_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the window height [NEED RESTART]");
 
 	//Framerate 
 	ImGui::Text("Framerate: ");
@@ -145,24 +150,30 @@ void ModuleWindow::BlitConfigInfo()
 	{
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF fullscreen mode.");
+
 	ImGui::SameLine();
 	//Resizable checkbox
 	if (ImGui::Checkbox("Resizable", &resizable))
 	{
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF window resize.");
+
 	//Borderless checkbox
 	if(ImGui::Checkbox("Borderless ", &borderless))
 	{
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Show/Hide window borders.");
 	ImGui::SameLine();
+
 	//Full Desktop checkbox
 	if(ImGui::Checkbox("Full Desktop", &full_desktop))
 	{
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
-
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF window full desktop mode.");
 	ImGui::Separator();
 
 	//Apply button
@@ -193,6 +204,7 @@ void ModuleWindow::BlitConfigInfo()
 		//Play save fx
 		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
 }
 
 // Functionality ================================
