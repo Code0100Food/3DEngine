@@ -1,1 +1,26 @@
-{"Application":{"name":"Holi :3","organization":"Code0100Food","max_fps":55},"Audio":{"master_volume":69,"fx_on_input":true},"Camera":{"camera_location":[0,0,0],"view_vector":[0,0,0],"camera_distance":5},"Renderer":{"vsync":true},"Window":{"brightness":1,"width":1280,"height":1024,"full_screen":false,"resizable":true,"borderless":false,"full_desktop":false}}
+{
+  "Application": {
+    "name": "Holi :3",
+    "organization": "Code0100Food",
+    "max_fps": 55
+  },
+  "Audio": {
+    "master_volume": 69,
+    "fx_on_input": true
+  },
+  "Camera": {
+    "camera_location": [ 5, 2, 5 ],
+    "view_vector": [ 0, 1, 0 ],
+    "camera_distance": 5.5
+  },
+  "Renderer": { "vsync": true },
+  "Window": {
+    "brightness": 1,
+    "width": 1280,
+    "height": 1024,
+    "full_screen": false,
+    "resizable": true,
+    "borderless": false,
+    "full_desktop": false
+  }
+}

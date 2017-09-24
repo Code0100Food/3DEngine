@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleCamera3D.h"
 #include "ModuleAudio.h"
+#include "FileSystem.h"
 
 // Constructors =================================
 ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
@@ -24,11 +25,21 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 // Game Loop ====================================
 bool ModuleCamera3D::Awake(const JSON_Object * data_root)
 {
-	/*json_array_t* _array = json_object_get_array(data_root, "camera_location");
-	camera_location.x = _array->capacity;
-	view_vector = json_object_get_array(data_root, "camera_location");
-	camera_location = json_object_get_array(data_root, "camera_location");
-	*/
+	//Load camera location
+	json_array_t* _array = json_object_get_array(data_root, "camera_location");
+	camera_location.x = json_array_get_number(_array, 0);
+	camera_location.y = json_array_get_number(_array, 1);
+	camera_location.z = json_array_get_number(_array, 2);
+	//Load view vector
+	_array = json_object_get_array(data_root, "view_vector");
+	view_vector.x = json_array_get_number(_array, 0);
+	view_vector.y = json_array_get_number(_array, 1);
+	view_vector.z = json_array_get_number(_array, 2);
+	//Load camera distance
+	camera_dist = json_object_get_number(data_root, "camera_distance");
+
+	config_menu = true;
+
 	return true;
 }
 
@@ -36,12 +47,6 @@ bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
-	
-	config_menu = true;
-
-	camera_location = vec3(5.0f, 2.0f, 5.0f);
-	view_vector = vec3(0.0f,1.0f, 0.0f);
-	camera_dist = 2;
 
 	return ret;
 }
@@ -65,6 +70,40 @@ void ModuleCamera3D::BlitConfigInfo()
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
 
+	ImGui::Separator();
+
+	//Save values
+	if (ImGui::Button("Apply", ImVec2(50, 20)))
+	{
+		//Load config json file
+		const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
+		assert(config_data != NULL);
+
+		//Save the new variables
+		JSON_Object* data_root = App->fs->AccessObject(config_data, 1, name.c_str());
+		//Save camera location
+		json_array_t* _array = json_object_get_array(data_root, "camera_location");
+		json_array_replace_number(_array, 0, camera_location.x);
+		json_array_replace_number(_array, 1, camera_location.y);
+		json_array_replace_number(_array, 2, camera_location.z);
+		//Save view vector
+		_array = json_object_get_array(data_root, "view_vector");
+		json_array_replace_number(_array, 0, view_vector.x);
+		json_array_replace_number(_array, 1, view_vector.y);
+		json_array_replace_number(_array, 2, view_vector.z);
+		//Save camera distance
+		float rounded_dist = camera_dist - (camera_dist - (int)camera_dist);
+		int rounded_decimals = ceil((camera_dist - (int)camera_dist) * 100);
+		rounded_dist += ((float)rounded_decimals / 100);
+		json_object_set_number(data_root, "camera_distance", rounded_dist);
+		
+		//Save the file
+		App->fs->SaveJSONFile(config_data, "config.json");
+		json_value_free((JSON_Value*)config_data);
+
+		//Play save fx
+		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
+	}
 }
 
 update_status ModuleCamera3D::Update(float dt)
