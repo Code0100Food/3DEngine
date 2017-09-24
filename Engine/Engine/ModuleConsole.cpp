@@ -3,7 +3,7 @@
 // Constructors =================================
 ModuleConsole::ModuleConsole(bool start_enabled) :Module(start_enabled)
 {
-	name = "module_console";
+	name = "Console";
 }
 
 

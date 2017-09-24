@@ -4,7 +4,7 @@
 
 ModuleHardware::ModuleHardware()
 {
-	name = "module_hardware";
+	name = "Hardware";
 }
 
 bool ModuleHardware::Start()

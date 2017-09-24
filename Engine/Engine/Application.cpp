@@ -82,7 +82,7 @@ bool Application::Awake()
 	const JSON_Object *root_object = json_value_get_object(config_data);
 	
 	//Load data from config application child
-	const JSON_Object* app_object = json_object_dotget_object(root_object, "application");
+	const JSON_Object* app_object = json_object_dotget_object(root_object, "Application");
 	app_name = json_object_get_string(app_object, "name");
 	organization = json_object_get_string(app_object, "organization");
 	max_fps = json_object_get_number(app_object, "max_fps");

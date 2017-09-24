@@ -10,7 +10,7 @@
 // Constructors =================================
 ModuleImgui::ModuleImgui(bool start_enabled) : Module(start_enabled)
 {
-	name = "module_imgui";
+	name = "Imgui";
 }
 
 // Game Loop ====================================
@@ -168,7 +168,6 @@ update_status ModuleImgui::Update(float dt)
 update_status ModuleImgui::PostUpdate(float dt)
 {
 	// Rendering
-	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 	ImGui::Render();
 
 	return update_status::UPDATE_CONTINUE;

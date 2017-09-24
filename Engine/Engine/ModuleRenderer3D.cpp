@@ -16,7 +16,7 @@
 // Constructors =================================
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 {
-	name = "module_renderer";
+	name = "Renderer";
 }
 
 // Game Loop ====================================
@@ -83,7 +83,7 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.2f, 0.4f, 1.5f, 1.f);
+		glClearColor(0, 0, 0, 1.f);
 
 		//Check for error
 		error = glGetError();

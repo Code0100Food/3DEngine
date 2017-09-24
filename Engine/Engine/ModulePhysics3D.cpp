@@ -24,7 +24,7 @@
 // Constructors =================================
 ModulePhysics3D::ModulePhysics3D(bool start_enabled) : Module(start_enabled)
 {
-	name = "module_physics";
+	name = "Physics";
 
 	debug = false;
 
