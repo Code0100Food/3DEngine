@@ -95,6 +95,8 @@ bool Application::Awake()
 		(*item)->Awake(module_object);
 	}
 
+	json_value_free((JSON_Value *)config_data);
+
 	PERF_PEEK(ms_timer);
 
 	return ret;
@@ -329,11 +331,13 @@ void Application::BlitConfigWindow()
 			const JSON_Value *config_data = fs->LoadJSONFile("config.json");
 			assert(config_data != NULL);
 			//Save the new variable
-			json_object_set_string(fs->AccessObject(config_data, 1, "application"), "name", app_name.c_str());
-			json_object_set_string(fs->AccessObject(config_data, 1, "application"), "organization", organization.c_str());
-			json_object_set_number(fs->AccessObject(config_data, 1, "application"), "max_fps", max_fps);
+			JSON_Object * app_value = fs->AccessObject(config_data, 1, "application");
+			json_object_set_string(app_value, "name", app_name.c_str());
+			json_object_set_string(app_value, "organization", organization.c_str());
+			json_object_set_number(app_value, "max_fps", max_fps);
 			//Save the file
 			fs->SaveJSONFile(config_data, "config.json");
+			json_value_free((JSON_Value*)config_data);
 			//Update window title
 			App->window->SetTitle(app_name.c_str());
 			capped_ms = 1000 / (float)max_fps;

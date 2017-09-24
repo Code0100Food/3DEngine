@@ -178,6 +178,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 		
 		//Save the file
 		App->fs->SaveJSONFile(config_data, "config.json");
+		json_value_free((JSON_Value*)config_data);
 
 		if (vsync)
 		{

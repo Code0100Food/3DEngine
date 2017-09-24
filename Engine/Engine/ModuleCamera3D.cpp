@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera3D.h"
+#include "ModuleAudio.h"
 
 // Constructors =================================
 ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
@@ -21,6 +22,16 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 }
 
 // Game Loop ====================================
+bool ModuleCamera3D::Awake(const JSON_Object * data_root)
+{
+	/*json_array_t* _array = json_object_get_array(data_root, "camera_location");
+	camera_location.x = _array->capacity;
+	view_vector = json_object_get_array(data_root, "camera_location");
+	camera_location = json_object_get_array(data_root, "camera_location");
+	*/
+	return true;
+}
+
 bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
@@ -49,7 +60,10 @@ void ModuleCamera3D::BlitConfigInfo()
 	//View vector ui
 	ImGui::InputFloat3("View Vector", &view_vector, 2);
 	//Camera dist ui
-	ImGui::InputFloat("Camera Distance", &camera_dist, 0.1, 0.5, 1);
+	if (ImGui::InputFloat("Camera Distance", &camera_dist, 0.1, 0.5, 1))
+	{
+		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
+	}
 
 }
 

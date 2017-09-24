@@ -642,6 +642,13 @@ update_status Scene::Update(float dt)
 	return update_status::UPDATE_CONTINUE;
 }
 
+bool Scene::CleanUp()
+{
+	RELEASE(rand_num_generator);
+
+	return false;
+}
+
 // Functionality ====================================
 
 void Scene::ShowRandom()

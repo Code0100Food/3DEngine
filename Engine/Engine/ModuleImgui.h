@@ -15,6 +15,7 @@ public:
 	bool			Start() final;
 	update_status	Update(float dt) final;
 	update_status	PostUpdate(float dt) final;
+	bool			CleanUp();
 
 private:
 

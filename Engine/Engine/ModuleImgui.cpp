@@ -36,6 +36,8 @@ bool ModuleImgui::Start()
 
 update_status ModuleImgui::Update(float dt)
 {
+	//return update_status::UPDATE_CONTINUE;
+
 	//Shows if the program has been compiled in debug or release
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::Begin("win", &debug_text, { 200, 200 }, 0.0, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
@@ -66,7 +68,9 @@ update_status ModuleImgui::Update(float dt)
 
 		//Exit button
 		if (ImGui::MenuItem("Exit"))
+		{
 			App->SetQuit();
+		}
 
 		ImGui::EndMenu();
 	}
@@ -171,6 +175,13 @@ update_status ModuleImgui::PostUpdate(float dt)
 	ImGui::Render();
 
 	return update_status::UPDATE_CONTINUE;
+}
+
+bool ModuleImgui::CleanUp()
+{
+	ImGui::Shutdown();
+
+	return true;
 }
 
 void ModuleImgui::BlitAboutWindow()

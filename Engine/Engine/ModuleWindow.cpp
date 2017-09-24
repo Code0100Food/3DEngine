@@ -188,6 +188,7 @@ void ModuleWindow::BlitConfigInfo()
 
 		//Save the file
 		App->fs->SaveJSONFile(config_data, "config.json");
+		json_value_free((JSON_Value*)config_data);
 
 		//Play save fx
 		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
