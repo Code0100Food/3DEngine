@@ -62,13 +62,13 @@ bool ModuleAudio::Start()
 	SetMasterVolume(master_volume);
 
 	//Load all the engine fx
-	std::string fx_dir = name + "/apply_fx.wav";
+	std::string fx_dir = "DATA/" + name + "/apply_fx.wav";
 	LoadFx(fx_dir.c_str(), APPLY_FX);
-	fx_dir = name + "/slice_tick_fx.wav";
+	fx_dir = "DATA/" +  name + "/slice_tick_fx.wav";
 	LoadFx(fx_dir.c_str(), SLICE_TICK_FX);
-	fx_dir = name + "/checkbox_fx.wav";
+	fx_dir = "DATA/" + name + "/checkbox_fx.wav";
 	LoadFx(fx_dir.c_str(), CHECKBOX_FX);
-	fx_dir = name + "/window_fx.wav";
+	fx_dir = "DATA/" + name + "/window_fx.wav";
 	LoadFx(fx_dir.c_str(), WINDOW_FX);
 
 

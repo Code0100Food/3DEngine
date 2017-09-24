@@ -35,7 +35,7 @@ int StartLauncher()
 	GetCurrentDir(myPath, sizeof(myPath));
 
 	string launcher_path = myPath;
-	launcher_path += "/Launcher.exe";
+	launcher_path += "\\Launcher.exe";
 	
 	int res = CreateProcess(launcher_path.c_str(), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
 
