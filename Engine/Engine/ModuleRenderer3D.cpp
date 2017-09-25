@@ -124,17 +124,11 @@ bool ModuleRenderer3D::Init()
 		if (lighting)
 		{
 			glEnable(GL_LIGHTING);
-		/*	GLfloat pos[4] = { 0.0f,0.0f,1.0f,0.0f };
-			glLightfv(GL_LIGHT0, GL_POSITION, pos);
-
-			GLfloat ambient[4] = { 0.0f,0.0f,1.0f,1.0f };
-			glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);*/
 		}
 
 		if (color_material)
 		{
 			glEnable(GL_COLOR_MATERIAL);
-			//glColorMaterial(GL_BACK, GL_AMBIENT);
 		}
 
 		if (dither)
@@ -174,11 +168,8 @@ bool ModuleRenderer3D::Init()
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 	
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
+		
 		lights[0].Active(true);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
 	
 	}
 
@@ -237,6 +228,109 @@ void ModuleRenderer3D::BlitConfigInfo()
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF VSync.");
 	
+	if (ImGui::Checkbox("Depht Test", &depth_test))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+
+		if (depth_test)
+		{
+			glEnable(GL_DEPTH_TEST);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
+	}
+
+	if (ImGui::Checkbox("Cull Test", &cull_face))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+		if (cull_face)
+		{
+			glEnable(GL_CULL_FACE);
+		}
+		else
+		{
+			glDisable(GL_CULL_FACE);
+		}
+	}
+
+	if (ImGui::Checkbox("Texture 2D", &texture_2d))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+		if (texture_2d)
+		{
+			glEnable(GL_TEXTURE_2D);
+		}
+		else
+		{
+			glDisable(GL_TEXTURE_2D);
+		}
+	}
+
+	if (ImGui::Checkbox("Lighting", &lighting))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+
+		if (lighting)
+		{
+			glEnable(GL_LIGHTING);
+		}
+		else
+		{
+			glDisable(GL_LIGHTING);
+		}
+	}
+
+	if (ImGui::Checkbox("Color Material", &color_material))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+		if (color_material)
+		{
+			glEnable(GL_COLOR_MATERIAL);
+		}
+		else
+		{
+			glDisable(GL_COLOR_MATERIAL);
+		}
+	}
+
+	if (ImGui::Checkbox("Dither", &dither))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+		if (dither)
+		{
+			glEnable(GL_DITHER);
+		}
+		else
+		{
+			glDisable(GL_DITHER);
+		}
+	}
+
+	if (ImGui::Checkbox("Fog", &fog))
+	{
+		App->audio->PlayFxForInput(CHECKBOX_FX);
+		if (fog)
+		{
+			glEnable(GL_FOG);
+			glFogf(GL_FOG_DENSITY, fog_density);
+		}
+		else
+		{
+			glDisable(GL_FOG);
+		}
+	}
+
+	if (fog)
+	{
+		if (ImGui::SliderFloat("Density", &fog_density, 0.0f, 1.0f))
+		{
+			App->audio->PlayFxForInput(SLICE_TICK_FX);
+			glFogf(GL_FOG_DENSITY, fog_density);
+		}
+	}
+
 	ImGui::Separator();
 
 	if (ImGui::Button("Apply##renderer_apply", ImVec2(50, 20)))

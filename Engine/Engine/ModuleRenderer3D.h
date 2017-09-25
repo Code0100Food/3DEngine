@@ -32,7 +32,10 @@ private:
 	bool	lighting = true;
 	bool	color_material = true;
 	bool	dither = true;
+
 	bool	fog = true;
+	float	fog_density = 0.0f;
+
 
 public:
 
