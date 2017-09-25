@@ -100,6 +100,9 @@ bool ModuleWindow::Init()
 
 			//Setup ImGui binding
 			ImGui_ImplSdl_Init(window);
+
+			//Apply brightness
+			SDL_SetWindowBrightness(window, brightness);
 		}
 	}
 
@@ -128,8 +131,7 @@ void ModuleWindow::BlitConfigInfo()
 	if (ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f))
 	{
 		//Apply brightness
-		GLfloat LightModelAmbient[] = { brightness, brightness, brightness, brightness };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+		SDL_SetWindowBrightness(window, brightness);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the global light brightness.");
 
@@ -188,35 +190,6 @@ void ModuleWindow::BlitConfigInfo()
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF window full desktop mode.");
-	ImGui::Separator();
-
-	//Apply button
-	if (ImGui::Button("Apply##window_apply", ImVec2(50, 20)))
-	{
-
-		
-		//Save values
-		//Load config json file
-		const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
-		assert(config_data != NULL);
-		
-		//Save the new variables
-		json_object_set_number(App->fs->AccessObject(config_data, 1, name.c_str()), "brightness", brightness);
-		json_object_set_number(App->fs->AccessObject(config_data, 1, name.c_str()), "width", width);
-		json_object_set_number(App->fs->AccessObject(config_data, 1, name.c_str()), "height", height);
-		json_object_set_boolean(App->fs->AccessObject(config_data, 1, name.c_str()), "full_screen", full_screen);
-		json_object_set_boolean(App->fs->AccessObject(config_data, 1, name.c_str()), "resizable", resizable);
-		json_object_set_boolean(App->fs->AccessObject(config_data, 1, name.c_str()), "borderless", borderless);
-		json_object_set_boolean(App->fs->AccessObject(config_data, 1, name.c_str()), "full_desktop", full_desktop);
-
-		//Save the file
-		App->fs->SaveJSONFile(config_data, "config.json");
-		json_value_free((JSON_Value*)config_data);
-
-		//Play save fx
-		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
-	}
-	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
 }
 
 void ModuleWindow::SaveConfigInfo(JSON_Object * data_root)

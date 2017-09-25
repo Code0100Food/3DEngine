@@ -25,17 +25,26 @@ public:
 
 private:
 
-	bool	vsync = true;
-	bool	depth_test = true;
-	bool	cull_face = true;
-	bool	texture_2d = true;
-	bool	lighting = true;
-	bool	color_material = true;
-	bool	dither = true;
+	bool	vsync = false;
+	bool	depth_test = false;
+	bool	cull_face = false;
+	bool	texture_2d = false;
+	bool	dither = false;
+	
+	bool	lighting = false;
+	float	lighting_color[4];
 
-	bool	fog = true;
+	bool	material_color = false;
+	float	material_ambient[4];
+	float	material_diffuse[4];
+
+	bool	fog = false;
 	float	fog_density = 0.0f;
+	float	fog_color[4];
 
+	bool	custom_clear = false;
+	float	clear_color[4];
+	float	clear_depth = 0.0f;
 
 public:
 
