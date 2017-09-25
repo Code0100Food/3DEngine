@@ -448,6 +448,50 @@ void ModuleRenderer3D::BlitConfigInfo()
 	// ----------------------
 }
 
+void ModuleRenderer3D::SaveConfigInfo(JSON_Object * data_root)
+{
+	json_object_set_boolean(data_root, "vsync", vsync);
+	json_object_set_boolean(data_root, "depth_test", depth_test);
+	json_object_set_boolean(data_root, "cull_face", cull_face);
+	json_object_set_boolean(data_root, "texture_2d", texture_2d);
+	json_object_set_boolean(data_root, "dither", dither);
+	// Lighting data
+	json_object_set_boolean(data_root, "lighting", lighting);
+	json_array_t*_array = json_object_get_array(data_root, "lighting_color");
+	json_array_replace_number(_array, 0, lighting_color[0]);
+	json_array_replace_number(_array, 1, lighting_color[1]);
+	json_array_replace_number(_array, 2, lighting_color[2]);
+	json_array_replace_number(_array, 3, lighting_color[3]);
+	// Material data
+	json_object_set_boolean(data_root, "material_color", material_color);
+	_array = json_object_get_array(data_root, "material_ambient");
+	json_array_replace_number(_array, 0, material_ambient[0]);
+	json_array_replace_number(_array, 1, material_ambient[1]);
+	json_array_replace_number(_array, 2, material_ambient[2]);
+	json_array_replace_number(_array, 3, material_ambient[3]);
+	_array = json_object_get_array(data_root, "material_diffuse");
+	json_array_replace_number(_array, 0, material_diffuse[0]);
+	json_array_replace_number(_array, 1, material_diffuse[1]);
+	json_array_replace_number(_array, 2, material_diffuse[2]);
+	json_array_replace_number(_array, 3, material_diffuse[3]);
+	//Fog data
+	json_object_set_boolean(data_root, "fog", fog);
+	json_object_set_number(data_root, "fog_density", fog_density);
+	_array = json_object_get_array(data_root, "fog_color");
+	json_array_replace_number(_array, 0, fog_color[0]);
+	json_array_replace_number(_array, 1, fog_color[1]);
+	json_array_replace_number(_array, 2, fog_color[2]);
+	json_array_replace_number(_array, 3, fog_color[3]);
+	//Clear data
+	json_object_set_boolean(data_root, "custom_clear", custom_clear);
+	_array = json_object_get_array(data_root, "clear_color");
+	json_array_replace_number(_array, 0, clear_color[0]);
+	json_array_replace_number(_array, 1, clear_color[1]);
+	json_array_replace_number(_array, 2, clear_color[2]);
+	json_array_replace_number(_array, 3, clear_color[3]);
+	json_object_set_number(data_root, "clear_depth", clear_depth);
+}
+
 // Functionality ================================
 void ModuleRenderer3D::OnResize(int width, int height)
 {
