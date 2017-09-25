@@ -26,6 +26,13 @@ public:
 private:
 
 	bool	vsync = true;
+	bool	depth_test = true;
+	bool	cull_face = true;
+	bool	texture_2d = true;
+	bool	lighting = true;
+	bool	color_material = true;
+	bool	dither = true;
+	bool	fog = true;
 
 public:
 

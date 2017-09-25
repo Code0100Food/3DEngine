@@ -171,8 +171,7 @@ update_status ModuleImgui::Update(float dt)
 
 update_status ModuleImgui::PostUpdate(float dt)
 {
-	// Rendering
-	ImGui::Render();
+	
 
 	return update_status::UPDATE_CONTINUE;
 }

@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -11,7 +12,7 @@
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
-
+#pragma comment (lib, "Engine/Glew/lib/Win32/glew32.lib")
 
 // Constructors =================================
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
@@ -35,6 +36,8 @@ bool ModuleRenderer3D::Init()
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
+	
+	//OPENGL initialization
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	if(context == NULL)
@@ -42,7 +45,14 @@ bool ModuleRenderer3D::Init()
 		LOG("[error] OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
-	
+
+	GLenum glew_error = glewInit();
+	if (glew_error != GL_NO_ERROR)
+	{
+		LOG("[error]Error initializing GLew! %s\n", glewGetErrorString(glew_error));
+	}
+	else LOG("Using GLew: %s", glewGetString(GLEW_VERSION));
+
 	if(ret == true)
 	{
 		//Use Vsync
@@ -85,6 +95,53 @@ bool ModuleRenderer3D::Init()
 		//Initialize clear color
 		glClearColor(0, 0, 0, 1.f);
 
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		//Enable OpenGL Options
+		if (depth_test)
+		{
+			glEnable(GL_DEPTH_TEST);
+		}
+
+		if (cull_face)
+		{
+			glEnable(GL_CULL_FACE);
+		}
+
+		if (texture_2d)
+		{
+			glEnable(GL_TEXTURE_2D);
+		}
+
+		if (lighting)
+		{
+			glEnable(GL_LIGHTING);
+		/*	GLfloat pos[4] = { 0.0f,0.0f,1.0f,0.0f };
+			glLightfv(GL_LIGHT0, GL_POSITION, pos);
+
+			GLfloat ambient[4] = { 0.0f,0.0f,1.0f,1.0f };
+			glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);*/
+		}
+
+		if (color_material)
+		{
+			glEnable(GL_COLOR_MATERIAL);
+			//glColorMaterial(GL_BACK, GL_AMBIENT);
+		}
+
+		if (dither)
+		{
+			glEnable(GL_DITHER);
+		}
+
+		if (fog)
+		{
+			glEnable(GL_FOG);
+			const GLfloat color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+			glFogfv(GL_FOG_COLOR, color);
+			glFogf(GL_FOG_DENSITY, 0.0f);
+		}
+
 		//Check for error
 		error = glGetError();
 		if(error != GL_NO_ERROR)
@@ -108,12 +165,13 @@ bool ModuleRenderer3D::Init()
 
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-		
+	
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+	
 	}
 
 	// Projection matrix for
@@ -143,6 +201,10 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	
+	// Rendering GUI
+	ImGui::Render();
+
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;
