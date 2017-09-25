@@ -120,23 +120,27 @@ void ModuleWindow::BlitConfigInfo()
 	//Brightness slice bar
 	if (ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f))
 	{
-		App->audio->PlayFxForInput(SLICE_TICK_FX);
+		//Apply brightness
+		GLfloat LightModelAmbient[] = { brightness, brightness, brightness, brightness };
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the global light brightness.");
 
 	//Width slice bar
 	if (ImGui::SliderInt("Width", &width, 0, SCREEN_WIDTH))
 	{
+		SDL_SetWindowSize(window, width, height);
 		App->audio->PlayFxForInput(SLICE_TICK_FX);
 	}
-	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the window width [NEED RESTART]");
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the window width.");
 
 	//Height slice bar
 	if (ImGui::SliderInt("Height", &height, 0, SCREEN_HEIGHT))
 	{
+		SDL_SetWindowSize(window, width, height);
 		App->audio->PlayFxForInput(SLICE_TICK_FX);
 	}
-	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the window height [NEED RESTART]");
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the window height.");
 
 	//Framerate 
 	ImGui::Text("Framerate: ");
@@ -148,21 +152,23 @@ void ModuleWindow::BlitConfigInfo()
 	//Full Screen checkbox
 	if (ImGui::Checkbox("Full Screen", &full_screen))
 	{
+		SDL_SetWindowFullscreen(window, full_screen ? SDL_WINDOW_FULLSCREEN : 0);
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF fullscreen mode.");
-
 	ImGui::SameLine();
+
 	//Resizable checkbox
 	if (ImGui::Checkbox("Resizable", &resizable))
 	{
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
-	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF window resize.");
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF window resize [NEED RESTART]");
 
 	//Borderless checkbox
 	if(ImGui::Checkbox("Borderless ", &borderless))
 	{
+		SDL_SetWindowBordered(window, (SDL_bool)!borderless);
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Show/Hide window borders.");
@@ -171,6 +177,7 @@ void ModuleWindow::BlitConfigInfo()
 	//Full Desktop checkbox
 	if(ImGui::Checkbox("Full Desktop", &full_desktop))
 	{
+		SDL_SetWindowFullscreen(window, full_desktop ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
 		App->audio->PlayFxForInput(CHECKBOX_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF window full desktop mode.");
@@ -179,9 +186,7 @@ void ModuleWindow::BlitConfigInfo()
 	//Apply button
 	if (ImGui::Button("Apply##window_apply", ImVec2(50, 20)))
 	{
-		//Apply brightness
-		GLfloat LightModelAmbient[] = { brightness, brightness, brightness, brightness };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+
 		
 		//Save values
 		//Load config json file
