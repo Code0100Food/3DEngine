@@ -25,6 +25,14 @@ bool ModuleRenderer3D::Awake(const JSON_Object * data_root)
 {
 	vsync = json_object_get_boolean(data_root, "vsync");
 
+	depth_test = json_object_get_boolean(data_root, "depth");
+	cull_face = json_object_get_boolean(data_root, "cull");
+	texture_2d = json_object_get_boolean(data_root, "texture2d");
+	lighting = json_object_get_boolean(data_root, "lighting");
+	color_material = json_object_get_boolean(data_root, "color_material");
+	dither = json_object_get_boolean(data_root, "dither");
+	fog = json_object_get_boolean(data_root, "fog");
+
 	config_menu = true;
 
 	return true;
