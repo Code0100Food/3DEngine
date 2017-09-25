@@ -53,6 +53,8 @@ bool ModuleAudio::Init()
 		ret = false;
 	}
 
+	if (!ret)this->enabled = false;
+
 	return true;
 }
 
@@ -78,6 +80,9 @@ bool ModuleAudio::Start()
 // Called before quitting
 bool ModuleAudio::CleanUp()
 {
+	if (!enabled)
+		return true;
+
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
 	if(music != NULL)
@@ -131,7 +136,7 @@ void ModuleAudio::BlitConfigInfo()
 		json_value_free((JSON_Value*)config_data);
 
 		//Apply immediate effects
-		SetMasterVolume(master_volume);
+		if(enabled)SetMasterVolume(master_volume);
 
 		//Play save fx
 		PlayFxForInput(FX_ID::APPLY_FX);
@@ -143,6 +148,8 @@ void ModuleAudio::BlitConfigInfo()
 // Play a music file
 bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 {
+	if (!enabled)return false;
+
 	bool ret = true;
 	
 	if(music != NULL)
@@ -194,6 +201,8 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 // Load WAV
 unsigned int ModuleAudio::LoadFx(const char* path, FX_ID id)
 {
+	if (!enabled)return 0;
+
 	unsigned int ret = 0;
 
 	Mix_Chunk* chunk = Mix_LoadWAV(path);
@@ -215,6 +224,8 @@ unsigned int ModuleAudio::LoadFx(const char* path, FX_ID id)
 // Play WAV
 bool ModuleAudio::PlayFx(FX_ID id,int channel, int repeat)
 {
+	if (!enabled)return false;
+
 	bool ret = false;
 
 	std::list<FX_Chunk>::iterator it = fx.begin();
@@ -235,7 +246,7 @@ bool ModuleAudio::PlayFx(FX_ID id,int channel, int repeat)
 
 bool ModuleAudio::PlayFxForInput(FX_ID id)
 {
-	if (!fx_on_input)return false;
+	if (!fx_on_input || !enabled)return false;
 
 	bool ret = false;
 

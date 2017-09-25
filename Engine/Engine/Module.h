@@ -15,7 +15,7 @@ using namespace std;
 
 class Module
 {
-private:
+public:
 
 	bool enabled = false;
 
@@ -23,7 +23,7 @@ public:
 
 
 	// Constructors =================================
-	Module(bool start_enabled = true)
+	Module(bool start_enabled = true) :enabled(start_enabled)
 	{
 	
 	}

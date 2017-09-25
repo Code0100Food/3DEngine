@@ -118,6 +118,8 @@ bool Application::Init()
 	LOG("Application Start --------------");
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret; item++)
 	{
+		if (!(*item)->enabled)continue;
+
 		ret = (*item)->Start();
 	}
 
@@ -174,16 +176,22 @@ update_status Application::Update()
 	
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
+		if (!(*item)->enabled)continue;
+
 		ret = (*item)->PreUpdate(dt);
 	}
 
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
+		if (!(*item)->enabled)continue;
+
 		ret = (*item)->Update(dt);
 	}
 
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
+		if (!(*item)->enabled)continue;
+
 		ret = (*item)->PostUpdate(dt);
 	}
 	

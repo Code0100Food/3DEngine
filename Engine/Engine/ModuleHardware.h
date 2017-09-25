@@ -10,16 +10,15 @@
 class ModuleHardware : public Module
 {
 public:
-	ModuleHardware();
 
-public:
-	~ModuleHardware() {};
+	ModuleHardware(bool start_enabled = true);
+	~ModuleHardware();
 	
 public:
 
-	bool Start();
-	update_status Update(float dt);
-	void BlitConfigInfo();
+	bool			Start()final;
+	update_status	Update(float dt)final;
+	void			BlitConfigInfo()final;
 
 private:
 

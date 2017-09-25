@@ -2,11 +2,21 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-ModuleHardware::ModuleHardware()
+
+// Constructors =================================
+ModuleHardware::ModuleHardware(bool start_enabled) :Module(start_enabled)
 {
 	name = "Hardware";
 }
 
+// Destructors ==================================
+ModuleHardware::~ModuleHardware()
+{
+
+}
+
+
+// Game Loop ====================================
 bool ModuleHardware::Start()
 {
 	num_cpus = SDL_GetCPUCount();
