@@ -205,9 +205,33 @@ update_status Application::Update()
 
 bool Application::CleanUp()
 {
-	PERF_START(ms_timer);
-
 	bool ret = true;
+
+	//Config autosave ---------------------------
+	//Save config json file
+	const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
+	assert(config_data != NULL);
+
+	//Save the new variable
+	JSON_Object * app_value = fs->AccessObject(config_data, 1, "Application");
+	json_object_set_string(app_value, "name", app_name.c_str());
+	json_object_set_string(app_value, "organization", organization.c_str());
+	json_object_set_number(app_value, "max_fps", max_fps);
+
+	// Call Awake() in all modules
+	const JSON_Object *root_object = json_value_get_object(config_data);
+	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
+	{
+		JSON_Object* module_object = json_object_dotget_object(root_object, item._Ptr->_Myval->name.c_str());
+		(*item)->SaveConfigInfo(module_object);
+	}
+
+	ret = fs->SaveJSONFile(config_data, "config.json");
+	json_value_free((JSON_Value *)config_data);
+
+
+	//CleanUp -----------------------------------
+	PERF_START(ms_timer);
 
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
 	{
@@ -250,13 +274,19 @@ void Application::BlitConfigWindow()
 		config_opened = true;
 		if (cpy != config_opened)App->audio->PlayFxForInput(WINDOW_FX);
 
-		ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue);
+		if (ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			App->audio->PlayFxForInput(FX_ID::APPLY_FX);
+			App->window->SetTitle(app_name.c_str());
+		}
 		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application title.");
+
 		ImGui::InputText("Organization", (char*)organization.c_str(), 20);
 		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application organization.");
 
 		if (ImGui::SliderInt("Max FPS", &max_fps, 0, 120))
 		{
+			capped_ms = 1000 / (float)max_fps;
 			App->audio->PlayFxForInput(SLICE_TICK_FX);
 		}
 		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Limit max FPS.");
@@ -269,6 +299,7 @@ void Application::BlitConfigWindow()
 			fps_array[k] = fps_array[k + 1];
 		}
 		fps_array[GRAPH_ARRAY_SIZE - 1] = ImGui::GetIO().Framerate;
+		
 		//Blit framerate graphic
 		char fps_title[25];
 		sprintf_s(fps_title, 25, "Framerate %.1f", fps_array[29]);
@@ -280,6 +311,7 @@ void Application::BlitConfigWindow()
 			miliseconds_array[k] = miliseconds_array[k + 1];
 		}
 		miliseconds_array[GRAPH_ARRAY_SIZE - 1] = dt * 1000;
+		
 		//Blit milliseconds graphic
 		char mili_title[25];
 		sprintf_s(mili_title, 25, "Milliseconds %.1f", miliseconds_array[29]);
@@ -333,33 +365,8 @@ void Application::BlitConfigWindow()
 		char peak_alloc_unit_count[35];
 		sprintf_s(peak_alloc_unit_count, 35, "Peak Alloc Unit Count: %i", memory_stats.peakAllocUnitCount);
 		ImGui::Text("%s", peak_alloc_unit_count);
-
-		ImGui::Separator();
-
-		if (ImGui::Button("Apply##1", ImVec2(50, 20)))
-		{
-			//Load config json file
-			//Load config json file
-			const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
-			assert(config_data != NULL);
-
-			//Save the new variable
-			JSON_Object * app_value = fs->AccessObject(config_data, 1, "Application");
-			json_object_set_string(app_value, "name", app_name.c_str());
-			json_object_set_string(app_value, "organization", organization.c_str());
-			json_object_set_number(app_value, "max_fps", max_fps);
-			//Save the file
-			bool ret = fs->SaveJSONFile(config_data, "config.json");
-			json_value_free((JSON_Value*)config_data);
-			//Update window title
-			App->window->SetTitle(app_name.c_str());
-			capped_ms = 1000 / (float)max_fps;
-
-			//Play save fx
-			App->audio->PlayFxForInput(FX_ID::APPLY_FX);
-		}
-		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
 	}
+
 	//Play fx when is closed
 	else if (config_opened)
 	{
@@ -373,9 +380,10 @@ void Application::BlitConfigWindow()
 		if (!(*item)->config_menu)continue;
 
 		bool cpy = (*item)->config_open;
+		
+		//Play fx on first open
 		if (ImGui::CollapsingHeader((*item)->name.c_str(),ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_NoTreePushOnOpen))
 		{
-			//Play fx on first open
 			(*item)->config_open = true;
 			if (cpy != (*item)->config_open)App->audio->PlayFxForInput(WINDOW_FX);
 

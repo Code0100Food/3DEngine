@@ -82,6 +82,11 @@ public:
 
 	}
 
+	virtual void SaveConfigInfo(JSON_Object* data_root)
+	{
+
+	}
+
 public:
 
 	std::string name = "undef_module";

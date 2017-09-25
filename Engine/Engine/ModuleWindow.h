@@ -19,6 +19,7 @@ public:
 	bool Init() final;
 	bool CleanUp() final;
 	void BlitConfigInfo()final;
+	void SaveConfigInfo(JSON_Object* data_root)final;
 
 private:
 

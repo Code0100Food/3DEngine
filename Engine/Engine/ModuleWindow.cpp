@@ -212,6 +212,17 @@ void ModuleWindow::BlitConfigInfo()
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
 }
 
+void ModuleWindow::SaveConfigInfo(JSON_Object * data_root)
+{
+	json_object_set_number(data_root, "brightness", brightness);
+	json_object_set_number(data_root, "width", width);
+	json_object_set_number(data_root, "height", height);
+	json_object_set_boolean(data_root, "full_screen", full_screen);
+	json_object_set_boolean(data_root, "resizable", resizable);
+	json_object_set_boolean(data_root, "borderless", borderless);
+	json_object_set_boolean(data_root, "full_desktop", full_desktop);
+}
+
 // Functionality ================================
 
 
