@@ -73,6 +73,9 @@ update_status Scene::Update(float dt)
 	p.axis = true;
 	p.Render();
 	
+	_Sphere sp(3, 0, 3, 0);
+	sp.Render();
+
 	if (random_window)
 	{
 		ImGui::Begin("Random Test", &random_window);

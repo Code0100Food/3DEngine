@@ -168,6 +168,7 @@
     <ClInclude Include="Engine\Parson\parson.h" />
     <ClInclude Include="Engine\PhysBody3D.h" />
     <ClInclude Include="Engine\Primitive.h" />
+    <ClInclude Include="Engine\Profiler.h" />
     <ClInclude Include="Engine\Quadtree.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\Timer.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="Engine\Parson\parson.c" />
     <ClCompile Include="Engine\PhysBody3D.cpp" />
     <ClCompile Include="Engine\Primitive.cpp" />
+    <ClCompile Include="Engine\Profiler.cpp" />
     <ClCompile Include="Engine\Scene.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
   </ItemGroup>

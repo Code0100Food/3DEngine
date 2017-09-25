@@ -20,6 +20,7 @@ class ModulePhysics3D;
 class ModuleImgui;
 class ModuleConsole;
 class ModuleHardware;
+class Profiler;
 class Scene;
 
 enum APP_CONTEXT
@@ -56,6 +57,7 @@ public:
 	ModuleImgui*		imgui = nullptr;
 	ModuleConsole*		console = nullptr;
 	ModuleHardware*		hard = nullptr;
+	Profiler*			profiler = nullptr;
 	Scene*				scene = nullptr;
 
 private:

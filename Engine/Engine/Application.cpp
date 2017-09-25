@@ -12,6 +12,7 @@
 #include "ModuleHardware.h"
 #include "Scene.h"
 #include "FileSystem.h"
+#include "Profiler.h"
 #include "Parson/parson.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "mmgr/mmgr.h"
@@ -32,7 +33,7 @@ Application::Application()
 	imgui = new ModuleImgui();
 	console = new ModuleConsole();
 	hard = new ModuleHardware();
-
+	profiler = new Profiler();
 	scene = new Scene();
 
 	// The order of calls is very important!
@@ -48,6 +49,7 @@ Application::Application()
 	AddModule(physics);
 	AddModule(console);
 	AddModule(hard);
+	AddModule(profiler);
 
 	// Scenes
 	AddModule(scene);

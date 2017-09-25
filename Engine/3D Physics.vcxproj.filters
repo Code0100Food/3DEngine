@@ -300,6 +300,9 @@
     <ClInclude Include="Engine\mmgr\nommgr.h">
       <Filter>Sources\Tools\mmgr</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Profiler.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -472,6 +475,9 @@
     </ClCompile>
     <ClCompile Include="Engine\mmgr\mmgr.cpp">
       <Filter>Sources\Tools\mmgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Profiler.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
