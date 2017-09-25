@@ -108,6 +108,7 @@ void ModuleAudio::BlitConfigInfo()
 	//Master volume slice
 	if (ImGui::SliderInt("Master Volume", &master_volume, 0, MAX_VOLUME))
 	{
+		if (enabled)SetMasterVolume(master_volume);
 		PlayFxForInput(SLICE_TICK_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the master audio volume");
@@ -115,33 +116,12 @@ void ModuleAudio::BlitConfigInfo()
 	//Input FX check box
 	ImGui::Checkbox("Input FX", &fx_on_input);
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF all the input audio effects.");
+}
 
-	ImGui::Separator();
-
-	//Apply button
-	if (ImGui::Button("Apply##audio_apply", ImVec2(50, 20)))
-	{
-		
-		//Save values
-		//Load config json file
-		const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
-		assert(config_data != NULL);
-
-		//Save the new variables
-		json_object_set_number(App->fs->AccessObject(config_data, 1, name.c_str()), "master_volume", master_volume);
-		json_object_set_boolean(App->fs->AccessObject(config_data, 1, name.c_str()), "fx_on_input", fx_on_input);
-
-		//Save the file
-		App->fs->SaveJSONFile(config_data, "config.json");
-		json_value_free((JSON_Value*)config_data);
-
-		//Apply immediate effects
-		if(enabled)SetMasterVolume(master_volume);
-
-		//Play save fx
-		PlayFxForInput(FX_ID::APPLY_FX);
-	}
-	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
+void ModuleAudio::SaveConfigInfo(JSON_Object * data_root)
+{
+	json_object_set_number(data_root, "master_volume", master_volume);
+	json_object_set_boolean(data_root, "fx_on_input", fx_on_input);
 }
 
 // Functionality ================================

@@ -20,6 +20,7 @@ public:
 	update_status	Update(float dt) final;
 	bool			CleanUp() final;
 	void			BlitConfigInfo();
+	void			SaveConfigInfo(JSON_Object* data_root);
 
 public:
 

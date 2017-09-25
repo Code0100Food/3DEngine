@@ -51,6 +51,17 @@ bool ModuleCamera3D::Start()
 	return ret;
 }
 
+update_status ModuleCamera3D::Update(float dt)
+{
+	//Look the vehicle body with the CameraLocation & the ViewVector & the Z_DIST defined
+	App->camera->Look(camera_location + camera_dist* normalize(camera_location - view_vector), view_vector, true);
+		
+	// Recalculate matrix -------------
+	CalculateViewMatrix();
+
+	return UPDATE_CONTINUE;
+}
+
 bool ModuleCamera3D::CleanUp()
 {
 	LOG("Cleaning camera");
@@ -62,63 +73,34 @@ void ModuleCamera3D::BlitConfigInfo()
 {
 	//Camera location ui
 	ImGui::InputFloat3("Camera Location", &camera_location, 2);
-	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)","Change main camera location.");
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change main camera location.");
+
 	//View vector ui
 	ImGui::InputFloat3("View Vector", &view_vector, 2);
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change main camera view vector.");
+
 	//Camera dist ui
 	if (ImGui::DragFloat("Camera Distance", &camera_dist, 0.1, NULL, NULL, "%.1f"))
 	{
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change main camera distance from the view target.");
-
-	ImGui::Separator();
-
-	//Save values
-	if (ImGui::Button("Apply", ImVec2(50, 20)))
-	{
-		//Load config json file
-		const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
-		assert(config_data != NULL);
-
-		//Save the new variables
-		JSON_Object* data_root = App->fs->AccessObject(config_data, 1, name.c_str());
-		//Save camera location
-		json_array_t* _array = json_object_get_array(data_root, "camera_location");
-		json_array_replace_number(_array, 0, camera_location.x);
-		json_array_replace_number(_array, 1, camera_location.y);
-		json_array_replace_number(_array, 2, camera_location.z);
-		//Save view vector
-		_array = json_object_get_array(data_root, "view_vector");
-		json_array_replace_number(_array, 0, view_vector.x);
-		json_array_replace_number(_array, 1, view_vector.y);
-		json_array_replace_number(_array, 2, view_vector.z);
-		//Save camera distance
-		float rounded_dist = camera_dist - (camera_dist - (int)camera_dist);
-		int rounded_decimals = ceil((camera_dist - (int)camera_dist) * 100);
-		rounded_dist += ((float)rounded_decimals / 100);
-		json_object_set_number(data_root, "camera_distance", rounded_dist);
-		
-		//Save the file
-		App->fs->SaveJSONFile(config_data, "config.json");
-		json_value_free((JSON_Value*)config_data);
-
-		//Play save fx
-		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
-	}
-	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Press Apply to save all the changes.");
 }
 
-update_status ModuleCamera3D::Update(float dt)
+void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
 {
-	//Look the vehicle body with the CameraLocation & the ViewVector & the Z_DIST defined
-	App->camera->Look(camera_location + camera_dist* normalize(camera_location - view_vector), view_vector, true);
-		
-	// Recalculate matrix -------------
-	CalculateViewMatrix();
-
-	return UPDATE_CONTINUE;
+	//Save camera location
+	json_array_t* _array = json_object_get_array(data_root, "camera_location");
+	json_array_replace_number(_array, 0, camera_location.x);
+	json_array_replace_number(_array, 1, camera_location.y);
+	json_array_replace_number(_array, 2, camera_location.z);
+	//Save view vector
+	_array = json_object_get_array(data_root, "view_vector");
+	json_array_replace_number(_array, 0, view_vector.x);
+	json_array_replace_number(_array, 1, view_vector.y);
+	json_array_replace_number(_array, 2, view_vector.z);
+	//Save camera distance
+	json_object_set_number(data_root, "camera_distance", camera_dist);
 }
 
 // Functionality ================================

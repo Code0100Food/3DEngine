@@ -133,10 +133,18 @@ bool ModuleRenderer3D::Init()
 		}
 		
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		glClearDepth(1.0f);
-		
+				
 		//Initialize clear color
-		glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
+		if (custom_clear)
+		{
+			glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
+			glClearDepth(clear_depth);
+		}
+		else
+		{
+			glClearColor(0.0, 0.0, 0.0, 0.0);
+			glClearDepth(1.0f);
+		}
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -162,10 +170,9 @@ bool ModuleRenderer3D::Init()
 		}
 
 		//Initialize lighting states
-		glEnable(GL_LIGHTING);
+		if (lighting)glEnable(GL_LIGHTING);
 		GLfloat l_color[] = { lighting_color[0], lighting_color[1], lighting_color[2], lighting_color[3] };
 		glLightModelfv(GL_EMISSION, l_color);
-		if (!lighting)glDisable(GL_LIGHTING);
 
 		//Initialize material states
 		if (material_color)
