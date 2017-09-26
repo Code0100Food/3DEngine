@@ -72,17 +72,19 @@ public:
 public:
 
 	// Called when before render is available
-	bool			Awake(const JSON_Object* data_root);
+	bool			Awake(const JSON_Object* data_root)final;
 	// Called after all Updates
-	update_status	PostUpdate(float dt);
+	update_status	PostUpdate(float dt)final;
 	// Called before quitting
-	bool			CleanUp();
+	bool			CleanUp()final;
+	void			BlitConfigInfo()final;
 
 public:
 
 	//Functionality -------------------
 	//Used when loading input keys
 	INPUT_EVENT				StrToInputEvent(const char* str)const;
+	const char*				InputEventToStr(INPUT_EVENT _event)const;
 	std::pair<int, int>		StrToControllerJoyID(const char* str)const;
 	//Used to manage the programmed input events
 	void					SendKeyboardInputEvent(int id, INPUT_STATE state);

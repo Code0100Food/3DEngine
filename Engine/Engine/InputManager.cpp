@@ -38,6 +38,7 @@ InputManager::InputManager()
 {
 	id = M_INPUT_MANAGER;
 	name = "InputManager";
+	config_menu = true;
 }
 
 // Destructors ==================================
@@ -74,7 +75,7 @@ bool InputManager::Awake(const JSON_Object* data_root)
 		const char* app_context_str = json_object_get_string(key_ptr, "app_context");
 		bool joy = json_object_get_boolean(key_ptr, "joy")> 0 ? true : false;
 
-		if (str == nullptr)
+		if (str != nullptr)
 		{
 			scancode = SDL_GetScancodeFromName(str);
 		}
@@ -175,6 +176,40 @@ bool InputManager::CleanUp()
 	return true;
 }
 
+void InputManager::BlitConfigInfo()
+{
+	//Show all the programmed keyboard events
+	ImGui::Text("Keyboard Events:");
+	
+	//Search the event in the keyboard map
+	std::map<int, Suitable_Input_Event>::const_iterator key_event = keyboard_events_map.begin();
+	while (key_event != keyboard_events_map.end())
+	{
+		ImGui::BulletText(SDL_GetScancodeName((SDL_Scancode)key_event._Ptr->_Myval.first));
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.2, 0.8, 0.2, 1.0), InputEventToStr(key_event._Ptr->_Myval.second.input_event));
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.6, 0.6, 0.8, 1.0), App->AppContextToStr(key_event._Ptr->_Myval.second.app_context));
+		
+		key_event++;
+	}
+	ImGui::Separator();
+
+	//Show all the programmed controller events
+	ImGui::Text("Controller Events");
+	//Search the event in the keyboard map
+	std::map<int, Suitable_Input_Event>::const_iterator controller_event = controller_events_map.begin();
+	while (controller_event != controller_events_map.end())
+	{
+		ImGui::BulletText(SDL_GetScancodeName((SDL_Scancode)controller_event._Ptr->_Myval.first));
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.2, 0.8, 0.2, 1.0), InputEventToStr(controller_event._Ptr->_Myval.second.input_event));
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.6, 0.6, 0.8, 1.0), App->AppContextToStr(controller_event._Ptr->_Myval.second.app_context));
+
+		controller_event++;
+	}
+}
 
 //Functionality ==================================
 INPUT_EVENT InputManager::StrToInputEvent(const char * str) const
@@ -194,6 +229,16 @@ INPUT_EVENT InputManager::StrToInputEvent(const char * str) const
 	if (strcmp(str, "add_value") == 0)				return INPUT_EVENT::ADD_VALUE;
 	if (strcmp(str, "rest_value") == 0)				return INPUT_EVENT::REST_VALUE;
 	return UNKNOWN_INPUT;
+}
+
+const char*	InputManager::InputEventToStr(INPUT_EVENT _event)const
+{
+	switch (_event)
+	{
+	case UNKNOWN_INPUT:		return "unknown";		break;
+	case ADD_VALUE:			return "Add Value";		break;
+	case REST_VALUE:		return "Rest Value";	break;
+	}
 }
 
 std::pair<int, int> InputManager::StrToControllerJoyID(const char * str) const

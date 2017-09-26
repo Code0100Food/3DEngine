@@ -316,6 +316,18 @@ APP_CONTEXT Application::StrToAppContext(const char * str) const
 	return UNKNOWN_CONTEXT;
 }
 
+const char*	Application::AppContextToStr(APP_CONTEXT app_context) const
+{
+	switch (app_context)
+	{
+	case UNKNOWN_CONTEXT:	return "Unknown";	break;
+	case BUILD_CONTEXT:		return "Build";		break;
+	case PLAY_CONTEXT:		return "Play";		break;
+	case IN_GAME_CONTEXT:	return "Game";		break;
+	case PAUSE_CONTEXT:		return "Pause";		break;
+	}
+}
+
 void Application::SetQuit()
 {
 	want_to_quit = true;

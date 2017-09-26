@@ -28,7 +28,7 @@ class Scene;
 enum APP_CONTEXT
 {
 	UNKNOWN_CONTEXT = 0,
-	BUILD_CONTEXT = 0,
+	BUILD_CONTEXT,
 	PLAY_CONTEXT,
 	IN_GAME_CONTEXT,
 	PAUSE_CONTEXT,
@@ -102,7 +102,8 @@ public:
 public:
 
 	// Used in data loading
-	APP_CONTEXT	StrToAppContext(const char* str)const;
+	APP_CONTEXT	StrToAppContext(const char* str) const;
+	const char*	AppContextToStr(APP_CONTEXT app_context) const;
 
 	void SetQuit();
 	void RequestBrowser(const char* link);
