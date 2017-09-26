@@ -7,7 +7,8 @@
 // Constructors =================================
 Scene::Scene(bool start_enabled) : Module(start_enabled)
 {
-
+	id = M_SCENE;
+	name = "Scene";
 }
 
 // Destructors ==================================

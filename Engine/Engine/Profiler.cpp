@@ -17,7 +17,46 @@ Profiler::~Profiler()
 // Game Loop ====================================
 void Profiler::BlitConfigInfo()
 {
-	ImGui::Text("App Build: %.3f (Sec)", GetProfBlock(APPLICATION,BUILD_STEP)->time_in_nanoseconds / 1000000.0f);
+	//Show app time tracking
+	ImGui::Text("App:");
+	ImGui::Text("- Build		"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(APPLICATION, BUILD_STEP)->time_in_nanoseconds / 1000000.0f);
+	//Show app awake time
+	ImGui::Text("- Awake		"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(APPLICATION, AWAKE_STEP)->time_in_nanoseconds / 1000000.0f);
+	//Show app start time
+	ImGui::Text("- Start		"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(APPLICATION, START_STEP)->time_in_nanoseconds / 1000000.0f);
+	//Show app pre update time
+	ImGui::Text("- PreUpdate	"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(APPLICATION, PRE_UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
+	//Show app update time
+	ImGui::Text("- Update	   "); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(APPLICATION, UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
+	//Show app post update time
+	ImGui::Text("- PostUpdate   "); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(APPLICATION, POST_UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
+	ImGui::Separator();
+	//Show renderer time tracking
+	ImGui::Text("Renderer:");
+	ImGui::Text("- Build		"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(M_RENDERER, BUILD_STEP)->time_in_nanoseconds / 1000.0f);
+	//Show app awake time
+	/*ImGui::Text("- Awake		"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(M_RENDERER, AWAKE_STEP)->time_in_nanoseconds / 1000000.0f);
+	//Show app start time
+	ImGui::Text("- Start		"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(M_RENDERER, START_STEP)->time_in_nanoseconds / 1000000.0f);
+	//Show app pre update time
+	ImGui::Text("- PreUpdate	"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(M_RENDERER, PRE_UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
+	//Show app update time
+	ImGui::Text("- Update	   "); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(M_RENDERER, UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
+	//Show app post update time
+	ImGui::Text("- PostUpdate   "); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(M_RENDERER, POST_UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
+	*/ImGui::Separator();
 }
 
 // Functionality ================================

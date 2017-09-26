@@ -64,6 +64,7 @@ public:
 private:
 
 	PerfTimer		prof_timer;
+	PerfTimer		m_prof_timer;
 	Timer			ms_timer;
 	uint64			frame_count = 0;
 	Timer			startup_time;

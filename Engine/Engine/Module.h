@@ -27,7 +27,8 @@ enum MODULE_ID
 	M_PHYSICS3D,
 	M_RENDERER,
 	M_WINDOW,
-	M_PROFILER
+	M_PROFILER,
+	M_SCENE
 };
 
 class Module

@@ -23,18 +23,51 @@ Application::Application()
 	START(ms_timer);
 	START(prof_timer);
 
-	window = new ModuleWindow();
-	fs = new FileSystem();
-	input = new ModuleInput();
-	audio = new ModuleAudio();
-	renderer3D = new ModuleRenderer3D();
-	camera = new ModuleCamera3D();
-	physics = new ModulePhysics3D();
-	imgui = new ModuleImgui();
-	console = new ModuleConsole();
-	hard = new ModuleHardware();
 	profiler = new Profiler();
+	
+	START(m_prof_timer);
+	window = new ModuleWindow();
+	profiler->CallProfBlock(M_WINDOW, BUILD_STEP, prof_timer.ReadTicks());
+	
+	START(m_prof_timer);
+	fs = new FileSystem();
+	profiler->CallProfBlock(M_FILE_SYSTEM, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	input = new ModuleInput();
+	profiler->CallProfBlock(M_INPUT, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	audio = new ModuleAudio();
+	profiler->CallProfBlock(M_AUDIO, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	renderer3D = new ModuleRenderer3D();
+	profiler->CallProfBlock(M_RENDERER, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	camera = new ModuleCamera3D();
+	profiler->CallProfBlock(M_CAMERA3D, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	physics = new ModulePhysics3D();
+	profiler->CallProfBlock(M_PHYSICS3D, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	imgui = new ModuleImgui();
+	profiler->CallProfBlock(M_IMGUI, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	console = new ModuleConsole();
+	profiler->CallProfBlock(M_CONSOLE, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	hard = new ModuleHardware();
+	profiler->CallProfBlock(M_HARDWARE, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
 	scene = new Scene();
+	profiler->CallProfBlock(M_SCENE, BUILD_STEP, prof_timer.ReadTicks());
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -77,6 +110,7 @@ Application::~Application()
 bool Application::Awake()
 {
 	START(ms_timer);
+	START(prof_timer);
 
 	bool ret = true;
 
@@ -95,13 +129,16 @@ bool Application::Awake()
 	// Call Awake() in all modules
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
+		START(m_prof_timer);
 		const JSON_Object* module_object = json_object_dotget_object(root_object, item._Ptr->_Myval->name.c_str());
 		(*item)->Awake(module_object);
+		profiler->CallProfBlock((*item)->id, BUILD_STEP, prof_timer.ReadTicks());
 	}
 
 	json_value_free((JSON_Value *)config_data);
 
 	PEEK(ms_timer);
+	profiler->CallProfBlock(APPLICATION, AWAKE_STEP, prof_timer.ReadTicks());
 
 	return ret;
 }
@@ -109,6 +146,7 @@ bool Application::Awake()
 bool Application::Init()
 {
 	START(ms_timer);
+	START(prof_timer);
 
 	bool ret = true;
 
@@ -131,6 +169,7 @@ bool Application::Init()
 	memset(fps_array, 0, 30);
 
 	PEEK(ms_timer);
+	profiler->CallProfBlock(APPLICATION, START_STEP, prof_timer.ReadTicks());
 
 	return ret;
 }
@@ -177,27 +216,33 @@ update_status Application::Update()
 	//Start frame timer & ImGui new frame
 	PrepareUpdate();
 	
+	START(prof_timer);
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
 		if (!(*item)->enabled)continue;
 
 		ret = (*item)->PreUpdate(dt);
 	}
+	profiler->CallProfBlock(APPLICATION, PRE_UPDATE_STEP, prof_timer.ReadTicks());
 
+	START(prof_timer);
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
 		if (!(*item)->enabled)continue;
 
 		ret = (*item)->Update(dt);
 	}
+	profiler->CallProfBlock(APPLICATION, UPDATE_STEP, prof_timer.ReadTicks());
 
+	START(prof_timer);
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
 		if (!(*item)->enabled)continue;
 
 		ret = (*item)->PostUpdate(dt);
 	}
-	
+	profiler->CallProfBlock(APPLICATION, POST_UPDATE_STEP, prof_timer.ReadTicks());
+
 	FinishUpdate();
 
 	if (want_to_quit)ret = update_status::UPDATE_STOP;
