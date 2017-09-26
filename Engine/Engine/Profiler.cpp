@@ -17,49 +17,88 @@ Profiler::~Profiler()
 // Game Loop ====================================
 void Profiler::BlitConfigInfo()
 {
-	//Show app time tracking
+	Prof_Block* block_ptr = nullptr;
+
+	//Show app time tracking --------------------
 	ImGui::Text("App:");
-	ImGui::Text("- Build		"); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(APPLICATION, BUILD_STEP)->time_in_nanoseconds / 1000000.0f);
-	//Show app awake time
-	ImGui::Text("- Awake		"); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(APPLICATION, AWAKE_STEP)->time_in_nanoseconds / 1000000.0f);
-	//Show app start time
-	ImGui::Text("- Start		"); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(APPLICATION, START_STEP)->time_in_nanoseconds / 1000000.0f);
-	//Show app pre update time
-	ImGui::Text("- PreUpdate	"); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(APPLICATION, PRE_UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
-	//Show app update time
-	ImGui::Text("- Update	   "); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(APPLICATION, UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
-	//Show app post update time
-	ImGui::Text("- PostUpdate   "); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(APPLICATION, POST_UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
+	BlitModuleProfile(APPLICATION, true);
 	ImGui::Separator();
-	//Show renderer time tracking
+
+	//Show renderer time tracking ---------------
 	ImGui::Text("Renderer:");
-	ImGui::Text("- Build		"); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(M_RENDERER, BUILD_STEP)->time_in_nanoseconds / 1000.0f);
-	//Show app awake time
-	/*ImGui::Text("- Awake		"); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(M_RENDERER, AWAKE_STEP)->time_in_nanoseconds / 1000000.0f);
-	//Show app start time
-	ImGui::Text("- Start		"); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", GetProfBlock(M_RENDERER, START_STEP)->time_in_nanoseconds / 1000000.0f);
-	//Show app pre update time
-	ImGui::Text("- PreUpdate	"); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(M_RENDERER, PRE_UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
-	//Show app update time
-	ImGui::Text("- Update	   "); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(M_RENDERER, UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
-	//Show app post update time
-	ImGui::Text("- PostUpdate   "); ImGui::SameLine();
-	ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", GetProfBlock(M_RENDERER, POST_UPDATE_STEP)->time_in_nanoseconds / 1000.0f);
-	*/ImGui::Separator();
+	BlitModuleProfile(M_RENDERER);
+	ImGui::Separator();
+
+	//Show console time tracking ---------------
+	ImGui::Text("Console:");
+	BlitModuleProfile(M_CONSOLE);
+	ImGui::Separator();
+
+	//Show camera time tracking ---------------
+	ImGui::Text("Camera:");
+	BlitModuleProfile(M_CAMERA3D);
+	ImGui::Separator();
+		
 }
 
 // Functionality ================================
+void Profiler::BlitModuleProfile(MODULE_ID id, bool graph)
+{
+	Prof_Block* block_ptr = nullptr;
+
+	ImGui::Text("- Build		"); ImGui::SameLine();
+	block_ptr = GetProfBlock(id, BUILD_STEP);
+	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	//Awake -----------------
+	ImGui::Text("- Awake		"); ImGui::SameLine();
+	block_ptr = GetProfBlock(id, AWAKE_STEP);
+	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	//Init ------------------
+	ImGui::Text("- Init			"); ImGui::SameLine();
+	block_ptr = GetProfBlock(id, INIT_STEP);
+	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	//Start -----------------
+	ImGui::Text("- Start		"); ImGui::SameLine();
+	block_ptr = GetProfBlock(id, START_STEP);
+	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	//PreUpdate -------------
+	ImGui::Text("- PreUpdate	"); ImGui::SameLine();
+	block_ptr = GetProfBlock(id, PRE_UPDATE_STEP);
+	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
+	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	//Update ----------------
+	ImGui::Text("- Update	   "); ImGui::SameLine();
+	block_ptr = GetProfBlock(id, UPDATE_STEP);
+	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
+	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	//PpstUpdate ------------
+	ImGui::Text("- PostUpdate   "); ImGui::SameLine();
+	block_ptr = GetProfBlock(id, POST_UPDATE_STEP);
+	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
+	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+
+	//Reperesents all the data in agraph
+	if (graph)
+	{
+		//Blit milliseconds graphic
+		float time_values[3];
+		block_ptr = GetProfBlock(id, PRE_UPDATE_STEP);
+		time_values[0] = block_ptr == nullptr ? 0 : block_ptr->time_in_nanoseconds / 1000.0f;
+		block_ptr = GetProfBlock(id, UPDATE_STEP);
+		time_values[1] = block_ptr == nullptr ? 0 : block_ptr->time_in_nanoseconds / 1000.0f;
+		block_ptr = GetProfBlock(id, POST_UPDATE_STEP);
+		time_values[2] = block_ptr == nullptr ? 0 : block_ptr->time_in_nanoseconds / 1000.0f;
+		char title[25];
+		sprintf_s(title, 25, "Total Miliseconds %.2f", (time_values[0] + time_values[1] + time_values[2]));
+		ImGui::PlotHistogram("", time_values, 3, 30, title, 0.0f, 100.0f, ImVec2(180, 50));
+
+	}
+}
+
 void Profiler::CallProfBlock(MODULE_ID id, LOOP_STEP step, uint64 time)
 {
 	bool found = false;

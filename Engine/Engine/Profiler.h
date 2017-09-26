@@ -8,6 +8,7 @@ enum LOOP_STEP
 	UNDEF_SEP = 0,
 	BUILD_STEP,
 	AWAKE_STEP,
+	INIT_STEP,
 	START_STEP,
 	PRE_UPDATE_STEP,
 	UPDATE_STEP,
@@ -43,6 +44,7 @@ private:
 public:
 
 	//Functionality
+	void		BlitModuleProfile(MODULE_ID id, bool graph = false);
 	void		CallProfBlock(MODULE_ID id, LOOP_STEP step, uint64 time);
 	Prof_Block*	GetProfBlock(MODULE_ID id, LOOP_STEP step)const;
 

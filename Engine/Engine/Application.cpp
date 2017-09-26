@@ -153,7 +153,9 @@ bool Application::Init()
 	// Call Init() in all modules
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret; item++)
 	{
+		START(m_prof_timer);
 		ret = (*item)->Init();
+		profiler->CallProfBlock((*item)->id, INIT_STEP, prof_timer.ReadTicks());
 	}
 
 	// After all Init calls we call Start() in all modules
@@ -162,7 +164,9 @@ bool Application::Init()
 	{
 		if (!(*item)->enabled)continue;
 
+		START(m_prof_timer);
 		ret = (*item)->Start();
+		profiler->CallProfBlock((*item)->id, START_STEP, prof_timer.ReadTicks());
 	}
 
 	//Initialize values
@@ -221,7 +225,9 @@ update_status Application::Update()
 	{
 		if (!(*item)->enabled)continue;
 
+		START(m_prof_timer);
 		ret = (*item)->PreUpdate(dt);
+		profiler->CallProfBlock((*item)->id, PRE_UPDATE_STEP, prof_timer.ReadTicks());
 	}
 	profiler->CallProfBlock(APPLICATION, PRE_UPDATE_STEP, prof_timer.ReadTicks());
 
@@ -230,7 +236,9 @@ update_status Application::Update()
 	{
 		if (!(*item)->enabled)continue;
 
+		START(m_prof_timer);
 		ret = (*item)->Update(dt);
+		profiler->CallProfBlock((*item)->id, UPDATE_STEP, prof_timer.ReadTicks());
 	}
 	profiler->CallProfBlock(APPLICATION, UPDATE_STEP, prof_timer.ReadTicks());
 
@@ -239,7 +247,9 @@ update_status Application::Update()
 	{
 		if (!(*item)->enabled)continue;
 
+		START(m_prof_timer);
 		ret = (*item)->PostUpdate(dt);
+		profiler->CallProfBlock((*item)->id, POST_UPDATE_STEP, prof_timer.ReadTicks());
 	}
 	profiler->CallProfBlock(APPLICATION, POST_UPDATE_STEP, prof_timer.ReadTicks());
 
