@@ -72,8 +72,7 @@ public:
 public:
 
 	// Called when before render is available
-	bool Awake(const JSON_Object* data_root);
-	//bool Awake(pugi::xml_node&);
+	bool			Awake(const JSON_Object* data_root);
 	// Called after all Updates
 	update_status	PostUpdate(float dt);
 	// Called before quitting
@@ -94,11 +93,11 @@ public:
 private:
 
 	//Maps with all the input events mapped
-	std::multimap<int, Suitable_Input_Event>				keyboard_events_map; /*for the keyboard*/
-	std::multimap<int, Suitable_Input_Event>				controller_events_map; /*for the controller*/
-	std::multimap<std::pair<int, int>, Suitable_Input_Event> controller_joysticks_events_map; /*for the controller axis (track sdl & my ID)*/
+	std::multimap<int, Suitable_Input_Event>					keyboard_events_map; /*for the keyboard*/
+	std::multimap<int, Suitable_Input_Event>					controller_events_map; /*for the controller*/
+	std::multimap<std::pair<int, int>, Suitable_Input_Event>	controller_joysticks_events_map; /*for the controller axis (track sdl & my ID)*/
 
-																							  //Events that are happening during this frame
+	//Events that are happening during this frame
 	std::multimap<Suitable_Input_Event, INPUT_STATE> current_events;
 };
 #endif // _J1_INPUT_MANAGER_H_

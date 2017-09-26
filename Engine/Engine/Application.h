@@ -29,7 +29,10 @@ enum APP_CONTEXT
 {
 	UNKNOWN_CONTEXT = 0,
 	BUILD_CONTEXT = 0,
-	PLAY_CONTEXT
+	PLAY_CONTEXT,
+	IN_GAME_CONTEXT,
+	PAUSE_CONTEXT,
+	MAIN_MENU_CONTEXT
 };
 
 class Application
@@ -97,6 +100,9 @@ public:
 	std::string		organization;
 
 public:
+
+	// Used in data loading
+	APP_CONTEXT	StrToAppContext(const char* str)const;
 
 	void SetQuit();
 	void RequestBrowser(const char* link);

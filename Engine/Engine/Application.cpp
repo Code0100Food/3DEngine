@@ -308,6 +308,14 @@ bool Application::CleanUp()
 }
 
 // Functionality ================================
+APP_CONTEXT Application::StrToAppContext(const char * str) const
+{
+	if (strcmp(str, "in_game_context") == 0)		return IN_GAME_CONTEXT;
+	if (strcmp(str, "pause_context") == 0)			return PAUSE_CONTEXT;
+	if (strcmp(str, "main_menu_context") == 0)		return MAIN_MENU_CONTEXT;
+	return UNKNOWN_CONTEXT;
+}
+
 void Application::SetQuit()
 {
 	want_to_quit = true;

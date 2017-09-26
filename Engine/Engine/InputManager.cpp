@@ -51,10 +51,12 @@ InputManager::~InputManager()
 // Called when before render is available
 bool InputManager::Awake(const JSON_Object* data_root)
 {
-	/*//Node where first key is located
-	pugi::xml_node key_node = config.child("key");
+	//Get initial object
+	const JSON_Object* key_ptr = json_object_get_object(data_root, "key0");
 
-	while (key_node != NULL)
+	//Iterate all the objects
+	uint k = 1;
+	while (key_ptr != NULL)
 	{
 		//Scancodes enums
 		SDL_Scancode				scancode = SDL_SCANCODE_UNKNOWN;
@@ -62,16 +64,24 @@ bool InputManager::Awake(const JSON_Object* data_root)
 
 		//Check if the programmed input is for the keyboard or the controller
 		// and get the scancode
-		char* str = nullptr;
-		str = (char*)key_node.attribute("id").as_string("error");
-		if (str != "error")
+
+		//Load all the object data
+		const char* str = json_object_get_string(key_ptr,"id");
+		bool num = json_object_get_boolean(key_ptr, "num") > 0 ? true : false;
+		uint controller_id = json_object_get_number(key_ptr, "controller_id");
+		const char* controller_id_str = json_object_get_string(key_ptr, "controller_id");
+		const char* event_str = json_object_get_string(key_ptr, "event");
+		const char* app_context_str = json_object_get_string(key_ptr, "app_context");
+		bool joy = json_object_get_boolean(key_ptr, "joy")> 0 ? true : false;
+
+		if (str == nullptr)
 		{
 			scancode = SDL_GetScancodeFromName(str);
 		}
 		else
 		{
-			if (!key_node.attribute("num").as_bool())controller_scancode = SDL_GameControllerGetButtonFromString(key_node.attribute("controller_id").as_string());
-			else controller_scancode = (SDL_GameControllerButton)key_node.attribute("controller_id").as_uint();
+			if (!num)controller_scancode = SDL_GameControllerGetButtonFromString(controller_id_str);
+			else controller_scancode = (SDL_GameControllerButton)controller_id;
 		}
 
 		// Keyboard case
@@ -82,7 +92,7 @@ bool InputManager::Awake(const JSON_Object* data_root)
 
 			//Build pair with the loaded data
 			new_key.first = scancode;
-			new_key.second = Suitable_Input_Event(StrToInputEvent(key_node.attribute("event").as_string()), App->StrToAppContext(key_node.attribute("app_context").as_string()));
+			new_key.second = Suitable_Input_Event(StrToInputEvent(event_str), App->StrToAppContext(app_context_str));
 			if (new_key.second.input_event == UNKNOWN_INPUT)
 			{
 				LOG("Error Loading Input Key!");
@@ -93,18 +103,17 @@ bool InputManager::Awake(const JSON_Object* data_root)
 			}
 		}
 		//Controller case
-		bool joy_case = key_node.attribute("joy").as_bool();
-		if (controller_scancode != SDL_CONTROLLER_BUTTON_INVALID || joy_case)
+		if (controller_scancode != SDL_CONTROLLER_BUTTON_INVALID || joy)
 		{
 			//Check if is a button or joystick event
-			if (joy_case)
+			if (joy)
 			{
 				//Map pair where new key is allocated
 				std::pair<std::pair<int, int>, Suitable_Input_Event> new_key;
 
 				//Build pair with the loaded data
-				new_key.first = StrToControllerJoyID(key_node.attribute("controller_id").as_string());
-				new_key.second = Suitable_Input_Event(StrToInputEvent(key_node.attribute("event").as_string()), App->StrToAppContext(key_node.attribute("app_context").as_string()));
+				new_key.first = StrToControllerJoyID(controller_id_str);
+				new_key.second = Suitable_Input_Event(StrToInputEvent(event_str), App->StrToAppContext(app_context_str));
 				if (new_key.second.input_event == UNKNOWN_INPUT)
 				{
 					LOG("Error Loading Controller Input Key!");
@@ -122,7 +131,7 @@ bool InputManager::Awake(const JSON_Object* data_root)
 
 				//Build pair with the loaded data
 				new_key.first = controller_scancode;
-				new_key.second = Suitable_Input_Event(StrToInputEvent(key_node.attribute("event").as_string()), App->StrToAppContext(key_node.attribute("app_context").as_string()));
+				new_key.second = Suitable_Input_Event(StrToInputEvent(event_str), App->StrToAppContext(app_context_str));
 				if (new_key.second.input_event == UNKNOWN_INPUT)
 				{
 					LOG("Error Loading Controller Input Key!");
@@ -135,10 +144,16 @@ bool InputManager::Awake(const JSON_Object* data_root)
 
 		}
 
-		//Focus the next key node
-		key_node = key_node.next_sibling();
+		//Generate boject name
+		char bff[8];
+		itoa(k, bff, 10);
+		std::string num_str = bff;
+		std::string obj_name = "key" + num_str;
+		//Find a object with the name generated
+		key_ptr = json_object_get_object(data_root, obj_name.c_str());
+		k += 1;
 	}
-	*/
+
 	return true;
 }
 
