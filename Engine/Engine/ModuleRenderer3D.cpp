@@ -9,6 +9,7 @@
 #include "ModuleCamera3D.h"
 #include "FileSystem.h"
 #include "ModuleAudio.h"
+#include "ModuleImgui.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -245,7 +246,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	
 	// Rendering GUI
-	ImGui::Render();
+	App->imgui->RenderUI();
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -428,6 +429,14 @@ void ModuleRenderer3D::BlitConfigInfo()
 
 	ImGui::Separator();
 
+	//Wireframe -------------
+
+	if (ImGui::Checkbox("WireFrame", &wireframe));
+
+	//-----------------------
+
+	ImGui::Separator();
+
 	//Clear Data ------------
 	if(ImGui::Checkbox("Custom Clear", &custom_clear))
 	{
@@ -514,4 +523,9 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+bool ModuleRenderer3D::GetWireframe() const
+{
+	return wireframe;
 }

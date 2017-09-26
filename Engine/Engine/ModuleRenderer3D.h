@@ -58,6 +58,7 @@ public:
 public:
 
 	void OnResize(int width, int height);
+	bool GetWireframe() const;
 };
 
 

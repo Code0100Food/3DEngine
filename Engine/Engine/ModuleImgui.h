@@ -33,5 +33,8 @@ private:
 	//To know sdl version
 	SDL_version sdl_version;
 
+public:
+	void RenderUI();
+
 };
 #endif // _ModuleImgui_H_

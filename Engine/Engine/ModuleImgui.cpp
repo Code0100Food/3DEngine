@@ -212,3 +212,9 @@ void ModuleImgui::ShowAbout()
 	show_about_window = !show_about_window;
 }
 
+void ModuleImgui::RenderUI()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	ImGui::Render();
+}
+
