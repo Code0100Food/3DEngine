@@ -13,14 +13,26 @@ struct PhysBody3D;
 
 using namespace std;
 
+enum MODULE_ID
+{
+	UNDEF_MODULE = 0,
+	APPLICATION,
+	M_CONSOLE,
+	M_FILE_SYSTEM,
+	M_AUDIO,
+	M_CAMERA3D,
+	M_HARDWARE,
+	M_IMGUI,
+	M_INPUT,
+	M_PHYSICS3D,
+	M_RENDERER,
+	M_WINDOW,
+	M_PROFILER
+};
+
 class Module
 {
 public:
-
-	bool enabled = false;
-
-public:
-
 
 	// Constructors =================================
 	Module(bool start_enabled = true) :enabled(start_enabled)
@@ -89,6 +101,8 @@ public:
 
 public:
 
+	bool		enabled = false;
+	MODULE_ID	id = UNDEF_MODULE;
 	std::string name = "undef_module";
 	bool		config_menu = false;
 	bool		config_open = false;

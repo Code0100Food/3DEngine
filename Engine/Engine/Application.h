@@ -4,6 +4,7 @@
 #include <list>
 #include "Globals.h"
 #include "Timer.h"
+#include "PerfTimer.h"
 
 #define GRAPH_ARRAY_SIZE 30
 
@@ -62,6 +63,7 @@ public:
 
 private:
 
+	PerfTimer		prof_timer;
 	Timer			ms_timer;
 	uint64			frame_count = 0;
 	Timer			startup_time;

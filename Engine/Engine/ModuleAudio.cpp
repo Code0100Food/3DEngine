@@ -8,6 +8,7 @@
 // Constructors =================================
 ModuleAudio::ModuleAudio(bool start_enabled) : Module(start_enabled), music(NULL)
 {
+	id = M_AUDIO;
 	name = "Audio";
 }
 

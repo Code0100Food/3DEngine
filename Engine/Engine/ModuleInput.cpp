@@ -10,6 +10,7 @@
 
 ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
 {
+	id = M_INPUT;
 	name = "Input";
 
 	keyboard = new KEY_STATE[MAX_KEYS];

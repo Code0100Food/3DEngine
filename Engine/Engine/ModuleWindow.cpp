@@ -10,6 +10,7 @@
 // Constructors =================================
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 {
+	id = M_WINDOW;
 	name = "Window";
 	window = NULL;
 	screen_surface = NULL;

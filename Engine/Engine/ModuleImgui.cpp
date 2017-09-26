@@ -10,6 +10,7 @@
 // Constructors =================================
 ModuleImgui::ModuleImgui(bool start_enabled) : Module(start_enabled)
 {
+	id = M_IMGUI;
 	name = "Imgui";
 }
 

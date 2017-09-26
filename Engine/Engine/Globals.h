@@ -19,7 +19,7 @@ void log(const char file[], int line, const char* format, ...);
 
 #define DEGTORAD 0.0174532925199432957f
 #define RADTODEG 57.295779513082320876f
-#define HAVE_M_PI
+#define HAVE_M_PI 3.1415926535897932384f
 
 
 #define GET_Y_LNG(size,angle) ((size * sinf(angle * DEGTORAD) / 2.0f)
@@ -28,8 +28,8 @@ void log(const char file[], int line, const char* format, ...);
 #define GET_CURVE_X(w_size,angle) (w_size * (sinf(angle *DEGTORAD)))
 #define GET_CURVE_Z(h_size,angle) (h_size * (sinf(angle *DEGTORAD)))
 
-#define PERF_START(timer) timer.Start()
-#define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadSec())
+#define START(timer) timer.Start()
+#define PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadSec())
 
 typedef unsigned int uint;
 typedef unsigned __int32 uint32;

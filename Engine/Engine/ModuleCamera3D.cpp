@@ -7,6 +7,7 @@
 // Constructors =================================
 ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 {
+	id = M_CAMERA3D;
 	name = "Camera";
 
 	CalculateViewMatrix();

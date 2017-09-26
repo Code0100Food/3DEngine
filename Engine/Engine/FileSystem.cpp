@@ -3,6 +3,7 @@
 // Constructors =================================
 FileSystem::FileSystem(bool start_enabled) :Module(start_enabled)
 {
+	id = M_FILE_SYSTEM;
 	name = "FileSystem";
 }
 

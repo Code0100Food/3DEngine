@@ -6,6 +6,7 @@
 // Constructors =================================
 ModuleHardware::ModuleHardware(bool start_enabled) :Module(start_enabled)
 {
+	id = M_HARDWARE;
 	name = "Hardware";
 }
 

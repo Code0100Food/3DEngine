@@ -20,8 +20,8 @@
 // Constructors =================================
 Application::Application()
 {
-
-	PERF_START(ms_timer);
+	START(ms_timer);
+	START(prof_timer);
 
 	window = new ModuleWindow();
 	fs = new FileSystem();
@@ -59,7 +59,9 @@ Application::Application()
 	// Renderer last!
 	AddModule(renderer3D);
 
-	PERF_PEEK(ms_timer);
+	PEEK(ms_timer);
+	profiler->CallProfBlock(APPLICATION, BUILD_STEP, prof_timer.ReadTicks());
+
 }
 
 // Destructors ==================================
@@ -74,7 +76,7 @@ Application::~Application()
 // Game Loop ====================================
 bool Application::Awake()
 {
-	PERF_START(ms_timer);
+	START(ms_timer);
 
 	bool ret = true;
 
@@ -99,14 +101,14 @@ bool Application::Awake()
 
 	json_value_free((JSON_Value *)config_data);
 
-	PERF_PEEK(ms_timer);
+	PEEK(ms_timer);
 
 	return ret;
 }
 
 bool Application::Init()
 {
-	PERF_START(ms_timer);
+	START(ms_timer);
 
 	bool ret = true;
 
@@ -128,8 +130,7 @@ bool Application::Init()
 	//Initialize values
 	memset(fps_array, 0, 30);
 
-	PERF_PEEK(ms_timer);
-	ms_timer.Start();	
+	PEEK(ms_timer);
 
 	return ret;
 }
@@ -207,6 +208,8 @@ update_status Application::Update()
 
 bool Application::CleanUp()
 {
+	START(ms_timer);
+
 	bool ret = true;
 
 	//Config autosave ---------------------------
@@ -233,14 +236,12 @@ bool Application::CleanUp()
 
 
 	//CleanUp -----------------------------------
-	PERF_START(ms_timer);
-
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
 	{
 		(*item)->CleanUp();
 	}
 
-	PERF_PEEK(ms_timer);
+	PEEK(ms_timer);
 
 	return ret;
 }

@@ -17,6 +17,7 @@
 // Constructors =================================
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 {
+	id = M_RENDERER;
 	name = "Renderer";
 }
 

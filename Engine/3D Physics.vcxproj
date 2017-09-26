@@ -166,6 +166,7 @@
     <ClInclude Include="Engine\ModuleWindow.h" />
     <ClInclude Include="Engine\p2Point.h" />
     <ClInclude Include="Engine\Parson\parson.h" />
+    <ClInclude Include="Engine\PerfTimer.h" />
     <ClInclude Include="Engine\PhysBody3D.h" />
     <ClInclude Include="Engine\Primitive.h" />
     <ClInclude Include="Engine\Profiler.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="Engine\ModuleRenderer3D.cpp" />
     <ClCompile Include="Engine\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Parson\parson.c" />
+    <ClCompile Include="Engine\PerfTimer.cpp" />
     <ClCompile Include="Engine\PhysBody3D.cpp" />
     <ClCompile Include="Engine\Primitive.cpp" />
     <ClCompile Include="Engine\Profiler.cpp" />
