@@ -2,7 +2,6 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-
 // Constructors =================================
 ModuleHardware::ModuleHardware(bool start_enabled) :Module(start_enabled)
 {
@@ -20,6 +19,7 @@ ModuleHardware::~ModuleHardware()
 // Game Loop ====================================
 bool ModuleHardware::Start()
 {
+	//CPU AND RAM
 	num_cpus = SDL_GetCPUCount();
 	cpu_cache = SDL_GetCPUCacheLineSize();
 	system_ram = SDL_GetSystemRAM();
@@ -33,11 +33,31 @@ bool ModuleHardware::Start()
 	sse42 = SDL_HasSSE42();
 	avx = SDL_HasAVX();
 
+	//GPU
 	vendor = glGetString(GL_VENDOR);
 	gpu_name = glGetString(GL_RENDERER);
 	version = glGetString(GL_VERSION);
 
 	glGetIntegerv(GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &total_memory_kb);
+
+	num_video_drivers = SDL_GetNumVideoDrivers();
+	current_video_driver = SDL_GetCurrentVideoDriver();
+	for (int i = 0; i < num_video_drivers; i++)
+	{
+		all_video_drivers.push_back(SDL_GetVideoDriver(i));
+	}
+
+	num_render_drivers = SDL_GetNumRenderDrivers();
+	render_info = new SDL_RendererInfo();
+
+	//DEVICES
+	num_monitors = SDL_GetNumVideoDisplays();
+	for (int i = 0; i < num_monitors; i++)
+	{
+		monitors_name.push_back(SDL_GetDisplayName(i));
+	}
+
+	num_joysticks = SDL_NumJoysticks();
 
 	config_menu = true;
 
@@ -53,6 +73,30 @@ update_status ModuleHardware::Update(float dt)
 	memory_usage = total_memory_kb - current_available_memory_kb;
 
 	return UPDATE_CONTINUE;
+}
+
+bool ModuleHardware::CleanUp()
+{
+
+	if (render_info)
+	{
+		RELEASE(render_info);
+	}
+
+	for (std::vector<string>::iterator item = all_video_drivers.begin(); item != all_video_drivers.end(); item++)
+	{
+		(*item).clear();
+	}
+	all_video_drivers.clear();
+
+	for (std::vector<string>::iterator item = monitors_name.begin(); item != monitors_name.end(); item++)
+	{
+		(*item).clear();
+	}
+	monitors_name.clear();
+
+
+	return true;
 }
 
 void ModuleHardware::BlitConfigInfo()
@@ -148,5 +192,48 @@ void ModuleHardware::BlitConfigInfo()
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%.2f MB", (memory_usage / 1000.0f));
 
+	ImGui::Text("Number of Video Drivers: ");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%i", num_video_drivers);
 
+	ImGui::Text("Current Video Driver: ");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s", current_video_driver.c_str());
+
+	ImGui::Text("Video Drivers: ");
+	for (std::vector<string>::iterator item = all_video_drivers.begin(); item != all_video_drivers.end(); item++)
+	{
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s, ", (*item).c_str());
+	}
+
+	ImGui::Text("Number of Render Drivers: ");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%i", num_render_drivers);
+
+	ImGui::Text("Render Drivers: ");
+	for (int i = 0; i < num_render_drivers; i++)
+	{
+		
+		ImGui::SameLine();
+		SDL_GetRenderDriverInfo(i, render_info);
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s, ", render_info->name);
+	}
+
+	//DEVICES
+	ImGui::Separator();
+	ImGui::Text("DEVICES: ");
+	ImGui::Text("Number of Monitors: ");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%i", num_monitors);
+
+	ImGui::Text("Monitors: ");
+	for (std::vector<string>::iterator item = monitors_name.begin(); item != monitors_name.end(); item++)
+	{
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "- %s ", (*item).c_str());
+	}
+
+	ImGui::Text("Number of Gamepads: ");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%i", num_joysticks);
 }

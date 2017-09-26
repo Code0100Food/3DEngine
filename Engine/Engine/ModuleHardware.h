@@ -4,7 +4,7 @@
 #include "Module.h"
 #include "SDL/include/SDL_cpuinfo.h"
 #include "SDL/include/SDL_opengl.h"
-
+#include "SDL/include/SDL.h"
 
 
 class ModuleHardware : public Module
@@ -18,6 +18,7 @@ public:
 
 	bool			Start()final;
 	update_status	Update(float dt)final;
+	bool			CleanUp() final;
 	void			BlitConfigInfo()final;
 
 private:
@@ -45,6 +46,20 @@ private:
 	GLint dedicated_memory_kb = 0;
 	GLint total_memory_kb = 0;
 	GLint current_available_memory_kb = 0;
+
+	int					num_video_drivers = 0;
+	string				current_video_driver;
+	vector<string>		all_video_drivers;
+
+	int					num_render_drivers = 0;
+	SDL_RendererInfo*	render_info = nullptr;
+
+	//DEVICES
+	int				num_monitors = 0;
+	vector<string>	monitors_name;
+
+	int				num_joysticks = 0;
+
 
 	// Get Methods ==================================
 
