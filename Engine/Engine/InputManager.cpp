@@ -195,6 +195,7 @@ void InputManager::BlitConfigInfo()
 	}
 	ImGui::Separator();
 
+	/*
 	//Show all the programmed controller events
 	ImGui::Text("Controller Events");
 	//Search the event in the keyboard map
@@ -209,6 +210,7 @@ void InputManager::BlitConfigInfo()
 
 		controller_event++;
 	}
+	*/
 }
 
 //Functionality ==================================

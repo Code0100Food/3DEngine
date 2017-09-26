@@ -71,10 +71,14 @@ void _Primitive::Render() const
 
 	glColor3f(color.r, color.g, color.b);
 
-	if(App->renderer3D->GetWireframe())
+	if (App->renderer3D->GetWireframe())
+	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
 	else
+	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
 	InnerRender();
 

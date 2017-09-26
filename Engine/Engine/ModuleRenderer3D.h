@@ -24,7 +24,7 @@ public:
 	void			BlitConfigInfo()final;
 	void			SaveConfigInfo(JSON_Object* data_root);
 
-private:
+public:
 
 	bool	vsync = false;
 	bool	depth_test = false;
