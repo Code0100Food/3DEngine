@@ -22,6 +22,11 @@ bool ModuleAudio::Awake(const JSON_Object * data_root)
 
 	config_menu = true;
 
+	num_audio_devices = SDL_GetNumAudioDrivers();
+
+	for (int i = 0; i < num_audio_devices; i++)
+		audio_drivers.push_back(SDL_GetAudioDriver(i));
+
 	return true;
 }
 
@@ -117,6 +122,19 @@ void ModuleAudio::BlitConfigInfo()
 	//Input FX check box
 	ImGui::Checkbox("Input FX", &fx_on_input);
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF all the input audio effects.");
+
+	//Drivers
+	ImGui::Separator();
+	ImGui::Text("Total Audio drivers:");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%i", num_audio_devices);
+
+	for (std::vector<string>::iterator item = audio_drivers.begin(); item != audio_drivers.end(); item++)
+	{
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s, ", (*item).c_str());
+		ImGui::SameLine();
+	}
+	ImGui::NewLine();
 }
 
 void ModuleAudio::SaveConfigInfo(JSON_Object * data_root)

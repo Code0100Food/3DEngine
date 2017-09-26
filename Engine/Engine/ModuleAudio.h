@@ -49,6 +49,10 @@ private:
 	int					master_volume = 0;
 	bool				fx_on_input = true;
 
+	//drivers
+	vector<string>		audio_drivers;
+	int					num_audio_devices = 0;
+
 public:
 
 	// Play a music file
