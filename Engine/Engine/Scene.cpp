@@ -62,8 +62,9 @@ bool Scene::Start()
 	tri_b.b.Set(0, 0, 0);
 	tri_b.c.Set(0, 0, 0);
 
-	plane_a.Set({ 0,0,0 }, { 0,0,0 });
-	plane_b.Set({ 0,0,0 }, { 0,0,0 });
+
+	plane_a.Set(math::float3(0.0f,0.0f,0.0f), math::float3(1.0f, 0.0f, 0.0f));
+	plane_b.Set(math::float3(0.0f, 0.0f, 0.0f), math::float3(1.0f, 0.0f, 0.0f));
 
 	return true;
 }
@@ -631,6 +632,8 @@ update_status Scene::Update(float dt)
 					}
 					if (plane_2)
 					{
+						plane_a.normal.Normalize();
+						plane_b.normal.Normalize();
 						if (plane_a.Intersects(plane_b)) collide_test = "true";
 						else collide_test = "false";
 					}
