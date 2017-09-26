@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "MathGeoLib/Algorithm/Random/LCG.h"
 #include "MathGeoLib/Geometry/GeometryAll.h"
+#include "Primitive.h"
 
 class Scene : public Module
 {
@@ -19,6 +20,9 @@ public:
 	bool			CleanUp();
 
 public: 
+
+	//Basic Plane
+	_Plane grid;
 
 	//Windows management
 	bool random_window = false;
@@ -73,8 +77,6 @@ public:
 
 	void ShowRandom();
 	void ShowMaths();
-
-
 
 };
 #endif

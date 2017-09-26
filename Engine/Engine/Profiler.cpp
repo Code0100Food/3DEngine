@@ -46,40 +46,55 @@ void Profiler::BlitModuleProfile(MODULE_ID id, bool graph)
 {
 	Prof_Block* block_ptr = nullptr;
 
-	ImGui::Text("- Build		"); ImGui::SameLine();
+	//Build -----------------
 	block_ptr = GetProfBlock(id, BUILD_STEP);
-	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
-	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	if (block_ptr != nullptr)
+	{
+		ImGui::BulletText("Build		"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+	}
 	//Awake -----------------
-	ImGui::Text("- Awake		"); ImGui::SameLine();
 	block_ptr = GetProfBlock(id, AWAKE_STEP);
-	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
-	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	if (block_ptr != nullptr)
+	{
+		ImGui::BulletText("Awake		"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+	}
 	//Init ------------------
-	ImGui::Text("- Init			"); ImGui::SameLine();
 	block_ptr = GetProfBlock(id, INIT_STEP);
-	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
-	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	if (block_ptr != nullptr)
+	{
+		ImGui::BulletText("Init		 "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+	}
 	//Start -----------------
-	ImGui::Text("- Start		"); ImGui::SameLine();
 	block_ptr = GetProfBlock(id, START_STEP);
-	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
-	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	if (block_ptr != nullptr)
+	{
+		ImGui::BulletText("Start		"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+	}
 	//PreUpdate -------------
-	ImGui::Text("- PreUpdate	"); ImGui::SameLine();
 	block_ptr = GetProfBlock(id, PRE_UPDATE_STEP);
-	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
-	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	if (block_ptr != nullptr)
+	{
+		ImGui::BulletText("PreUpdate	"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
+	}
 	//Update ----------------
-	ImGui::Text("- Update	   "); ImGui::SameLine();
 	block_ptr = GetProfBlock(id, UPDATE_STEP);
-	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
-	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
-	//PpstUpdate ------------
-	ImGui::Text("- PostUpdate   "); ImGui::SameLine();
+	if (block_ptr != nullptr)
+	{
+		ImGui::BulletText("Update	   "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
+	}
+	//PostUpdate ------------
 	block_ptr = GetProfBlock(id, POST_UPDATE_STEP);
-	if (block_ptr != nullptr)ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
-	else ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "- disabled -");
+	if (block_ptr != nullptr)
+	{
+		ImGui::BulletText("PostUpdate   "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
+	}
 
 	//Reperesents all the data in agraph
 	if (graph)
@@ -94,7 +109,7 @@ void Profiler::BlitModuleProfile(MODULE_ID id, bool graph)
 		time_values[2] = block_ptr == nullptr ? 0 : block_ptr->time_in_nanoseconds / 1000.0f;
 		char title[25];
 		sprintf_s(title, 25, "Total Miliseconds %.2f", (time_values[0] + time_values[1] + time_values[2]));
-		ImGui::PlotHistogram("", time_values, 3, 30, title, 0.0f, 100.0f, ImVec2(180, 50));
+		ImGui::PlotHistogram("", time_values, 3, 30, title, 0.0f,30.0f, ImVec2(180, 50));
 
 	}
 }

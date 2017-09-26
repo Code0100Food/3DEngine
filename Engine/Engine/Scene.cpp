@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "ModulePhysics3D.h"
 #include "imgui/imgui.h"
-#include "Primitive.h"
 
 // Constructors =================================
 Scene::Scene(bool start_enabled) : Module(start_enabled)
@@ -20,6 +19,11 @@ Scene::~Scene()
 // Game Loop ====================================
 bool Scene::Start()
 {
+	//Initialize grid
+	grid.constant = 0;
+	grid.normal = {0, 1, 0};
+	grid.axis = true;
+
 	//Starts the random number generator
 	rand_num_generator = new math::LCG((u32)5);
 
@@ -69,10 +73,8 @@ update_status Scene::Update(float dt)
 	//Prepare random number window
 	if (App->show_config_window)App->BlitConfigWindow();
 
-	//Render the base plane
-	_Plane p(0, 1, 0, 0);
-	p.axis = true;
-	p.Render();
+	//Render the base grid
+	grid.Render();
 	
 	_Sphere sp(3, 0, 3, 0);
 	sp.Render();

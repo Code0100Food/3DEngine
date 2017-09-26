@@ -31,7 +31,8 @@ private:
 	bool	cull_face = false;
 	bool	texture_2d = false;
 	bool	dither = false;
-	
+	bool	wireframe = false;
+
 	bool	lighting = false;
 	float	lighting_color[4];
 

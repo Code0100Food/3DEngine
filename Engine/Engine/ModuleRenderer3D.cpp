@@ -34,6 +34,8 @@ bool ModuleRenderer3D::Awake(const JSON_Object * data_root)
 	
 	dither = json_object_get_boolean(data_root, "dither");
 
+	wireframe = json_object_get_boolean(data_root, "wireframe");
+
 	lighting = json_object_get_boolean(data_root, "lighting");
 	JSON_Array* lighting_color_array = json_object_get_array(data_root, "lighting_color");
 	lighting_color[0] = json_array_get_number(lighting_color_array, 0);
