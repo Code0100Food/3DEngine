@@ -46,6 +46,9 @@
     <Filter Include="Sources\Tools\mmgr">
       <UniqueIdentifier>{c4336c53-a888-4251-9214-eb8fcc1d0ea2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\Input">
+      <UniqueIdentifier>{cd6c406a-9a20-4130-a967-be3772505c64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Color.h">
@@ -103,9 +106,6 @@
       <Filter>Sources\Tools\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModuleImgui.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ModuleInput.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Scene.h">
@@ -306,6 +306,12 @@
     <ClInclude Include="Engine\PerfTimer.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ModuleInput.h">
+      <Filter>Sources\Modules\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\InputManager.h">
+      <Filter>Sources\Modules\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -360,9 +366,6 @@
       <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ModuleImgui.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ModuleInput.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Scene.cpp">
@@ -484,6 +487,12 @@
     </ClCompile>
     <ClCompile Include="Engine\PerfTimer.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ModuleInput.cpp">
+      <Filter>Sources\Modules\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\InputManager.cpp">
+      <Filter>Sources\Modules\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

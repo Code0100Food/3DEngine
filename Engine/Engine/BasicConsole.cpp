@@ -211,18 +211,6 @@ int BasicConsole::_TextEditCallback(ImGuiTextEditCallbackData * data)
 	//AddLog("cursor: %d, selection: %d-%d", data->CursorPos, data->SelectionStart, data->SelectionEnd);
 	switch (data->EventFlag)
 	{
-	case ImGuiInputTextFlags_CallbackAlways:
-	{
-		if (App->input->last_key_pressed != -1)
-		{
-			char c = App->input->GetLastKeyStr();
-			static_buffer.push_back('g');
-			//strcat(static_buffer.c_str(), _Application->input->GetLastKeyStr());
-			//static_buffer += _Application->input->GetLastKeyStr();
-		}
-	}
-	break;
-
 	case ImGuiInputTextFlags_CallbackCompletion:
 	{
 		// Example of TEXT COMPLETION

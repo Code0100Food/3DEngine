@@ -10,6 +10,7 @@
 #include "ModuleConsole.h"
 #include "FileSystem.h"
 #include "ModuleHardware.h"
+#include "InputManager.h"
 #include "Scene.h"
 #include "FileSystem.h"
 #include "Profiler.h"
@@ -36,6 +37,10 @@ Application::Application()
 	START(m_prof_timer);
 	input = new ModuleInput();
 	profiler->CallProfBlock(M_INPUT, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	input_manager = new InputManager();
+	profiler->CallProfBlock(M_INPUT_MANAGER, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
 	audio = new ModuleAudio();
@@ -78,6 +83,7 @@ Application::Application()
 	AddModule(fs);
 	AddModule(window);
 	AddModule(input);
+	AddModule(input_manager);
 	AddModule(audio);
 	AddModule(physics);
 	AddModule(console);

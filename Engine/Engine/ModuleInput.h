@@ -4,7 +4,21 @@
 #include "Module.h"
 #include "Globals.h"
 #include "imgui/imgui.h"
-#define MAX_MOUSE_BUTTONS 5
+#include "SDL\include\SDL_gamecontroller.h"
+
+#define NUM_MOUSE_BUTTONS 5
+#define NUM_CONTROLLER_BUTTONS 15
+#define NUM_CONTROLLER_AXIS 6
+#define DEAD_ZONE 10000
+#define TRIGGER_ZONE 32000
+
+enum EVENT_WINDOW
+{
+	WE_QUIT = 0,
+	WE_HIDE = 1,
+	WE_SHOW = 2,
+	WE_COUNT
+};
 
 enum KEY_STATE
 {
@@ -12,6 +26,13 @@ enum KEY_STATE
 	KEY_DOWN,
 	KEY_REPEAT,
 	KEY_UP
+};
+
+enum JOYSTICK_STATE
+{
+	JOYSTICK_POSITIVE,
+	JOYSTICK_NEGATIVE,
+	JOYSTICK_NOTHING
 };
 
 class ModuleInput : public Module
@@ -23,68 +44,40 @@ public:
 
 public:
 
-	bool			Init();
-	update_status	PreUpdate(float dt);
-	bool			CleanUp();
-
-public:
-
-	int last_key_pressed = -1;
-
-	char GetLastKeyStr()const
-	{
-		if (last_key_pressed == -1)return '/0';
-		/*char bf[2];
-		itoa(last_key_pressed, bf, 10);*/
-
-		return '0' + last_key_pressed;
-	}
-
-	KEY_STATE GetKey(int id) const
-	{
-		return keyboard[id];
-	}
-
-	KEY_STATE GetMouseButton(int id) const
-	{
-		return mouse_buttons[id];
-	}
-
-	int GetMouseX() const
-	{
-		return mouse_x;
-	}
-
-	int GetMouseY() const
-	{
-		return mouse_y;
-	}
-
-	int GetMouseZ() const
-	{
-		return mouse_z;
-	}
-
-	int GetMouseXMotion() const
-	{
-		return mouse_x_motion;
-	}
-
-	int GetMouseYMotion() const
-	{
-		return mouse_y_motion;
-	}
+	bool			Init()final;
+	bool			Start();
+	update_status	PreUpdate(float dt)final;
+	bool			CleanUp()final;
+	void			BlitConfigInfo()final;
 
 private:
 
+	bool		windowEvents[WE_COUNT];
 	KEY_STATE*	keyboard = nullptr;
-	KEY_STATE	mouse_buttons[MAX_MOUSE_BUTTONS];
+
+	// Mouse data -----------
+	KEY_STATE	mouse_buttons[NUM_MOUSE_BUTTONS];
+	int			mouse_motion_x = 0;
+	int			mouse_motion_y = 0;
 	int			mouse_x = 0;
 	int			mouse_y = 0;
 	int			mouse_z = 0;
-	int			mouse_x_motion = 0;
-	int			mouse_y_motion = 0;
-	int			mouse_z_motion = 0;
+
+	// Controller data ------
+	SDL_GameController*	gamecontroller = nullptr;
+	KEY_STATE			controller_buttons[NUM_CONTROLLER_BUTTONS];
+	JOYSTICK_STATE		controller_axis[NUM_CONTROLLER_AXIS];
+
+public:
+
+	//Get methods
+	KEY_STATE	GetKey(int id) const;
+	KEY_STATE	GetMouseButton(int id) const;
+	int			GetMouseX() const;
+	int			GetMouseY() const;
+	
+	// Reset all input states
+	void		ResetInputMaps();
 
 };
 

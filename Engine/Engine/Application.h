@@ -14,6 +14,7 @@ class Module;
 class ModuleWindow;
 class FileSystem;
 class ModuleInput;
+class InputManager;
 class ModuleAudio;
 class ModuleRenderer3D;
 class ModuleCamera3D;
@@ -26,6 +27,7 @@ class Scene;
 
 enum APP_CONTEXT
 {
+	UNKNOWN_CONTEXT = 0,
 	BUILD_CONTEXT = 0,
 	PLAY_CONTEXT
 };
@@ -51,6 +53,7 @@ public:
 	ModuleWindow*		window = nullptr;
 	FileSystem*			fs = nullptr;
 	ModuleInput*		input = nullptr;
+	InputManager*		input_manager = nullptr;
 	ModuleAudio*		audio = nullptr;
 	ModuleRenderer3D*	renderer3D = nullptr;
 	ModuleCamera3D*		camera = nullptr;
@@ -60,6 +63,9 @@ public:
 	ModuleHardware*		hard = nullptr;
 	Profiler*			profiler = nullptr;
 	Scene*				scene = nullptr;
+
+
+	APP_CONTEXT			app_context = UNKNOWN_CONTEXT;
 
 private:
 

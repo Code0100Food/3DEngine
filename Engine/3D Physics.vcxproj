@@ -96,6 +96,7 @@
     <ClInclude Include="Engine\imgui\imgui.h" />
     <ClInclude Include="Engine\imgui\imgui_impl_sdl.h" />
     <ClInclude Include="Engine\imgui\imgui_internal.h" />
+    <ClInclude Include="Engine\InputManager.h" />
     <ClInclude Include="Engine\Light.h" />
     <ClInclude Include="Engine\MathGeoLib\Algorithm\Random\LCG.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\AABB.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="Engine\imgui\imgui_demo.cpp" />
     <ClCompile Include="Engine\imgui\imgui_draw.cpp" />
     <ClCompile Include="Engine\imgui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="Engine\InputManager.cpp" />
     <ClCompile Include="Engine\Light.cpp" />
     <ClCompile Include="Engine\log.cpp" />
     <ClCompile Include="Engine\main.cpp" />
