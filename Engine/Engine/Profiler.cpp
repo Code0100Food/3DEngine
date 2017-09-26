@@ -24,20 +24,44 @@ void Profiler::BlitConfigInfo()
 	BlitModuleProfile(APPLICATION, true);
 	ImGui::Separator();
 
-	//Show renderer time tracking ---------------
-	ImGui::Text("Renderer:");
-	BlitModuleProfile(M_RENDERER);
-	ImGui::Separator();
-
-	//Show console time tracking ---------------
+	//Show console time tracking ----------------
 	ImGui::Text("Console:");
 	BlitModuleProfile(M_CONSOLE);
 	ImGui::Separator();
 
-	//Show camera time tracking ---------------
+	//Show audio time tracking ------------------
+	ImGui::Text("Audio:");
+	BlitModuleProfile(M_AUDIO);
+	ImGui::Separator();
+
+	//Show camera time tracking -----------------
 	ImGui::Text("Camera:");
 	BlitModuleProfile(M_CAMERA3D);
 	ImGui::Separator();
+
+	//Show imgui time tracking ------------------
+	ImGui::Text("ImGui:");
+	BlitModuleProfile(M_IMGUI);
+	ImGui::Separator();
+
+	//Show input time tracking ------------------
+	ImGui::Text("Input:");
+	BlitModuleProfile(M_INPUT);
+	ImGui::Separator();
+
+	//Show physics time tracking ----------------
+	ImGui::Text("Physics:");
+	BlitModuleProfile(M_PHYSICS3D);
+	ImGui::Separator();
+
+	//Show window time tracking -----------------
+	ImGui::Text("Window:");
+	BlitModuleProfile(M_WINDOW);
+	ImGui::Separator();
+
+	//Show scene time tracking ------------------
+	ImGui::Text("Scene:");
+	BlitModuleProfile(M_SCENE);
 		
 }
 
