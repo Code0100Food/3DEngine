@@ -98,7 +98,10 @@ bool ModuleRenderer3D::Init()
 	{
 		LOG("[error]Error initializing GLew! %s\n", glewGetErrorString(glew_error));
 	}
-	else LOG("Using GLew: %s", glewGetString(GLEW_VERSION));
+	else
+	{
+		LOG("Using GLew: %s", glewGetString(GLEW_VERSION));
+	}
 
 	if(ret == true)
 	{
@@ -245,6 +248,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	
+	
+
 	// Rendering GUI
 	App->imgui->RenderUI();
 
@@ -265,6 +270,11 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::BlitConfigInfo()
 {
+	ImGui::Text("GLew Version: ");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s", glewGetString(GLEW_VERSION));
+	ImGui::Separator();
+
 	//Vsync check box
 	if (ImGui::Checkbox("VSync", &vsync))
 	{
