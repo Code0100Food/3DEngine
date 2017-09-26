@@ -7,6 +7,8 @@ This code is under the MIT License
    ImGui -> https://github.com/ocornut/imgui
    Bullet -> http://bulletphysics.org
    Sdl -> http://www.libsdl.org/
+   Glew -> https://github.com/nigels-com/glew
+   cURL -> https://curl.haxx.se/
 
 Bullet and sdl are suggested to zlib license. -> http://www.zlib.net/zlib_license.html
 ImGui is suggested to MIT License
@@ -14,6 +16,16 @@ MathGeoLib is suggested to Apache 2 License. -> http://www.apache.org/licenses/L
 All those Libraries are not created by us.
 
 # Changelog
+
+	 -Release 0.1.8:
+		Render Effects
+		Print simple geometry full and wireframe
+		Added glew libraries
+		Added Input manager
+		Added more Drivers and Hardware information
+		Added Input info (mouse and keyboard)
+		Added Profiler to look timing
+		Bugs fixed
 
 	-Release 0.1.5:
 	 	Simple Launcher
