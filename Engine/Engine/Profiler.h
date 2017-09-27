@@ -1,6 +1,8 @@
 #ifndef  _PROFILER_H_
 #define  _PROFILER_H_
 
+#define MAX_MS 15
+
 #include "Module.h"
 
 enum LOOP_STEP
@@ -47,7 +49,7 @@ public:
 	void		SaveConfiguration()const;
 
 	//Functionality
-	void						BlitModuleProfile(MODULE_ID id, bool graph = false);
+	void						BlitModuleProfile(MODULE_ID id, const char* str_id, bool graph = false);
 	void						CallProfBlock(MODULE_ID id, LOOP_STEP step, uint64 time);
 	Prof_Block*					GetProfBlock(MODULE_ID id, LOOP_STEP step)const;
 	void						SetMilliLimit(MODULE_ID id, uint limit);

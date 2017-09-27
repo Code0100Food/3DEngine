@@ -235,7 +235,7 @@ update_status Application::Update()
 
 		START(m_prof_timer);
 		ret = (*item)->PreUpdate(dt);
-		profiler->CallProfBlock((*item)->id, PRE_UPDATE_STEP, prof_timer.ReadTicks());
+		profiler->CallProfBlock((*item)->id, PRE_UPDATE_STEP, m_prof_timer.ReadTicks());
 	}
 	profiler->CallProfBlock(APPLICATION, PRE_UPDATE_STEP, prof_timer.ReadTicks());
 
@@ -246,7 +246,7 @@ update_status Application::Update()
 
 		START(m_prof_timer);
 		ret = (*item)->Update(dt);
-		profiler->CallProfBlock((*item)->id, UPDATE_STEP, prof_timer.ReadTicks());
+		profiler->CallProfBlock((*item)->id, UPDATE_STEP, m_prof_timer.ReadTicks());
 	}
 	profiler->CallProfBlock(APPLICATION, UPDATE_STEP, prof_timer.ReadTicks());
 
@@ -257,7 +257,7 @@ update_status Application::Update()
 
 		START(m_prof_timer);
 		ret = (*item)->PostUpdate(dt);
-		profiler->CallProfBlock((*item)->id, POST_UPDATE_STEP, prof_timer.ReadTicks());
+		profiler->CallProfBlock((*item)->id, POST_UPDATE_STEP, m_prof_timer.ReadTicks());
 	}
 	profiler->CallProfBlock(APPLICATION, POST_UPDATE_STEP, prof_timer.ReadTicks());
 

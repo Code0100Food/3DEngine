@@ -25,47 +25,47 @@ void Profiler::BlitInfo()
 
 	//Show app time tracking --------------------
 	ImGui::Text("App:");
-	BlitModuleProfile(APPLICATION, true);
+	BlitModuleProfile(APPLICATION, "##App", true);
 	ImGui::Separator();
 
 	//Show console time tracking ----------------
 	ImGui::Text("Console:");
-	BlitModuleProfile(M_CONSOLE);
+	BlitModuleProfile(M_CONSOLE,"##Console");
 	ImGui::Separator();
 
 	//Show audio time tracking ------------------
 	ImGui::Text("Audio:");
-	BlitModuleProfile(M_AUDIO);
+	BlitModuleProfile(M_AUDIO,"##Audio");
 	ImGui::Separator();
 
 	//Show camera time tracking -----------------
 	ImGui::Text("Camera:");
-	BlitModuleProfile(M_CAMERA3D);
+	BlitModuleProfile(M_CAMERA3D,"##Camera");
 	ImGui::Separator();
 
 	//Show imgui time tracking ------------------
 	ImGui::Text("ImGui:");
-	BlitModuleProfile(M_IMGUI);
+	BlitModuleProfile(M_IMGUI,"##ImGui");
 	ImGui::Separator();
 
 	//Show input time tracking ------------------
 	ImGui::Text("Input:");
-	BlitModuleProfile(M_INPUT);
+	BlitModuleProfile(M_INPUT,"##Input");
 	ImGui::Separator();
 
 	//Show physics time tracking ----------------
 	ImGui::Text("Physics:");
-	BlitModuleProfile(M_PHYSICS3D);
+	BlitModuleProfile(M_PHYSICS3D,"##Physics");
 	ImGui::Separator();
 
 	//Show window time tracking -----------------
 	ImGui::Text("Window:");
-	BlitModuleProfile(M_WINDOW);
+	BlitModuleProfile(M_WINDOW,"##Window");
 	ImGui::Separator();
 
 	//Show scene time tracking ------------------
 	ImGui::Text("Scene:");
-	BlitModuleProfile(M_SCENE);
+	BlitModuleProfile(M_SCENE,"##Scene");
 		
 	ImGui::End();
 }
@@ -91,9 +91,10 @@ bool Profiler::LoadConfiguration(const JSON_Object * data_root)
 }
 
 // Functionality ================================
-void Profiler::BlitModuleProfile(MODULE_ID id, bool graph)
+void Profiler::BlitModuleProfile(MODULE_ID id, const char* str_id, bool graph)
 {
 	Prof_Block* block_ptr = nullptr;
+	std::pair<MODULE_ID, uint>* milli_limit = GetMilliLimit(id);
 
 	//Build -----------------
 	block_ptr = GetProfBlock(id, BUILD_STEP);
@@ -123,31 +124,51 @@ void Profiler::BlitModuleProfile(MODULE_ID id, bool graph)
 		ImGui::BulletText("Start		"); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
 	}
+
+	//Game Loop -------------
+	Prof_Block* pre_block_ptr = GetProfBlock(id, PRE_UPDATE_STEP);
+	float pre_update_ms = pre_block_ptr != nullptr ? pre_block_ptr->time_in_nanoseconds / 1000.0f : 0.000f;
+	Prof_Block* up_block_ptr = GetProfBlock(id, UPDATE_STEP);
+	float update_ms = up_block_ptr != nullptr ? up_block_ptr->time_in_nanoseconds / 1000.0f : 0.000f;
+	Prof_Block* post_block_ptr = GetProfBlock(id, POST_UPDATE_STEP);
+	float post_update_ms = post_block_ptr != nullptr ? post_block_ptr->time_in_nanoseconds / 1000.0f : 0.000f;
+
 	//PreUpdate -------------
-	block_ptr = GetProfBlock(id, PRE_UPDATE_STEP);
-	if (block_ptr != nullptr)
+	if (pre_block_ptr != nullptr)
 	{
 		ImGui::BulletText("PreUpdate	"); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", pre_update_ms);
 	}
 	//Update ----------------
 	block_ptr = GetProfBlock(id, UPDATE_STEP);
-	if (block_ptr != nullptr)
+	if (up_block_ptr != nullptr)
 	{
 		ImGui::BulletText("Update	   "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", update_ms);
 	}
 	//PostUpdate ------------
 	block_ptr = GetProfBlock(id, POST_UPDATE_STEP);
-	if (block_ptr != nullptr)
+	if (post_block_ptr != nullptr)
 	{
 		ImGui::BulletText("PostUpdate   "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", post_update_ms);
 	}
 
 	//Max Milliseconds ------
-	std::pair<MODULE_ID, uint>* milli_limit = GetMilliLimit(id);
-	if (milli_limit != nullptr)ImGui::Text("Ms Limit: %i", milli_limit->second);
+	if (milli_limit != nullptr)
+	{
+		uint limit = milli_limit->second;
+		float total = pre_update_ms + update_ms + post_update_ms;
+		ImGui::Text("State: "); 
+		ImGui::SameLine();
+		if (total > limit)ImGui::TextColored(ImVec4(0.8, 0.2, 0.2, 1.0), "EXCEED");
+		else if (total >= (float)limit * 0.5f)ImGui::TextColored(ImVec4(0.2, 0.8, 0.2, 1.0), "NORMAL");
+		else if(total < (float)limit * 0.5f)ImGui::TextColored(ImVec4(0.5, 0.2, 0.7, 1.0), "PERFECT");
+
+		ImGui::Text("Max Ms: %i", limit);
+		ImGui::SameLine();
+		ImGui::SliderInt(str_id, (int*)&milli_limit->second, 0, MAX_MS);
+	}
 
 	//Represents all the data in a graph
 	if (graph)
@@ -160,8 +181,8 @@ void Profiler::BlitModuleProfile(MODULE_ID id, bool graph)
 		time_values[1] = block_ptr == nullptr ? 0 : block_ptr->time_in_nanoseconds / 1000.0f;
 		block_ptr = GetProfBlock(id, POST_UPDATE_STEP);
 		time_values[2] = block_ptr == nullptr ? 0 : block_ptr->time_in_nanoseconds / 1000.0f;
-		char title[25];
-		sprintf_s(title, 25, "Total Miliseconds %.2f", (time_values[0] + time_values[1] + time_values[2]));
+		char title[50];
+		sprintf_s(title, 50, "Total Milliseconds %.2f", (time_values[0] + time_values[1] + time_values[2]));
 		ImGui::PlotHistogram("", time_values, 3, 30, title, 0.0f,30.0f, ImVec2(180, 50));
 
 	}
@@ -180,6 +201,7 @@ void Profiler::CallProfBlock(MODULE_ID id, LOOP_STEP step, uint64 time)
 		{
 			current_profiled_blocks[k].time_in_nanoseconds = time;
 			found = true;
+			break;
 		}
 	}
 
