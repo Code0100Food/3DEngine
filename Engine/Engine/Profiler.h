@@ -34,7 +34,8 @@ public:
 private:
 
 	//Track all the modules timing
-	std::vector<Prof_Block>	current_profiled_blocks;
+	std::vector<Prof_Block>					current_profiled_blocks;
+	std::vector<std::pair<MODULE_ID, uint>>	modules_max_milli;
 
 public:
 
@@ -45,6 +46,7 @@ public:
 	void		BlitModuleProfile(MODULE_ID id, bool graph = false);
 	void		CallProfBlock(MODULE_ID id, LOOP_STEP step, uint64 time);
 	Prof_Block*	GetProfBlock(MODULE_ID id, LOOP_STEP step)const;
+	void		SetMilliLimit(MODULE_ID id, uint limit);
 
 };
 #endif // ! _PROFILER_H_

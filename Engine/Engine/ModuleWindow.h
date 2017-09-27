@@ -10,7 +10,7 @@ class ModuleWindow : public Module
 {
 public:
 
-	ModuleWindow(bool start_enabled = true);
+	ModuleWindow(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled = true);
 	~ModuleWindow();
 
 public:

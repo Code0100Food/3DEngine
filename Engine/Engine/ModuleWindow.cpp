@@ -8,10 +8,8 @@
 #include "ModuleAudio.h"
 
 // Constructors =================================
-ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
+ModuleWindow::ModuleWindow(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_WINDOW;
-	name = "Window";
 	window = NULL;
 	screen_surface = NULL;
 }

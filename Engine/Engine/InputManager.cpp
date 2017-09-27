@@ -34,11 +34,9 @@ bool Suitable_Input_Event::operator<(const Suitable_Input_Event & target) const
 /// -----------------------------------
 
 // Constructors =================================
-InputManager::InputManager()
+InputManager::InputManager(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled):Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_INPUT_MANAGER;
-	name = "InputManager";
-	config_menu = true;
+
 }
 
 // Destructors ==================================

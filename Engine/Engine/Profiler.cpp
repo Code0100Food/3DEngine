@@ -125,7 +125,11 @@ void Profiler::BlitModuleProfile(MODULE_ID id, bool graph)
 		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000.0f);
 	}
 
-	//Reperesents all the data in agraph
+	//Max Milliseconds ------
+
+
+
+	//Represents all the data in a graph
 	if (graph)
 	{
 		//Blit milliseconds graphic
@@ -180,4 +184,23 @@ Prof_Block * Profiler::GetProfBlock(MODULE_ID id, LOOP_STEP step)const
 	}
 
 	return ptr;
+}
+
+void Profiler::SetMilliLimit(MODULE_ID id, uint limit)
+{
+	bool in = false;
+	//Check if the send pair is already in the vector
+	std::vector<std::pair<MODULE_ID, uint>>::const_iterator pair = modules_max_milli.begin();
+	while (pair != modules_max_milli.end())
+	{
+		if (pair._Ptr->first == id)
+		{
+			pair._Ptr->second = limit;
+			in = true;
+			break;
+		}
+		pair++;
+	}
+	//Else add the new pair in the vector
+	if(!in)modules_max_milli.push_back({ id,limit });
 }

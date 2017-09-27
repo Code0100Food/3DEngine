@@ -8,7 +8,7 @@ class ModuleConsole : public Module
 {
 public:
 
-	ModuleConsole(bool start_enabled = true);
+	ModuleConsole(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled = true);
 	~ModuleConsole();
 
 public:

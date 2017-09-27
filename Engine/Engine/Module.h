@@ -37,9 +37,9 @@ class Module
 public:
 
 	// Constructors =================================
-	Module(bool start_enabled = true) :enabled(start_enabled)
+	Module(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled = true) : name(_name), id(_id), config_menu(_config_menu), enabled(_enabled)
 	{
-	
+
 	}
 
 	// Destructors ==================================

@@ -16,10 +16,15 @@
 #pragma comment (lib, "Engine/Glew/lib/Win32/glew32.lib")
 
 // Constructors =================================
-ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
+ModuleRenderer3D::ModuleRenderer3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_RENDERER;
-	name = "Renderer";
+
+}
+
+// Destructors ==================================
+ModuleRenderer3D::~ModuleRenderer3D()
+{
+
 }
 
 // Game Loop ====================================

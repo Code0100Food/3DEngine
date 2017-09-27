@@ -31,7 +31,8 @@ class ModuleAudio : public Module
 {
 public:
 
-	ModuleAudio(bool start_enabled = true);
+	ModuleAudio(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled = true);
+	~ModuleAudio();
 
 public:
 

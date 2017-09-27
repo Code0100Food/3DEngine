@@ -1,10 +1,9 @@
 #include "ModuleConsole.h"
 
 // Constructors =================================
-ModuleConsole::ModuleConsole(bool start_enabled) :Module(start_enabled)
+ModuleConsole::ModuleConsole(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_CONSOLE;
-	name = "Console";
+
 }
 
 

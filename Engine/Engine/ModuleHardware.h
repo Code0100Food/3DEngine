@@ -11,7 +11,7 @@ class ModuleHardware : public Module
 {
 public:
 
-	ModuleHardware(bool start_enabled = true);
+	ModuleHardware(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled = true);
 	~ModuleHardware();
 	
 public:
@@ -59,10 +59,6 @@ private:
 	vector<string>	monitors_name;
 
 	int				num_joysticks = 0;
-
-
-	// Get Methods ==================================
-
 
 };
 

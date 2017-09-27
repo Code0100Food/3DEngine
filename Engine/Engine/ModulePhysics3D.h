@@ -28,7 +28,7 @@ class ModulePhysics3D : public Module
 {
 public:
 
-	ModulePhysics3D(bool start_enabled = true);
+	ModulePhysics3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled = true);
 	~ModulePhysics3D();
 
 public:

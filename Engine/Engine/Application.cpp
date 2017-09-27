@@ -27,51 +27,51 @@ Application::Application()
 	profiler = new Profiler();
 	
 	START(m_prof_timer);
-	window = new ModuleWindow();
+	window = new ModuleWindow("Window", M_WINDOW, true);
 	profiler->CallProfBlock(M_WINDOW, BUILD_STEP, prof_timer.ReadTicks());
 	
 	START(m_prof_timer);
-	fs = new FileSystem();
+	fs = new FileSystem("FileSystem", M_FILE_SYSTEM, false);
 	profiler->CallProfBlock(M_FILE_SYSTEM, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	input = new ModuleInput();
+	input = new ModuleInput("Input", M_INPUT, true);
 	profiler->CallProfBlock(M_INPUT, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	input_manager = new InputManager();
+	input_manager = new InputManager("InputManager", M_INPUT_MANAGER, true);
 	profiler->CallProfBlock(M_INPUT_MANAGER, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	audio = new ModuleAudio();
+	audio = new ModuleAudio("Audio", M_AUDIO, true);
 	profiler->CallProfBlock(M_AUDIO, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	renderer3D = new ModuleRenderer3D();
+	renderer3D = new ModuleRenderer3D("Renderer", M_RENDERER, true);
 	profiler->CallProfBlock(M_RENDERER, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	camera = new ModuleCamera3D();
+	camera = new ModuleCamera3D("Camera", M_CAMERA3D, true);
 	profiler->CallProfBlock(M_CAMERA3D, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	physics = new ModulePhysics3D();
+	physics = new ModulePhysics3D("Physics", M_PHYSICS3D, false);
 	profiler->CallProfBlock(M_PHYSICS3D, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	imgui = new ModuleImgui();
+	imgui = new ModuleImgui("ImGui", M_IMGUI, false);
 	profiler->CallProfBlock(M_IMGUI, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	console = new ModuleConsole();
+	console = new ModuleConsole("Console", M_CONSOLE, true);
 	profiler->CallProfBlock(M_CONSOLE, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	hard = new ModuleHardware();
+	hard = new ModuleHardware("Hardware", M_HARDWARE, true);;
 	profiler->CallProfBlock(M_HARDWARE, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	scene = new Scene();
+	scene = new Scene("Scene", M_SCENE, false);
 	profiler->CallProfBlock(M_SCENE, BUILD_STEP, prof_timer.ReadTicks());
 
 	// The order of calls is very important!
@@ -140,6 +140,7 @@ bool Application::Awake()
 		profiler->CallProfBlock((*item)->id, BUILD_STEP, prof_timer.ReadTicks());
 	}
 
+	//Free config data
 	json_value_free((JSON_Value *)config_data);
 
 	PEEK(ms_timer);
@@ -167,8 +168,6 @@ bool Application::Init()
 	LOG("Application Start --------------");
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret; item++)
 	{
-		if (!(*item)->enabled)continue;
-
 		START(m_prof_timer);
 		ret = (*item)->Start();
 		profiler->CallProfBlock((*item)->id, START_STEP, prof_timer.ReadTicks());
@@ -301,7 +300,12 @@ bool Application::CleanUp()
 		(*item)->CleanUp();
 	}
 
+	//Delete the profiler
+	RELEASE(profiler);
+
 	PEEK(ms_timer);
+
+
 
 	return ret;
 }

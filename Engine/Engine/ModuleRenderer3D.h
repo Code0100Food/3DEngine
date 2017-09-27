@@ -12,7 +12,8 @@ class ModuleRenderer3D : public Module
 {
 public:
 
-	ModuleRenderer3D(bool start_enabled = true);
+	ModuleRenderer3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled = true);
+	~ModuleRenderer3D();
 
 public:
 

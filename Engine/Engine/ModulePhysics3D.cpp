@@ -22,13 +22,8 @@
 
 
 // Constructors =================================
-ModulePhysics3D::ModulePhysics3D(bool start_enabled) : Module(start_enabled)
+ModulePhysics3D::ModulePhysics3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_PHYSICS3D;
-	name = "Physics";
-
-	debug = false;
-
 	collision_conf = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collision_conf);
 	broad_phase = new btDbvtBroadphase();

@@ -10,10 +10,15 @@
 #include "ModuleRenderer3D.h"
 
 // Constructors =================================
-ModuleImgui::ModuleImgui(bool start_enabled) : Module(start_enabled)
+ModuleImgui::ModuleImgui(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_IMGUI;
-	name = "Imgui";
+
+}
+
+// Destructors ==================================
+ModuleImgui::~ModuleImgui()
+{
+
 }
 
 // Game Loop ====================================

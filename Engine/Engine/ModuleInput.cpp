@@ -12,12 +12,8 @@
 #define MAX_KEYS 300
 
 // Constructors =================================
-ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
+ModuleInput::ModuleInput(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_INPUT;
-	name = "Input";
-	config_menu = true;
-
 	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
 	memset(mouse_buttons, KEY_IDLE, sizeof(KEY_STATE) * NUM_MOUSE_BUTTONS);

@@ -4,10 +4,9 @@
 #include "imgui/imgui.h"
 
 // Constructors =================================
-Scene::Scene(bool start_enabled) : Module(start_enabled)
+Scene::Scene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_SCENE;
-	name = "Scene";
+
 }
 
 // Destructors ==================================

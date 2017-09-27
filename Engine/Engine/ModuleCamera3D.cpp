@@ -5,11 +5,8 @@
 #include "FileSystem.h"
 
 // Constructors =================================
-ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
+ModuleCamera3D::ModuleCamera3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_CAMERA3D;
-	name = "Camera";
-
 	CalculateViewMatrix();
 
 	X = vec3(1.0f, 0.0f, 0.0f);
@@ -21,6 +18,12 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 	
 	camera_location = vec3(0.0f, 0.0f, 0.0f);
 	view_vector = vec3(0.0f, 0.0f, 0.0f);
+}
+
+// Destructors ==================================
+ModuleCamera3D::~ModuleCamera3D()
+{
+
 }
 
 // Game Loop ====================================

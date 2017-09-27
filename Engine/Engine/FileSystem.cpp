@@ -1,10 +1,9 @@
 #include "FileSystem.h"
 
 // Constructors =================================
-FileSystem::FileSystem(bool start_enabled) :Module(start_enabled)
+FileSystem::FileSystem(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
-	id = M_FILE_SYSTEM;
-	name = "FileSystem";
+
 }
 
 // Destructors ==================================

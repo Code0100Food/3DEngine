@@ -6,10 +6,15 @@
 #pragma comment( lib, "Engine/SDL_mixer/libx86/SDL2_mixer.lib" )
 
 // Constructors =================================
-ModuleAudio::ModuleAudio(bool start_enabled) : Module(start_enabled), music(NULL)
+ModuleAudio::ModuleAudio(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled), music(NULL)
 {
-	id = M_AUDIO;
-	name = "Audio";
+
+}
+
+// Destructors ==================================
+ModuleAudio::~ModuleAudio()
+{
+
 }
 
 // Game Loop ====================================
@@ -66,6 +71,8 @@ bool ModuleAudio::Init()
 
 bool ModuleAudio::Start()
 {
+	if (!enabled)return true;
+
 	//Apply the loaded master volume
 	SetMasterVolume(master_volume);
 
