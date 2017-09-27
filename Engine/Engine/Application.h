@@ -24,6 +24,7 @@ class ModuleConsole;
 class ModuleHardware;
 class Profiler;
 class Scene;
+enum MODULE_ID;
 
 enum APP_CONTEXT
 {
@@ -105,6 +106,7 @@ public:
 	// Used in data loading
 	APP_CONTEXT	StrToAppContext(const char* str) const;
 	const char*	AppContextToStr(APP_CONTEXT app_context) const;
+	MODULE_ID	StrToModuleID(const char* str)const;
 
 	void SetQuit();
 	void RequestBrowser(const char* link);

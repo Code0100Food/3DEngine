@@ -70,6 +70,26 @@ void Profiler::BlitInfo()
 	ImGui::End();
 }
 
+bool Profiler::LoadConfiguration(const JSON_Object * data_root)
+{
+	//Load all the modules max milliseconds
+	SetMilliLimit(APPLICATION, json_object_get_number(data_root, "Application"));
+	SetMilliLimit(M_CONSOLE, json_object_get_number(data_root, "Console"));
+	SetMilliLimit(M_FILE_SYSTEM, json_object_get_number(data_root, "FileSystem"));
+	SetMilliLimit(M_AUDIO, json_object_get_number(data_root, "Audio"));
+	SetMilliLimit(M_CAMERA3D, json_object_get_number(data_root, "Camera"));
+	SetMilliLimit(M_HARDWARE, json_object_get_number(data_root, "Hardware"));
+	SetMilliLimit(M_IMGUI, json_object_get_number(data_root, "ImGui"));
+	SetMilliLimit(M_INPUT, json_object_get_number(data_root, "Input"));
+	SetMilliLimit(M_INPUT_MANAGER, json_object_get_number(data_root, "InputManager"));
+	SetMilliLimit(M_PHYSICS3D, json_object_get_number(data_root, "Physics"));
+	SetMilliLimit(M_RENDERER, json_object_get_number(data_root, "Renderer"));
+	SetMilliLimit(M_WINDOW, json_object_get_number(data_root, "Window"));
+	SetMilliLimit(M_SCENE, json_object_get_number(data_root, "Scene"));
+
+	return true;
+}
+
 // Functionality ================================
 void Profiler::BlitModuleProfile(MODULE_ID id, bool graph)
 {
@@ -126,8 +146,8 @@ void Profiler::BlitModuleProfile(MODULE_ID id, bool graph)
 	}
 
 	//Max Milliseconds ------
-
-
+	std::pair<MODULE_ID, uint>* milli_limit = GetMilliLimit(id);
+	if (milli_limit != nullptr)ImGui::Text("Ms Limit: %i", milli_limit->second);
 
 	//Represents all the data in a graph
 	if (graph)
@@ -203,4 +223,18 @@ void Profiler::SetMilliLimit(MODULE_ID id, uint limit)
 	}
 	//Else add the new pair in the vector
 	if(!in)modules_max_milli.push_back({ id,limit });
+}
+
+std::pair<MODULE_ID, uint>* Profiler::GetMilliLimit(MODULE_ID id) const
+{
+	//Check if the send pair is already in the vector
+	std::vector<std::pair<MODULE_ID, uint>>::const_iterator pair = modules_max_milli.begin();
+	while (pair != modules_max_milli.end())
+	{
+		if (pair._Ptr->first == id)return pair._Ptr;
+
+		pair++;
+	}
+	
+	return nullptr;
 }

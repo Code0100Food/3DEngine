@@ -42,11 +42,15 @@ public:
 	//Draw 
 	void		BlitInfo();
 
-	//Functionality
-	void		BlitModuleProfile(MODULE_ID id, bool graph = false);
-	void		CallProfBlock(MODULE_ID id, LOOP_STEP step, uint64 time);
-	Prof_Block*	GetProfBlock(MODULE_ID id, LOOP_STEP step)const;
-	void		SetMilliLimit(MODULE_ID id, uint limit);
+	//Save/Load
+	bool		LoadConfiguration(const JSON_Object* data_root);
+	void		SaveConfiguration()const;
 
+	//Functionality
+	void						BlitModuleProfile(MODULE_ID id, bool graph = false);
+	void						CallProfBlock(MODULE_ID id, LOOP_STEP step, uint64 time);
+	Prof_Block*					GetProfBlock(MODULE_ID id, LOOP_STEP step)const;
+	void						SetMilliLimit(MODULE_ID id, uint limit);
+	std::pair<MODULE_ID, uint>*	GetMilliLimit(MODULE_ID id)const;
 };
 #endif // ! _PROFILER_H_

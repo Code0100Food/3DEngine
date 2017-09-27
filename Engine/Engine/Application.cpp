@@ -140,6 +140,10 @@ bool Application::Awake()
 		profiler->CallProfBlock((*item)->id, BUILD_STEP, prof_timer.ReadTicks());
 	}
 
+	//Load profiler configuration
+	const JSON_Object* profiler_object = json_object_dotget_object(root_object, "Profiler");
+	profiler->LoadConfiguration(profiler_object);
+
 	//Free config data
 	json_value_free((JSON_Value *)config_data);
 
@@ -305,8 +309,6 @@ bool Application::CleanUp()
 
 	PEEK(ms_timer);
 
-
-
 	return ret;
 }
 
@@ -329,6 +331,24 @@ const char*	Application::AppContextToStr(APP_CONTEXT app_context) const
 	case IN_GAME_CONTEXT:	return "Game";		break;
 	case PAUSE_CONTEXT:		return "Pause";		break;
 	}
+}
+
+MODULE_ID Application::StrToModuleID(const char * str) const
+{
+	if (strcmp(str, "Application") == 0)	return APPLICATION;
+	if (strcmp(str, "Console") == 0)		return M_CONSOLE;
+	if (strcmp(str, "FileSystem") == 0)		return M_FILE_SYSTEM;
+	if (strcmp(str, "Audio") == 0)			return M_AUDIO;
+	if (strcmp(str, "Camera") == 0)			return M_CAMERA3D;
+	if (strcmp(str, "Hardware") == 0)		return M_HARDWARE;
+	if (strcmp(str, "ImGui") == 0)			return M_IMGUI;
+	if (strcmp(str, "Input") == 0)			return M_INPUT;
+	if (strcmp(str, "InputManager") == 0)	return M_INPUT_MANAGER;
+	if (strcmp(str, "Physics") == 0)		return M_PHYSICS3D;
+	if (strcmp(str, "Renderer") == 0)		return M_RENDERER;
+	if (strcmp(str, "Window") == 0)			return M_WINDOW;
+	if (strcmp(str, "Scene") == 0)			return M_SCENE;
+	return MODULE_ID::UNDEF_MODULE;
 }
 
 void Application::SetQuit()
