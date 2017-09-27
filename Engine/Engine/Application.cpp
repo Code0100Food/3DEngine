@@ -88,7 +88,6 @@ Application::Application()
 	AddModule(physics);
 	AddModule(console);
 	AddModule(hard);
-	AddModule(profiler);
 
 	// Scenes
 	AddModule(scene);

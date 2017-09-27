@@ -24,17 +24,12 @@ struct Prof_Block
 	uint64		time_in_nanoseconds = 0;
 };
 
-class Profiler : public Module
+class Profiler
 {
 public:
 
-	Profiler(bool start_enabled = true);
+	Profiler();
 	~Profiler();
-
-public:
-
-	//update_status	PostUpdate(float dt);
-	void BlitConfigInfo();
 
 private:
 
@@ -42,6 +37,9 @@ private:
 	std::vector<Prof_Block>	current_profiled_blocks;
 
 public:
+
+	//Draw 
+	void		BlitInfo();
 
 	//Functionality
 	void		BlitModuleProfile(MODULE_ID id, bool graph = false);

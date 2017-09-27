@@ -1,11 +1,9 @@
 #include "Profiler.h"
 
 // Constructors =================================
-Profiler::Profiler(bool start_enabled) :Module(start_enabled)
+Profiler::Profiler()
 {
-	id = M_PROFILER;
-	name = "Profiler";
-	config_menu = true;
+	
 }
 
 // Destructors ==================================
@@ -15,8 +13,14 @@ Profiler::~Profiler()
 }
 
 // Game Loop ====================================
-void Profiler::BlitConfigInfo()
+void Profiler::BlitInfo()
 {
+	//Build configuration base window
+	ImGui::SetNextWindowPos(ImVec2(0, 80));
+	ImGui::SetNextWindowSize(ImVec2(300, 360));
+	ImGui::Begin("Profiler", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
+	ImGui::TextColored(ImVec4(0.4, 0.8, 0.8, 1.0), "Profiler");
+
 	Prof_Block* block_ptr = nullptr;
 
 	//Show app time tracking --------------------
@@ -63,6 +67,7 @@ void Profiler::BlitConfigInfo()
 	ImGui::Text("Scene:");
 	BlitModuleProfile(M_SCENE);
 		
+	ImGui::End();
 }
 
 // Functionality ================================

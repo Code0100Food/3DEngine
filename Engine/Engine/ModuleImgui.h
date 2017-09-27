@@ -19,11 +19,16 @@ public:
 
 private:
 
-	bool	show_test_window = false;
-	bool	show_about_window = false;
 	bool	file_menu_open = false;
 	bool	view_menu_open = false;
+	bool	tools_menu_open = false;
 	bool	help_menu_open = false;
+
+	bool	show_profiler_window = false;
+	bool	show_test_window = false;
+	bool	show_about_window = false;
+
+	
 	bool	debug_text = false;
 	ImVec4	clear_color = ImColor(255, 255, 255);
 

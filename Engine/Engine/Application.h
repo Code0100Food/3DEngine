@@ -64,9 +64,10 @@ public:
 	ModuleImgui*		imgui = nullptr;
 	ModuleConsole*		console = nullptr;
 	ModuleHardware*		hard = nullptr;
-	Profiler*			profiler = nullptr;
 	Scene*				scene = nullptr;
 
+	//Tools 
+	Profiler*			profiler = nullptr;
 
 	APP_CONTEXT			app_context = UNKNOWN_CONTEXT;
 

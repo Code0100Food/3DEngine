@@ -1,5 +1,6 @@
 #include "ModuleImgui.h"
 #include "Application.h"
+#include "Profiler.h"
 #include "ModuleWindow.h"
 #include "Scene.h"
 #include "ModuleAudio.h"
@@ -57,7 +58,7 @@ update_status ModuleImgui::Update(float dt)
 
 	ImGui::End();
 
-	//Top Menu [File, view, help...]
+	//Top Menu [File, view, tools, help...] -----
 	ImGui::BeginMainMenuBar();
 
 	// File ---------------------------
@@ -112,6 +113,27 @@ update_status ModuleImgui::Update(float dt)
 		App->audio->PlayFxForInput(WINDOW_FX);
 	}
 
+	//Tools ---------------------------
+	cpy = tools_menu_open;
+	if (ImGui::BeginMenu("Tools"))
+	{
+		//Play fx when the menu is opened
+		tools_menu_open = true;
+		if (tools_menu_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
+
+		if (ImGui::MenuItem("Profiler"))
+		{
+			show_profiler_window = !show_profiler_window;
+		}
+		
+		ImGui::EndMenu();
+	}
+	else if (tools_menu_open)
+	{
+		tools_menu_open = false;
+		App->audio->PlayFxForInput(WINDOW_FX);
+	}
+
 	//Help ----------------------------
 	cpy = help_menu_open;
 	if (ImGui::BeginMenu("Help"))
@@ -154,7 +176,13 @@ update_status ModuleImgui::Update(float dt)
 	}
 
 	ImGui::EndMainMenuBar();
+	// ------------------------------------------
 
+	//Profiler window
+	if (show_profiler_window)
+	{
+		App->profiler->BlitInfo();
+	}
 	//Test window
 	if (show_test_window)
 	{
