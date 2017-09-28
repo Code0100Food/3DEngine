@@ -114,7 +114,7 @@ bool RenderInit(SDL_GLContext* context, SDL_Window* window)
 		glClearDepth(1.0f);
 
 		//Initialize clear color
-		glClearColor(0.0f, 0.0f, 0.0f, 1.f);
+		glClearColor(0.4f, 0.0f, 0.4f, 1.f);
 
 		//Check for error
 		error = glGetError();
@@ -244,6 +244,7 @@ int main(int argc, char ** argv)
 	//Save the actual version
 	string str_version = json_object_get_string(update_data, "version");
 	SDL_version current_version = GetVersion(str_version);
+	SDL_version new_version;
 	bool outdated = false;
 
 	CURL* curl = nullptr;
@@ -270,7 +271,7 @@ int main(int argc, char ** argv)
 		const JSON_Object* new_root_object = json_value_get_object(new_reader);
 		const JSON_Object* new_update_data = json_object_dotget_object(new_root_object, "Fiesta Engine");
 		string str_new_version = json_object_get_string(new_update_data, "version");
-		SDL_version new_version = GetVersion(str_new_version);
+		new_version = GetVersion(str_new_version);
 
 		if ((new_version.major != current_version.major) || (new_version.minor != current_version.minor) || (new_version.patch != current_version.patch))
 		{
@@ -304,14 +305,20 @@ int main(int argc, char ** argv)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
 
+		//Launcher UI
 		ImGui::SetNextWindowPos(ImVec2(0, 0));
-		ImGui::SetNextWindowSize(ImVec2(500, 200));
-		ImGui::Begin("Welcome to the Fiesta Engine Launcher");
-
+		ImGui::Begin("Welcome to the Fiesta Engine Launcher",0, ImVec2(500, 500),0.0f,ImGuiWindowFlags_::ImGuiWindowFlags_NoMove| ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar);
+		ImGui::TextColored(ImVec4(0.2, 0.5, 0.8, 1.0), "Welcome to the Fiesta Engine Launcher!");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0, 0.8, 0.8, 1.0), "v%i.%i.%i", current_version.major, current_version.minor, current_version.patch);
 		if (outdated)
 		{
+			ImGui::Separator();
 			ImGui::Text("There's a new version available");
-			if (ImGui::Button("Download"))
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(0.0, 0.8, 0.8, 1.0), "v%i.%i.%i", new_version.major, new_version.minor, new_version.patch);
+			ImGui::SameLine();
+			if (ImGui::Button("Download!"))
 			{
 				ShellExecute(NULL, "open", download_url.c_str(), NULL, NULL, SW_SHOWNORMAL);
 			}
@@ -321,15 +328,39 @@ int main(int argc, char ** argv)
 			ImGui::Text("There isn't a new version available");
 		}
 		
-		if (ImGui::Button("Start"))
+		ImGui::Separator();
+		ImGui::Separator();
+		ImGui::Separator();
+
+		if (ImGui::Button("Start", ImVec2(238, 50)))
 		{
 			ret = 1;
 			loop = false;
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Close"))
+		if (ImGui::Button("Close", ImVec2(238, 50)))
 		{
 			loop = false;
+		}
+		
+		ImGui::Separator();
+		ImGui::Separator();
+		ImGui::Separator();
+
+		ImGui::BulletText("A 3D engine developed by two students of video games development.");
+		ImGui::BulletText("This code is under the MIT License.");
+		ImGui::Separator();
+		ImGui::BulletText("Ferran Martin Vila");
+		ImGui::SameLine();
+		if (ImGui::Button("Info##f"))
+		{
+			ShellExecute(NULL, "open", "https://github.com/ferranmartinvila", NULL, NULL, SW_SHOWNORMAL);
+		}
+		ImGui::BulletText("Eric Sola Vila");
+		ImGui::SameLine();
+		if (ImGui::Button("Info##e"))
+		{
+			ShellExecute(NULL, "open", "https://github.com/HeladodePistacho", NULL, NULL, SW_SHOWNORMAL);
 		}
 		ImGui::End();
 
