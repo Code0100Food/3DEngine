@@ -20,6 +20,7 @@ void Profiler::BlitInfo()
 	ImGui::SetNextWindowSize(ImVec2(280, 400));
 	ImGui::Begin("Profiler", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
 	ImGui::TextColored(ImVec4(0.4, 0.8, 0.8, 1.0), "Profiler");
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Shows how long each module's step takes");
 
 	Prof_Block* block_ptr = nullptr;
 

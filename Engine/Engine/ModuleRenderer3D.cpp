@@ -428,6 +428,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 			glDisable(GL_DEPTH_TEST);
 		}
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF the depth pixel painting.");
 
 	//Cull Test check box
 	if (ImGui::Checkbox("Cull Test", &cull_face))
@@ -442,6 +443,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 			glDisable(GL_CULL_FACE);
 		}
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF the triangle culling.");
 
 	//Texture 2D check box
 	if (ImGui::Checkbox("Texture 2D", &texture_2d))
@@ -456,6 +458,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 			glDisable(GL_TEXTURE_2D);
 		}
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Allows to texture in 2D");
 
 	//Dither check box
 	if (ImGui::Checkbox("Dither", &dither))
@@ -470,7 +473,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 			glDisable(GL_DITHER);
 		}
 	}
-
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Dither color components before they are written to the color buffer.");
 	ImGui::Separator();
 
 
@@ -488,7 +491,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 		}
 
 	}
-
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF the lights");
 	if (lighting)
 	{
 		if (ImGui::DragFloat4("Lighting Color", lighting_color, 0.05, 0.0, 1.0, "%.2f"))
@@ -514,6 +517,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 			glDisable(GL_COLOR_MATERIAL);
 		}
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Allows to have one or more material parameters tracking the current color");
 	if (material_color)
 	{
 		if (ImGui::DragFloat4("Material Ambient", material_ambient, 0.05, 0.0, 1.0, "%.2f"))
@@ -545,6 +549,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 			glDisable(GL_FOG);
 		}
 	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turns ON/OFF the Fog");
 
 	if (fog)
 	{
@@ -566,6 +571,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 	//Wireframe -------------
 
 	if (ImGui::Checkbox("WireFrame", &wireframe));
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turns ON/OFF the WireFrame mode");
 
 	if (wireframe)
 	{
@@ -592,7 +598,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 			glClearDepth(clear_depth);
 		}
 	}
-	
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Specify the red, green, blue, and alpha values used when the color buffers are cleared");
 	if (custom_clear)
 	{
 		if (ImGui::DragFloat4("Clear Color", clear_color, 0.05, 0.0, 1.0, "%.2f"))
