@@ -1,7 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
-
+#include "ModuleRenderer3D.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "SDL/include/SDL_opengl.h"
 #include "FileSystem.h"
@@ -199,6 +199,7 @@ void ModuleWindow::BlitConfigInfo()
 		width = pre_defined_windows[item]->width;
 		height = pre_defined_windows[item]->height;
 		SDL_SetWindowSize(window, width, height);
+		App->renderer3D->OnResize(width, height);
 	}
 
 	//Framerate 

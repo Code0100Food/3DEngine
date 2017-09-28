@@ -234,7 +234,7 @@ bool ModuleRenderer3D::Init()
 bool ModuleRenderer3D::Start()
 {
 	/*
-	//Generate a cube & truangulate it
+	//Generate a cube & triangulate it
 	geolib_cube = new math::AABB({ 0,0,0 }, { 1,1,1 });
 	math::float3 vertex[36];
 	geolib_cube->Triangulate(1, 1, 1, vertex, NULL, NULL, true);
@@ -247,7 +247,7 @@ bool ModuleRenderer3D::Start()
 	*/
 	
 	/*
-	//Generate a cube & truangulate it
+	//Generate a cube & collect the vertex
 	geolib_cube = new math::AABB({ 0,0,0 }, { 1,1,1 });
 	math::float3 vertex[8];
 	geolib_cube->GetCornerPoints(vertex);
@@ -267,9 +267,8 @@ bool ModuleRenderer3D::Start()
 	glBindBuffer(GL_ARRAY_BUFFER, opt_cube_index_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36 * 3, indices, GL_STATIC_DRAW);
 
-	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);	
 	*/
-
 	return true;
 }
 
@@ -390,7 +389,7 @@ update_status ModuleRenderer3D::Update(float dt)
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, vertex);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->opt_cube_index_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->opt_cube_index_id);
 	glDrawElements(GL_TRIANGLES,36, GL_UNSIGNED_BYTE, indices);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
