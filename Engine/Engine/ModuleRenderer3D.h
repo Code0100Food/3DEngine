@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+#include "MathGeoLib/MathGeoLib.h"
 
 #define MAX_LIGHTS 8
 
@@ -27,7 +28,7 @@ public:
 	void			BlitConfigInfo()final;
 	void			SaveConfigInfo(JSON_Object* data_root);
 
-public:
+private:
 
 	bool	vsync = false;
 	bool	depth_test = false;
@@ -52,12 +53,17 @@ public:
 	float	clear_color[4];
 	float	clear_depth = 0.0f;
 
-public:
+private:
 
 	Light			lights[MAX_LIGHTS];
 	SDL_GLContext	context;
 	mat3x3			NormalMatrix;
 	mat4x4			ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+private:
+
+	math::AABB*		geolib_cube = nullptr;
+	uint			geolib_cube_id = 0;
 
 public:
 

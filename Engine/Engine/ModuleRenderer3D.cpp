@@ -233,29 +233,20 @@ bool ModuleRenderer3D::Init()
 
 bool ModuleRenderer3D::Start()
 {
-	GLfloat v0[3] = { 1,1,0 };
-	GLfloat v1[3] = { 0,1,0 };
-	GLfloat v2[3] = { 0,0,0 };
-	GLfloat v3[3] = { 1,0,0 };
-	GLfloat v4[3] = { 1,0,1 };
-	GLfloat v5[3] = { 1,1,1 };
-	GLfloat v6[3] = { 0,1,1 };
-	GLfloat v7[3] = { 0,0,1 };
+	/*
+	//Generate a cube & truangulate it
+	geolib_cube = new math::AABB({ 0,0,0 }, { 1,1,1 });
+	math::float3 vertex[36];
+	geolib_cube->Triangulate(1, 1, 1, vertex, NULL, NULL, true);
 
-	//cube = new AABB(v7,v6);
-	//AABB cube({ 0,0,0 }, { 1,1,1 });
-
-	//GLfloat* v7[36] = { 0,0,1 };
-
-	/*float vertex_vec_cpy[24] = { 1,1,0,0,1,0,0,0,1,0,0,1,0,1,1,1,1,0,1,1,0,0,1 };
-	vertex_vec = vertex_vec_cpy;
-	glGenBuffers(1, &cube_a_id);
-	glBindBuffer(GL_ARRAY_BUFFER, cube_a_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8 * 3, vertex_vec, GL_STATIC_DRAW);
+	//Allocate a buffer for the cube data
+	glGenBuffers(1, &geolib_cube_id);
+	glBindBuffer(GL_ARRAY_BUFFER, geolib_cube_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vertex, GL_STATIC_DRAW);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
-	return true;
 
+	return true;
 }
 
 // PreUpdate: clear buffer
@@ -357,12 +348,14 @@ update_status ModuleRenderer3D::Update(float dt)
 	glEnd();
 	*/
 
-	/*glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, cube_a_id);
+	/*
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, geolib_cube_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawArrays(GL_TRIANGLES, 0, 24);
+	glDrawArrays(GL_TRIANGLES, 0, 36 * 3);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
+
 	return update_status::UPDATE_CONTINUE;
 
 }
