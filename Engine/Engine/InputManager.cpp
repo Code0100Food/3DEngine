@@ -193,7 +193,7 @@ void InputManager::BlitConfigInfo()
 	}
 	ImGui::Separator();
 
-	/*
+	
 	//Show all the programmed controller events
 	ImGui::Text("Controller Events");
 	//Search the event in the keyboard map
@@ -208,23 +208,13 @@ void InputManager::BlitConfigInfo()
 
 		controller_event++;
 	}
-	*/
+	
 }
 
 //Functionality ==================================
 INPUT_EVENT InputManager::StrToInputEvent(const char * str) const
 {
-	if (strcmp(str, "colliders_debug") == 0)		return INPUT_EVENT::COLLIDERS_DEBUG_MODE;
-	if (strcmp(str, "ui_debug") == 0)				return INPUT_EVENT::UI_DEBUG_MODE;
 	if (strcmp(str, "escape") == 0)					return INPUT_EVENT::ESCAPE;
-	if (strcmp(str, "go_left") == 0)				return INPUT_EVENT::GO_LEFT;
-	if (strcmp(str, "go_right") == 0)				return INPUT_EVENT::GO_RIGHT;
-	if (strcmp(str, "jump") == 0)					return INPUT_EVENT::JUMP;
-	if (strcmp(str, "crouch") == 0)					return INPUT_EVENT::CROUCH;
-	if (strcmp(str, "interact") == 0)				return INPUT_EVENT::INTERACT;
-	if (strcmp(str, "attack") == 0)					return INPUT_EVENT::ATTACK;
-	if (strcmp(str, "focus_next") == 0)				return INPUT_EVENT::FOCUS_NEXT;
-	if (strcmp(str, "focus_prev") == 0)				return INPUT_EVENT::FOCUS_PREV;
 	if (strcmp(str, "accept") == 0)					return INPUT_EVENT::ACCEPT;
 	if (strcmp(str, "add_value") == 0)				return INPUT_EVENT::ADD_VALUE;
 	if (strcmp(str, "rest_value") == 0)				return INPUT_EVENT::REST_VALUE;
@@ -235,9 +225,11 @@ const char*	InputManager::InputEventToStr(INPUT_EVENT _event)const
 {
 	switch (_event)
 	{
-	case UNKNOWN_INPUT:		return "unknown";		break;
-	case ADD_VALUE:			return "Add Value";		break;
-	case REST_VALUE:		return "Rest Value";	break;
+	case UNKNOWN_INPUT:		return "unknown";
+	case ADD_VALUE:			return "Add Value";
+	case REST_VALUE:		return "Rest Value";
+	case ESCAPE:			return "Escape";
+	default:				return "ERROR";
 	}
 }
 

@@ -179,7 +179,7 @@ bool Application::Init()
 
 	//Initialize values
 	memset(fps_array, 0, 30);
-
+	app_context = APP_CONTEXT::PAUSE_CONTEXT;
 	PEEK(ms_timer);
 	profiler->CallProfBlock(APPLICATION, START_STEP, prof_timer.ReadTicks());
 

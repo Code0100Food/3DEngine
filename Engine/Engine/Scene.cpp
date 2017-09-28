@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Application.h"
+#include "InputManager.h"
 #include "ModulePhysics3D.h"
 #include "imgui/imgui.h"
 
@@ -79,6 +80,12 @@ update_status Scene::Update(float dt)
 	_Sphere sp(3, 0, 3, 0);
 	sp.Render();
 
+	if (App->input_manager->GetEvent(ESCAPE) == INPUT_STATE::INPUT_DOWN)
+	{
+		App->SetQuit();
+	}
+
+	//Random window
 	if (random_window)
 	{
 		ImGui::Begin("Random Test", &random_window);
