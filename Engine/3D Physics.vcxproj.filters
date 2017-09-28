@@ -312,6 +312,15 @@
     <ClInclude Include="Engine\InputManager.h">
       <Filter>Sources\Modules\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\MathGeoLib\MathBuildConfig.h">
+      <Filter>Sources\Tools\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MathGeoLib\MathGeoLib.h">
+      <Filter>Sources\Tools\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MathGeoLib\MathGeoLibFwd.h">
+      <Filter>Sources\Tools\MathGeoLib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">

@@ -245,6 +245,30 @@ bool ModuleRenderer3D::Start()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vertex, GL_STATIC_DRAW);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
+	
+	/*
+	//Generate a cube & truangulate it
+	geolib_cube = new math::AABB({ 0,0,0 }, { 1,1,1 });
+	math::float3 vertex[8];
+	geolib_cube->GetCornerPoints(vertex);
+	uint indices[36] = {	0,1,2, 2,3,0,   // 36 of indices
+							0,3,4, 4,5,0,
+							0,5,6, 6,1,0,
+							1,6,7, 7,2,1,
+							7,4,3, 3,2,7,
+							4,7,6, 6,5,4 };
+
+	//Vertex buffer
+	glGenBuffers(1, (GLuint*) &(opt_cube_vertex_id));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opt_cube_vertex_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * 8, vertex, GL_STATIC_DRAW);
+	//Index buffer
+	glGenBuffers(1, (GLuint*) &(opt_cube_index_id));
+	glBindBuffer(GL_ARRAY_BUFFER, opt_cube_index_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36 * 3, indices, GL_STATIC_DRAW);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	*/
 
 	return true;
 }
@@ -353,6 +377,21 @@ update_status ModuleRenderer3D::Update(float dt)
 	glBindBuffer(GL_ARRAY_BUFFER, geolib_cube_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glDrawArrays(GL_TRIANGLES, 0, 36 * 3);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	*/
+
+	/*
+	GLubyte indices[] = {	0,1,2, 2,3,0,   // 36 of indices
+							0,3,4, 4,5,0,
+							0,5,6, 6,1,0,
+							1,6,7, 7,2,1,
+							7,4,3, 3,2,7,
+							4,7,6, 6,5,4 };
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertex);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->opt_cube_index_id);
+	glDrawElements(GL_TRIANGLES,36, GL_UNSIGNED_BYTE, indices);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
 

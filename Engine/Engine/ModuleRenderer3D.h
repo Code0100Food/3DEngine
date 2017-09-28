@@ -64,7 +64,10 @@ private:
 
 	math::AABB*		geolib_cube = nullptr;
 	uint			geolib_cube_id = 0;
-
+	uint			opt_cube_vertex_id = 0;
+	uint			opt_cube_index_id = 0;
+	math::float3	vertex[8];
+	
 public:
 
 	void OnResize(int width, int height);

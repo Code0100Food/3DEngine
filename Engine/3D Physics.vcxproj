@@ -120,6 +120,9 @@
     <ClInclude Include="Engine\MathGeoLib\Geometry\Sphere.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\Triangle.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\TriangleMesh.h" />
+    <ClInclude Include="Engine\MathGeoLib\MathBuildConfig.h" />
+    <ClInclude Include="Engine\MathGeoLib\MathGeoLib.h" />
+    <ClInclude Include="Engine\MathGeoLib\MathGeoLibFwd.h" />
     <ClInclude Include="Engine\MathGeoLib\Math\assume.h" />
     <ClInclude Include="Engine\MathGeoLib\Math\BitOps.h" />
     <ClInclude Include="Engine\MathGeoLib\Math\Complex.h" />
