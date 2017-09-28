@@ -54,18 +54,18 @@
     }
   },
   "Profiler": {
-    "Application": 50,
-    "Console": 10,
+    "Application": 4.5999999046325684,
+    "Console": 2.7999999523162842,
     "FileSystem": 10,
-    "Audio": 10,
-    "Camera": 10,
+    "Audio": 9.9000005722045898,
+    "Camera": 3.1000001430511475,
     "Hardware": 10,
-    "ImGui": 10,
-    "Input": 10,
+    "ImGui": 15,
+    "Input": 15,
     "InputManager": 10,
-    "Physics": 10,
+    "Physics": 15,
     "Renderer": 10,
-    "Window": 10,
-    "Scene": 10
+    "Window": 3,
+    "Scene": 15
   }
 }

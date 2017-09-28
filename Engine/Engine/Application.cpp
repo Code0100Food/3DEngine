@@ -286,13 +286,16 @@ bool Application::CleanUp()
 	json_object_set_string(app_value, "organization", organization.c_str());
 	json_object_set_number(app_value, "max_fps", max_fps);
 
-	// Call Awake() in all modules
+	// Save all modules configuration
 	const JSON_Object *root_object = json_value_get_object(config_data);
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
 	{
 		JSON_Object* module_object = json_object_dotget_object(root_object, item._Ptr->_Myval->name.c_str());
 		(*item)->SaveConfigInfo(module_object);
 	}
+
+	//Save profiler configuration
+	profiler->SaveConfiguration(json_object_dotget_object(root_object, "Profiler"));
 
 	ret = fs->SaveJSONFile(config_data, "config.json");
 	json_value_free((JSON_Value *)config_data);

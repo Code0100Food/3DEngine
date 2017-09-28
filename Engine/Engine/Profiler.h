@@ -36,8 +36,8 @@ public:
 private:
 
 	//Track all the modules timing
-	std::vector<Prof_Block>					current_profiled_blocks;
-	std::vector<std::pair<MODULE_ID, uint>>	modules_max_milli;
+	std::vector<Prof_Block>						current_profiled_blocks;
+	std::vector<std::pair<MODULE_ID, float>>	modules_max_milli;
 
 public:
 
@@ -46,13 +46,13 @@ public:
 
 	//Save/Load
 	bool		LoadConfiguration(const JSON_Object* data_root);
-	void		SaveConfiguration()const;
+	void		SaveConfiguration(JSON_Object * data_root)const;
 
 	//Functionality
-	void						BlitModuleProfile(MODULE_ID id, const char* str_id, bool graph = false);
-	void						CallProfBlock(MODULE_ID id, LOOP_STEP step, uint64 time);
-	Prof_Block*					GetProfBlock(MODULE_ID id, LOOP_STEP step)const;
-	void						SetMilliLimit(MODULE_ID id, uint limit);
-	std::pair<MODULE_ID, uint>*	GetMilliLimit(MODULE_ID id)const;
+	void							BlitModuleProfile(MODULE_ID id, const char* str_id, bool graph = false);
+	void							CallProfBlock(MODULE_ID id, LOOP_STEP step, uint64 time);
+	Prof_Block*						GetProfBlock(MODULE_ID id, LOOP_STEP step)const;
+	void							SetMilliLimit(MODULE_ID id, float limit);
+	std::pair<MODULE_ID, float>*	GetMilliLimit(MODULE_ID id)const;
 };
 #endif // ! _PROFILER_H_

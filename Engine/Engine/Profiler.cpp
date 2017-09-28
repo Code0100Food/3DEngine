@@ -17,7 +17,7 @@ void Profiler::BlitInfo()
 {
 	//Build configuration base window
 	ImGui::SetNextWindowPos(ImVec2(0, 80));
-	ImGui::SetNextWindowSize(ImVec2(300, 360));
+	ImGui::SetNextWindowSize(ImVec2(280, 400));
 	ImGui::Begin("Profiler", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
 	ImGui::TextColored(ImVec4(0.4, 0.8, 0.8, 1.0), "Profiler");
 
@@ -90,11 +90,29 @@ bool Profiler::LoadConfiguration(const JSON_Object * data_root)
 	return true;
 }
 
+void Profiler::SaveConfiguration(JSON_Object * data_root) const
+{
+	//Save all the modules max milliseconds
+	json_object_set_number(data_root, "Application", GetMilliLimit(APPLICATION)->second);
+	json_object_set_number(data_root, "Console", GetMilliLimit(M_CONSOLE)->second);
+	json_object_set_number(data_root, "FileSystem", GetMilliLimit(M_FILE_SYSTEM)->second);
+	json_object_set_number(data_root, "Audio", GetMilliLimit(M_AUDIO)->second);
+	json_object_set_number(data_root, "Camera", GetMilliLimit(M_CAMERA3D)->second);
+	json_object_set_number(data_root, "Hardware", GetMilliLimit(M_HARDWARE)->second);
+	json_object_set_number(data_root, "ImGui", GetMilliLimit(M_IMGUI)->second);
+	json_object_set_number(data_root, "Input", GetMilliLimit(M_INPUT)->second);
+	json_object_set_number(data_root, "InputManager", GetMilliLimit(M_INPUT_MANAGER)->second);
+	json_object_set_number(data_root, "Physics", GetMilliLimit(M_PHYSICS3D)->second);
+	json_object_set_number(data_root, "Renderer", GetMilliLimit(M_RENDERER)->second);
+	json_object_set_number(data_root, "Window", GetMilliLimit(M_WINDOW)->second);
+	json_object_set_number(data_root, "Scene", GetMilliLimit(M_SCENE)->second);
+}
+
 // Functionality ================================
 void Profiler::BlitModuleProfile(MODULE_ID id, const char* str_id, bool graph)
 {
 	Prof_Block* block_ptr = nullptr;
-	std::pair<MODULE_ID, uint>* milli_limit = GetMilliLimit(id);
+	std::pair<MODULE_ID, float>* milli_limit = GetMilliLimit(id);
 
 	//Build -----------------
 	block_ptr = GetProfBlock(id, BUILD_STEP);
@@ -157,7 +175,7 @@ void Profiler::BlitModuleProfile(MODULE_ID id, const char* str_id, bool graph)
 	//Max Milliseconds ------
 	if (milli_limit != nullptr)
 	{
-		uint limit = milli_limit->second;
+		float limit = milli_limit->second;
 		float total = pre_update_ms + update_ms + post_update_ms;
 		ImGui::Text("State: "); 
 		ImGui::SameLine();
@@ -165,9 +183,9 @@ void Profiler::BlitModuleProfile(MODULE_ID id, const char* str_id, bool graph)
 		else if (total >= (float)limit * 0.5f)ImGui::TextColored(ImVec4(0.2, 0.8, 0.2, 1.0), "NORMAL");
 		else if(total < (float)limit * 0.5f)ImGui::TextColored(ImVec4(0.5, 0.2, 0.7, 1.0), "PERFECT");
 
-		ImGui::Text("Max Ms: %i", limit);
+		ImGui::Text("Max Ms");
 		ImGui::SameLine();
-		ImGui::SliderInt(str_id, (int*)&milli_limit->second, 0, MAX_MS);
+		ImGui::SliderFloat(str_id, &milli_limit->second, 0, MAX_MS,"%.1f");
 	}
 
 	//Represents all the data in a graph
@@ -228,11 +246,11 @@ Prof_Block * Profiler::GetProfBlock(MODULE_ID id, LOOP_STEP step)const
 	return ptr;
 }
 
-void Profiler::SetMilliLimit(MODULE_ID id, uint limit)
+void Profiler::SetMilliLimit(MODULE_ID id, float limit)
 {
 	bool in = false;
 	//Check if the send pair is already in the vector
-	std::vector<std::pair<MODULE_ID, uint>>::const_iterator pair = modules_max_milli.begin();
+	std::vector<std::pair<MODULE_ID, float>>::const_iterator pair = modules_max_milli.begin();
 	while (pair != modules_max_milli.end())
 	{
 		if (pair._Ptr->first == id)
@@ -247,10 +265,10 @@ void Profiler::SetMilliLimit(MODULE_ID id, uint limit)
 	if(!in)modules_max_milli.push_back({ id,limit });
 }
 
-std::pair<MODULE_ID, uint>* Profiler::GetMilliLimit(MODULE_ID id) const
+std::pair<MODULE_ID, float>* Profiler::GetMilliLimit(MODULE_ID id) const
 {
 	//Check if the send pair is already in the vector
-	std::vector<std::pair<MODULE_ID, uint>>::const_iterator pair = modules_max_milli.begin();
+	std::vector<std::pair<MODULE_ID, float>>::const_iterator pair = modules_max_milli.begin();
 	while (pair != modules_max_milli.end())
 	{
 		if (pair._Ptr->first == id)return pair._Ptr;
