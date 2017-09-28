@@ -448,6 +448,12 @@ void ModuleRenderer3D::BlitConfigInfo()
 
 	if (ImGui::Checkbox("WireFrame", &wireframe));
 
+	if (wireframe)
+	{
+		if (ImGui::Checkbox("Front Mode", &front_wireframe));
+	}
+	
+
 	//-----------------------
 
 	ImGui::Separator();
@@ -543,4 +549,9 @@ void ModuleRenderer3D::OnResize(int width, int height)
 bool ModuleRenderer3D::GetWireframe() const
 {
 	return wireframe;
+}
+
+bool ModuleRenderer3D::GetWireframeFront() const
+{
+	return front_wireframe;
 }

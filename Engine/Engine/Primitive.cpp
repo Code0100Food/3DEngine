@@ -73,7 +73,14 @@ void _Primitive::Render() const
 
 	if (App->renderer3D->GetWireframe())
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if (App->renderer3D->GetWireframeFront())
+		{
+			glPolygonMode(GL_FRONT, GL_LINE);
+		}
+		else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
 	}
 	else
 	{

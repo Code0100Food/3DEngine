@@ -33,6 +33,7 @@ public:
 	bool	texture_2d = false;
 	bool	dither = false;
 	bool	wireframe = false;
+	bool	front_wireframe = false;
 
 	bool	lighting = false;
 	float	lighting_color[4];
@@ -60,6 +61,7 @@ public:
 
 	void OnResize(int width, int height);
 	bool GetWireframe() const;
+	bool GetWireframeFront() const;
 };
 
 
