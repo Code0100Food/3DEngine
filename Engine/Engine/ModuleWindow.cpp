@@ -31,6 +31,40 @@ bool ModuleWindow::Awake(const JSON_Object * data_root)
 	borderless = json_object_get_boolean(data_root, "borderless");
 	full_desktop = json_object_get_boolean(data_root, "full_desktop");
 
+	//Load window sizes
+	const JSON_Object* win = json_object_get_object(data_root, "win0");
+
+	for (int i = 1; win != nullptr; i++)
+	{
+		//Load Data
+		int new_width = json_object_get_number(win, "width");
+		int new_height = json_object_get_number(win, "height");
+
+		WindowSize* new_pre_defined_windows = new WindowSize(new_width, new_height);
+		if (new_pre_defined_windows)
+		{
+			pre_defined_windows.push_back(new_pre_defined_windows);
+		}
+
+		//Fill the string for the Combo
+		char wd[5];
+		char ht[5];
+		itoa(new_width, wd, 10);
+		itoa(new_height, ht, 10);
+		string w = wd;
+		string h = ht;
+		string size = w + "x" + h;
+		windows_names.push_back(size);
+
+		//Jump to next window
+		char index[5];
+		itoa(i, index, 10);
+		string number = index;
+		string next_win = "win" + number;
+		win = json_object_get_object(data_root, next_win.c_str());
+	}
+
+
 	config_menu = true;
 
 	return true;
@@ -119,6 +153,12 @@ bool ModuleWindow::CleanUp()
 		SDL_DestroyWindow(window);
 	}
 
+	for (std::vector<WindowSize*>::iterator item = pre_defined_windows.begin(); item != pre_defined_windows.end(); item++)
+	{
+		RELEASE((*item));
+	}
+	pre_defined_windows.clear();
+
 	//Quit SDL subsystems
 	SDL_Quit();
 	return true;
@@ -149,6 +189,17 @@ void ModuleWindow::BlitConfigInfo()
 		App->audio->PlayFxForInput(SLICE_TICK_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the window height.");
+
+	//Window sizes
+	static int item = 6;
+	const char* sizes[] = {windows_names[0].c_str(), windows_names[1].c_str(), windows_names[2].c_str(), windows_names[3].c_str(), windows_names[4].c_str(), windows_names[5].c_str(), };
+	
+	if (ImGui::Combo("Resolution", &item, sizes, IM_ARRAYSIZE(sizes)))
+	{
+		width = pre_defined_windows[item]->width;
+		height = pre_defined_windows[item]->height;
+		SDL_SetWindowSize(window, width, height);
+	}
 
 	//Framerate 
 	ImGui::Text("Framerate: ");

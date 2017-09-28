@@ -6,6 +6,15 @@
 
 class Application;
 
+class WindowSize
+{
+public:
+	WindowSize(int _width, int _height) : width(_width), height(_height) {};
+
+	int width = 0;
+	int height = 0;
+};
+
 class ModuleWindow : public Module
 {
 public:
@@ -31,6 +40,9 @@ private:
 	bool	resizable = false;
 	bool	borderless = false;
 	bool	full_desktop = false;
+
+	std::vector<WindowSize*> pre_defined_windows;
+	std::vector<string>		 windows_names;
 
 public:
 
