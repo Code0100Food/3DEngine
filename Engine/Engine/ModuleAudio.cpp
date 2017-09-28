@@ -130,8 +130,10 @@ void ModuleAudio::BlitConfigInfo()
 	ImGui::Checkbox("Input FX", &fx_on_input);
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF all the input audio effects.");
 
-	//Drivers
 	ImGui::Separator();
+	ImGui::Separator();
+
+	//Drivers
 	ImGui::Text("Total Audio drivers:");
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%i", num_audio_devices);
@@ -143,6 +145,7 @@ void ModuleAudio::BlitConfigInfo()
 	}
 
 	//Audio Callbacks
+	ImGui::NewLine();
 	ImGui::Separator();
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.2f, 0.2f, 0.8f, 1.0f), "History");
@@ -160,12 +163,10 @@ void ModuleAudio::BlitConfigInfo()
 		ImGui::Text(audio_logs[k].c_str());
 	}
 
-	float scroll_y = ImGui::GetScrollY(), scroll_max_y = ImGui::GetScrollMaxY();
 	ImGui::EndChild();
-	ImGui::Text("%.0f/%0.f", scroll_y, scroll_max_y);
 	ImGui::EndGroup();
 
-	ImGui::NewLine();
+	//ImGui::NewLine();
 }
 
 void ModuleAudio::SaveConfigInfo(JSON_Object * data_root)
