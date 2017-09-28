@@ -201,6 +201,11 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 	}
 
 	LOG("Successfully playing %s", path);
+	
+	//Console call
+	if(!ret)AddConsoleLabel("Error Playing Music: ", path);
+	else AddConsoleLabel("Playing Music: ", path);
+
 	return ret;
 }
 
@@ -216,15 +221,34 @@ unsigned int ModuleAudio::LoadFx(const char* path, FX_ID id)
 	if(chunk == NULL)
 	{
 		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
+		AddConsoleLabel("Error loading FX: ", path);
 	}
 	else
 	{
 		FX_Chunk new_fx(chunk, id);
 		fx.push_back(new_fx);
 		ret = fx.size();
+		AddConsoleLabel("FX Loaded: ", path);
 	}
 
 	return ret;
+}
+
+const char* ModuleAudio::FxIdToStr(FX_ID id) const 
+{
+	switch (id)
+	{
+	case UNDEF_FX: return "Undef";
+		break;
+	case APPLY_FX:	return "Apply FX";
+		break;
+	case SLICE_TICK_FX:	return "Slice FX";
+		break;
+	case CHECKBOX_FX:	return "CheckBox FX";
+		break;
+	case WINDOW_FX:	return "Window FX";
+		break;
+	}
 }
 
 // Play WAV
@@ -245,8 +269,16 @@ bool ModuleAudio::PlayFx(FX_ID id,int channel, int repeat)
 		it++;
 	}
 	
-	if (ret)Mix_PlayChannel(channel, (*it).data, repeat);
+	if (ret)
+	{
+		Mix_PlayChannel(channel, (*it).data, repeat);
+		//Console call
+		AddConsoleLabel("Playing FX: %s", FxIdToStr(id));
+	}
 	
+	//Console call
+	AddConsoleLabel("Error playing FX: ", FxIdToStr(id));
+
 	return ret;
 }
 
@@ -277,4 +309,11 @@ void ModuleAudio::SetMasterVolume(int volume)
 	master_volume = volume;
 	Mix_Volume(-1, master_volume);
 	Mix_VolumeMusic(master_volume);
+}
+
+void ModuleAudio::AddConsoleLabel(const char* action, const char* path)
+{
+	//Build and push a console label
+	/*strcat((char*)action, path);
+	audio_logs.push_back(action);*/
 }

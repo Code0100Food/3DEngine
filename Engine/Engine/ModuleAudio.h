@@ -54,18 +54,25 @@ private:
 	vector<string>		audio_drivers;
 	int					num_audio_devices = 0;
 
+	//Audio Log Console(no input just output)
+	std::vector<std::string>	audio_logs;
+
 public:
 
 	// Play a music file
 	bool			PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
 	// Load a WAV in memory
 	unsigned int	LoadFx(const char* path, FX_ID id);
+	const char*		FxIdToStr(FX_ID id)const;
 	// Play a previously loaded WAV
 	bool			PlayFx(FX_ID id,int channel = -1, int repeat = 0);
 	bool			PlayFxForInput(FX_ID id);
 
 	//Update master volume
 	void			SetMasterVolume(int volume);
+
+	//Add console label
+	void AddConsoleLabel(const char* action, const char* path);
 
 };
 /// -----------------------------------
