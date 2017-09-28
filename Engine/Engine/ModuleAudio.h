@@ -56,6 +56,7 @@ private:
 
 	//Audio Log Console(no input just output)
 	std::vector<std::string>	audio_logs;
+	bool						scroll_audio_calls = false;
 
 public:
 
@@ -72,7 +73,7 @@ public:
 	void			SetMasterVolume(int volume);
 
 	//Add console label
-	void AddConsoleLabel(const char* action, const char* path);
+	void AddConsoleLabel(const char* action,...);
 
 };
 /// -----------------------------------

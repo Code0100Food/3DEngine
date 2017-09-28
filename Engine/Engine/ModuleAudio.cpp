@@ -141,6 +141,30 @@ void ModuleAudio::BlitConfigInfo()
 		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s, ", (*item).c_str());
 		ImGui::SameLine();
 	}
+
+	//Audio Callbacks
+	ImGui::Separator();
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(0.2f, 0.2f, 0.8f, 1.0f), "History");
+
+	ImGui::BeginGroup();
+	ImGui::BeginChild(ImGui::GetID((void*)(intptr_t)1), ImVec2(400.0f, 200.0f), true);
+	if (scroll_audio_calls)
+	{
+		ImGui::SetScrollFromPosY(ImGui::GetScrollMaxY(), 0.25f);
+		scroll_audio_calls = false;
+	}
+	uint vec_size = audio_logs.size();
+	for (uint k = 0; k < vec_size; k++)
+	{
+		ImGui::Text(audio_logs[k].c_str());
+	}
+
+	float scroll_y = ImGui::GetScrollY(), scroll_max_y = ImGui::GetScrollMaxY();
+	ImGui::EndChild();
+	ImGui::Text("%.0f/%0.f", scroll_y, scroll_max_y);
+	ImGui::EndGroup();
+
 	ImGui::NewLine();
 }
 
@@ -203,8 +227,8 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 	LOG("Successfully playing %s", path);
 	
 	//Console call
-	if(!ret)AddConsoleLabel("Error Playing Music: ", path);
-	else AddConsoleLabel("Playing Music: ", path);
+	if(!ret)AddConsoleLabel("Error Playing Music: %s", path);
+	else AddConsoleLabel("Playing Music: %s", path);
 
 	return ret;
 }
@@ -221,14 +245,14 @@ unsigned int ModuleAudio::LoadFx(const char* path, FX_ID id)
 	if(chunk == NULL)
 	{
 		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
-		AddConsoleLabel("Error loading FX: ", path);
+		AddConsoleLabel("Error loading FX: %s", path);
 	}
 	else
 	{
 		FX_Chunk new_fx(chunk, id);
 		fx.push_back(new_fx);
 		ret = fx.size();
-		AddConsoleLabel("FX Loaded: ", path);
+		AddConsoleLabel("FX Loaded: %s", path);
 	}
 
 	return ret;
@@ -277,7 +301,7 @@ bool ModuleAudio::PlayFx(FX_ID id,int channel, int repeat)
 	}
 	
 	//Console call
-	AddConsoleLabel("Error playing FX: ", FxIdToStr(id));
+	else AddConsoleLabel("Error playing FX: %s", FxIdToStr(id));
 
 	return ret;
 }
@@ -299,7 +323,15 @@ bool ModuleAudio::PlayFxForInput(FX_ID id)
 		it++;
 	}
 
-	if (ret)Mix_PlayChannel(-1, (*it).data, 0);
+	if (ret)
+	{
+		Mix_PlayChannel(-1, (*it).data, 0);
+		//Console call
+		AddConsoleLabel("Playing FX: %s", FxIdToStr(id));
+	}
+
+	//Console call
+	else AddConsoleLabel("Error playing FX: %s", FxIdToStr(id));
 
 	return ret;
 }
@@ -311,9 +343,16 @@ void ModuleAudio::SetMasterVolume(int volume)
 	Mix_VolumeMusic(master_volume);
 }
 
-void ModuleAudio::AddConsoleLabel(const char* action, const char* path)
+void ModuleAudio::AddConsoleLabel(const char* action,...)
 {
 	//Build and push a console label
-	/*strcat((char*)action, path);
-	audio_logs.push_back(action);*/
+	char buf[1024];
+	va_list args;
+	va_start(args, action);
+	vsnprintf(buf, IM_ARRAYSIZE(buf), action, args);
+	buf[IM_ARRAYSIZE(buf) - 1] = 0;
+	va_end(args);
+
+	audio_logs.push_back(buf);
+	scroll_audio_calls = true;
 }
