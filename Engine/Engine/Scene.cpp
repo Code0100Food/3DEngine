@@ -76,14 +76,6 @@ update_status Scene::Update(float dt)
 
 	//Render the base grid
 	grid.Render();
-	
-	_Sphere sp(3, 0, 3, 0);
-	sp.Render();
-
-	if (App->input_manager->GetEvent(ESCAPE) == INPUT_STATE::INPUT_DOWN)
-	{
-		App->SetQuit();
-	}
 
 	//Random window
 	if (random_window)
@@ -653,6 +645,11 @@ update_status Scene::Update(float dt)
 		ImGui::End();
 	}
 	
+	//Exit engine
+	if (App->input_manager->GetEvent(ESCAPE) == INPUT_STATE::INPUT_DOWN)
+	{
+		App->SetQuit();
+	}
 
 	return update_status::UPDATE_CONTINUE;
 }

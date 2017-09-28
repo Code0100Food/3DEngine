@@ -231,6 +231,33 @@ bool ModuleRenderer3D::Init()
 	return ret;
 }
 
+bool ModuleRenderer3D::Start()
+{
+	GLfloat v0[3] = { 1,1,0 };
+	GLfloat v1[3] = { 0,1,0 };
+	GLfloat v2[3] = { 0,0,0 };
+	GLfloat v3[3] = { 1,0,0 };
+	GLfloat v4[3] = { 1,0,1 };
+	GLfloat v5[3] = { 1,1,1 };
+	GLfloat v6[3] = { 0,1,1 };
+	GLfloat v7[3] = { 0,0,1 };
+
+	//cube = new AABB(v7,v6);
+	//AABB cube({ 0,0,0 }, { 1,1,1 });
+
+	//GLfloat* v7[36] = { 0,0,1 };
+
+	/*float vertex_vec_cpy[24] = { 1,1,0,0,1,0,0,0,1,0,0,1,0,1,1,1,1,0,1,1,0,0,1 };
+	vertex_vec = vertex_vec_cpy;
+	glGenBuffers(1, &cube_a_id);
+	glBindBuffer(GL_ARRAY_BUFFER, cube_a_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8 * 3, vertex_vec, GL_STATIC_DRAW);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	*/
+	return true;
+
+}
+
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
@@ -249,14 +276,106 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+update_status ModuleRenderer3D::Update(float dt)
+{
+	//Draw a simple line
+	/*
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glEnd();
+	glLineWidth(1.0f);
+	*/
+
+	GLfloat v0[3] = { 1,1,0 };
+	GLfloat v1[3] = { 0,1,0 };
+	GLfloat v2[3] = { 0,0,0 };
+	GLfloat v3[3] = { 1,0,0 };
+	GLfloat v4[3] = { 1,0,1 };
+	GLfloat v5[3] = { 1,1,1 };
+	GLfloat v6[3] = { 0,1,1 };
+	GLfloat v7[3] = { 0,0,1 };
+
+	//Draw a simple cube with triangles in direct mode
+	/*
+	glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
+	// front face =================
+	glVertex3fv(v2);
+	glVertex3fv(v1);
+	glVertex3fv(v0);
+
+	glVertex3fv(v0);
+	glVertex3fv(v3);
+	glVertex3fv(v2);
+
+	// back face ==================
+	glVertex3fv(v5);
+	glVertex3fv(v6);
+	glVertex3fv(v7);
+
+	glVertex3fv(v7);
+	glVertex3fv(v4);
+	glVertex3fv(v5);
+
+	// right face =================
+	glVertex3fv(v4);
+	glVertex3fv(v3);
+	glVertex3fv(v0);
+
+	glVertex3fv(v0);
+	glVertex3fv(v5);
+	glVertex3fv(v4);
+
+	// left face ==================
+	glVertex3fv(v1);
+	glVertex3fv(v2);
+	glVertex3fv(v7);
+
+	glVertex3fv(v7);
+	glVertex3fv(v6);
+	glVertex3fv(v1);
+
+	// top face ===================
+	glVertex3fv(v6);
+	glVertex3fv(v5);
+	glVertex3fv(v0);
+
+	glVertex3fv(v0);
+	glVertex3fv(v1);
+	glVertex3fv(v6);
+
+	// bottom face ================
+	glVertex3fv(v2);
+	glVertex3fv(v3);
+	glVertex3fv(v4);
+
+	glVertex3fv(v4);
+	glVertex3fv(v7);
+	glVertex3fv(v2);
+
+	glEnd();
+	*/
+
+	/*glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, cube_a_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawArrays(GL_TRIANGLES, 0, 24);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	*/
+	return update_status::UPDATE_CONTINUE;
+
+}
+
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	
-	
+	DisableGLRenderFlags();	
 
 	// Rendering GUI
 	App->imgui->RenderUI();
+
+	EnableGLRenderFlags();
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -554,4 +673,15 @@ bool ModuleRenderer3D::GetWireframe() const
 bool ModuleRenderer3D::GetWireframeFront() const
 {
 	return front_wireframe;
+}
+
+void ModuleRenderer3D::DisableGLRenderFlags()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDisable(GL_LIGHTING);
+}
+
+void ModuleRenderer3D::EnableGLRenderFlags()
+{
+	if (lighting)glEnable(GL_LIGHTING);
 }

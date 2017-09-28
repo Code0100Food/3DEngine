@@ -19,7 +19,9 @@ public:
 
 	bool			Awake(const JSON_Object* data_root)final;
 	bool			Init() final;
+	bool			Start()final;
 	update_status	PreUpdate(float dt) final;
+	update_status	Update(float dt)final;
 	update_status	PostUpdate(float dt) final;
 	bool			CleanUp() final;
 	void			BlitConfigInfo()final;
@@ -62,6 +64,9 @@ public:
 	void OnResize(int width, int height);
 	bool GetWireframe() const;
 	bool GetWireframeFront() const;
+	void DisableGLRenderFlags();
+	void EnableGLRenderFlags();
+
 };
 
 

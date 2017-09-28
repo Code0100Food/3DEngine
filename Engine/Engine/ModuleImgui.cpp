@@ -248,11 +248,6 @@ void ModuleImgui::ShowAbout()
 
 void ModuleImgui::RenderUI()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDisable(GL_LIGHTING);
-
 	ImGui::Render();
-
-	if(App->renderer3D->lighting)glEnable(GL_LIGHTING);
 }
 
