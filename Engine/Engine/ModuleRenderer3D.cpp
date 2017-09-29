@@ -245,30 +245,36 @@ bool ModuleRenderer3D::Start()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vertex, GL_STATIC_DRAW);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
-	
-	/*
-	//Generate a cube & collect the vertex
+		
+	//Generate cube vertex
 	geolib_cube = new math::AABB({ 0,0,0 }, { 1,1,1 });
 	math::float3 vertex[8];
 	geolib_cube->GetCornerPoints(vertex);
-	uint indices[36] = {	0,1,2, 2,3,0,   // 36 of indices
-							0,3,4, 4,5,0,
-							0,5,6, 6,1,0,
-							1,6,7, 7,2,1,
-							7,4,3, 3,2,7,
-							4,7,6, 6,5,4 };
+	//Generate cube index
+	GLubyte index[36] = {	0, 1, 2,
+							2, 3, 0,
+							1, 5, 6,
+							6, 2, 1,
+							7, 6, 5,
+							5, 4, 7,
+							4, 0, 3,
+							3, 7, 4,
+							4, 5, 1,
+							1, 0, 4,
+							3, 2, 6,
+							6, 7, 3, };
 
-	//Vertex buffer
-	glGenBuffers(1, (GLuint*) &(opt_cube_vertex_id));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opt_cube_vertex_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * 8, vertex, GL_STATIC_DRAW);
-	//Index buffer
-	glGenBuffers(1, (GLuint*) &(opt_cube_index_id));
-	glBindBuffer(GL_ARRAY_BUFFER, opt_cube_index_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36 * 3, indices, GL_STATIC_DRAW);
+	//Save cube vertex in a generic buffer
+	glGenBuffers(1, (GLuint*)&(opt_cube_vertex_id));
+	glBindBuffer(GL_ARRAY_BUFFER, opt_cube_vertex_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8 * 3, vertex, GL_STATIC_DRAW);
+	
+	//Save cube index in a buffer of elements
+	glGenBuffers(1, (GLuint*)&(opt_cube_index_id));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opt_cube_index_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 36, index, GL_STATIC_DRAW);
+	
 
-	glDisableClientState(GL_VERTEX_ARRAY);	
-	*/
 	return true;
 }
 
@@ -292,25 +298,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 update_status ModuleRenderer3D::Update(float dt)
 {
-	//Draw a simple line
-	/*
-	glLineWidth(2.0f);
-	glBegin(GL_LINES);
-	glVertex3f(0.f, 0.f, 0.f);
-	glVertex3f(0.f, 10.f, 0.f);
-	glEnd();
-	glLineWidth(1.0f);
-	*/
-
-	GLfloat v0[3] = { 1,1,0 };
-	GLfloat v1[3] = { 0,1,0 };
-	GLfloat v2[3] = { 0,0,0 };
-	GLfloat v3[3] = { 1,0,0 };
-	GLfloat v4[3] = { 1,0,1 };
-	GLfloat v5[3] = { 1,1,1 };
-	GLfloat v6[3] = { 0,1,1 };
-	GLfloat v7[3] = { 0,0,1 };
-
 	//Draw a simple cube with triangles in direct mode
 	/*
 	glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
@@ -379,20 +366,28 @@ update_status ModuleRenderer3D::Update(float dt)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
 
-	/*
-	GLubyte indices[] = {	0,1,2, 2,3,0,   // 36 of indices
-							0,3,4, 4,5,0,
-							0,5,6, 6,1,0,
-							1,6,7, 7,2,1,
-							7,4,3, 3,2,7,
-							4,7,6, 6,5,4 };
-
+	//Enable the vertex and elements flags
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, vertex);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->opt_cube_index_id);
-	glDrawElements(GL_TRIANGLES,36, GL_UNSIGNED_BYTE, indices);
+	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
+
+	//Open focus of index (elements)
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opt_cube_index_id);
+	//Open focus index of vertex (data)
+	glBindBuffer(GL_ARRAY_BUFFER, opt_cube_vertex_id);
+	//Define how to read the vertex buffer
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	//Draw the defined index interpreting the vertex of the data buffer with the defined mode
+	glDrawElements(GL_TRIANGLES, sizeof(GLubyte) * 36, GL_UNSIGNED_BYTE, NULL);
+	
+	//Reset the buffers focus
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//Disable the vertex and elements flags
 	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
+	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
+
 
 	return update_status::UPDATE_CONTINUE;
 
