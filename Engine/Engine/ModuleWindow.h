@@ -40,9 +40,10 @@ private:
 	bool	resizable = false;
 	bool	borderless = false;
 	bool	full_desktop = false;
-
-	std::vector<WindowSize*> pre_defined_windows;
-	std::vector<string>		 windows_names;
+	
+	int							current_window_index = 0;
+	std::vector<WindowSize*>	pre_defined_windows;
+	std::vector<string>			windows_names;
 
 public:
 

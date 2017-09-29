@@ -372,8 +372,8 @@ void Application::ShowConfiguration()
 void Application::BlitConfigWindow()
 {
 	//Build configuration base window
-	ImGui::SetNextWindowPos(ImVec2(850, 100));
-	ImGui::SetNextWindowSize(ImVec2(420, 600));
+	ImGui::SetNextWindowPos(ImVec2(840, 100));
+	ImGui::SetNextWindowSize(ImVec2(440, 600));
 	ImGui::Begin("Configuration", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
 	
 	//Build application header

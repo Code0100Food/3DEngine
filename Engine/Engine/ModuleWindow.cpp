@@ -64,6 +64,15 @@ bool ModuleWindow::Awake(const JSON_Object * data_root)
 		win = json_object_get_object(data_root, next_win.c_str());
 	}
 
+	//Set the current pre defined window index
+	uint size = pre_defined_windows.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (pre_defined_windows[k]->width == width && pre_defined_windows[k]->height == height)
+		{
+			current_window_index = k;
+		}
+	}
 
 	config_menu = true;
 
@@ -89,7 +98,7 @@ bool ModuleWindow::Init()
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 
-		//Set Atributes
+		//Set Attributes
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -191,13 +200,12 @@ void ModuleWindow::BlitConfigInfo()
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the window height.");
 
 	//Window sizes
-	static int item = 6;
-	const char* sizes[] = {windows_names[0].c_str(), windows_names[1].c_str(), windows_names[2].c_str(), windows_names[3].c_str(), windows_names[4].c_str(), windows_names[5].c_str(), };
+	const char* sizes[] = {windows_names[0].c_str(), windows_names[1].c_str(), windows_names[2].c_str(), windows_names[3].c_str(), windows_names[4].c_str(), windows_names[5].c_str() };
 	
-	if (ImGui::Combo("Resolution", &item, sizes, IM_ARRAYSIZE(sizes)))
+	if (ImGui::Combo("Resolution", &current_window_index, sizes, IM_ARRAYSIZE(sizes)))
 	{
-		width = pre_defined_windows[item]->width;
-		height = pre_defined_windows[item]->height;
+		width = pre_defined_windows[current_window_index]->width;
+		height = pre_defined_windows[current_window_index]->height;
 		SDL_SetWindowSize(window, width, height);
 		App->renderer3D->OnResize(width, height);
 	}
