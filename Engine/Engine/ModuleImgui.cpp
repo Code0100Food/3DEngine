@@ -190,6 +190,11 @@ update_status ModuleImgui::Update(float dt)
 		{
 			show_profiler_window = !show_profiler_window;
 		}
+
+		if (ImGui::MenuItem("UI Config"))
+		{
+			show_ui_conf_window = !show_ui_conf_window;
+		}
 		
 		ImGui::EndMenu();
 	}
@@ -246,8 +251,15 @@ update_status ModuleImgui::Update(float dt)
 	//Profiler window
 	if (show_profiler_window)
 	{
-		App->profiler->BlitInfo();
+		App->profiler->BlitInfo(&show_profiler_window);
 	}
+
+	//UI Configuration window
+	if (show_ui_conf_window)
+	{
+		BlitUIConfigWindow();
+	}
+
 	//Test window
 	if (show_test_window)
 	{
@@ -276,6 +288,12 @@ bool ModuleImgui::CleanUp()
 	ImGui::Shutdown();
 
 	return true;
+}
+
+void ModuleImgui::BlitUIConfigWindow()
+{
+	ImGui::Begin("UI Configuration", &show_ui_conf_window);
+	ImGui::End();
 }
 
 void ModuleImgui::BlitAboutWindow()

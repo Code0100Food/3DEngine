@@ -13,12 +13,12 @@ Profiler::~Profiler()
 }
 
 // Game Loop ====================================
-void Profiler::BlitInfo()
+void Profiler::BlitInfo(bool* flag)
 {
 	//Build configuration base window
-	ImGui::SetNextWindowPos(ImVec2(0, 80));
+	ImGui::SetNextWindowPos(ImVec2(0, 95));
 	ImGui::SetNextWindowSize(ImVec2(280, 400));
-	ImGui::Begin("Profiler", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin("Profiler", flag, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
 	ImGui::TextColored(ImVec4(0.4, 0.8, 0.8, 1.0), "Profiler");
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Shows how long each module's step takes");
 

@@ -42,7 +42,7 @@ private:
 public:
 
 	//Draw 
-	void		BlitInfo();
+	void		BlitInfo(bool* flag);
 
 	//Save/Load
 	bool		LoadConfiguration(const JSON_Object* data_root);

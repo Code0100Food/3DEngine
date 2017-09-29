@@ -28,11 +28,12 @@ private:
 	bool	show_profiler_window = false;
 	bool	show_test_window = false;
 	bool	show_about_window = false;
-
+	bool	show_ui_conf_window = false;
 	
 	bool	debug_text = false;
 	ImVec4	clear_color = ImColor(255, 255, 255);
 
+	void	BlitUIConfigWindow();
 	void	BlitAboutWindow();
 	void	ShowAbout();
 
