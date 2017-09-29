@@ -24,10 +24,19 @@ ModuleImgui::~ModuleImgui()
 // Game Loop ====================================
 bool ModuleImgui::Awake(const JSON_Object * data_root)
 {
+	//Load theme booleans
 	dark_theme = json_object_get_boolean(data_root, "dark_theme");
 	light_theme = json_object_get_boolean(data_root, "light_theme");
 	custom_theme = json_object_get_boolean(data_root, "custom_theme");
-
+	
+	//Load all custom theme data
+	const JSON_Object * custom_theme_root = json_object_get_object(data_root, "custom_theme_data");
+	JSON_Array* text_color_array = json_object_get_array(custom_theme_root, "text_color");
+	custom_style.Colors[ImGuiCol_Text].x = json_array_get_number(text_color_array, 0);
+	custom_style.Colors[ImGuiCol_Text].y = json_array_get_number(text_color_array, 1);
+	custom_style.Colors[ImGuiCol_Text].w = json_array_get_number(text_color_array, 2);
+	custom_style.Colors[ImGuiCol_Text].z = json_array_get_number(text_color_array, 3);
+	
 	return true;
 }
 bool ModuleImgui::Start()
@@ -47,11 +56,6 @@ bool ModuleImgui::Start()
 
 	SDL_GetVersion(&sdl_version);
 
-	//Set imgui style 
-	if(custom_theme)SetCustomTheme();
-	else if (dark_theme)SetDarkTheme();
-	else if (light_theme)SetLightTheme();
-
 	//Build custom style basics
 	custom_style.WindowPadding = ImVec2(15, 15);
 	custom_style.WindowRounding = 5.0f;
@@ -64,6 +68,11 @@ bool ModuleImgui::Start()
 	custom_style.ScrollbarRounding = 9.0f;
 	custom_style.GrabMinSize = 5.0f;
 	custom_style.GrabRounding = 3.0f;
+
+	//Set imgui style 
+	if (custom_theme)SetCustomTheme();
+	else if (dark_theme)SetDarkTheme();
+	else if (light_theme)SetLightTheme();
 
 	return true;
 }
@@ -259,9 +268,19 @@ bool ModuleImgui::CleanUp()
 
 void ModuleImgui::SaveConfigInfo(JSON_Object * data_root)
 {
+	//Save theme booleans
 	json_object_set_boolean(data_root, "dark_theme", dark_theme);
 	json_object_set_boolean(data_root, "light_theme", light_theme);
 	json_object_set_boolean(data_root, "custom_theme", custom_theme);
+
+	//Save all the custom theme data
+	//Load all custom theme data
+	JSON_Object * custom_theme_root = json_object_get_object(data_root, "custom_theme_data");
+	json_array_t*_array = json_object_get_array(custom_theme_root, "text_color");
+	json_array_replace_number(_array, 0, custom_style.Colors[ImGuiCol_Text].x);
+	json_array_replace_number(_array, 1, custom_style.Colors[ImGuiCol_Text].y);
+	json_array_replace_number(_array, 2, custom_style.Colors[ImGuiCol_Text].w);
+	json_array_replace_number(_array, 3, custom_style.Colors[ImGuiCol_Text].z);
 }
 
 void ModuleImgui::BlitUIConfigWindow()
