@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "ModulePhysics3D.h"
 #include "imgui/imgui.h"
+#include "GeometryManager.h"
 
 // Constructors =================================
 Scene::Scene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -65,6 +66,18 @@ bool Scene::Start()
 
 	plane_a.Set(math::float3(0.0f,0.0f,0.0f), math::float3(1.0f, 0.0f, 0.0f));
 	plane_b.Set(math::float3(0.0f, 0.0f, 0.0f), math::float3(1.0f, 0.0f, 0.0f));
+
+	/*cube = (Cube_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CUBE);
+	cube->SetMinPoint(math::float3(0, 0, 0));
+	cube->SetMaxPoint(math::float3(1, 1, 1));
+	cube->SetDefinition(1);
+	cube->Initialize();*/
+
+	sphere = (Sphere_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
+	sphere->SetPosition(math::float3(0, 0, 0));
+	sphere->SetRad(5.0f);
+	sphere->SetDefinition(2);
+	sphere->Initialize();
 
 	return true;
 }

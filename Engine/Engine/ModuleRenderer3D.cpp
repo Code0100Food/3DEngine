@@ -1,5 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
+#include "GeometryManager.h"
 #include "ModuleRenderer3D.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
@@ -238,49 +239,6 @@ bool ModuleRenderer3D::Start()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vertex, GL_STATIC_DRAW);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
-		
-	//Generate cube vertex
-	geolib_cube = new math::AABB({ 0,0,0 }, { 1,1,1 });
-	math::float3 vertex[8];
-	geolib_cube->GetCornerPoints(vertex);
-	math::float3 all_vertex[36];
-	geolib_cube->Triangulate(1, 1, 1, all_vertex, NULL, NULL, true);
-	GLubyte my_index[36];
-	for (uint k = 0; k < 36; k++)
-	{
-		for (uint x = 0; x < 8; x++)
-		{
-			if (all_vertex[k] == vertex[x])
-			{
-				my_index[k] = x;
-			}
-		}
-	}
-
-	//Generate cube index
-	GLubyte index[36] = {	0, 1, 2,
-							2, 3, 0,
-							1, 5, 6,
-							6, 2, 1,
-							7, 6, 5,
-							5, 4, 7,
-							4, 0, 3,
-							3, 7, 4,
-							4, 5, 1,
-							1, 0, 4,
-							3, 2, 6,
-							6, 7, 3, };
-
-	//Save cube vertex in a generic buffer
-	glGenBuffers(1, (GLuint*)&(opt_cube_vertex_id));
-	glBindBuffer(GL_ARRAY_BUFFER, opt_cube_vertex_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8 * 3, vertex, GL_STATIC_DRAW);
-	
-	//Save cube index in a buffer of elements
-	glGenBuffers(1, (GLuint*)&(opt_cube_index_id));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opt_cube_index_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 36, my_index, GL_STATIC_DRAW);
-	
 
 	return true;
 }
@@ -375,36 +333,15 @@ update_status ModuleRenderer3D::Update(float dt)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
 
-	//Enable the vertex and elements flags
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
-
-	//Open focus of index (elements)
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opt_cube_index_id);
-	//Open focus index of vertex (data)
-	glBindBuffer(GL_ARRAY_BUFFER, opt_cube_vertex_id);
-	//Define how to read the vertex buffer
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	//Draw the defined index interpreting the vertex of the data buffer with the defined mode
-	glDrawElements(GL_TRIANGLES, sizeof(GLubyte) * 36, GL_UNSIGNED_BYTE, NULL);
-	
-	//Reset the buffers focus
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//Disable the vertex and elements flags
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
-
-
 	return update_status::UPDATE_CONTINUE;
-
 }
 
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	//Rendering Geometry
+	App->geometry->Draw();
+
 	DisableGLRenderFlags();	
 
 	// Rendering GUI

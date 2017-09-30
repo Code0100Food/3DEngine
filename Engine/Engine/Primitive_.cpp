@@ -1,7 +1,7 @@
 #include "Primitive_.h"
 
 // Constructors =================================
-Primitive_::Primitive_()
+Primitive_::Primitive_(PRIMITIVE_TYPE _type):type(type)
 {
 
 }
@@ -15,12 +15,6 @@ Primitive_::Primitive_(const Primitive_ & _cpy) :color(_cpy.color), axis(_cpy.ax
 Primitive_::~Primitive_()
 {
 
-}
-
-// Game Loop ====================================
-bool Primitive_::Draw()
-{
-	return true;
 }
 
 // Set Methods ==================================
@@ -37,6 +31,11 @@ void Primitive_::SetAxis(bool n_axis)
 void Primitive_::SetType(PRIMITIVE_TYPE n_type)
 {
 	type = n_type;
+}
+
+void Primitive_::SetDefinition(uint def)
+{
+	definition = def;
 }
 
 // Get Methods ==================================

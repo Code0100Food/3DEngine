@@ -2,7 +2,6 @@
 #define _CUBE__H_
 
 #include "Primitive_.h"
-#include "Globals.h"
 
 class AABB;
 
@@ -14,13 +13,18 @@ public:
 	Cube_(const Cube_& cpy);
 	~Cube_();
 
+public:
+
+	void Initialize();
+	void Draw();
+
 protected:
 	
 	math::AABB* geometry = nullptr;
 
 public:
 
-	//SetMethods ------------
+	//Set Methods -----------
 	void SetMinPoint(math::float3 minp);
 	void SetMaxPoint(math::float3 maxp);
 

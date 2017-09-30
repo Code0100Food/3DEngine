@@ -1,5 +1,6 @@
 #include "GeometryManager.h"
-
+#include "Glew/include/glew.h"
+#include "SDL/include/SDL_opengl.h"
 
 // Constructors =================================
 GeometryManager::GeometryManager(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _enabled)
@@ -16,6 +17,10 @@ GeometryManager::~GeometryManager()
 // Game Loop ====================================
 bool GeometryManager::Draw()
 {
+	//Enable the vertex and elements flags
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
+
 	std::list<Primitive_*>::const_iterator geom = geometry_list.begin();
 	while (geom != geometry_list.end())
 	{
@@ -23,6 +28,14 @@ bool GeometryManager::Draw()
 
 		geom++;
 	}
+
+	//Reset the buffers focus
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//Disable the vertex and elements flags
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
 
 	return true;
 }
@@ -42,7 +55,7 @@ bool GeometryManager::CleanUp()
 }
 
 // Functionality ================================
-Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type, ...)
+Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 {
 	Primitive_* new_primitive = nullptr;
 
@@ -58,6 +71,7 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type, ...)
 		new_primitive = new Cube_();
 		break;
 	case PRIMITIVE_SPHERE:
+		new_primitive = new Sphere_();
 		break;
 	case PRIMITIVE_CYLINDER:
 		break;

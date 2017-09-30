@@ -6,6 +6,9 @@
 #include "MathGeoLib/Geometry/GeometryAll.h"
 #include "Primitive.h"
 
+class Cube_;
+class Sphere_;
+
 class Scene : public Module
 {
 public:
@@ -73,6 +76,10 @@ public:
 
 	std::string collide_test;
 	
+	//Geometry
+	Cube_* cube = nullptr;
+	Sphere_* sphere = nullptr;
+
 public:
 
 	void ShowRandom();

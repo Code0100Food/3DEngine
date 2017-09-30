@@ -1,6 +1,7 @@
 #ifndef _BASIC_PRIMITIVE_H_
 #define _BASIC_PRIMITIVE_H_
 
+#include "Globals.h"
 #include "Color.h"
 #include "MathGeoLib/MathGeoLib.h"
 
@@ -22,19 +23,23 @@ class Primitive_
 {
 public:
 
-	Primitive_();
+	Primitive_(PRIMITIVE_TYPE _type);
 	Primitive_(const Primitive_& _cpy);
 	virtual ~Primitive_();
 
 public:
 
-	virtual bool Draw();
+	virtual void Initialize() = 0;
+	virtual void Draw() = 0;
 
 protected:
 
 	Color			color = { 255,255,255,255 };
 	bool			axis = false;
 	PRIMITIVE_TYPE	type = UNDEF_PRIMITIVE;
+	uint			definition = 0;
+	uint			vertex_buffer_id = 0;
+	uint			index_buffer_id = 0;
 
 public:
 
@@ -42,6 +47,7 @@ public:
 	void SetColor(const Color& n_color);
 	void SetAxis(bool n_axis);
 	void SetType(PRIMITIVE_TYPE n_type);
+	void SetDefinition(uint def);
 
 	//Get Methods -----------
 	Color			GetColor()const;

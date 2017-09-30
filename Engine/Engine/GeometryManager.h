@@ -5,6 +5,7 @@
 
 #include "Primitive_.h"
 #include "Cube_.h"
+#include "Sphere_.h"
 
 class GeometryManager : public Module
 {
@@ -25,7 +26,11 @@ private:
 public:
 
 	//Geometry factory ------
-	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type, ...);
+	
+	/*
+	- Cube: float3 min vertex, float3 max vertex
+	*/
+	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type);
 
 };
 
