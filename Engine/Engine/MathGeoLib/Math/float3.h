@@ -156,6 +156,8 @@ public:
 	/** @return A reference to this. */
 	float3 &operator /=(float scalar);
 
+	bool operator == (float3 &target) { return bool(x == target.x && y == target.y && z == target.z); }
+
 #ifdef MATH_ENABLE_UNCOMMON_OPERATIONS
 	float3 operator *(const float3 &vector) const { return this->Mul(vector); }
 	float3 operator /(const float3 &vector) const { return this->Div(vector); }

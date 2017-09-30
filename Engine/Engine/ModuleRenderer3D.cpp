@@ -134,7 +134,7 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 
-		//Initialize Modelview Matrix
+		//Initialize Model view Matrix
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -207,15 +207,6 @@ bool ModuleRenderer3D::Init()
 		glFogfv(GL_FOG_COLOR, f_color);
 		glFogf(GL_FOG_DENSITY, fog_density);
 		
-		//Maybe we can ignore this?
-		//Check for error
-		/*error = glGetError();
-		if(error != GL_NO_ERROR)
-		{
-			LOG("[error] Error initializing OpenGL! %s\n", gluErrorString(error));
-			ret = false;
-		}*/
-		
 		//Initialize default light
 		lights[0].ref = GL_LIGHT0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
@@ -252,6 +243,20 @@ bool ModuleRenderer3D::Start()
 	geolib_cube = new math::AABB({ 0,0,0 }, { 1,1,1 });
 	math::float3 vertex[8];
 	geolib_cube->GetCornerPoints(vertex);
+	math::float3 all_vertex[36];
+	geolib_cube->Triangulate(1, 1, 1, all_vertex, NULL, NULL, true);
+	GLubyte my_index[36];
+	for (uint k = 0; k < 36; k++)
+	{
+		for (uint x = 0; x < 8; x++)
+		{
+			if (all_vertex[k] == vertex[x])
+			{
+				my_index[k] = x;
+			}
+		}
+	}
+
 	//Generate cube index
 	GLubyte index[36] = {	0, 1, 2,
 							2, 3, 0,
@@ -274,7 +279,7 @@ bool ModuleRenderer3D::Start()
 	//Save cube index in a buffer of elements
 	glGenBuffers(1, (GLuint*)&(opt_cube_index_id));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opt_cube_index_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 36, index, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 36, my_index, GL_STATIC_DRAW);
 	
 
 	return true;
@@ -292,8 +297,10 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
 
-	for(uint i = 0; i < MAX_LIGHTS; ++i)
+	for (uint i = 0; i < MAX_LIGHTS; ++i)
+	{
 		lights[i].Render();
+	}
 
 	return UPDATE_CONTINUE;
 }

@@ -22,6 +22,7 @@ class ModulePhysics3D;
 class ModuleImgui;
 class ModuleConsole;
 class ModuleHardware;
+class GeometryManager;
 class Profiler;
 class Scene;
 enum MODULE_ID;
@@ -65,6 +66,7 @@ public:
 	ModuleImgui*		imgui = nullptr;
 	ModuleConsole*		console = nullptr;
 	ModuleHardware*		hard = nullptr;
+	GeometryManager*	geometry = nullptr;
 	Scene*				scene = nullptr;
 
 	//Tools 

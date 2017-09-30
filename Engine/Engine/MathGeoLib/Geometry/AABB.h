@@ -63,6 +63,8 @@ public:
 	/** @see minPoint, maxPoint. */
 	AABB(const float3 &minPoint, const float3 &maxPoint);
 
+	AABB(const AABB& cpy) { minPoint = cpy.minPoint; maxPoint = cpy.maxPoint; }
+
 	/// Constructs this AABB to enclose the given OBB.
 	/** This constructor computes the optimal minimum volume AABB that encloses the given OBB.
 		@note Since an AABB cannot generally represent an OBB, this conversion is not exact, but the returned AABB

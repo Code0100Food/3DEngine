@@ -36,7 +36,7 @@ public:
 	Color	color;
 	mat4x4	transform;
 	vec3	rotations;
-	bool	axis, wire;
+	bool	axis;
 
 protected:
 

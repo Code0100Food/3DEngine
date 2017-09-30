@@ -49,6 +49,9 @@
     <Filter Include="Sources\Modules\Input">
       <UniqueIdentifier>{cd6c406a-9a20-4130-a967-be3772505c64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Helpers\Primitives">
+      <UniqueIdentifier>{4406f9e8-a687-4c4a-b604-15079471fd54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Color.h">
@@ -321,6 +324,15 @@
     <ClInclude Include="Engine\MathGeoLib\MathGeoLibFwd.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Cube_.h">
+      <Filter>Sources\Helpers\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Primitive_.h">
+      <Filter>Sources\Helpers\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GeometryManager.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -502,6 +514,15 @@
     </ClCompile>
     <ClCompile Include="Engine\InputManager.cpp">
       <Filter>Sources\Modules\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Primitive_.cpp">
+      <Filter>Sources\Helpers\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Cube_.cpp">
+      <Filter>Sources\Helpers\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GeometryManager.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,10 +10,10 @@
 #pragma comment (lib, "Engine/glut/glut32.lib")
 
 // ------------------------------------------------------------
-_Primitive::_Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), rotations({0,0,0}),type(PrimitiveTypes::Primitive_Point)
+_Primitive::_Primitive() : transform(IdentityMatrix), color(White), axis(false), rotations({0,0,0}),type(PrimitiveTypes::Primitive_Point)
 {}
 
-_Primitive::_Primitive(float _posX, float _posY, float _posZ) : transform(IdentityMatrix), color(White), wire(false), axis(false), rotations({ 0,0,0 }), type(PrimitiveTypes::Primitive_Point)
+_Primitive::_Primitive(float _posX, float _posY, float _posZ) : transform(IdentityMatrix), color(White), axis(false), rotations({ 0,0,0 }), type(PrimitiveTypes::Primitive_Point)
 {
 	transform.translate(_posX, _posY, _posZ);
 }
@@ -287,7 +287,6 @@ Cube::Cube(const Cube * _copy)
 	this->color = _copy->color;
 	this->rotations = _copy->rotations;
 	this->size = _copy->size;
-	this->wire = _copy->wire;
 }
 
 Cube::Cube(float _sizeX, float _sizeY, float _sizeZ) : _Primitive(), size(_sizeX, _sizeY, _sizeZ)
