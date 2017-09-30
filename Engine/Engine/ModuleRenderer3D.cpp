@@ -42,6 +42,8 @@ bool ModuleRenderer3D::Awake(const JSON_Object * data_root)
 
 	wireframe = json_object_get_boolean(data_root, "wireframe");
 
+	front_wireframe = json_object_get_boolean(data_root, "front_wireframe");
+
 	lighting = json_object_get_boolean(data_root, "lighting");
 	JSON_Array* lighting_color_array = json_object_get_array(data_root, "lighting_color");
 	lighting_color[0] = json_array_get_number(lighting_color_array, 0);
@@ -665,6 +667,10 @@ void ModuleRenderer3D::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 1, material_diffuse[1]);
 	json_array_replace_number(_array, 2, material_diffuse[2]);
 	json_array_replace_number(_array, 3, material_diffuse[3]);
+	//Wireframe data
+	json_object_set_boolean(data_root, "wireframe", wireframe);
+	json_object_set_boolean(data_root, "front_wireframe", front_wireframe);
+
 	//Fog data
 	json_object_set_boolean(data_root, "fog", fog);
 	json_object_set_number(data_root, "fog_density", fog_density);
