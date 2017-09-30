@@ -143,7 +143,7 @@ bool InputManager::Awake(const JSON_Object* data_root)
 
 		}
 
-		//Generate boject name
+		//Generate object name
 		char bff[8];
 		itoa(k, bff, 10);
 		std::string num_str = bff;

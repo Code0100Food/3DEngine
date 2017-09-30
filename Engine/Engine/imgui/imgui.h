@@ -619,6 +619,7 @@ enum ImGuiCol_
     ImGuiCol_FrameBgHovered,
     ImGuiCol_FrameBgActive,
     ImGuiCol_TitleBg,
+
     ImGuiCol_TitleBgCollapsed,
     ImGuiCol_TitleBgActive,
     ImGuiCol_MenuBarBg,
@@ -642,6 +643,7 @@ enum ImGuiCol_
     ImGuiCol_ResizeGrip,
     ImGuiCol_ResizeGripHovered,
     ImGuiCol_ResizeGripActive,
+
     ImGuiCol_CloseButton,
     ImGuiCol_CloseButtonHovered,
     ImGuiCol_CloseButtonActive,

@@ -31,12 +31,24 @@ bool ModuleImgui::Awake(const JSON_Object * data_root)
 	
 	//Load all custom theme data
 	const JSON_Object * custom_theme_root = json_object_get_object(data_root, "custom_theme_data");
-	JSON_Array* text_color_array = json_object_get_array(custom_theme_root, "text_color");
-	custom_style.Colors[ImGuiCol_Text].x = json_array_get_number(text_color_array, 0);
-	custom_style.Colors[ImGuiCol_Text].y = json_array_get_number(text_color_array, 1);
-	custom_style.Colors[ImGuiCol_Text].w = json_array_get_number(text_color_array, 2);
-	custom_style.Colors[ImGuiCol_Text].z = json_array_get_number(text_color_array, 3);
-	
+	const JSON_Object * custom_theme_color_root = json_object_get_object(custom_theme_root, "colors");
+	for (uint k = 0; k < ImGuiCol_COUNT; k++)
+	{
+		char index[5];
+		itoa(k, index, 10);
+		string number = index;
+		string next_win = "color" + number;
+
+		JSON_Array* color_array = json_object_get_array(custom_theme_color_root, next_win.c_str());
+		custom_style.Colors[k].x = json_array_get_number(color_array, 0);
+		custom_style.Colors[k].y = json_array_get_number(color_array, 1);
+		custom_style.Colors[k].z = json_array_get_number(color_array, 2);
+		custom_style.Colors[k].w = json_array_get_number(color_array, 3);
+		
+		number.clear();
+		next_win.clear();
+	}
+
 	return true;
 }
 bool ModuleImgui::Start()
@@ -274,19 +286,31 @@ void ModuleImgui::SaveConfigInfo(JSON_Object * data_root)
 	json_object_set_boolean(data_root, "custom_theme", custom_theme);
 
 	//Save all the custom theme data
-	//Load all custom theme data
 	JSON_Object * custom_theme_root = json_object_get_object(data_root, "custom_theme_data");
-	json_array_t*_array = json_object_get_array(custom_theme_root, "text_color");
-	json_array_replace_number(_array, 0, custom_style.Colors[ImGuiCol_Text].x);
-	json_array_replace_number(_array, 1, custom_style.Colors[ImGuiCol_Text].y);
-	json_array_replace_number(_array, 2, custom_style.Colors[ImGuiCol_Text].w);
-	json_array_replace_number(_array, 3, custom_style.Colors[ImGuiCol_Text].z);
+	const JSON_Object * custom_theme_color_root = json_object_get_object(custom_theme_root, "colors");
+	for (uint k = 0; k < ImGuiCol_COUNT; k++)
+	{
+		char index[5];
+		itoa(k, index, 10);
+		string number = index;
+		string next_win = "color" + number;
+
+		JSON_Array* color_array = json_object_get_array(custom_theme_color_root, next_win.c_str());
+		json_array_replace_number(color_array, 0, custom_style.Colors[k].x);
+		json_array_replace_number(color_array, 1, custom_style.Colors[k].y);
+		json_array_replace_number(color_array, 2, custom_style.Colors[k].z);
+		json_array_replace_number(color_array, 3, custom_style.Colors[k].w);
+
+		number.clear();
+		next_win.clear();
+	}
 }
 
 void ModuleImgui::BlitUIConfigWindow()
 {
-	ImGui::SetNextWindowPos(ImVec2(250, 70));
-	ImGui::Begin("UI Config", &show_ui_conf_window,ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SetNextWindowPos(ImVec2(250, 50));
+	ImGui::SetNextWindowSize(ImVec2(750, 600));
+	ImGui::Begin("UI Config", &show_ui_conf_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
 	
 	if (ImGui::Checkbox("Dark Theme", &dark_theme))
 	{
@@ -298,6 +322,9 @@ void ModuleImgui::BlitUIConfigWindow()
 		}
 		else dark_theme = true;
 	}
+
+	ImGui::Separator();
+
 	if (ImGui::Checkbox("White Theme", &light_theme))
 	{
 		if (light_theme)
@@ -308,6 +335,9 @@ void ModuleImgui::BlitUIConfigWindow()
 		}
 		else light_theme = true;
 	}
+
+	ImGui::Separator();
+
 	if (ImGui::Checkbox("Custom Theme", &custom_theme))
 	{
 		if (custom_theme)
@@ -325,8 +355,94 @@ void ModuleImgui::BlitUIConfigWindow()
 		bool changes = false;
 		
 		//All custom theme options
-		if (ImGui::SliderFloat4("Text Color", *custom_style.Colors[ImGuiCol_Text].Get_F_Array(), 0.0f, 1.0f))changes = true;
-
+		ImGui::Text("Colors:"); ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)","RGBA colors of the all UI elements.");
+		ImGui::ColorEdit4("C##0", *custom_style.Colors[ImGuiCol_Text].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Text", *custom_style.Colors[ImGuiCol_Text].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##1", *custom_style.Colors[ImGuiCol_TextDisabled].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Text Disabled", *custom_style.Colors[ImGuiCol_TextDisabled].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##2", *custom_style.Colors[ImGuiCol_WindowBg].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Window background", *custom_style.Colors[ImGuiCol_WindowBg].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##3", *custom_style.Colors[ImGuiCol_ChildWindowBg].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Child Window background", *custom_style.Colors[ImGuiCol_ChildWindowBg].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##4", *custom_style.Colors[ImGuiCol_PopupBg].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Popup background", *custom_style.Colors[ImGuiCol_PopupBg].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##5", *custom_style.Colors[ImGuiCol_Border].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Border", *custom_style.Colors[ImGuiCol_Border].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##6", *custom_style.Colors[ImGuiCol_BorderShadow].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Border Shadow", *custom_style.Colors[ImGuiCol_BorderShadow].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##7", *custom_style.Colors[ImGuiCol_FrameBg].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Frame background", *custom_style.Colors[ImGuiCol_FrameBg].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##8", *custom_style.Colors[ImGuiCol_FrameBgHovered].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Frame Hovered background", *custom_style.Colors[ImGuiCol_FrameBgHovered].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##9", *custom_style.Colors[ImGuiCol_FrameBgActive].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Frame Active background", *custom_style.Colors[ImGuiCol_FrameBgActive].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##10", *custom_style.Colors[ImGuiCol_TitleBg].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Title background", *custom_style.Colors[ImGuiCol_TitleBg].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##11", *custom_style.Colors[ImGuiCol_TitleBgCollapsed].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Title Collapsed background", *custom_style.Colors[ImGuiCol_TitleBgCollapsed].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##12", *custom_style.Colors[ImGuiCol_TitleBgActive].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Title Active background", *custom_style.Colors[ImGuiCol_TitleBgActive].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##13", *custom_style.Colors[ImGuiCol_MenuBarBg].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Menu Bar background", *custom_style.Colors[ImGuiCol_MenuBarBg].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##14", *custom_style.Colors[ImGuiCol_ScrollbarBg].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Scroll Bar background", *custom_style.Colors[ImGuiCol_ScrollbarBg].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##15", *custom_style.Colors[ImGuiCol_ScrollbarGrab].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Scroll Bar Grab", *custom_style.Colors[ImGuiCol_ScrollbarGrab].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##16", *custom_style.Colors[ImGuiCol_ScrollbarGrabHovered].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Scroll Bar Grab Hovered", *custom_style.Colors[ImGuiCol_ScrollbarGrabHovered].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##17", *custom_style.Colors[ImGuiCol_ScrollbarGrabActive].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Scroll Bar Grab Active", *custom_style.Colors[ImGuiCol_ScrollbarGrabActive].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##18", *custom_style.Colors[ImGuiCol_ComboBg].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Combo background", *custom_style.Colors[ImGuiCol_ComboBg].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##19", *custom_style.Colors[ImGuiCol_CheckMark].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Check Mark", *custom_style.Colors[ImGuiCol_CheckMark].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##20", *custom_style.Colors[ImGuiCol_SliderGrab].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Slider Grab", *custom_style.Colors[ImGuiCol_SliderGrab].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##21", *custom_style.Colors[ImGuiCol_SliderGrabActive].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("TeSlider Grab Active", *custom_style.Colors[ImGuiCol_SliderGrabActive].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##22", *custom_style.Colors[ImGuiCol_Button].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Button", *custom_style.Colors[ImGuiCol_Button].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##23", *custom_style.Colors[ImGuiCol_ButtonHovered].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Button Hovered", *custom_style.Colors[ImGuiCol_ButtonHovered].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##24", *custom_style.Colors[ImGuiCol_ButtonActive].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Button Active", *custom_style.Colors[ImGuiCol_ButtonActive].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##25", *custom_style.Colors[ImGuiCol_Header].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Header", *custom_style.Colors[ImGuiCol_Header].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##26", *custom_style.Colors[ImGuiCol_HeaderHovered].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Header Hovered", *custom_style.Colors[ImGuiCol_HeaderHovered].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##27", *custom_style.Colors[ImGuiCol_HeaderActive].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Header Active", *custom_style.Colors[ImGuiCol_HeaderActive].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##28", *custom_style.Colors[ImGuiCol_Separator].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Separator", *custom_style.Colors[ImGuiCol_Separator].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##29", *custom_style.Colors[ImGuiCol_SeparatorHovered].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Separator Hovered", *custom_style.Colors[ImGuiCol_SeparatorHovered].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##30", *custom_style.Colors[ImGuiCol_SeparatorActive].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Separator Active", *custom_style.Colors[ImGuiCol_SeparatorActive].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##31", *custom_style.Colors[ImGuiCol_ResizeGrip].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Resize Grip", *custom_style.Colors[ImGuiCol_ResizeGrip].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##32", *custom_style.Colors[ImGuiCol_ResizeGripHovered].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Resize Grip Hovered", *custom_style.Colors[ImGuiCol_ResizeGripHovered].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##33", *custom_style.Colors[ImGuiCol_ResizeGripActive].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Resize Grip Active", *custom_style.Colors[ImGuiCol_ResizeGripActive].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##34", *custom_style.Colors[ImGuiCol_CloseButton].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Close Button", *custom_style.Colors[ImGuiCol_CloseButton].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##35", *custom_style.Colors[ImGuiCol_CloseButtonHovered].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Close Button Hovered", *custom_style.Colors[ImGuiCol_CloseButtonHovered].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##36", *custom_style.Colors[ImGuiCol_CloseButtonActive].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Close Button Active", *custom_style.Colors[ImGuiCol_CloseButtonActive].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##37", *custom_style.Colors[ImGuiCol_PlotLines].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Plot Lines", *custom_style.Colors[ImGuiCol_PlotLines].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##38", *custom_style.Colors[ImGuiCol_PlotLinesHovered].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Plot Lines Hovered", *custom_style.Colors[ImGuiCol_PlotLinesHovered].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##39", *custom_style.Colors[ImGuiCol_PlotHistogram].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Plot Histogram", *custom_style.Colors[ImGuiCol_PlotHistogram].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##40", *custom_style.Colors[ImGuiCol_PlotHistogramHovered].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Plot Histogram Hovered", *custom_style.Colors[ImGuiCol_PlotHistogramHovered].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##41", *custom_style.Colors[ImGuiCol_TextSelectedBg].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Text Selected background", *custom_style.Colors[ImGuiCol_TextSelectedBg].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		ImGui::ColorEdit4("C##42", *custom_style.Colors[ImGuiCol_ModalWindowDarkening].Get_F_Array(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); ImGui::SameLine();
+		if (ImGui::SliderFloat4("Modal Window Darkening", *custom_style.Colors[ImGuiCol_ModalWindowDarkening].Get_F_Array(), 0.0f, 1.0f))changes = true;
+		
 		//Upload imgui theme if custom theme has been edited
 		if (changes)SetCustomTheme();
 	}
