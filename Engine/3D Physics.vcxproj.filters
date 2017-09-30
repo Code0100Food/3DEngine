@@ -333,6 +333,9 @@
     <ClInclude Include="Engine\GeometryManager.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\imgui\imgui_dock.h">
+      <Filter>Sources\Tools\Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -523,6 +526,9 @@
     </ClCompile>
     <ClCompile Include="Engine\GeometryManager.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\imgui\imgui_dock.cpp">
+      <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

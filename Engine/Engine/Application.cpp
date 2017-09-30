@@ -18,6 +18,7 @@
 #include "Parson/parson.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "mmgr/mmgr.h"
+#include "imgui\imgui_dock.h"
 
 // Constructors =================================
 Application::Application()
@@ -377,19 +378,14 @@ void Application::ShowConfiguration()
 
 void Application::BlitConfigWindow()
 {
-	//Build configuration base window
-	ImGui::SetNextWindowPos(ImVec2(840, 100));
-	ImGui::SetNextWindowSize(ImVec2(440, 600));
-	ImGui::Begin("Configuration", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
-	
-	//Build application header
-	bool cpy = config_opened;
-	if (ImGui::CollapsingHeader("Application"))
-	{
-		//Play fx on first open
-		config_opened = true;
-		if (cpy != config_opened)App->audio->PlayFxForInput(WINDOW_FX);
 
+	//Begin The dock frame
+	BeginWorkspace();
+
+	//Begin aplication dock
+	bool ApplicationDock = true;
+	BeginDock("Application", &ApplicationDock, 0);
+	{
 		if (ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
 		{
 			App->audio->PlayFxForInput(FX_ID::APPLY_FX);
@@ -415,19 +411,19 @@ void Application::BlitConfigWindow()
 			fps_array[k] = fps_array[k + 1];
 		}
 		fps_array[GRAPH_ARRAY_SIZE - 1] = ImGui::GetIO().Framerate;
-		
+
 		//Blit framerate graphic
 		char fps_title[25];
 		sprintf_s(fps_title, 25, "Framerate %.1f", fps_array[29]);
-		ImGui::PlotHistogram("", fps_array, IM_ARRAYSIZE(fps_array), 30, fps_title, 0.0f,130.0f, ImVec2(0, 80));
-		
+		ImGui::PlotHistogram("", fps_array, IM_ARRAYSIZE(fps_array), 30, fps_title, 0.0f, 130.0f, ImVec2(0, 80));
+
 		//Update framerate graphic
 		for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
 		{
 			miliseconds_array[k] = miliseconds_array[k + 1];
 		}
 		miliseconds_array[GRAPH_ARRAY_SIZE - 1] = dt * 1000;
-		
+
 		//Blit milliseconds graphic
 		char mili_title[25];
 		sprintf_s(mili_title, 25, "Milliseconds %.1f", miliseconds_array[29]);
@@ -436,7 +432,7 @@ void Application::BlitConfigWindow()
 		ImGui::Separator();
 
 		//Blit memory data
-		sMStats memory_stats = 	m_getMemoryStatistics();
+		sMStats memory_stats = m_getMemoryStatistics();
 		//Total reported memory
 		char total_rep_mem[35];
 		sprintf_s(total_rep_mem, 35, "Total Reported Mem: %i", memory_stats.totalReportedMemory);
@@ -481,39 +477,26 @@ void Application::BlitConfigWindow()
 		char peak_alloc_unit_count[35];
 		sprintf_s(peak_alloc_unit_count, 35, "Peak Alloc Unit Count: %i", memory_stats.peakAllocUnitCount);
 		ImGui::Text("%s", peak_alloc_unit_count);
+
 	}
 
-	//Play fx when is closed
-	else if (config_opened)
-	{
-		config_opened = false;
-		App->audio->PlayFxForInput(WINDOW_FX);
-	}
+	//Close Dock
+	EndDock();
 
 	//Build headers for the rest of modules
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
 	{
 		if (!(*item)->config_menu)continue;
 
-		bool cpy = (*item)->config_open;
-		
-		//Play fx on first open
-		if (ImGui::CollapsingHeader((*item)->name.c_str(),ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_NoTreePushOnOpen))
-		{
-			(*item)->config_open = true;
-			if (cpy != (*item)->config_open)App->audio->PlayFxForInput(WINDOW_FX);
+		bool cpy = true;
 
-			(*item)->BlitConfigInfo();
-		}
-		//Play fx when is closed
-		else if ((*item)->config_open)
-		{
-			App->audio->PlayFxForInput(WINDOW_FX);
-			(*item)->config_open = false;
-		}
+		BeginDock((*item)->name.c_str(), &cpy, 0);
+		(*item)->BlitConfigInfo();
+		EndDock();
+
 	}
-	
-	ImGui::End();
+
+	EndWorkspace();
 }
 
 void Application::AddModule(Module* mod)

@@ -96,6 +96,7 @@
     <ClInclude Include="Engine\glmath.h" />
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\imgui\imgui.h" />
+    <ClInclude Include="Engine\imgui\imgui_dock.h" />
     <ClInclude Include="Engine\imgui\imgui_impl_sdl.h" />
     <ClInclude Include="Engine\imgui\imgui_internal.h" />
     <ClInclude Include="Engine\InputManager.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Engine\glmath.cpp" />
     <ClCompile Include="Engine\imgui\imgui.cpp" />
     <ClCompile Include="Engine\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Engine\imgui\imgui_dock.cpp" />
     <ClCompile Include="Engine\imgui\imgui_draw.cpp" />
     <ClCompile Include="Engine\imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="Engine\InputManager.cpp" />
