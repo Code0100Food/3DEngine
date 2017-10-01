@@ -18,9 +18,10 @@ public:
 	void Initialize();
 	void Draw();
 
-protected:
+public:
 
-	math::Capsule* geometry = nullptr;
+	math::Capsule*	geometry = nullptr;
+	uint			vertex_num = 0;
 
 public:
 

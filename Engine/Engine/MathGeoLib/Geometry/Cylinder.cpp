@@ -27,33 +27,35 @@ std::vector<math::float3> Cylinder::Triangulate(int slices) const
 	double resolution = ang * DEGTORAD;
 
 	double height = l.Length();
-
+	
 	for (i = 0; i <= 2 * HAVE_M_PI; i += resolution)
 	{
-		vertex_vec.push_back(math::float3(0, height, 0));
-		vertex_vec.push_back(math::float3(r * cos(i + resolution), height, r * sin(i + resolution)));
-		vertex_vec.push_back(math::float3(r * cos(i), height, r * sin(i)));
+		vertex_vec.push_back(math::float3(l.a.x, l.a.y + height, l.a.z));
+		vertex_vec.push_back(math::float3(l.a.x + r * cos(i + resolution), l.a.y + height, l.a.z + r * sin(i + resolution)));
+		vertex_vec.push_back(math::float3(l.a.x + r * cos(i), l.a.y + height, l.a.z + r * sin(i)));
 	}
 
 	for (i = 2 * HAVE_M_PI; i >= 0; i -= resolution)
 	{
-		vertex_vec.push_back(math::float3(r * cos(i), 0, r * sin(i)));
-		vertex_vec.push_back(math::float3(r * cos(i + resolution), 0, r * sin(i + resolution)));
-		vertex_vec.push_back(math::float3(0, 0, 0));
+		vertex_vec.push_back(math::float3(l.b.x, l.b.y, l.b.z));
+		vertex_vec.push_back(math::float3(l.b.x + r * cos(i + resolution), l.b.y, l.b.z + r * sin(i + resolution)));
+		
+		
+		vertex_vec.push_back(math::float3(l.b.x + r * cos(i), l.b.y, l.b.z + r * sin(i)));
 	}
 
 	for (i = 0; i <= 2 * HAVE_M_PI; i += resolution)
 	{
-		vertex_vec.push_back(math::float3(r * cos(i), height, r * sin(i)));
-		vertex_vec.push_back(math::float3(r * cos(i + resolution), height, r * sin(i + resolution)));
-		vertex_vec.push_back(math::float3(r * cos(i + resolution), 0, r * sin(i + resolution)));
+		vertex_vec.push_back(math::float3(l.b.x + r * cos(i), l.a.y + height, l.b.z + r * sin(i)));
+		vertex_vec.push_back(math::float3(l.b.x + r * cos(i + resolution), l.a.y + height, l.b.z + r * sin(i + resolution)));
+		vertex_vec.push_back(math::float3(l.b.x + r * cos(i + resolution), l.b.y, l.b.z + r * sin(i + resolution)));
 	}
 
 	for (i = 2 * HAVE_M_PI; i >= 0; i -= resolution)
 	{
-		vertex_vec.push_back(math::float3(r * cos(i), height, r * sin(i)));
-		vertex_vec.push_back(math::float3(r * cos(i + resolution), 0, r * sin(i + resolution)));
-		vertex_vec.push_back(math::float3(r * cos(i), 0, r * sin(i)));
+		vertex_vec.push_back(math::float3(l.b.x + r * cos(i), l.a.y + height, l.b.z + r * sin(i)));
+		vertex_vec.push_back(math::float3(l.b.x + r * cos(i + resolution), l.b.y, l.b.z + r * sin(i + resolution)));
+		vertex_vec.push_back(math::float3(l.b.x + r * cos(i), l.b.y, l.b.z + r * sin(i)));
 	}
 
 	return vertex_vec;

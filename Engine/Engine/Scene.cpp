@@ -67,27 +67,70 @@ bool Scene::Start()
 	plane_a.Set(math::float3(0.0f,0.0f,0.0f), math::float3(1.0f, 0.0f, 0.0f));
 	plane_b.Set(math::float3(0.0f, 0.0f, 0.0f), math::float3(1.0f, 0.0f, 0.0f));
 
-	/*cube = (Cube_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CUBE);
-	cube->SetMinPoint(math::float3(0, 0, 0));
-	cube->SetMaxPoint(math::float3(1, 1, 1));
+	cube = (Cube_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CUBE);
+	cube->SetMinPoint(math::float3(0, 0, -4));
+	cube->SetMaxPoint(math::float3(3,3, -8));
 	cube->SetDivisions(1);
-	cube->Initialize();*/
+	cube->Initialize();
 
-	/*sphere = (Sphere_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
+	sphere = (Sphere_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
 	sphere->SetPosition(math::float3(0, 0, 0));
-	sphere->SetRad(5.0f);
-	sphere->SetDivisions(2);
-	sphere->Initialize();*/
+	sphere->SetRad(1.0f);
+	sphere->SetDivisions(1);
+	sphere->Initialize();
 
-	/*capsule = (Capsule_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CAPSULE);
-	capsule->Initialize();*/
+	sphere = (Sphere_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
+	sphere->SetPosition(math::float3(4, 0, 0));
+	sphere->SetRad(1.0f);
+	sphere->SetDivisions(2);
+	sphere->Initialize();
+
+	sphere = (Sphere_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
+	sphere->SetPosition(math::float3(8, 0, 0));
+	sphere->SetRad(1.0f);
+	sphere->SetDivisions(3);
+	sphere->Initialize();
+
+	sphere = (Sphere_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
+	sphere->SetPosition(math::float3(12, 0, 0));
+	sphere->SetRad(1.0f);
+	sphere->SetDivisions(4);
+	sphere->Initialize();
 
 	cylinder = (Cylinder_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
-	cylinder->geometry->r = 4;
-	cylinder->geometry->l.a = { 0,0,0 };
-	cylinder->geometry->l.b = { 0,2,0 };
-	cylinder->SetDivisions(80);
+	cylinder->geometry->r = 1;
+	cylinder->geometry->l.a = { 0,0.5,6 };
+	cylinder->geometry->l.b = { 0,0,6 };
+	cylinder->SetDivisions(6);
 	cylinder->Initialize();
+
+	cylinder = (Cylinder_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
+	cylinder->geometry->r = 1;
+	cylinder->geometry->l.a = { 4,0.5,6 };
+	cylinder->geometry->l.b = { 4,0,6 };
+	cylinder->SetDivisions(12);
+	cylinder->Initialize();
+
+	cylinder = (Cylinder_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
+	cylinder->geometry->r = 1;
+	cylinder->geometry->l.a = { 8,0.5,6 };
+	cylinder->geometry->l.b = { 8,0,6 };
+	cylinder->SetDivisions(20);
+	cylinder->Initialize();
+
+	cylinder = (Cylinder_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
+	cylinder->geometry->r = 1;
+	cylinder->geometry->l.a = { 12,0.5,6 };
+	cylinder->geometry->l.b = { 12,0,6 };
+	cylinder->SetDivisions(40);
+	cylinder->Initialize();
+
+	/*capsule = (Capsule_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CAPSULE);
+	capsule->geometry->r = 4;
+	capsule->geometry->l.a = { 0,0,0 };
+	capsule->geometry->l.b = { 0,2,0 };
+	capsule->SetDivisions(5);
+	capsule->Initialize();*/
 
 	return true;
 }

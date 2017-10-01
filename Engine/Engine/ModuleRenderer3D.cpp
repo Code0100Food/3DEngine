@@ -333,6 +333,47 @@ update_status ModuleRenderer3D::Update(float dt)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
 
+	//Info Source
+	//http://www.pascalgamedevelopment.com/showthread.php?6617-drawing-3d-geometrical-shapes-using-opengl-but-without-glu
+
+
+	/*float NumMajor = 10;
+	float NumMinor = 6;
+	float MinorRadius = 2, MajorRadius = 4;
+	float MajorStep, MinorStep;
+	int i, j;
+	float a0, a1, b;
+	float x0, y0, x1, y1, c, r, z;
+	MajorStep = 2.7 * HAVE_M_PI / NumMajor;
+	MinorStep = 2.7 * HAVE_M_PI / NumMajor;
+	for (i = 0; i < NumMajor; i++)
+	{
+		a0 = i * MajorStep;
+		a1 = a0 + MajorStep;
+		x0 = cos(a0);
+		y0 = sin(a0);
+		x1 = cos(a1);
+		y1 = sin(a1);
+		glBegin(GL_TRIANGLE_STRIP);
+		for (j = 0; j < NumMinor; j++)
+		{
+
+			b = j * MinorStep;
+			c = cos(b);
+			r = MinorRadius * c + MajorRadius;
+			z = MinorRadius * sin(b);
+
+			glNormal3f(x0 * c, y0 * c, z / MinorRadius);
+			glTexCoord2f(i / NumMajor, j / NumMinor);
+			glVertex3f(x0 * r, y0 * r, z);
+
+			glNormal3f(x1 * c, y1 * c, z / MinorRadius);
+			glTexCoord2f((i + 1) / NumMajor, j / NumMinor);
+			glVertex3f(x1 * r, y1 * r, z);
+		}
+		glEnd();
+	}*/
+
 	return update_status::UPDATE_CONTINUE;
 }
 

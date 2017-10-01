@@ -81,8 +81,10 @@ public:
 	//Geometry
 	Cube_*		cube = nullptr;
 	Sphere_*	sphere = nullptr;
-	Capsule_*	capsule = nullptr;
 	Cylinder_*	cylinder = nullptr;
+
+	Capsule_*	capsule = nullptr;
+
 
 public:
 

@@ -19,6 +19,7 @@
 
 #include "../MathGeoLibFwd.h"
 #include "LineSegment.h"
+#include <vector>
 
 MATH_BEGIN_NAMESPACE
 
@@ -260,6 +261,8 @@ public:
 	bool Intersects(const Polygon &polygon) const;
 	bool Intersects(const Frustum &frustum) const;
 	bool Intersects(const Polyhedron &polyhedron) const;
+
+	std::vector<math::float3> Triangulate(int slices) const;
 
 #ifdef MATH_ENABLE_STL_SUPPORT
 	/// Returns a human-readable representation of this Capsule. Most useful for debugging purposes.
