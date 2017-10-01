@@ -68,8 +68,8 @@ bool Scene::Start()
 	plane_b.Set(math::float3(0.0f, 0.0f, 0.0f), math::float3(1.0f, 0.0f, 0.0f));
 
 	cube = (Cube_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CUBE);
-	cube->SetMinPoint(math::float3(0, 0, -4));
-	cube->SetMaxPoint(math::float3(3,3, -8));
+	cube->SetMinPoint(math::float3(12, 0, -4));
+	cube->SetMaxPoint(math::float3(15,3, -7));
 	cube->SetDivisions(1);
 	cube->Initialize();
 

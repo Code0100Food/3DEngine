@@ -227,9 +227,9 @@ bool ModuleRenderer3D::Init()
 
 bool ModuleRenderer3D::Start()
 {
-	/*
+	
 	//Generate a cube & triangulate it
-	geolib_cube = new math::AABB({ 0,0,0 }, { 1,1,1 });
+	geolib_cube = new math::AABB({ 6,0,-4 }, { 9,3,-7 });
 	math::float3 vertex[36];
 	geolib_cube->Triangulate(1, 1, 1, vertex, NULL, NULL, true);
 
@@ -238,7 +238,7 @@ bool ModuleRenderer3D::Start()
 	glBindBuffer(GL_ARRAY_BUFFER, geolib_cube_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vertex, GL_STATIC_DRAW);
 	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
+	
 
 	return true;
 }
@@ -266,7 +266,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::Update(float dt)
 {
 	//Draw a simple cube with triangles in direct mode
-	/*
+	
+	GLfloat v0[3] = { 3,3,-4 };
+	GLfloat v1[3] = { 0,3,-4 };
+	GLfloat v2[3] = { 0,0,-4 };
+	GLfloat v3[3] = { 3,0,-4 };
+	GLfloat v4[3] = { 3,0,-7 };
+	GLfloat v5[3] = { 3,3,-7 };
+	GLfloat v6[3] = { 0,3,-7 };
+	GLfloat v7[3] = { 0,0,-7 };
+
 	glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
 	// front face =================
 	glVertex3fv(v2);
@@ -323,15 +332,15 @@ update_status ModuleRenderer3D::Update(float dt)
 	glVertex3fv(v2);
 
 	glEnd();
-	*/
+	
 
-	/*
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, geolib_cube_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glDrawArrays(GL_TRIANGLES, 0, 36 * 3);
 	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
+	
 
 	//Info Source
 	//http://www.pascalgamedevelopment.com/showthread.php?6617-drawing-3d-geometrical-shapes-using-opengl-but-without-glu
