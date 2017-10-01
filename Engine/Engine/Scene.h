@@ -9,6 +9,7 @@
 class Cube_;
 class Sphere_;
 class Capsule_;
+class Cylinder_;
 
 class Scene : public Module
 {
@@ -81,6 +82,7 @@ public:
 	Cube_*		cube = nullptr;
 	Sphere_*	sphere = nullptr;
 	Capsule_*	capsule = nullptr;
+	Cylinder_*	cylinder = nullptr;
 
 public:
 

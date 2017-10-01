@@ -73,14 +73,21 @@ bool Scene::Start()
 	cube->SetDivisions(1);
 	cube->Initialize();*/
 
-	sphere = (Sphere_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
+	/*sphere = (Sphere_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
 	sphere->SetPosition(math::float3(0, 0, 0));
 	sphere->SetRad(5.0f);
 	sphere->SetDivisions(2);
-	sphere->Initialize();
+	sphere->Initialize();*/
 
 	/*capsule = (Capsule_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CAPSULE);
 	capsule->Initialize();*/
+
+	cylinder = (Cylinder_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
+	cylinder->geometry->r = 4;
+	cylinder->geometry->l.a = { 0,0,0 };
+	cylinder->geometry->l.b = { 0,2,0 };
+	cylinder->SetDivisions(80);
+	cylinder->Initialize();
 
 	return true;
 }

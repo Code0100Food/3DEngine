@@ -92,6 +92,7 @@
     <ClInclude Include="Engine\Capsule_.h" />
     <ClInclude Include="Engine\Color.h" />
     <ClInclude Include="Engine\Cube_.h" />
+    <ClInclude Include="Engine\Cylinder_.h" />
     <ClInclude Include="Engine\FileSystem.h" />
     <ClInclude Include="Engine\GeometryManager.h" />
     <ClInclude Include="Engine\glmath.h" />
@@ -107,6 +108,7 @@
     <ClInclude Include="Engine\MathGeoLib\Geometry\AABB2D.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\Capsule.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\Circle.h" />
+    <ClInclude Include="Engine\MathGeoLib\Geometry\Cylinder.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\Frustum.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\GeometryAll.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\GeomType.h" />
@@ -190,6 +192,7 @@
     <ClCompile Include="Engine\Capsule_.cpp" />
     <ClCompile Include="Engine\Color.cpp" />
     <ClCompile Include="Engine\Cube_.cpp" />
+    <ClCompile Include="Engine\Cylinder_.cpp" />
     <ClCompile Include="Engine\FileSystem.cpp" />
     <ClCompile Include="Engine\GeometryManager.cpp" />
     <ClCompile Include="Engine\glmath.cpp" />
@@ -206,6 +209,7 @@
     <ClCompile Include="Engine\MathGeoLib\Geometry\AABB.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Geometry\Capsule.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Geometry\Circle.cpp" />
+    <ClCompile Include="Engine\MathGeoLib\Geometry\Cylinder.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Geometry\Frustum.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Geometry\Line.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Geometry\LineSegment.cpp" />
