@@ -74,7 +74,7 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 		new_primitive = new Sphere_();
 		break;
 	case PRIMITIVE_CYLINDER:
-		new_primitive = new Cylinder_();
+		//new_primitive = new Cylinder_();
 		break;
 	case PRIMITIVE_RAY:
 		break;
@@ -82,6 +82,7 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 		new_primitive = new Capsule_();
 		break;
 	case PRIMITIVE_FRUSTUM:
+		new_primitive = new Frustrum_();
 		break;
 	}
 

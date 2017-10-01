@@ -601,6 +601,62 @@ Polyhedron Frustum::ToPolyhedron() const
 	return p;
 }
 
+void Frustum::Triangulate(float3 * outPos) const
+{
+	assume(outPos);
+	if (!outPos)
+		return;
+
+	//Lateral Faces
+	int k = 2;
+	for (int face = 0; face < 4; face++)
+	{
+		outPos[face] = CornerPoint(face);
+		outPos[face + 1] = CornerPoint(k);
+		outPos[face + 2] = CornerPoint(face + 1);
+
+		outPos[face + 3] = outPos[face + 2];
+		outPos[face + 4] = outPos[face + 1];
+		
+		if (k == 6) { k = 0; };
+
+		switch (face)
+		{
+		case 0:
+			outPos[face + 5] = CornerPoint(3);
+			break;
+
+		case 1:
+			outPos[face + 5] = CornerPoint(7);
+			break;
+
+		case 2:
+			outPos[face + 5] = CornerPoint(1);
+			break;
+
+		case 3:
+			outPos[face + 5] = CornerPoint(5);
+			break;
+		};
+		
+		k += 4;	
+	}
+
+	//Front faces
+	int count = 0;
+	for (int i = 24; i < 26; i++)
+	{
+		outPos[i] = CornerPoint(count);
+		outPos[i + 1] = CornerPoint(count + 4);
+		outPos[i + 2] = CornerPoint(count + 6);
+		outPos[i + 3] = outPos[i];
+		outPos[i + 4] = outPos[i + 2];
+		outPos[i + 5] = CornerPoint(count + 2);
+	}
+
+}
+
+
 bool Frustum::Intersects(const Ray &ray) const
 {
 	///@todo This is a naive test. Implement a faster version.

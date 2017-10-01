@@ -8,6 +8,7 @@
 #include "Sphere_.h"
 #include "Capsule_.h"
 #include "Cylinder_.h"
+#include "Frustrum_.h"
 
 class GeometryManager : public Module
 {
