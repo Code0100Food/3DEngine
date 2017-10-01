@@ -342,11 +342,8 @@
     <ClInclude Include="Engine\Capsule_.h">
       <Filter>Sources\Helpers\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Cylinder_.h">
+    <ClInclude Include="Engine\Frustrum_.h">
       <Filter>Sources\Helpers\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\MathGeoLib\Geometry\Cylinder.h">
-      <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -545,13 +542,10 @@
     <ClCompile Include="Engine\Sphere_.cpp">
       <Filter>Sources\Helpers\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Capsule_.cpp">
+    <ClCompile Include="Engine\Capsule_.cpp" />
+    <ClCompile Include="Engine\Frustrum_.cpp">
       <Filter>Sources\Helpers\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Cylinder_.cpp">
-      <Filter>Sources\Helpers\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\MathGeoLib\Geometry\Cylinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">
