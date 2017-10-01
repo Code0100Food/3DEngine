@@ -25,7 +25,7 @@ Cube_::~Cube_()
 void Cube_::Initialize()
 {
 	//Calculate the number of vertex
-	const uint vertex_num = 36 * definition;
+	const uint vertex_num = 36 * divisions;
 
 	//Get geometry vertex
 	math::float3 vertex[16];
@@ -33,7 +33,7 @@ void Cube_::Initialize()
 	
 	//Get geometry triangulation
 	math::float3* all_vertex = (math::float3*)malloc(sizeof(math::float3) * vertex_num);
-	geometry->Triangulate(definition, definition, definition, all_vertex, NULL, NULL, true);
+	geometry->Triangulate(divisions, divisions, divisions, all_vertex, NULL, NULL, true);
 
 	//Generate the index
 	
@@ -76,7 +76,7 @@ void Cube_::Draw()
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	//Draw the defined index interpreting the vertex of the data buffer with the defined mode
-	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * 36 * definition, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * 36 * divisions, GL_UNSIGNED_INT, NULL);
 }
 
 // Set Methods ==================================

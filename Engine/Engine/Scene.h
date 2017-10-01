@@ -8,6 +8,7 @@
 
 class Cube_;
 class Sphere_;
+class Capsule_;
 
 class Scene : public Module
 {
@@ -77,8 +78,9 @@ public:
 	std::string collide_test;
 	
 	//Geometry
-	Cube_* cube = nullptr;
-	Sphere_* sphere = nullptr;
+	Cube_*		cube = nullptr;
+	Sphere_*	sphere = nullptr;
+	Capsule_*	capsule = nullptr;
 
 public:
 

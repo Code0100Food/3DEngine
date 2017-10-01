@@ -25,35 +25,16 @@ Sphere_::~Sphere_()
 void Sphere_::Initialize()
 {
 	//Calculate the number of vertex
-	const uint vertex_num = 24 * pow(4,definition);
+	const uint vertex_num = 24 * pow(4,divisions);
 
 	//Get geometry triangulation
 	math::float3* all_vertex = (math::float3*)malloc(sizeof(math::float3) * vertex_num);
 	geometry->Triangulate(all_vertex, NULL, NULL, vertex_num, true);
 
-	std::vector<math::float3> indexed_vertex;
 	std::vector<GLuint> my_index;
 	std::vector<math::float3> my_vertex;
 
-	for (uint k = 0; k < vertex_num; k++)
-	{
-		uint size = indexed_vertex.size();
-		bool found = false;
-		for (uint x = 0; x < size; x++)
-		{
-			if (indexed_vertex[x] == all_vertex[k])
-			{
-				my_index.push_back(x);
-				found = true;
-			}
-		}
-		if (!found)
-		{
-			indexed_vertex.push_back(all_vertex[k]);
-			my_index.push_back(indexed_vertex.size() - 1);
-			my_vertex.push_back(all_vertex[k]);
-		}
-	}
+	VertexToIndex(all_vertex, vertex_num, &my_index, &my_vertex);
 
 	//Save geometry vertex in a generic buffer
 	glGenBuffers(1, (GLuint*)&(vertex_buffer_id));
@@ -82,7 +63,7 @@ void Sphere_::Draw()
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	//Draw the defined index interpreting the vertex of the data buffer with the defined mode
-	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * 24 * pow(4, definition), GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * 24 * pow(4, divisions), GL_UNSIGNED_INT, NULL);
 }
 
 // Set Methods ==================================

@@ -78,6 +78,7 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 	case PRIMITIVE_RAY:
 		break;
 	case PRIMITIVE_CAPSULE:
+		new_primitive = new Capsule_();
 		break;
 	case PRIMITIVE_FRUSTUM:
 		break;

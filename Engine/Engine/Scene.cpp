@@ -70,14 +70,17 @@ bool Scene::Start()
 	/*cube = (Cube_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CUBE);
 	cube->SetMinPoint(math::float3(0, 0, 0));
 	cube->SetMaxPoint(math::float3(1, 1, 1));
-	cube->SetDefinition(1);
+	cube->SetDivisions(1);
 	cube->Initialize();*/
 
 	sphere = (Sphere_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
 	sphere->SetPosition(math::float3(0, 0, 0));
 	sphere->SetRad(5.0f);
-	sphere->SetDefinition(2);
+	sphere->SetDivisions(2);
 	sphere->Initialize();
+
+	/*capsule = (Capsule_*)App->geometry->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CAPSULE);
+	capsule->Initialize();*/
 
 	return true;
 }

@@ -339,6 +339,9 @@
     <ClInclude Include="Engine\Sphere_.h">
       <Filter>Sources\Helpers\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Capsule_.h">
+      <Filter>Sources\Helpers\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -533,7 +536,10 @@
     <ClCompile Include="Engine\imgui\imgui_dock.cpp">
       <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Sphere_.cpp" />
+    <ClCompile Include="Engine\Sphere_.cpp">
+      <Filter>Sources\Helpers\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Capsule_.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

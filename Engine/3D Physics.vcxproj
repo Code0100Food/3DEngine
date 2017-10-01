@@ -89,6 +89,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Engine\BasicConsole.h" />
+    <ClInclude Include="Engine\Capsule_.h" />
     <ClInclude Include="Engine\Color.h" />
     <ClInclude Include="Engine\Cube_.h" />
     <ClInclude Include="Engine\FileSystem.h" />
@@ -186,6 +187,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Engine\BasicConsole.cpp" />
+    <ClCompile Include="Engine\Capsule_.cpp" />
     <ClCompile Include="Engine\Color.cpp" />
     <ClCompile Include="Engine\Cube_.cpp" />
     <ClCompile Include="Engine\FileSystem.cpp" />

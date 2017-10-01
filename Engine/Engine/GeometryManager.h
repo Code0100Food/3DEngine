@@ -6,6 +6,7 @@
 #include "Primitive_.h"
 #include "Cube_.h"
 #include "Sphere_.h"
+#include "Capsule_.h"
 
 class GeometryManager : public Module
 {

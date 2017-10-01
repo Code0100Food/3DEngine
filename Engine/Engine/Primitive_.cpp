@@ -33,9 +33,9 @@ void Primitive_::SetType(PRIMITIVE_TYPE n_type)
 	type = n_type;
 }
 
-void Primitive_::SetDefinition(uint def)
+void Primitive_::SetDivisions(uint def)
 {
-	definition = def;
+	divisions = def;
 }
 
 // Get Methods ==================================
@@ -54,3 +54,30 @@ PRIMITIVE_TYPE Primitive_::GetType() const
 	return type;
 }
 
+bool VertexToIndex(math::float3* all_vertex,uint vertex_num, std::vector<uint>* index, std::vector<math::float3>* vertex)
+{
+	if (index == nullptr || vertex == nullptr || vertex_num == 0)return false;
+	
+	std::vector<math::float3> indexed_vertex;
+	for (uint k = 0; k < vertex_num; k++)
+	{
+		uint size = indexed_vertex.size();
+		bool found = false;
+		for (uint x = 0; x < size; x++)
+		{
+			if (indexed_vertex[x] == all_vertex[k])
+			{
+				index->push_back(x);
+				found = true;
+			}
+		}
+		if (!found)
+		{
+			indexed_vertex.push_back(all_vertex[k]);
+			index->push_back(indexed_vertex.size() - 1);
+			vertex->push_back(all_vertex[k]);
+		}
+	}
+
+	return true;
+}
