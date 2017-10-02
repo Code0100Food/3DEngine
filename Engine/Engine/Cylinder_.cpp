@@ -15,7 +15,7 @@ Cylinder_::Cylinder_(const Cylinder_ & _cpy) :Primitive_(_cpy)
 
 Cylinder_::~Cylinder_()
 {
-
+	RELEASE(geometry);
 }
 
 void Cylinder_::Initialize()

@@ -20,7 +20,6 @@ public:
 
 	bool			Awake(const JSON_Object* data_root)final;
 	bool			Init() final;
-	bool			Start()final;
 	update_status	PreUpdate(float dt) final;
 	update_status	Update(float dt)final;
 	update_status	PostUpdate(float dt) final;
@@ -59,13 +58,6 @@ private:
 	SDL_GLContext	context;
 	mat3x3			NormalMatrix;
 	mat4x4			ModelMatrix, ViewMatrix, ProjectionMatrix;
-
-private:
-
-	math::AABB*		geolib_cube = nullptr;
-	uint			geolib_cube_id = 0;
-	uint			opt_cube_vertex_id = 0;
-	uint			opt_cube_index_id = 0;
 
 public:
 

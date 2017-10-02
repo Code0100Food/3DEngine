@@ -351,6 +351,9 @@
     <ClInclude Include="Engine\MathGeoLib\Geometry\Cylinder.h">
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Mesh_.h">
+      <Filter>Sources\Helpers\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -559,6 +562,9 @@
     </ClCompile>
     <ClCompile Include="Engine\MathGeoLib\Geometry\Cylinder.cpp">
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Mesh_.cpp">
+      <Filter>Sources\Helpers\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

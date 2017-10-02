@@ -225,24 +225,6 @@ bool ModuleRenderer3D::Init()
 	return ret;
 }
 
-bool ModuleRenderer3D::Start()
-{
-	
-	//Generate a cube & triangulate it
-	geolib_cube = new math::AABB({ 6,0,-4 }, { 9,3,-7 });
-	math::float3 vertex[36];
-	geolib_cube->Triangulate(1, 1, 1, vertex, NULL, NULL, true);
-
-	//Allocate a buffer for the cube data
-	glGenBuffers(1, &geolib_cube_id);
-	glBindBuffer(GL_ARRAY_BUFFER, geolib_cube_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vertex, GL_STATIC_DRAW);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	
-
-	return true;
-}
-
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {

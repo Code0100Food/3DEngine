@@ -16,11 +16,18 @@ enum PRIMITIVE_TYPE
 	PRIMITIVE_CYLINDER,
 	PRIMITIVE_RAY,
 	PRIMITIVE_CAPSULE,
-	PRIMITIVE_FRUSTUM
+	PRIMITIVE_FRUSTUM,
+	PRIMITIVE_MESH
 };
 
 struct MeshData
 {
+	~MeshData()
+	{
+		delete []indices;
+		delete []vertices;
+	}
+
 	uint	id_vertices = 0; // id in VRAM
 	uint	num_indices = 0;
 	uint*	indices = nullptr;
@@ -32,6 +39,9 @@ struct MeshData
 
 class Primitive_
 {
+
+	friend class GeometryManager;
+
 public:
 
 	Primitive_(PRIMITIVE_TYPE _type);
@@ -40,7 +50,7 @@ public:
 
 public:
 
-	virtual void	Initialize() = 0;
+	virtual void	Initialize();
 	void			Draw();
 
 protected:

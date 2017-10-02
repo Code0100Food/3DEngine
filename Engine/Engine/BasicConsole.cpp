@@ -61,8 +61,8 @@ void BasicConsole::AddLog(const char * fmt, ...) IM_PRINTFARGS(2)
 void BasicConsole::_Draw(const char * title, bool * p_open)
 {
 	ImGui::SetNextWindowSize(ImVec2(520, 300), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(0, 1000), ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin(title, p_open, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar))
+	ImGui::SetNextWindowPos(ImVec2(0, 700));
+	if (!ImGui::Begin(title, p_open, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar))
 	{
 		ImGui::End();
 		return;

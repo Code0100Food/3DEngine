@@ -20,6 +20,19 @@ Primitive_::~Primitive_()
 }
 
 // Game Loop ====================================
+void Primitive_::Initialize()
+{
+	//Save geometry vertex in a generic buffer
+	glGenBuffers(1, (GLuint*)&(mesh.id_vertices));
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertices * 3, mesh.vertices, GL_STATIC_DRAW);
+
+	//Save geometry index in a buffer of elements
+	glGenBuffers(1, (GLuint*)&(mesh.id_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * mesh.num_indices, mesh.indices, GL_STATIC_DRAW);
+}
+
 void Primitive_::Draw()
 {
 	//The geometry can't be drawn if is not allocated
