@@ -15,13 +15,11 @@ public:
 
 public:
 
-	void Initialize();
-	void Draw();
+	void Initialize()final;
 
 public:
 
 	math::Cylinder* geometry = nullptr;
-	uint			vertex_num = 0;
 
 };
 #endif // !_CYLINDER_H_

@@ -16,7 +16,6 @@ public:
 public:
 
 	void Initialize();
-	void Draw();
 
 public:
 

@@ -15,8 +15,7 @@ public:
 
 public:
 
-	void Initialize();
-	void Draw();
+	void Initialize()final;
 
 protected:
 	

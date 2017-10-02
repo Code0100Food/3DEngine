@@ -19,6 +19,17 @@ enum PRIMITIVE_TYPE
 	PRIMITIVE_FRUSTUM
 };
 
+struct MeshData
+{
+	uint	id_vertices = 0; // id in VRAM
+	uint	num_indices = 0;
+	uint*	indices = nullptr;
+
+	uint	id_indices = 0; // id in VRAM
+	uint	num_vertices = 0;
+	float*	vertices = nullptr;
+};
+
 class Primitive_
 {
 public:
@@ -29,8 +40,8 @@ public:
 
 public:
 
-	virtual void Initialize() = 0;
-	virtual void Draw() = 0;
+	virtual void	Initialize() = 0;
+	void			Draw();
 
 protected:
 
@@ -38,8 +49,7 @@ protected:
 	bool			axis = false;
 	PRIMITIVE_TYPE	type = UNDEF_PRIMITIVE;
 	uint			divisions = 0;
-	uint			vertex_buffer_id = 0;
-	uint			index_buffer_id = 0;
+	MeshData		mesh;
 
 public:
 

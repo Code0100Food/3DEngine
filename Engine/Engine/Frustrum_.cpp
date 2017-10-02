@@ -23,7 +23,7 @@ Frustrum_::~Frustrum_()
 
 void Frustrum_::Initialize()
 {
-	//Get Triangles
+	/*//Get Triangles
 	math::float3* all_vertex = (math::float3*)malloc(sizeof(math::float3) * 36);
 	geometry->Triangulate(all_vertex);
 
@@ -41,13 +41,13 @@ void Frustrum_::Initialize()
 	//Save Index Values
 	glGenBuffers(1, (GLuint*)&(index_buffer_id));
 	glBindBuffer(GL_ARRAY_BUFFER, index_buffer_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLuint) * indexs.size() * 3, indexs.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLuint) * indexs.size() * 3, indexs.data(), GL_STATIC_DRAW);*/
 
 }
 
 void Frustrum_::Draw()
 {
-	// The geometry can't be drawn if is not allocated
+	/*// The geometry can't be drawn if is not allocated
 	if (index_buffer_id == 0 || vertex_buffer_id == 0)return;
 
 	//Open focus of index (elements)
@@ -58,5 +58,5 @@ void Frustrum_::Draw()
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	//Draw the defined index interpreting the vertex of the data buffer with the defined mode
-	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * 24 * pow(4, divisions), GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * 24 * pow(4, divisions), GL_UNSIGNED_INT, NULL);*/
 }

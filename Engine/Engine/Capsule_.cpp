@@ -123,19 +123,3 @@ void Capsule_::Initialize()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * vertex_num, my_index.data(), GL_STATIC_DRAW);*/
 }
-
-void Capsule_::Draw()
-{
-	/*//The geometry can't be drawn if is not allocated
-	if (index_buffer_id == 0 || vertex_buffer_id == 0)return;
-
-	//Open focus of index (elements)
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id);
-	//Open focus index of vertex (data)
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
-	//Define how to read the vertex buffer
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	//Draw the defined index interpreting the vertex of the data buffer with the defined mode
-	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * vertex_num, GL_UNSIGNED_INT, NULL);	*/
-}

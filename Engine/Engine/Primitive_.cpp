@@ -1,4 +1,6 @@
 #include "Primitive_.h"
+#include "Glew/include/glew.h"
+#include "SDL/include/SDL_opengl.h"
 
 // Constructors =================================
 Primitive_::Primitive_(PRIMITIVE_TYPE _type):type(type)
@@ -6,7 +8,7 @@ Primitive_::Primitive_(PRIMITIVE_TYPE _type):type(type)
 
 }
 
-Primitive_::Primitive_(const Primitive_ & _cpy) :color(_cpy.color), axis(_cpy.axis), type(_cpy.type)
+Primitive_::Primitive_(const Primitive_ & _cpy) : color(_cpy.color), axis(_cpy.axis), type(_cpy.type), mesh(_cpy.mesh)
 {
 
 }
@@ -15,6 +17,23 @@ Primitive_::Primitive_(const Primitive_ & _cpy) :color(_cpy.color), axis(_cpy.ax
 Primitive_::~Primitive_()
 {
 
+}
+
+// Game Loop ====================================
+void Primitive_::Draw()
+{
+	//The geometry can't be drawn if is not allocated
+	if (mesh.id_indices == 0 || mesh.id_vertices == 0)return;
+
+	//Open focus of index (elements)
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
+	//Open focus index of vertex (data)
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
+	//Define how to read the vertex buffer
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	//Draw the defined index interpreting the vertex of the data buffer with the defined mode
+	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * mesh.num_vertices / 3, GL_UNSIGNED_INT, NULL);
 }
 
 // Set Methods ==================================

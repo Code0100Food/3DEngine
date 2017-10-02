@@ -25,45 +25,30 @@ Sphere_::~Sphere_()
 void Sphere_::Initialize()
 {
 	//Calculate the number of vertex
-	const uint vertex_num = 24 * pow(4,divisions);
+	mesh.num_vertices = 24 * pow(4,divisions);
 
 	//Get geometry triangulation
-	math::float3* all_vertex = (math::float3*)malloc(sizeof(math::float3) * vertex_num);
-	geometry->Triangulate(all_vertex, NULL, NULL, vertex_num, true);
+	std::vector<math::float3> all_vertex;
+	all_vertex.reserve(mesh.num_vertices);
+
+	geometry->Triangulate(all_vertex.data(), NULL, NULL, mesh.num_vertices, true);
 
 	std::vector<GLuint> my_index;
 	std::vector<math::float3> my_vertex;
 
-	VertexToIndex(all_vertex, vertex_num, &my_index, &my_vertex);
+	VertexToIndex(all_vertex.data(), mesh.num_vertices, &my_index, &my_vertex);
+	mesh.num_indices = my_index.size();
+	
 
 	//Save geometry vertex in a generic buffer
-	glGenBuffers(1, (GLuint*)&(vertex_buffer_id));
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
+	glGenBuffers(1, (GLuint*)&(mesh.id_vertices));
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * my_vertex.size() * 3, my_vertex.data(), GL_STATIC_DRAW);
 
 	//Save geometry index in a buffer of elements
-	glGenBuffers(1, (GLuint*)&(index_buffer_id));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * vertex_num, my_index.data(), GL_STATIC_DRAW);
-
-	//RELEASE(all_vertex);
-
-}
-
-void Sphere_::Draw()
-{
-	//The geometry can't be drawn if is not allocated
-	if (index_buffer_id == 0 || vertex_buffer_id == 0)return;
-
-	//Open focus of index (elements)
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id);
-	//Open focus index of vertex (data)
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
-	//Define how to read the vertex buffer
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	//Draw the defined index interpreting the vertex of the data buffer with the defined mode
-	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * 24 * pow(4, divisions), GL_UNSIGNED_INT, NULL);
+	glGenBuffers(1, (GLuint*)&(mesh.id_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * mesh.num_indices, my_index.data(), GL_STATIC_DRAW);
 }
 
 // Set Methods ==================================
