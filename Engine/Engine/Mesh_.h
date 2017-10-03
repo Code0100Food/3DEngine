@@ -39,8 +39,8 @@ public:
 
 private:
 
-	uint VAO = 0, VBO = 0, EBO = 0;
-
+	uint VertexArrayObjects = 0, VertexBufferObjects = 0, ElementBufferObjects = 0;
+	
 private:
 
 	void SetupMesh();

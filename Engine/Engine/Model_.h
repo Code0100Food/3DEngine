@@ -21,9 +21,9 @@ public:
 
 private:
 
-	std::vector<Texture> textures;
-	std::vector<Mesh_>	meshes;
-	std::string			directory;
+	std::vector<Texture>	textures;
+	std::vector<Mesh_>		meshes;
+	std::string				directory;
 
 private:
 

@@ -1,11 +1,11 @@
 #include "Model_.h"
+#define STB_IMAGE_IMPLEMENTATION
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
 #include "stb/stb_image.h"
 #include "Assimp/include/Importer.hpp"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
-
 
 Model_::Model_(const char * path)
 {
@@ -66,7 +66,6 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		vector.z = mesh->mVertices[i].z;
 		vertex.position = vector;
 		
-
 		vector.x = mesh->mNormals[i].x;
 		vector.y = mesh->mNormals[i].y;
 		vector.z = mesh->mNormals[i].z;
@@ -145,8 +144,8 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 
 unsigned int Model_::TextureFromFile(const char *path, const std::string &directory, bool gamma)
 {
-	/*std::string filename = std::string(path);
-	filename = directory + '/' + filename;
+	std::string filename = std::string(path);
+	filename = "Assets/" + filename;
 
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
@@ -176,9 +175,9 @@ unsigned int Model_::TextureFromFile(const char *path, const std::string &direct
 	}
 	else
 	{
-		std::cout << "Texture failed to load at path: " << path << std::endl;
+		LOG("Texture failed to load at path: %s", path);
 		stbi_image_free(data);
-	}*/
+	}
 
-	return 0;
+	return textureID;
 }
