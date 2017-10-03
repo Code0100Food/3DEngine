@@ -127,9 +127,9 @@ bool GeometryManager::LoadScene(const char * folder)
 			Mesh_* mesh = (Mesh_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_MESH);
 						
 			//Load vertex data
-			uint num_vertex = mesh->mesh.num_vertices = m->mNumVertices;
-			mesh->mesh.vertices = new float[num_vertex * 3];
-			memcpy(mesh->mesh.vertices, m->mVertices, sizeof(float) * num_vertex * 3);
+			uint num_vertex = mesh->num_vertices = m->mNumVertices;
+			mesh->vertices = new float[num_vertex * 3];
+			memcpy(mesh->vertices, m->mVertices, sizeof(float) * num_vertex * 3);
 	
 			LOG("- %i vertices", num_vertex);
 
@@ -146,8 +146,8 @@ bool GeometryManager::LoadScene(const char * folder)
 			//Load index data
 			if (m->HasFaces())
 			{
-				mesh->mesh.num_indices = m->mNumFaces * 3;
-				mesh->mesh.indices = new uint[mesh->mesh.num_indices];
+				mesh->num_indices = m->mNumFaces * 3;
+				mesh->indices = new uint[mesh->num_indices];
 				for (uint h = 0; h < m->mNumFaces; h++)
 				{
 					if (m->mFaces[h].mNumIndices != 3)
@@ -156,10 +156,10 @@ bool GeometryManager::LoadScene(const char * folder)
 					}
 					else
 					{
-						memcpy(&mesh->mesh.indices[h * 3], m->mFaces[h].mIndices, 3 * sizeof(uint));
+						memcpy(&mesh->indices[h * 3], m->mFaces[h].mIndices, 3 * sizeof(uint));
 					}
 				}
-				LOG("- %i indices", mesh->mesh.num_indices);
+				LOG("- %i indices", mesh->num_indices);
 			}
 
 			//Load colors data

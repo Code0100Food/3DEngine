@@ -25,30 +25,30 @@ Sphere_::~Sphere_()
 void Sphere_::Initialize()
 {
 	//Calculate the number of vertex
-	mesh.num_vertices = 24 * pow(4,divisions);
+	num_vertices = 24 * pow(4,divisions);
 
 	//Get geometry triangulation
 	std::vector<math::float3> all_vertex;
-	all_vertex.reserve(mesh.num_vertices);
+	all_vertex.reserve(num_vertices);
 
-	geometry->Triangulate(all_vertex.data(), NULL, NULL, mesh.num_vertices, true);
+	geometry->Triangulate(all_vertex.data(), NULL, NULL, num_vertices, true);
 
 	std::vector<GLuint> my_index;
 	std::vector<math::float3> my_vertex;
 
-	VertexToIndex(all_vertex.data(), mesh.num_vertices, &my_index, &my_vertex);
-	mesh.num_indices = my_index.size();
+	VertexToIndex(all_vertex.data(), num_vertices, &my_index, &my_vertex);
+	num_indices = my_index.size();
 	
 
 	//Save geometry vertex in a generic buffer
-	glGenBuffers(1, (GLuint*)&(mesh.id_vertices));
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
+	glGenBuffers(1, (GLuint*)&(id_vertices));
+	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * my_vertex.size() * 3, my_vertex.data(), GL_STATIC_DRAW);
 
 	//Save geometry index in a buffer of elements
-	glGenBuffers(1, (GLuint*)&(mesh.id_indices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * mesh.num_indices, my_index.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, (GLuint*)&(id_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * num_indices, my_index.data(), GL_STATIC_DRAW);
 }
 
 // Set Methods ==================================

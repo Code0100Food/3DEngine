@@ -8,7 +8,7 @@ Primitive_::Primitive_(PRIMITIVE_TYPE _type):type(type)
 
 }
 
-Primitive_::Primitive_(const Primitive_ & _cpy) : color(_cpy.color), axis(_cpy.axis), type(_cpy.type), mesh(_cpy.mesh)
+Primitive_::Primitive_(const Primitive_ & _cpy) : color(_cpy.color), axis(_cpy.axis), type(_cpy.type)
 {
 
 }
@@ -23,30 +23,30 @@ Primitive_::~Primitive_()
 void Primitive_::Initialize()
 {
 	//Save geometry vertex in a generic buffer
-	glGenBuffers(1, (GLuint*)&(mesh.id_vertices));
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertices * 3, mesh.vertices, GL_STATIC_DRAW);
+	glGenBuffers(1, (GLuint*)&(id_vertices));
+	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
 
 	//Save geometry index in a buffer of elements
-	glGenBuffers(1, (GLuint*)&(mesh.id_indices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * mesh.num_indices, mesh.indices, GL_STATIC_DRAW);
+	glGenBuffers(1, (GLuint*)&(id_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * num_indices, indices, GL_STATIC_DRAW);
 }
 
 void Primitive_::Draw()
 {
 	//The geometry can't be drawn if is not allocated
-	if (mesh.id_indices == 0 || mesh.id_vertices == 0)return;
+	if (id_indices == 0 || id_vertices == 0)return;
 
 	//Open focus of index (elements)
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	//Open focus index of vertex (data)
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	//Define how to read the vertex buffer
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	//Draw the defined index interpreting the vertex of the data buffer with the defined mode
-	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * mesh.num_vertices / 3, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, sizeof(GLuint) * num_vertices / 3, GL_UNSIGNED_INT, NULL);
 }
 
 // Set Methods ==================================

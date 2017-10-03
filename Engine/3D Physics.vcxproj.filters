@@ -49,7 +49,7 @@
     <Filter Include="Sources\Modules\Input">
       <UniqueIdentifier>{cd6c406a-9a20-4130-a967-be3772505c64}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Helpers\Meshes &amp; Geometry">
+    <Filter Include="Sources\Helpers\Meshes &amp; Primitives">
       <UniqueIdentifier>{4406f9e8-a687-4c4a-b604-15079471fd54}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -325,10 +325,10 @@
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Cube_.h">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Primitive_.h">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\GeometryManager.h">
       <Filter>Sources\Modules</Filter>
@@ -337,22 +337,22 @@
       <Filter>Sources\Tools\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Sphere_.h">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Capsule_.h">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Frustrum_.h">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Cylinder_.h">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\MathGeoLib\Geometry\Cylinder.h">
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Mesh_.h">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -537,10 +537,10 @@
       <Filter>Sources\Modules\Input</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Primitive_.cpp">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Cube_.cpp">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GeometryManager.cpp">
       <Filter>Sources\Modules</Filter>
@@ -549,22 +549,22 @@
       <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Sphere_.cpp">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Frustrum_.cpp">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Capsule_.cpp">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Cylinder_.cpp">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\MathGeoLib\Geometry\Cylinder.cpp">
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Mesh_.cpp">
-      <Filter>Sources\Helpers\Meshes &amp; Geometry</Filter>
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

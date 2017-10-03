@@ -20,9 +20,9 @@ enum PRIMITIVE_TYPE
 	PRIMITIVE_MESH
 };
 
-struct MeshData
+struct SimpleMesh
 {
-	~MeshData()
+	virtual ~SimpleMesh()
 	{
 		delete []indices;
 		delete []vertices;
@@ -37,7 +37,7 @@ struct MeshData
 	float*	vertices = nullptr;
 };
 
-class Primitive_
+class Primitive_ : public SimpleMesh
 {
 
 	friend class GeometryManager;
@@ -46,7 +46,7 @@ public:
 
 	Primitive_(PRIMITIVE_TYPE _type);
 	Primitive_(const Primitive_& _cpy);
-	virtual ~Primitive_();
+	~Primitive_();
 
 public:
 
@@ -59,7 +59,6 @@ protected:
 	bool			axis = false;
 	PRIMITIVE_TYPE	type = UNDEF_PRIMITIVE;
 	uint			divisions = 0;
-	MeshData		mesh;
 
 public:
 
