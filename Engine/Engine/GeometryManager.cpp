@@ -22,55 +22,8 @@ bool GeometryManager::Start()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 	
-	const aiScene* scene = aiImportFile("Assets/warrior.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene != nullptr && scene->HasMeshes())
-	{
-		uint size = scene->mNumMeshes;
-		for (uint k = 0; k < size; k++)
-		{
-			//Pointer to the current mesh
-			aiMesh* m = scene->mMeshes[k];
-			
-			//Create a new mesh
-			Mesh_* mesh = (Mesh_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_MESH);
-			
-			//Load vertex data
-			uint num_vertex = mesh->mesh.num_vertices = m->mNumVertices;
-			mesh->mesh.vertices = new float[num_vertex * 3];
-			memcpy(mesh->mesh.vertices, m->mVertices, sizeof(float) * num_vertex * 3);
-			
-			LOG("Created Mesh with %i vertices", num_vertex);
-
-			//Load index data
-			if (m->HasFaces())
-			{
-				mesh->mesh.num_indices = m->mNumFaces * 3;
-				mesh->mesh.indices = new uint[mesh->mesh.num_indices];
-				for (uint h = 0; h < m->mNumFaces; h++)
-				{
-					if (m->mFaces[h].mNumIndices != 3)
-					{
-						LOG("[error] Geometry face with != 3 indices!");
-					}
-					else
-					{
-						memcpy(&mesh->mesh.indices[h * 3], m->mFaces[h].mIndices, 3 * sizeof(uint));
-					}
-				}
-			}
-
-			//Initialize the loaded mesh
-			mesh->Initialize();
-
-		}
-
-		//Release the scene
-		aiReleaseImport(scene);
-	}
-	else
-	{
-		LOG("Error loading scene");
-	}
+	//Load warrior fbx
+	//LoadScene("Assets/arbol.fbx");
 
 	return true;
 }
@@ -156,4 +109,105 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 	geometry_list.push_back(new_primitive);
 
 	return new_primitive;
+}
+
+bool GeometryManager::LoadScene(const char * folder)
+{
+	const aiScene* scene = aiImportFile(folder, aiProcessPreset_TargetRealtime_MaxQuality);
+	if (scene != nullptr && scene->HasMeshes())
+	{
+		uint size = scene->mNumMeshes;
+		for (uint k = 0; k < size; k++)
+		{
+			LOG("Created Mesh with:");
+			//Pointer to the current mesh
+			aiMesh* m = scene->mMeshes[k];
+			
+			//Create a new mesh
+			Mesh_* mesh = (Mesh_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_MESH);
+						
+			//Load vertex data
+			uint num_vertex = mesh->mesh.num_vertices = m->mNumVertices;
+			mesh->mesh.vertices = new float[num_vertex * 3];
+			memcpy(mesh->mesh.vertices, m->mVertices, sizeof(float) * num_vertex * 3);
+	
+			LOG("- %i vertices", num_vertex);
+
+			//Load normals data
+			/*if (m->HasNormals())
+			{
+				mesh->mesh.face_normals = new float[num_vertex * 3];
+				memcpy(mesh->mesh.face_normals, m->mNormals, sizeof(float) * num_vertex * 3);
+				LOG("- %i normals", num_vertex);
+				//mesh->SetRenderFlags(DRAW_VERTEX | DRAW_FACE_NORMALS);
+			}
+			else LOG("- No normals");*/
+
+			//Load index data
+			if (m->HasFaces())
+			{
+				mesh->mesh.num_indices = m->mNumFaces * 3;
+				mesh->mesh.indices = new uint[mesh->mesh.num_indices];
+				for (uint h = 0; h < m->mNumFaces; h++)
+				{
+					if (m->mFaces[h].mNumIndices != 3)
+					{
+						LOG("[error] Geometry face with != 3 indices!");
+					}
+					else
+					{
+						memcpy(&mesh->mesh.indices[h * 3], m->mFaces[h].mIndices, 3 * sizeof(uint));
+					}
+				}
+				LOG("- %i indices", mesh->mesh.num_indices);
+			}
+
+			//Load colors data
+			/*uint tot_colors = 0;
+			mesh->mesh.colors = new float[num_vertex * 4];
+			for (uint h = 0; h < num_vertex; h++)
+			{
+				if (m->HasVertexColors(h))
+				{
+					memcpy(&mesh->mesh.colors[h * 4], m->mColors, sizeof(float) * 4);
+					tot_colors++;
+				}
+			}
+			if (tot_colors > 0)
+			{
+				LOG("- %i Vertex Colors", tot_colors);
+			}
+			else LOG("- No Vertex Colors");*/
+			
+			//Load texture coords
+			/*uint tot_tex_coords = 0;
+			mesh->mesh.texture_coords = new float[num_vertex * 2];
+			for (uint h = 0; h < num_vertex; h++)
+			{
+				if (m->HasTextureCoords(h))
+				{
+					memcpy(&mesh->mesh.texture_coords[h * 2], m->mTextureCoords, sizeof(float) * 2);
+				}
+			}
+			if (tot_tex_coords > 0)
+			{
+				LOG("- %i Texture Coords", tot_tex_coords);
+			}
+			else LOG("- No Texture Coords");*/
+
+			//Initialize the loaded mesh
+			mesh->Initialize();
+
+		}
+
+		//Release the scene
+		aiReleaseImport(scene);
+	}
+	else
+	{
+		LOG("Error loading scene");
+		return false;
+	}
+	
+	return true;
 }

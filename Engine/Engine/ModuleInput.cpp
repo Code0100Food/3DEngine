@@ -8,6 +8,7 @@
 #include "ModuleWindow.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "InputManager.h"
+#include "GeometryManager.h"
 
 #define MAX_KEYS 300
 
@@ -258,6 +259,10 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				SDL_GameControllerClose(gamecontroller);
 			}
+			break;
+
+		case SDL_DROPFILE:
+			App->geometry->LoadScene(event.drop.file);
 			break;
 		}
 	}

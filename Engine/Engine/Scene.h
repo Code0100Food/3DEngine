@@ -77,14 +77,6 @@ public:
 	math::Plane plane_b;
 
 	std::string collide_test;
-	
-	//Geometry
-	Cube_*		cube = nullptr;
-	Sphere_*	sphere = nullptr;
-	Cylinder_*	cylinder = nullptr;
-
-	Capsule_*	capsule = nullptr;
-
 
 public:
 

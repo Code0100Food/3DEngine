@@ -43,6 +43,8 @@ public:
 	- Cube: float3 min vertex, float3 max vertex
 	*/
 	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type);
+	
+	bool		LoadScene(const char* folder);
 
 };
 
