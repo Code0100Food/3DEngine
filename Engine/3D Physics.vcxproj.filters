@@ -52,6 +52,9 @@
     <Filter Include="Sources\Helpers\Meshes &amp; Primitives">
       <UniqueIdentifier>{4406f9e8-a687-4c4a-b604-15079471fd54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\stb">
+      <UniqueIdentifier>{6958ef8c-c4ef-47dc-b9a7-71c6a60de134}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Color.h">
@@ -357,6 +360,12 @@
     <ClInclude Include="Engine\Model_.h">
       <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\stb\stb_image.h">
+      <Filter>Sources\Tools\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\stb\stb.h">
+      <Filter>Sources\Tools\stb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -569,7 +578,9 @@
     <ClCompile Include="Engine\Mesh_.cpp">
       <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Model_.cpp" />
+    <ClCompile Include="Engine\Model_.cpp">
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

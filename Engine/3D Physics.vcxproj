@@ -186,6 +186,8 @@
     <ClInclude Include="Engine\Quadtree.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\Sphere_.h" />
+    <ClInclude Include="Engine\stb\stb.h" />
+    <ClInclude Include="Engine\stb\stb_image.h" />
     <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\Primitive_.h" />
   </ItemGroup>

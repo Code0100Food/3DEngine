@@ -21,6 +21,7 @@ public:
 
 private:
 
+	std::vector<Texture> textures;
 	std::vector<Mesh_>	meshes;
 	std::string			directory;
 
@@ -30,6 +31,6 @@ private:
 	void					ProcessNode(aiNode *node, const aiScene *scene);
 	Mesh_					ProcessMesh(aiMesh *mesh, const aiScene *scene);
 	std::vector<Texture>	LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
-
+	uint					TextureFromFile(const char *path, const std::string &directory, bool gamma);
 };
 #endif // !_MODEL_H_
