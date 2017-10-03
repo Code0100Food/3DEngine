@@ -354,6 +354,9 @@
     <ClInclude Include="Engine\Mesh_.h">
       <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Model_.h">
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -566,6 +569,7 @@
     <ClCompile Include="Engine\Mesh_.cpp">
       <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Model_.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

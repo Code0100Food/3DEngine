@@ -166,6 +166,7 @@
     <ClInclude Include="Engine\Mesh_.h" />
     <ClInclude Include="Engine\mmgr\mmgr.h" />
     <ClInclude Include="Engine\mmgr\nommgr.h" />
+    <ClInclude Include="Engine\Model_.h" />
     <ClInclude Include="Engine\Module.h" />
     <ClInclude Include="Engine\ModuleAudio.h" />
     <ClInclude Include="Engine\ModuleCamera3D.h" />
@@ -241,6 +242,7 @@
     <ClCompile Include="Engine\MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="Engine\Mesh_.cpp" />
     <ClCompile Include="Engine\mmgr\mmgr.cpp" />
+    <ClCompile Include="Engine\Model_.cpp" />
     <ClCompile Include="Engine\ModuleAudio.cpp" />
     <ClCompile Include="Engine\ModuleCamera3D.cpp" />
     <ClCompile Include="Engine\ModuleConsole.cpp" />

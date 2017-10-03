@@ -10,6 +10,7 @@
 #include "Cylinder_.h"
 #include "Frustrum_.h"
 #include "Mesh_.h"
+#include "Model_.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -34,7 +35,7 @@ public:
 private:
 
 	std::list<Primitive_*>	primitives_list;
-	std::list<Mesh_*>		mesh_list;
+	std::list<Model_*>		models_list;
 
 public:
 

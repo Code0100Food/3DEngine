@@ -16,35 +16,34 @@ struct Texture
 {
 	uint		id = 0;
 	std::string	type;
+	std::string path;
 };
 
-class Mesh {
-public:
-	/*  Mesh Data  */
-	/*vector<Vertex> vertices;
-	vector<unsigned int> indices;
-	vector<Texture> textures;*/
-/*	// Functions  
-	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
-	void Draw(Shader shader);
-private:
-	//  Render data  
-	unsigned int VAO, VBO, EBO;
-	//  Functions    
-	void setupMesh();*/
-};
-
-class Mesh_ : public Primitive_
+class Mesh_
 {
 public:
 
 	Mesh_();
-	Mesh_(const Mesh_& _cpy);
+	Mesh_(std::vector<Vertex> vertices, std::vector<uint> indices, std::vector<Texture> textures);
 	~Mesh_();
 
-protected:
+public:
 
-	/*Mesh Data*/
+	void Draw();
+
+public:
+
+	std::vector<Vertex>		vertices;
+	std::vector<uint>		indices;
+	std::vector<Texture>	textures;
+
+private:
+
+	uint VAO = 0, VBO = 0, EBO = 0;
+
+private:
+
+	void SetupMesh();
 
 };
 #endif // !_MESH_H_

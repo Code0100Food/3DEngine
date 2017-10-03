@@ -42,8 +42,8 @@ bool GeometryManager::Draw()
 		geom++;
 	}
 
-	std::list<Mesh_*>::const_iterator mesh = mesh_list.begin();
-	while (mesh != mesh_list.end())
+	std::list<Model_*>::const_iterator mesh = models_list.begin();
+	while (mesh != models_list.end())
 	{
 		mesh._Ptr->_Myval->Draw();
 
@@ -74,14 +74,14 @@ bool GeometryManager::CleanUp()
 	primitives_list.clear();
 
 	//Clean meshes
-	std::list<Mesh_*>::const_iterator mesh = mesh_list.begin();
-	while (mesh != mesh_list.end())
+	std::list<Model_*>::const_iterator mesh = models_list.begin();
+	while (mesh != models_list.end())
 	{
 		RELEASE(mesh._Ptr->_Myval);
 
 		mesh++;
 	}
-	mesh_list.clear();
+	models_list.clear();
 
 
 	// detach log stream
@@ -131,13 +131,19 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 Mesh_ * GeometryManager::CreateMesh()
 {
 	Mesh_* m = new Mesh_();
-	mesh_list.push_back(m);
+	//models_list.push_back(m);
 	return m;
 }
 
 bool GeometryManager::LoadScene(const char * folder)
 {
-	const aiScene* scene = aiImportFile(folder, aiProcessPreset_TargetRealtime_MaxQuality);
+
+	Model_* new_model = new Model_(folder);
+	models_list.push_back(new_model);
+
+	return true;
+
+	/*const aiScene* scene = aiImportFile(folder, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		uint size = scene->mNumMeshes;
@@ -165,7 +171,7 @@ bool GeometryManager::LoadScene(const char * folder)
 				LOG("- %i normals", num_vertex);
 				//mesh->SetRenderFlags(DRAW_VERTEX | DRAW_FACE_NORMALS);
 			}
-			else LOG("- No normals");*/
+			else LOG("- No normals");
 
 			//Load index data
 			if (m->HasFaces())
@@ -217,12 +223,12 @@ bool GeometryManager::LoadScene(const char * folder)
 			{
 				LOG("- %i Texture Coords", tot_tex_coords);
 			}
-			else LOG("- No Texture Coords");*/
+			else LOG("- No Texture Coords");
 
 			//Initialize the loaded mesh
 			mesh->Initialize();
-
-		}
+			*/
+		/*}
 
 		//Release the scene
 		aiReleaseImport(scene);
@@ -232,6 +238,6 @@ bool GeometryManager::LoadScene(const char * folder)
 		LOG("Error loading scene");
 		return false;
 	}
-	
+	*/
 	return true;
 }
