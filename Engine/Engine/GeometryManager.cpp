@@ -34,12 +34,20 @@ bool GeometryManager::Draw()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
 
-	std::list<Primitive_*>::const_iterator geom = geometry_list.begin();
-	while (geom != geometry_list.end())
+	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
+	while (geom != primitives_list.end())
 	{
 		geom._Ptr->_Myval->Draw();
 
 		geom++;
+	}
+
+	std::list<Mesh_*>::const_iterator mesh = mesh_list.begin();
+	while (mesh != mesh_list.end())
+	{
+		mesh._Ptr->_Myval->Draw();
+
+		mesh++;
 	}
 
 	//Reset the buffers focus
@@ -55,14 +63,26 @@ bool GeometryManager::Draw()
 
 bool GeometryManager::CleanUp()
 {
-	std::list<Primitive_*>::const_iterator geom = geometry_list.begin();
-	while (geom != geometry_list.end())
+	//Clean Primitives
+	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
+	while (geom != primitives_list.end())
 	{
 		RELEASE(geom._Ptr->_Myval);
 
 		geom++;
 	}
-	geometry_list.clear();
+	primitives_list.clear();
+
+	//Clean meshes
+	std::list<Mesh_*>::const_iterator mesh = mesh_list.begin();
+	while (mesh != mesh_list.end())
+	{
+		RELEASE(mesh._Ptr->_Myval);
+
+		mesh++;
+	}
+	mesh_list.clear();
+
 
 	// detach log stream
 	aiDetachAllLogStreams();
@@ -100,15 +120,19 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 	case PRIMITIVE_FRUSTUM:
 		new_primitive = new Frustrum_();
 		break;
-	case PRIMITIVE_MESH:
-		new_primitive = new Mesh_();
-		break;
 	}
 
 	//Add the new primitive at the geometry list
-	geometry_list.push_back(new_primitive);
+	primitives_list.push_back(new_primitive);
 
 	return new_primitive;
+}
+
+Mesh_ * GeometryManager::CreateMesh()
+{
+	Mesh_* m = new Mesh_();
+	mesh_list.push_back(m);
+	return m;
 }
 
 bool GeometryManager::LoadScene(const char * folder)
@@ -124,7 +148,7 @@ bool GeometryManager::LoadScene(const char * folder)
 			aiMesh* m = scene->mMeshes[k];
 			
 			//Create a new mesh
-			Mesh_* mesh = (Mesh_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_MESH);
+			Mesh_* mesh = CreateMesh();
 						
 			//Load vertex data
 			uint num_vertex = mesh->num_vertices = m->mNumVertices;

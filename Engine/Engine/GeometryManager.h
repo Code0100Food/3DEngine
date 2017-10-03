@@ -33,7 +33,8 @@ public:
 
 private:
 
-	std::list<Primitive_*> geometry_list;
+	std::list<Primitive_*>	primitives_list;
+	std::list<Mesh_*>		mesh_list;
 
 public:
 
@@ -43,7 +44,8 @@ public:
 	- Cube: float3 min vertex, float3 max vertex
 	*/
 	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type);
-	
+	Mesh_*		CreateMesh();
+
 	bool		LoadScene(const char* folder);
 
 };
