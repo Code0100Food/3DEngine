@@ -91,8 +91,11 @@ bool ModuleImgui::Start()
 
 update_status ModuleImgui::PreUpdate(float dt)
 {
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight() - 20));
+	ImGui::Begin("", 0, 0);
 
-	//Begin the full workspace
+	//Begin the workspace
 	BeginWorkspace();
 
 	return update_status::UPDATE_CONTINUE;
@@ -674,6 +677,7 @@ void ModuleImgui::SetCustomTheme()
 void ModuleImgui::RenderUI()
 {
 	EndWorkspace();
+	ImGui::End();
 	ImGui::Render();
 }
 
