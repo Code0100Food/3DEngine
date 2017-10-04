@@ -232,7 +232,26 @@ bool ModuleRenderer3D::Init()
 
 bool ModuleRenderer3D::Start()
 {
+	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
+		for (int j = 0; j < CHECKERS_WIDTH; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkImage[i][j][0] = (GLubyte)c;
+			checkImage[i][j][1] = (GLubyte)c;
+			checkImage[i][j][2] = (GLubyte)c;
+			checkImage[i][j][3] = (GLubyte)255;
+		}
+	}
 
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &ImageName);
+	glBindTexture(GL_TEXTURE_2D, ImageName);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+
+	glEnable(GL_TEXTURE_2D);
 
 	return true;
 }
@@ -263,42 +282,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	//http://www.pascalgamedevelopment.com/showthread.php?6617-drawing-3d-geometrical-shapes-using-opengl-but-without-glu
 
 
-	/*float NumMajor = 10;
-	float NumMinor = 6;
-	float MinorRadius = 2, MajorRadius = 4;
-	float MajorStep, MinorStep;
-	int i, j;
-	float a0, a1, b;
-	float x0, y0, x1, y1, c, r, z;
-	MajorStep = 2.7 * HAVE_M_PI / NumMajor;
-	MinorStep = 2.7 * HAVE_M_PI / NumMajor;
-	for (i = 0; i < NumMajor; i++)
-	{
-		a0 = i * MajorStep;
-		a1 = a0 + MajorStep;
-		x0 = cos(a0);
-		y0 = sin(a0);
-		x1 = cos(a1);
-		y1 = sin(a1);
-		glBegin(GL_TRIANGLE_STRIP);
-		for (j = 0; j < NumMinor; j++)
-		{
-
-			b = j * MinorStep;
-			c = cos(b);
-			r = MinorRadius * c + MajorRadius;
-			z = MinorRadius * sin(b);
-
-			glNormal3f(x0 * c, y0 * c, z / MinorRadius);
-			glTexCoord2f(i / NumMajor, j / NumMinor);
-			glVertex3f(x0 * r, y0 * r, z);
-
-			glNormal3f(x1 * c, y1 * c, z / MinorRadius);
-			glTexCoord2f((i + 1) / NumMajor, j / NumMinor);
-			glVertex3f(x1 * r, y1 * r, z);
-		}
-		glEnd();
-	}*/
+	
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -308,19 +292,84 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 
 	render_to_texture->Bind();
+
+	GLfloat v0[3] = { 1,1,0 };
+	GLfloat v1[3] = { 0,1,0 };
+	GLfloat v2[3] = { 0,0,0 };
+	GLfloat v3[3] = { 1,0,0 };
+	GLfloat v4[3] = { 1,0,1 };
+	GLfloat v5[3] = { 1,1,1 };
+	GLfloat v6[3] = { 0,1,1 };
+	GLfloat v7[3] = { 0,0,1 };
+
+	glBindTexture(GL_TEXTURE_2D, ImageName);
+
+	glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
+
+	// front face =================
+	glTexCoord2f(1.0f, 1.0f);  glVertex3fv(v0);
+	glTexCoord2f(0.0f, 0.0f);  glVertex3fv(v2);
+	glTexCoord2f(1.0f, 0.0f);  glVertex3fv(v1);
+	
+	glTexCoord2f(0.0f, 0.0f);  glVertex3fv(v2);
+	glTexCoord2f(1.0f, 1.0f);  glVertex3fv(v0);
+	glTexCoord2f(0.0f, 1.0f);  glVertex3fv(v3);
+	
+
+	// back face ==================
+	glTexCoord2f(0.0f, 1.0f);glVertex3fv(v5);
+	glTexCoord2f(1.0f, 1.0f);  glVertex3fv(v6);
+	glTexCoord2f(1.0f, 0.0f);  glVertex3fv(v7);
+	
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v5);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v7);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
+	
+	// right face =================
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v0);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v3);
+
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v5);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
+
+	// left face ==================
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v1);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v2);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v7);
+
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v1);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v7);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v6);
+
+	// top face ===================
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v1);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v5);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v0);
+
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v1);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v6);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v5);
+
+	// bottom face ===================
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v2);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v3);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
+
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v2);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v7);
+
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	App->geometry->Draw();
 	render_to_texture->UnBind();
 
 	//Rendering Geometry
 	BeginDock("Scene", 0, ImGuiWindowFlags_HorizontalScrollbar);
-
-	/*ImVec2 size = ImGui::GetWindowSize();
-	if (render_to_texture->width != size.x && render_to_texture->height != size.y)
-	{
-		render_to_texture->Destroy();
-		render_to_texture->Create(size.x, size.y);
-	}*/
-
 
 	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width, render_to_texture->height), ImVec2(1, 1), ImVec2(0, 0));
 

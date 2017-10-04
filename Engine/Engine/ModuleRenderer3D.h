@@ -8,6 +8,8 @@
 #include "MathGeoLib/MathGeoLib.h"
 
 #define MAX_LIGHTS 8
+#define CHECKERS_HEIGHT 256
+#define CHECKERS_WIDTH 256
 
 class FrameTexture
 {
@@ -76,6 +78,9 @@ private:
 	bool	custom_clear = false;
 	float	clear_color[4];
 	float	clear_depth = 0.0f;
+
+	unsigned char  checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	uint ImageName = 0;
 
 private:
 
