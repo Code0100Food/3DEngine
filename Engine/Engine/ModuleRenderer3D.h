@@ -18,6 +18,7 @@ public:
 	void Create(int, int);
 	void Bind();
 	void UnBind();
+	void Destroy();
 
 public:
 
@@ -25,7 +26,6 @@ public:
 	unsigned int			rbo_id;
 	unsigned int			texture_id;
 	unsigned int			depth_id = 0;
-	std::vector<int>		draw_buffer;
 
 	int		width;
 	int		height;

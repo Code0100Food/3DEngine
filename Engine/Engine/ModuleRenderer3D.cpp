@@ -312,11 +312,20 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	render_to_texture->UnBind();
 
 	//Rendering Geometry
-	BeginDock("Scene", 0, 0);
+	BeginDock("Scene", 0, ImGuiWindowFlags_HorizontalScrollbar);
+
+	/*ImVec2 size = ImGui::GetWindowSize();
+	if (render_to_texture->width != size.x && render_to_texture->height != size.y)
+	{
+		render_to_texture->Destroy();
+		render_to_texture->Create(size.x, size.y);
+	}*/
+
 
 	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width, render_to_texture->height), ImVec2(1, 1), ImVec2(0, 0));
-	//, ImVec2(1,1), ImVec2(0,0)
+
 	EndDock();
+
 
 	DisableGLRenderFlags();	
 
@@ -620,6 +629,12 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
 	glLoadMatrixf(&ProjectionMatrix);
 
+	if (render_to_texture)
+	{
+		render_to_texture->Destroy();
+		render_to_texture->Create(width,height);
+	}
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -651,16 +666,7 @@ FrameTexture::FrameTexture() : frame_id(0), rbo_id(0), texture_id(0), width(0), 
 
 FrameTexture::~FrameTexture()
 {
-	glDeleteFramebuffers(1, &frame_id);
-	frame_id = 0;
-
-	glDeleteTextures(1, &texture_id);
-	texture_id = 0;
-
-	glDeleteRenderbuffers(1, &rbo_id);
-	rbo_id = 0;
-
-	draw_buffer.clear();
+	Destroy();
 }
 
 void FrameTexture::Create(int width, int height)
@@ -724,4 +730,16 @@ void FrameTexture::UnBind()
 {
 	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FrameTexture::Destroy()
+{
+	glDeleteFramebuffers(1, &frame_id);
+	frame_id = 0;
+
+	glDeleteTextures(1, &texture_id);
+	texture_id = 0;
+
+	glDeleteRenderbuffers(1, &rbo_id);
+	rbo_id = 0;
 }
