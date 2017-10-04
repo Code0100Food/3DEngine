@@ -26,9 +26,6 @@ public:
 
 public: 
 
-	//Basic Plane
-	_Plane grid;
-
 	//Windows management
 	bool random_window = false;
 	bool maths_window = false;

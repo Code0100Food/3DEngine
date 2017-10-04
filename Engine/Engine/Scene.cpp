@@ -20,11 +20,6 @@ Scene::~Scene()
 // Game Loop ====================================
 bool Scene::Start()
 {
-	//Initialize grid
-	grid.constant = 0;
-	grid.normal = {0, 1, 0};
-	grid.axis = true;
-
 	//Starts the random number generator
 	rand_num_generator = new math::LCG((u32)5);
 
@@ -72,10 +67,6 @@ bool Scene::Start()
 
 update_status Scene::Update(float dt)
 {
-
-	//Render the base grid
-	grid.Render();
-
 	//Random window
 	if (random_window)
 	{

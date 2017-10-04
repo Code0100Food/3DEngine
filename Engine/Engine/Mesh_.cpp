@@ -47,6 +47,8 @@ void Mesh_::Draw()
 
 	// Draw the mesh
 	glBindVertexArray(VertexArrayObjects);
+	glLineWidth(2.5f);
+	glColor4f(0.5f, 0.8f, 0.8f,0.3f);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 

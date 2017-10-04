@@ -3,6 +3,7 @@
 
 #include "Module.h"
 
+#include "Primitive.h"
 #include "Primitive_.h"
 #include "Cube_.h"
 #include "Sphere_.h"
@@ -28,14 +29,29 @@ public:
 
 public:
 
+	bool Awake(const JSON_Object * data_root);
 	bool Start()final;
 	bool Draw();
 	bool CleanUp()final;
-
+	void BlitConfigInfo()final;
+	void SaveConfigInfo(JSON_Object* data_root)final;
 private:
 
 	std::list<Primitive_*>	primitives_list;
 	std::list<Model_*>		models_list;
+
+	_Plane grid; //Ground grid
+
+	// Config data
+	bool	show_grid = true;
+
+	bool	show_meshes = true;
+	float	mesh_lines_width = 1.0f;
+	float	mesh_color[4];
+	float	vertex_normals_color[4];
+
+	bool	show_primitives = true;
+	float	primitive_color[4];
 
 public:
 

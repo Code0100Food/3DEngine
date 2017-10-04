@@ -14,26 +14,63 @@ GeometryManager::~GeometryManager()
 
 }
 
+bool GeometryManager::Awake(const JSON_Object * data_root)
+{
+	show_grid = json_object_get_boolean(data_root, "show_grid");
+
+	show_meshes = json_object_get_boolean(data_root, "show_meshes");
+
+	mesh_lines_width = json_object_get_number(data_root, "mesh_lines_width");
+
+	JSON_Array* mesh_color_array = json_object_get_array(data_root, "mesh_color");
+	mesh_color[0] = json_array_get_number(mesh_color_array, 0);
+	mesh_color[1] = json_array_get_number(mesh_color_array, 1);
+	mesh_color[2] = json_array_get_number(mesh_color_array, 2);
+	mesh_color[3] = json_array_get_number(mesh_color_array, 3);
+
+	JSON_Array* vertex_normals_color_array = json_object_get_array(data_root, "vertex_normals_color");
+	vertex_normals_color[0] = json_array_get_number(vertex_normals_color_array, 0);
+	vertex_normals_color[1] = json_array_get_number(vertex_normals_color_array, 1);
+	vertex_normals_color[2] = json_array_get_number(vertex_normals_color_array, 2);
+	vertex_normals_color[3] = json_array_get_number(vertex_normals_color_array, 3);
+
+	show_primitives = json_object_get_boolean(data_root, "show_primitives");
+
+	JSON_Array* primitive_color_array = json_object_get_array(data_root, "primitive_color");
+	primitive_color[0] = json_array_get_number(vertex_normals_color_array, 0);
+	primitive_color[1] = json_array_get_number(vertex_normals_color_array, 1);
+	primitive_color[2] = json_array_get_number(vertex_normals_color_array, 2);
+	primitive_color[3] = json_array_get_number(vertex_normals_color_array, 3);
+
+	return true;
+}
+
 // Game Loop ====================================
 bool GeometryManager::Start()
 {
+	//Initialize grid
+	grid.constant = 0;
+	grid.normal = { 0, 1, 0 };
+	grid.axis = true;
+
 	// Stream log messages to Debug window
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 	
-	//Load warrior fbx
-	//LoadScene("Assets/arbol.fbx");
-
 	return true;
 }
 
 bool GeometryManager::Draw()
 {
+	//Blit ground grid
+	if (show_grid)grid.Render();
+
 	//Enable the vertex and elements flags
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
 
+	//Blit debug primitives
 	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
 	while (geom != primitives_list.end())
 	{
@@ -42,6 +79,7 @@ bool GeometryManager::Draw()
 		geom++;
 	}
 
+	//Blit meshes
 	std::list<Model_*>::const_iterator mesh = models_list.begin();
 	while (mesh != models_list.end())
 	{
@@ -88,6 +126,24 @@ bool GeometryManager::CleanUp()
 	aiDetachAllLogStreams();
 
 	return true;
+}
+
+void GeometryManager::BlitConfigInfo()
+{
+	ImGui::Checkbox("Show Grid", &show_grid);
+}
+
+void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
+{
+	json_object_set_boolean(data_root, "show_grid", show_grid);
+
+	json_object_set_boolean(data_root, "show_meshes", show_meshes);
+
+	json_array_t*_array = json_object_get_array(data_root, "mesh_color");
+	json_array_replace_number(_array, 0, mesh_color[0]);
+	json_array_replace_number(_array, 1, mesh_color[1]);
+	json_array_replace_number(_array, 2, mesh_color[2]);
+	json_array_replace_number(_array, 3, mesh_color[3]);
 }
 
 // Functionality ================================
