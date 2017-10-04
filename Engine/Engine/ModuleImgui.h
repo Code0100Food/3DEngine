@@ -15,6 +15,7 @@ public:
 
 	bool			Awake(const JSON_Object* data_root)final;
 	bool			Start() final;
+	update_status	PreUpdate(float dt) final;
 	update_status	Update(float dt) final;
 	update_status	PostUpdate(float dt) final;
 	bool			CleanUp();

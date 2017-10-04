@@ -11,6 +11,8 @@
 #include "FileSystem.h"
 #include "ModuleAudio.h"
 #include "ModuleImgui.h"
+#include "imgui/imgui_dock.h"
+#include "Scene.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -222,7 +224,17 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	render_to_texture = new FrameTexture();
+	render_to_texture->Create(1000, 1000);
+
 	return ret;
+}
+
+bool ModuleRenderer3D::Start()
+{
+
+
+	return true;
 }
 
 // PreUpdate: clear buffer
@@ -294,8 +306,17 @@ update_status ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	//Rendering Geometry
+
+	render_to_texture->Bind();
 	App->geometry->Draw();
+	render_to_texture->UnBind();
+
+	//Rendering Geometry
+	BeginDock("Scene", 0, 0);
+
+	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width, render_to_texture->height), ImVec2(1, 1), ImVec2(0, 0));
+	//, ImVec2(1,1), ImVec2(0,0)
+	EndDock();
 
 	DisableGLRenderFlags();	
 
@@ -314,6 +335,7 @@ bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
 
+	RELEASE(render_to_texture);
 	SDL_GL_DeleteContext(context);
 
 	return true;
@@ -621,4 +643,85 @@ void ModuleRenderer3D::DisableGLRenderFlags()
 void ModuleRenderer3D::EnableGLRenderFlags()
 {
 	if (lighting)glEnable(GL_LIGHTING);
+}
+
+//------------------ FRAME TEXTURE ------------------\\
+
+FrameTexture::FrameTexture() : frame_id(0), rbo_id(0), texture_id(0), width(0), height(0) {}
+
+FrameTexture::~FrameTexture()
+{
+	glDeleteFramebuffers(1, &frame_id);
+	frame_id = 0;
+
+	glDeleteTextures(1, &texture_id);
+	texture_id = 0;
+
+	glDeleteRenderbuffers(1, &rbo_id);
+	rbo_id = 0;
+
+	draw_buffer.clear();
+}
+
+void FrameTexture::Create(int width, int height)
+{
+	//Create The Frame Buffer
+	glGenFramebuffers(1, &frame_id);
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_id);
+
+	//Generate the Texture
+	glGenTextures(1, &texture_id);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	this->width = width;
+	this->height = height;
+	
+	/*glGenTextures(1, &depth_id);
+	glBindTexture(GL_TEXTURE_2D, depth_id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);*/
+
+
+	//Attach texture to the frame buffer
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture_id, 0);
+	//glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth_id, 0);//optional
+	
+//	glMatrixMode(GL_TEXTURE);
+
+	
+	//glMatrixMode(GL_MODELVIEW);
+
+	
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+	{
+		LOG("Frame Buffer Load nice");
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+}
+
+void FrameTexture::Bind()
+{
+	glViewport(0, 0, width, height);
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_id);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	/*glTranslatef(0.5, 0.5, 0.0);
+	glRotatef(180, 0.0, 0.0, 1.0);
+	glTranslatef(-0.5, -0.5, 0.0);*/
+	
+}
+
+void FrameTexture::UnBind()
+{
+	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

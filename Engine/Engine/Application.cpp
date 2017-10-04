@@ -384,8 +384,6 @@ bool Application::GetConfigWindowState() const
 void Application::BlitConfigWindow()
 {
 
-	//Begin The dock frame
-	BeginWorkspace();
 
 	//Begin aplication dock
 	bool ApplicationDock = true;
@@ -500,8 +498,6 @@ void Application::BlitConfigWindow()
 		EndDock();
 
 	}
-
-	EndWorkspace();
 }
 
 void Application::AddModule(Module* mod)

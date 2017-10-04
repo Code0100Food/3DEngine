@@ -59,7 +59,9 @@ public:
 	void SetTitle(const char* title);
 
 	//Get Methods =====================
-	float GetBrightness()const;
+	float	 GetBrightness()const;
+	int		 GetWidth() const;
+	int		 GetHeight() const;
 
 };
 

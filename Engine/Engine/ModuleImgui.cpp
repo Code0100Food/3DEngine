@@ -9,6 +9,7 @@
 #include "Bullet/include/LinearMath/btScalar.h"
 #include "ModuleRenderer3D.h"
 #include "GeometryManager.h"
+#include "imgui/imgui_dock.h"
 
 // Constructors =================================
 ModuleImgui::ModuleImgui(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -86,6 +87,15 @@ bool ModuleImgui::Start()
 	else if (light_theme)SetLightTheme();
 
 	return true;
+}
+
+update_status ModuleImgui::PreUpdate(float dt)
+{
+
+	//Begin the full workspace
+	BeginWorkspace();
+
+	return update_status::UPDATE_CONTINUE;
 }
 
 update_status ModuleImgui::Update(float dt)
@@ -294,6 +304,7 @@ update_status ModuleImgui::PostUpdate(float dt)
 
 bool ModuleImgui::CleanUp()
 {
+	ShutdownDock();
 	ImGui::Shutdown();
 
 	return true;
@@ -662,6 +673,7 @@ void ModuleImgui::SetCustomTheme()
 
 void ModuleImgui::RenderUI()
 {
+	EndWorkspace();
 	ImGui::Render();
 }
 

@@ -9,6 +9,30 @@
 
 #define MAX_LIGHTS 8
 
+class FrameTexture
+{
+public:
+	FrameTexture();
+	~FrameTexture();
+
+	void Create(int, int);
+	void Bind();
+	void UnBind();
+
+public:
+
+	unsigned int			frame_id;
+	unsigned int			rbo_id;
+	unsigned int			texture_id;
+	unsigned int			depth_id = 0;
+	std::vector<int>		draw_buffer;
+
+	int		width;
+	int		height;
+
+};
+
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -20,6 +44,7 @@ public:
 
 	bool			Awake(const JSON_Object* data_root)final;
 	bool			Init() final;
+	bool			Start() final;
 	update_status	PreUpdate(float dt) final;
 	update_status	Update(float dt)final;
 	update_status	PostUpdate(float dt) final;
@@ -58,6 +83,9 @@ private:
 	SDL_GLContext	context;
 	mat3x3			NormalMatrix;
 	mat4x4			ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	unsigned int quadVAO, quadVBO;
+	FrameTexture*	render_to_texture = nullptr;
 
 public:
 

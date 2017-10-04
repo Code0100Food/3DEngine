@@ -276,3 +276,13 @@ float ModuleWindow::GetBrightness() const
 {
 	return brightness;
 }
+
+int ModuleWindow::GetWidth() const
+{
+	return width;
+}
+
+int ModuleWindow::GetHeight() const
+{
+	return height;
+}
