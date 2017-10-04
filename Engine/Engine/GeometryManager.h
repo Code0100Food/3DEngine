@@ -55,11 +55,18 @@ private:
 	float	primitive_lines_width = 1.0f;
 	float	primitive_color[4];
 
+	//Scene objects window data
+	bool	show_scene_objects = false;
+
 public:
+
+	//Objects window  methods
+	void ShowSceneObjects();
+	bool GetObjWindowState()const;
+	void BlitObjectsWindow();
 
 	//Geometry factory ------
 	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type);
-
 	bool		LoadScene(const char* folder);
 
 };

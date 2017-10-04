@@ -8,6 +8,7 @@
 #include "imgui/imgui_impl_sdl.h"
 #include "Bullet/include/LinearMath/btScalar.h"
 #include "ModuleRenderer3D.h"
+#include "GeometryManager.h"
 
 // Constructors =================================
 ModuleImgui::ModuleImgui(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -147,6 +148,11 @@ update_status ModuleImgui::Update(float dt)
 		view_menu_open = true;
 		if (view_menu_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
 
+		if (ImGui::MenuItem("Scene Objects"))
+		{
+			App->geometry->ShowSceneObjects();
+		}
+
 		if (ImGui::MenuItem("Random Generator"))
 		{
 			App->scene->ShowRandom();
@@ -265,9 +271,17 @@ update_status ModuleImgui::Update(float dt)
 	}
 
 	//Config Window
-	if (App->show_config_window)App->BlitConfigWindow();
+	if (App->GetConfigWindowState())
+	{
+		App->BlitConfigWindow();
+	}
 
-
+	//Scene Objects Window
+	if (App->geometry->GetObjWindowState())
+	{
+		App->geometry->BlitObjectsWindow();
+	}
+	
 	return update_status::UPDATE_CONTINUE;
 }
 

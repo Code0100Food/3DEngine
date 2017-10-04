@@ -95,11 +95,10 @@ private:
 	float			fps_array[GRAPH_ARRAY_SIZE];
 	float			miliseconds_array[GRAPH_ARRAY_SIZE];
 	bool			config_opened = false;
-
-public:
-
 	bool			show_config_window = false;
 
+public:
+	
 	std::string		app_name;
 	std::string		organization;
 
@@ -113,6 +112,7 @@ public:
 	void SetQuit();
 	void RequestBrowser(const char* link);
 	void ShowConfiguration();
+	bool GetConfigWindowState()const;
 	void BlitConfigWindow();
 
 private:

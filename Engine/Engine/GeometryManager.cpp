@@ -199,6 +199,31 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 }
 
 // Functionality ================================
+void GeometryManager::ShowSceneObjects()
+{
+	show_scene_objects = !show_scene_objects;
+}
+
+bool GeometryManager::GetObjWindowState() const
+{
+	return show_scene_objects;
+}
+
+void GeometryManager::BlitObjectsWindow()
+{
+	ImGui::Begin("Test", &show_scene_objects);
+	
+	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
+	while (geom != primitives_list.end())
+	{
+		geom._Ptr->_Myval->Draw();
+
+		geom++;
+	}
+	
+	ImGui::End();
+}
+
 Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 {
 	Primitive_* new_primitive = nullptr;

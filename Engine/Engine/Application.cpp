@@ -376,6 +376,11 @@ void Application::ShowConfiguration()
 	show_config_window = !show_config_window;
 }
 
+bool Application::GetConfigWindowState() const
+{
+	return show_config_window;
+}
+
 void Application::BlitConfigWindow()
 {
 
