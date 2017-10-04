@@ -61,8 +61,6 @@ bool ModuleImgui::Start()
 	debug_text = false;
 #endif
 	
-	clear_color = ImColor(144, 044, 155, 200);
-	
 	ImGui::GetStyle().Alpha = 1.0;
 	ImGui::GetStyle().WindowTitleAlign = ImVec2(0.5, 0.5);
 
@@ -91,7 +89,12 @@ bool ModuleImgui::Start()
 
 update_status ModuleImgui::Update(float dt)
 {
-	//return update_status::UPDATE_CONTINUE;
+	//Exit Window
+	if (show_exit_window)
+	{
+		BlitExitWindow();
+		return update_status::UPDATE_CONTINUE;
+	}
 
 	//Shows if the program has been compiled in debug or release
 	ImGui::SetNextWindowPos(ImVec2(0, 30));
@@ -125,7 +128,7 @@ update_status ModuleImgui::Update(float dt)
 		//Exit button
 		if (ImGui::MenuItem("Exit"))
 		{
-			App->SetQuit();
+			show_exit_window = true;
 		}
 
 		ImGui::EndMenu();
@@ -260,6 +263,10 @@ update_status ModuleImgui::Update(float dt)
 	{
 		BlitAboutWindow();
 	}
+
+	//Config Window
+	if (App->show_config_window)App->BlitConfigWindow();
+
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -468,13 +475,48 @@ void ModuleImgui::BlitAboutWindow()
 	ImGui::Text("\nWe don't own all this libraries and are not made by us");
 	ImGui::Text("The engine is under MIT License");
 	
+	ImGui::Separator();
+	ImGui::BulletText("Ferran Martin Vila");
+	ImGui::SameLine();
+	if (ImGui::Button("Info##f"))
+	{
+		ShellExecute(NULL, "open", "https://github.com/ferranmartinvila", NULL, NULL, SW_SHOWNORMAL);
+	}
+	ImGui::BulletText("Eric Sola Vila");
+	ImGui::SameLine();
+	if (ImGui::Button("Info##e"))
+	{
+		ShellExecute(NULL, "open", "https://github.com/HeladodePistacho", NULL, NULL, SW_SHOWNORMAL);
+	}
 
 	ImGui::End();
 }
 
-void ModuleImgui::ShowAbout()
+void ModuleImgui::BlitExitWindow()
 {
-	show_about_window = !show_about_window;
+	ImGui::SetNextWindowPos(ImVec2(360, 250));
+	ImGui::SetNextWindowSize(ImVec2(520, 150));
+	ImGui::Begin("Exit Window",&show_exit_window,ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);
+
+	ImGui::TextColored(ImVec4(0.5f, 0.4f, 0.2f, 1.0f), "-- Exit Window --");
+	
+	ImGui::Separator();
+	ImGui::Separator();
+	
+	if (ImGui::Button("Exit", ImVec2(238, 50)))
+	{
+		App->SetQuit();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Cancel", ImVec2(238, 50)))
+	{
+		show_exit_window = false;
+	}
+
+	ImGui::Separator(); 
+	ImGui::Separator();
+
+	ImGui::End();
 }
 
 void ModuleImgui::SetDarkTheme()
@@ -607,5 +649,10 @@ void ModuleImgui::SetCustomTheme()
 void ModuleImgui::RenderUI()
 {
 	ImGui::Render();
+}
+
+void ModuleImgui::CallExitWindow()
+{
+	show_exit_window = !show_exit_window;
 }
 

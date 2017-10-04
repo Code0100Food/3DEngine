@@ -9,6 +9,7 @@
 #include "imgui/imgui_impl_sdl.h"
 #include "InputManager.h"
 #include "GeometryManager.h"
+#include "ModuleImgui.h"
 
 #define MAX_KEYS 300
 
@@ -269,7 +270,7 @@ update_status ModuleInput::PreUpdate(float dt)
 
 	if (quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 	{
-		App->SetQuit();
+		App->imgui->CallExitWindow();
 	}
 
 	return UPDATE_CONTINUE;

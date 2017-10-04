@@ -33,7 +33,8 @@ private:
 	bool	show_test_window = false;
 	bool	show_about_window = false;
 	bool	show_ui_conf_window = false;
-	
+	bool	show_exit_window = false;
+
 	//UI Configuration window data
 	bool		dark_theme = false;
 	bool		light_theme = false;
@@ -41,11 +42,10 @@ private:
 	ImGuiStyle	custom_style;
 	
 	bool	debug_text = false;
-	ImVec4	clear_color = ImColor(255, 255, 255);
 
 	void	BlitUIConfigWindow();
 	void	BlitAboutWindow();
-	void	ShowAbout();
+	void	BlitExitWindow();
 
 	void	SetDarkTheme();
 	void	SetLightTheme();
@@ -55,7 +55,9 @@ private:
 	SDL_version sdl_version;
 
 public:
+
 	void RenderUI();
+	void CallExitWindow();
 
 };
 #endif // _ModuleImgui_H_
