@@ -36,11 +36,13 @@ bool GeometryManager::Awake(const JSON_Object * data_root)
 
 	show_primitives = json_object_get_boolean(data_root, "show_primitives");
 
+	primitive_lines_width = json_object_get_number(data_root, "primitive_lines_width");
+
 	JSON_Array* primitive_color_array = json_object_get_array(data_root, "primitive_color");
-	primitive_color[0] = json_array_get_number(vertex_normals_color_array, 0);
-	primitive_color[1] = json_array_get_number(vertex_normals_color_array, 1);
-	primitive_color[2] = json_array_get_number(vertex_normals_color_array, 2);
-	primitive_color[3] = json_array_get_number(vertex_normals_color_array, 3);
+	primitive_color[0] = json_array_get_number(primitive_color_array, 0);
+	primitive_color[1] = json_array_get_number(primitive_color_array, 1);
+	primitive_color[2] = json_array_get_number(primitive_color_array, 2);
+	primitive_color[3] = json_array_get_number(primitive_color_array, 3);
 
 	return true;
 }
@@ -58,6 +60,13 @@ bool GeometryManager::Start()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 	
+	Cylinder_* c = (Cylinder_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
+	c->geometry->r = 3;
+	c->geometry->l.a = { 0,4,0 };
+	c->geometry->l.b = { 0,0,0 };
+	c->SetDivisions(6);
+	c->Initialize();
+
 	return true;
 }
 
@@ -71,22 +80,40 @@ bool GeometryManager::Draw()
 	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
 
 	//Blit debug primitives
-	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
-	while (geom != primitives_list.end())
+	if (show_primitives)
 	{
-		geom._Ptr->_Myval->Draw();
+		//Set Primitives render states
+		glLineWidth(primitive_lines_width);
+		glColor4f(primitive_color[0], primitive_color[1], primitive_color[2], primitive_color[3]);
 
-		geom++;
+		std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
+		while (geom != primitives_list.end())
+		{
+			geom._Ptr->_Myval->Draw();
+
+			geom++;
+		}
 	}
 
-	//Blit meshes
-	std::list<Model_*>::const_iterator mesh = models_list.begin();
-	while (mesh != models_list.end())
+	if (show_meshes)
 	{
-		mesh._Ptr->_Myval->Draw();
+		//Set meshes render states
+		glLineWidth(mesh_lines_width);
+		glColor4f(mesh_color[0], mesh_color[1], mesh_color[2], mesh_color[3]);
 
-		mesh++;
+		//Blit meshes
+		std::list<Model_*>::const_iterator mesh = models_list.begin();
+		while (mesh != models_list.end())
+		{
+			mesh._Ptr->_Myval->Draw();
+
+			mesh++;
+		}
 	}
+
+	glLineWidth(1.0f);
+	glColor4f(1, 1, 1, 1);
+
 
 	//Reset the buffers focus
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -131,19 +158,44 @@ bool GeometryManager::CleanUp()
 void GeometryManager::BlitConfigInfo()
 {
 	ImGui::Checkbox("Show Grid", &show_grid);
+	ImGui::Checkbox("Show Primitives", &show_primitives);
+	ImGui::Checkbox("Show Meshes", &show_meshes);
+	ImGui::SliderFloat("Mesh Lines Width", &mesh_lines_width, 0.0, 10.0, "%.1f");
+	ImGui::SliderFloat4("Mesh Color", mesh_color, 0.0, 1.0, "%.2f");
+	ImGui::SliderFloat("Primitive Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f");
+	ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f");
+	ImGui::SliderFloat4("Vertex Normals Color", vertex_normals_color, 0.0, 1.0, "%.2f");
 }
 
 void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 {
 	json_object_set_boolean(data_root, "show_grid", show_grid);
-
+		
 	json_object_set_boolean(data_root, "show_meshes", show_meshes);
+
+	json_object_set_number(data_root, "mesh_lines_width", mesh_lines_width);
 
 	json_array_t*_array = json_object_get_array(data_root, "mesh_color");
 	json_array_replace_number(_array, 0, mesh_color[0]);
 	json_array_replace_number(_array, 1, mesh_color[1]);
 	json_array_replace_number(_array, 2, mesh_color[2]);
 	json_array_replace_number(_array, 3, mesh_color[3]);
+
+	_array = json_object_get_array(data_root, "vertex_normals_color");
+	json_array_replace_number(_array, 0, vertex_normals_color[0]);
+	json_array_replace_number(_array, 1, vertex_normals_color[1]);
+	json_array_replace_number(_array, 2, vertex_normals_color[2]);
+	json_array_replace_number(_array, 3, vertex_normals_color[3]);
+
+	json_object_set_boolean(data_root, "show_primitives", show_primitives);
+
+	json_object_set_number(data_root, "primitive_lines_width", primitive_lines_width);
+
+	_array = json_object_get_array(data_root, "primitive_color");
+	json_array_replace_number(_array, 0, primitive_color[0]);
+	json_array_replace_number(_array, 1, primitive_color[1]);
+	json_array_replace_number(_array, 2, primitive_color[2]);
+	json_array_replace_number(_array, 3, primitive_color[3]);
 }
 
 // Functionality ================================
@@ -184,116 +236,11 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 	return new_primitive;
 }
 
-Mesh_ * GeometryManager::CreateMesh()
-{
-	Mesh_* m = new Mesh_();
-	//models_list.push_back(m);
-	return m;
-}
-
 bool GeometryManager::LoadScene(const char * folder)
 {
 
 	Model_* new_model = new Model_(folder);
 	models_list.push_back(new_model);
 
-	return true;
-
-	/*const aiScene* scene = aiImportFile(folder, aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene != nullptr && scene->HasMeshes())
-	{
-		uint size = scene->mNumMeshes;
-		for (uint k = 0; k < size; k++)
-		{
-			LOG("Created Mesh with:");
-			//Pointer to the current mesh
-			aiMesh* m = scene->mMeshes[k];
-			
-			//Create a new mesh
-			Mesh_* mesh = CreateMesh();
-						
-			//Load vertex data
-			uint num_vertex = mesh->num_vertices = m->mNumVertices;
-			mesh->vertices = new float[num_vertex * 3];
-			memcpy(mesh->vertices, m->mVertices, sizeof(float) * num_vertex * 3);
-	
-			LOG("- %i vertices", num_vertex);
-
-			//Load normals data
-			/*if (m->HasNormals())
-			{
-				mesh->mesh.face_normals = new float[num_vertex * 3];
-				memcpy(mesh->mesh.face_normals, m->mNormals, sizeof(float) * num_vertex * 3);
-				LOG("- %i normals", num_vertex);
-				//mesh->SetRenderFlags(DRAW_VERTEX | DRAW_FACE_NORMALS);
-			}
-			else LOG("- No normals");
-
-			//Load index data
-			if (m->HasFaces())
-			{
-				mesh->num_indices = m->mNumFaces * 3;
-				mesh->indices = new uint[mesh->num_indices];
-				for (uint h = 0; h < m->mNumFaces; h++)
-				{
-					if (m->mFaces[h].mNumIndices != 3)
-					{
-						LOG("[error] Geometry face with != 3 indices!");
-					}
-					else
-					{
-						memcpy(&mesh->indices[h * 3], m->mFaces[h].mIndices, 3 * sizeof(uint));
-					}
-				}
-				LOG("- %i indices", mesh->num_indices);
-			}
-
-			//Load colors data
-			/*uint tot_colors = 0;
-			mesh->mesh.colors = new float[num_vertex * 4];
-			for (uint h = 0; h < num_vertex; h++)
-			{
-				if (m->HasVertexColors(h))
-				{
-					memcpy(&mesh->mesh.colors[h * 4], m->mColors, sizeof(float) * 4);
-					tot_colors++;
-				}
-			}
-			if (tot_colors > 0)
-			{
-				LOG("- %i Vertex Colors", tot_colors);
-			}
-			else LOG("- No Vertex Colors");*/
-			
-			//Load texture coords
-			/*uint tot_tex_coords = 0;
-			mesh->mesh.texture_coords = new float[num_vertex * 2];
-			for (uint h = 0; h < num_vertex; h++)
-			{
-				if (m->HasTextureCoords(h))
-				{
-					memcpy(&mesh->mesh.texture_coords[h * 2], m->mTextureCoords, sizeof(float) * 2);
-				}
-			}
-			if (tot_tex_coords > 0)
-			{
-				LOG("- %i Texture Coords", tot_tex_coords);
-			}
-			else LOG("- No Texture Coords");
-
-			//Initialize the loaded mesh
-			mesh->Initialize();
-			*/
-		/*}
-
-		//Release the scene
-		aiReleaseImport(scene);
-	}
-	else
-	{
-		LOG("Error loading scene");
-		return false;
-	}
-	*/
 	return true;
 }

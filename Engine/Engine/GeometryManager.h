@@ -35,6 +35,7 @@ public:
 	bool CleanUp()final;
 	void BlitConfigInfo()final;
 	void SaveConfigInfo(JSON_Object* data_root)final;
+
 private:
 
 	std::list<Primitive_*>	primitives_list;
@@ -51,17 +52,13 @@ private:
 	float	vertex_normals_color[4];
 
 	bool	show_primitives = true;
+	float	primitive_lines_width = 1.0f;
 	float	primitive_color[4];
 
 public:
 
 	//Geometry factory ------
-	
-	/*
-	- Cube: float3 min vertex, float3 max vertex
-	*/
 	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type);
-	Mesh_*		CreateMesh();
 
 	bool		LoadScene(const char* folder);
 

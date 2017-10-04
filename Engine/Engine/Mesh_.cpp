@@ -2,6 +2,8 @@
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
 #include "Primitive.h"
+#include "Application.h"
+#include "GeometryManager.h"
 
 Mesh_::Mesh_()
 {
@@ -46,12 +48,14 @@ void Mesh_::Draw()
 	glActiveTexture(GL_TEXTURE0);
 
 	// Draw the mesh
+	//Focus mesh vertex buffer
 	glBindVertexArray(VertexArrayObjects);
-	glLineWidth(2.5f);
-	glColor4f(0.5f, 0.8f, 0.8f,0.3f);
+	//Draw the buffer using triangles
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	//Reset the focus
 	glBindVertexArray(0);
 
+	/*
 	glBegin(GL_LINES);
 	for (uint k = 0; k < vertices.size(); k++)
 	{	
@@ -61,7 +65,7 @@ void Mesh_::Draw()
 		glVertex3f(vertices[k].position.x + vertices[k].normal.x, vertices[k].position.y + vertices[k].normal.y, vertices[k].position.z + vertices[k].normal.z);
 	}
 	glColor3f(1.0f, 1.0f, 1.0f);
-	glEnd();
+	glEnd();*/
 }
 
 void Mesh_::SetupMesh()
