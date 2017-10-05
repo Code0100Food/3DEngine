@@ -9,11 +9,19 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 
+// Constructors =================================
 Model_::Model_(const char * path)
 {
 	LoadModel(path);
 }
 
+// Destructors ==================================
+Model_::~Model_()
+{
+
+}
+
+// Game Loop ====================================
 void Model_::Draw()
 {
 	for (unsigned int i = 0; i < meshes.size(); i++)
@@ -22,6 +30,7 @@ void Model_::Draw()
 	}
 }
 
+// Functionality ================================
 void Model_::LoadModel(std::string path)
 {
 	Assimp::Importer import;
@@ -32,6 +41,7 @@ void Model_::LoadModel(std::string path)
 		LOG("ERROR_ASSIMP: %s", import.GetErrorString());
 		return;
 	}
+
 	directory = path.substr(0, path.find_last_of('/'));
 
 	ProcessNode(scene->mRootNode, scene);
@@ -57,57 +67,70 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 	std::vector<Vertex>		vertices;
 	std::vector<uint>		indices;
 	std::vector<Texture>	textures;
-
-	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+	
+	//Iterate all the mesh vertices and load all the data
+	for (uint i = 0; i < mesh->mNumVertices; i++)
 	{
-		Vertex vertex;
-		// process vertex positions, normals and texture coordinates
-		math::float3 vector;
-		vector.x = mesh->mVertices[i].x;
-		vector.y = mesh->mVertices[i].y;
-		vector.z = mesh->mVertices[i].z;
-		vertex.position = vector;
-		
-		vector.x = mesh->mNormals[i].x;
-		vector.y = mesh->mNormals[i].y;
-		vector.z = mesh->mNormals[i].z;
-		vertex.normal = vector;
-
-		if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+		Vertex			vertex;
+		math::float3	data;
+		math::float2	tex_color;
+		//Build vertex positions
+		if (mesh->HasPositions())
 		{
-			math::float2 vec;
-			vec.x = mesh->mTextureCoords[0][i].x;
-			vec.y = mesh->mTextureCoords[0][i].y;
-			vertex.tex_coords = vec;
-		}
-		else
-		{
-			vertex.tex_coords = math::float2(0.0f, 0.0f);
+			data.x = mesh->mVertices[i].x;
+			data.y = mesh->mVertices[i].y;
+			data.z = mesh->mVertices[i].z;
+			vertex.position = data;
 		}
 
+		//Build vertex normals
+		if (mesh->HasNormals())
+		{
+			data.x = mesh->mNormals[i].x;
+			data.y = mesh->mNormals[i].y;
+			data.z = mesh->mNormals[i].z;
+			vertex.normals = data;
+		}
+
+		//Build texture coordinates
+		if (mesh->HasTextureCoords(0))
+		{
+			tex_color.x = mesh->mTextureCoords[0][i].x;
+			tex_color.y = mesh->mTextureCoords[0][i].y;
+			vertex.tex_coords = tex_color;
+		}
+
+		//Add the built vertex to the vertex vector
 		vertices.push_back(vertex);
 	}
-	// process indices
+
+	//Build the triangles with the index
 	if (mesh->HasFaces())
 	{
-		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+		for (uint i = 0; i < mesh->mNumFaces; i++)
 		{
 			aiFace face = mesh->mFaces[i];
-			for (unsigned int j = 0; j < face.mNumIndices; j++)
+
+			for (uint j = 0; j < face.mNumIndices; j++)
 			{
 				indices.push_back(face.mIndices[j]);
 			}
 		}
 	}
 
-	//Process material
+	//Build the different materials (textures)
 	if (mesh->mMaterialIndex >= 0)
 	{
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-		std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-		std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+		//Load Normal data
+		std::vector<Texture> normal_map = LoadMaterialTextures(material,aiTextureType_HEIGHT, "texture_normal");
+		textures.insert(textures.end(), normal_map.begin(), normal_map.end());
+		//Load diffuse data
+		std::vector<Texture> diffuse_map = LoadMaterialTextures(material,aiTextureType_DIFFUSE, "texture_diffuse");
+		textures.insert(textures.end(), diffuse_map.begin(), diffuse_map.end());
+		//Load Specular data
+		std::vector<Texture> specular_map = LoadMaterialTextures(material,aiTextureType_SPECULAR, "texture_specular");
+		textures.insert(textures.end(), specular_map.begin(), specular_map.end());
 	}
 
 	return Mesh_(vertices, indices, textures);
@@ -141,6 +164,7 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 			textures.push_back(texture); // add to loaded textures
 		}
 	}
+
 	return n_textures;
 }
 
@@ -151,7 +175,7 @@ unsigned int Model_::TextureFromFile(const char *path, const std::string &direct
 
 	return App->textures->LoadTexture(filename.c_str());
 
-	unsigned int textureID;
+	unsigned int textureID = 0;
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
@@ -160,11 +184,17 @@ unsigned int Model_::TextureFromFile(const char *path, const std::string &direct
 	{
 		GLenum format;
 		if (nrComponents == 1)
+		{
 			format = GL_RED;
+		}
 		else if (nrComponents == 3)
+		{
 			format = GL_RGB;
+		}
 		else if (nrComponents == 4)
+		{
 			format = GL_RGBA;
+		}
 
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -177,6 +207,7 @@ unsigned int Model_::TextureFromFile(const char *path, const std::string &direct
 
 		stbi_image_free(data);
 	}
+
 	else
 	{
 		LOG("Texture failed to load at path: %s", path);

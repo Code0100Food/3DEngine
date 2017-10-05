@@ -5,93 +5,63 @@
 #include "Application.h"
 #include "GeometryManager.h"
 
-Mesh_::Mesh_()
-{
-
-}
-
-Mesh_::Mesh_(std::vector<Vertex> vertices, std::vector<uint> indices, std::vector<Texture> textures)
+// Constructors =================================
+Mesh_::Mesh_(std::vector<Vertex> vertices, std::vector<uint> indices, std::vector<Texture> textures) :vertices(vertices), indices(indices), textures(textures)
 {
 	this->vertices = vertices;
-	this->indices = indices;
 	this->textures = textures;
-
-	this->SetupMesh();
+	this->indices = indices;
+	
+	SetupMesh();
 }
 
+// Destructors ==================================
 Mesh_::~Mesh_()
 {
 
 }
 
-void Mesh_::Draw()
-{
-
-	unsigned int diffuseNr = 1;
-	unsigned int specularNr = 1;
-	for (unsigned int i = 0; i < textures.size(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
-										  // retrieve texture number (the N in diffuse_textureN)
-		/*std::stringstream ss;
-		std::string number;
-		std::string name = textures[i].type;
-		if (name == "texture_diffuse")
-			ss << diffuseNr++; // transfer unsigned int to stream
-		else if (name == "texture_specular")
-			ss << specularNr++; // transfer unsigned int to stream
-		number = ss.str();
-
-		shader.setFloat(("material." + name + number).c_str(), i);*/
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
-	}
-	glActiveTexture(GL_TEXTURE0);
-
-	// Draw the mesh
-	//Focus mesh vertex buffer
-	glBindVertexArray(VertexArrayObjects);
-	//Draw the buffer using triangles
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	//Reset the focus
-	glBindVertexArray(0);
-
-	/*
-	glBegin(GL_LINES);
-	for (uint k = 0; k < vertices.size(); k++)
-	{	
-		glColor3f(0.5f, 0.8f, 0.8f);
-		glVertex3f(vertices[k].position.x, vertices[k].position.y, vertices[k].position.z);
-		glColor3f(0.3f, 1.0f, 1.0f);
-		glVertex3f(vertices[k].position.x + vertices[k].normal.x, vertices[k].position.y + vertices[k].normal.y, vertices[k].position.z + vertices[k].normal.z);
-	}
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glEnd();*/
-}
-
 void Mesh_::SetupMesh()
 {
-	glGenVertexArrays(1, &VertexArrayObjects);
-	glGenBuffers(1, &VertexBufferObjects);
-	glGenBuffers(1, &ElementBufferObjects);
+	glGenBuffers(1, &VertexBufferObject);
+	glGenBuffers(1, &ElementBufferObject);
 
-	glBindVertexArray(VertexArrayObjects);
-	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObjects);
-
+	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObjects);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObject);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint), &indices[0], GL_STATIC_DRAW);
 
-	// vertex positions
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-	// vertex normals
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-	// vertex texture coords
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
+}
 
+// Game Loop ====================================
+void Mesh_::Draw()
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	for (int i = 0; i < textures.size(); i++)
+	{
+		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
+	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
+	glNormalPointer(GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, normals));
+	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObject);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }

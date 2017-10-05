@@ -14,6 +14,7 @@ class Model_
 public:
 
 	Model_(const char* path);
+	~Model_();
 
 public:
 

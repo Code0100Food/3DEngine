@@ -153,7 +153,7 @@ void GeometryManager::BlitConfigInfo()
 	ImGui::Checkbox("Show Grid", &show_grid);
 	ImGui::Checkbox("Show Primitives", &show_primitives);
 	ImGui::Checkbox("Show Meshes", &show_meshes);
-	ImGui::SliderFloat("Mesh Lines Width", &mesh_lines_width, 0.0, 10.0, "%.1f");
+	ImGui::SliderFloat("Mesh Lines Width", &mesh_lines_width, 0.1, 10.0, "%.1f");
 	ImGui::SliderFloat4("Mesh Color", mesh_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat("Primitive Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f");
 	ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f");
