@@ -49,7 +49,7 @@ bool ModuleTextures::Start()
 	ilInit();
 
 	//Load lenna image
-	lenna_porn = LoadTexture("harambe.jpg");
+	lenna_porn = LoadTexture("texturacaja.jpg");
 
 	return true;
 }
@@ -84,13 +84,13 @@ uint ModuleTextures::LoadTexture(const char * str)
 
 		// Convert the image into a suitable format to work with
 		// NOTE: If your image contains alpha channel you can replace IL_RGB with IL_RGBA
-		success = ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
+		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 
 		// Quit out if we failed the conversion
 		if (!success)
 		{
 			error = ilGetError();
-			LOG("Image conversion failed - IL reports error: ", iluErrorString(error));
+			LOG("[error] Image conversion failed - IL reports error: ", iluErrorString(error));
 			exit(-1);
 		}
 
@@ -111,21 +111,21 @@ uint ModuleTextures::LoadTexture(const char * str)
 		// Specify the texture specification
 		glTexImage2D(GL_TEXTURE_2D, 			// Type of texture
 			0,									// Pyramid level (for mip-mapping) - 0 is the top level
-			ilGetInteger(IL_IMAGE_FORMAT),		// Internal pixel format to use. Can be a generic type like GL_RGB or GL_RGBA, or a sized type
+			IL_RGBA,		// Internal pixel format to use. Can be a generic type like GL_RGB or GL_RGBA, or a sized type
 			ilGetInteger(IL_IMAGE_WIDTH),		// Image width
 			ilGetInteger(IL_IMAGE_HEIGHT),		// Image height
 			0,									// Border width in pixels (can either be 1 or 0)
-			ilGetInteger(IL_IMAGE_FORMAT),		// Format of image pixel data
+			IL_RGBA,		// Format of image pixel data
 			GL_UNSIGNED_BYTE,					// Image data type
 			ilGetData());						// The actual image data itself
 	}
 	else // If we failed to open the image file in the first place...
 	{
 		error = ilGetError();
-		LOG("Image load failed - IL reports error: ", iluErrorString(error));
+		LOG("[error] Image load failed - IL reports error: ", iluErrorString(error));
 		exit(-1);
 	}
-
+	
 	ilDeleteImages(1, &imageID); // Because we have already copied image data into texture data we can release memory used by image.
 
 	LOG("Texture creation successful.");

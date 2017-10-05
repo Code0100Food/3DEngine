@@ -4,6 +4,7 @@
 #include "ModuleAudio.h"
 #include "FileSystem.h"
 #include "ModuleInput.h"
+#include <math.h>
 
 // Constructors =================================
 ModuleCamera3D::ModuleCamera3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -95,20 +96,13 @@ update_status ModuleCamera3D::Update(float dt)
 
 			Y = rotate(Y, DeltaY, X);
 			Z = rotate(Z, DeltaY, X);
-
-			if (Y.y < 0.0f)
-			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
-			}
 		}
 
-		camera_location = view_vector + Z * length(camera_location);
-		LOG("Z:		%.2f	%.2f	%.2f", Z.x, Z.y, Z.z);
+		if(Y.y > 0.0f)camera_location = view_vector + Z * length(camera_location);
 	}
 
 	//Camera move 
-	/*if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 	{
 		float Sensitivity = 0.25f;
 		
@@ -122,12 +116,17 @@ update_status ModuleCamera3D::Update(float dt)
 		vec3 view_dir_normal(-camera_view_dir.y, camera_view_dir.x, camera_view_dir.z);
 		float len = sqrt(view_dir_normal.x*view_dir_normal.x + view_dir_normal.y*view_dir_normal.y + view_dir_normal.z*view_dir_normal.z);
 		vec3 normalized = view_dir_normal / len;
+		
+		float r = sqrt(normalized.x * normalized.x + normalized.y * normalized.y + normalized.z * normalized.z);
+		float t = atan(normalized.y / normalized.x);
+		float p = acos(normalized.z / r);
 
-		camera_location += normalized*DeltaX;
-	}*/
+		vec3 move_vec(DeltaX, DeltaY, 0);
+		
+	}
 
 	//Look the vehicle body with the CameraLocation & the ViewVector & the Z_DIST defined
-	App->camera->Look(camera_location + camera_dist* normalize(camera_location - view_vector), view_vector, true);
+	App->camera->Look(camera_location + camera_dist * normalize(camera_location - view_vector), view_vector, true);
 		
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
