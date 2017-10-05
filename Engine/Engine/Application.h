@@ -22,9 +22,11 @@ class ModulePhysics3D;
 class ModuleImgui;
 class ModuleConsole;
 class ModuleHardware;
+class ModuleTextures;
 class GeometryManager;
 class Profiler;
 class Scene;
+
 enum MODULE_ID;
 
 enum APP_CONTEXT
@@ -66,6 +68,7 @@ public:
 	ModuleImgui*		imgui = nullptr;
 	ModuleConsole*		console = nullptr;
 	ModuleHardware*		hard = nullptr;
+	ModuleTextures*		textures = nullptr;
 	GeometryManager*	geometry = nullptr;
 	Scene*				scene = nullptr;
 

@@ -12,6 +12,7 @@
 #include "ModuleHardware.h"
 #include "InputManager.h"
 #include "GeometryManager.h"
+#include "ModuleTextures.h"
 #include "Scene.h"
 #include "FileSystem.h"
 #include "Profiler.h"
@@ -73,6 +74,10 @@ Application::Application()
 	profiler->CallProfBlock(M_HARDWARE, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
+	textures = new ModuleTextures("Textures", M_TEXTURES, true);;
+	profiler->CallProfBlock(M_TEXTURES, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
 	geometry = new GeometryManager("Geometry Manager", M_GEOMETRY, true);;
 	profiler->CallProfBlock(M_GEOMETRY, BUILD_STEP, prof_timer.ReadTicks());
 
@@ -94,6 +99,7 @@ Application::Application()
 	AddModule(physics);
 	AddModule(console);
 	AddModule(hard);
+	AddModule(textures);
 	AddModule(geometry);
 
 	// Scenes

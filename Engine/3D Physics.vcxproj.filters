@@ -366,6 +366,9 @@
     <ClInclude Include="Engine\stb\stb.h">
       <Filter>Sources\Tools\stb</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ModuleTextures.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -580,6 +583,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Model_.cpp">
       <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ModuleTextures.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

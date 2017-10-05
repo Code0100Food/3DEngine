@@ -176,6 +176,7 @@
     <ClInclude Include="Engine\ModuleInput.h" />
     <ClInclude Include="Engine\ModulePhysics3D.h" />
     <ClInclude Include="Engine\ModuleRenderer3D.h" />
+    <ClInclude Include="Engine\ModuleTextures.h" />
     <ClInclude Include="Engine\ModuleWindow.h" />
     <ClInclude Include="Engine\p2Point.h" />
     <ClInclude Include="Engine\Parson\parson.h" />
@@ -253,6 +254,7 @@
     <ClCompile Include="Engine\ModuleInput.cpp" />
     <ClCompile Include="Engine\ModulePhysics3D.cpp" />
     <ClCompile Include="Engine\ModuleRenderer3D.cpp" />
+    <ClCompile Include="Engine\ModuleTextures.cpp" />
     <ClCompile Include="Engine\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Parson\parson.c" />
     <ClCompile Include="Engine\PerfTimer.cpp" />

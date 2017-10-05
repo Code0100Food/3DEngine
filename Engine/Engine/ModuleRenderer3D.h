@@ -8,8 +8,6 @@
 #include "MathGeoLib/MathGeoLib.h"
 
 #define MAX_LIGHTS 8
-#define CHECKERS_HEIGHT 256
-#define CHECKERS_WIDTH 256
 
 class FrameTexture
 {
@@ -46,7 +44,6 @@ public:
 
 	bool			Awake(const JSON_Object* data_root)final;
 	bool			Init() final;
-	bool			Start() final;
 	update_status	PreUpdate(float dt) final;
 	update_status	Update(float dt)final;
 	update_status	PostUpdate(float dt) final;
@@ -78,9 +75,6 @@ private:
 	bool	custom_clear = false;
 	float	clear_color[4];
 	float	clear_depth = 0.0f;
-
-	unsigned char  checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
-	uint ImageName = 0;
 
 private:
 

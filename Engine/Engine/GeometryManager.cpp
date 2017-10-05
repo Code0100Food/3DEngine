@@ -263,6 +263,12 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 
 bool GeometryManager::LoadScene(const char * folder)
 {
+	//Temporal for the first assignment
+	if (models_list.size() >= 1)
+	{
+		RELEASE(models_list.back());
+		models_list.pop_back();
+	}
 
 	Model_* new_model = new Model_(folder);
 	models_list.push_back(new_model);
