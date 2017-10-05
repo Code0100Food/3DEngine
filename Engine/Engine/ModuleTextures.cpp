@@ -49,7 +49,7 @@ bool ModuleTextures::Start()
 	ilInit();
 
 	//Load lenna image
-	lenna_porn = LoadTexture("lenna.png");
+	lenna_porn = LoadTexture("harambe.jpg");
 
 	return true;
 }

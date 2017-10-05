@@ -60,13 +60,6 @@ bool GeometryManager::Start()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 	
-	Cylinder_* c = (Cylinder_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
-	c->geometry->r = 3;
-	c->geometry->l.a = { 0,4,0 };
-	c->geometry->l.b = { 0,0,0 };
-	c->SetDivisions(6);
-	c->Initialize();
-
 	return true;
 }
 

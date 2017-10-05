@@ -33,6 +33,7 @@ private:
 	vec3	view_vector;
 	float	camera_dist = 0;
 	mat4x4	view_matrix, view_matrix_inverse;
+	float	camera_z_mov_vel = 0.0f;
 
 public:
 

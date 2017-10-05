@@ -75,7 +75,10 @@ public:
 	KEY_STATE	GetMouseButton(int id) const;
 	int			GetMouseX() const;
 	int			GetMouseY() const;
-	
+	int			GetMouseZ() const;
+	int			GetMouseXMotion()const;
+	int			GetMouseYMotion()const;
+
 	// Reset all input states
 	void		ResetInputMaps();
 

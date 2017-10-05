@@ -3,6 +3,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleAudio.h"
 #include "FileSystem.h"
+#include "ModuleInput.h"
 
 // Constructors =================================
 ModuleCamera3D::ModuleCamera3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -52,11 +53,79 @@ bool ModuleCamera3D::Start()
 	LOG("Setting up the camera");
 	bool ret = true;
 
+	camera_z_mov_vel = 0.5f;
+
 	return ret;
 }
 
 update_status ModuleCamera3D::Update(float dt)
 {
+	//Camera zoom in/out
+	if (App->input->GetMouseZ() == 1)
+	{
+		camera_dist -= camera_z_mov_vel;
+	}
+	else if (App->input->GetMouseZ() == -1)
+	{
+		camera_dist += camera_z_mov_vel;
+	}
+
+	//Camera rotate around point
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+		int dx = App->input->GetMouseXMotion();
+		int dy = -App->input->GetMouseYMotion();
+
+		float Sensitivity = 0.25f;
+
+		camera_location -= view_vector;
+
+		if (dx != 0)
+		{
+			float DeltaX = (float)dx * Sensitivity;
+
+			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		}
+
+		if (dy != 0)
+		{
+			float DeltaY = (float)dy * Sensitivity;
+
+			Y = rotate(Y, DeltaY, X);
+			Z = rotate(Z, DeltaY, X);
+
+			if (Y.y < 0.0f)
+			{
+				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+				Y = cross(Z, X);
+			}
+		}
+
+		camera_location = view_vector + Z * length(camera_location);
+		LOG("Z:		%.2f	%.2f	%.2f", Z.x, Z.y, Z.z);
+	}
+
+	//Camera move 
+	/*if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	{
+		float Sensitivity = 0.25f;
+		
+		int dx = App->input->GetMouseXMotion();
+		int dy = -App->input->GetMouseYMotion();
+
+		float DeltaY = (float)dy * Sensitivity;
+		float DeltaX = (float)dx * Sensitivity;
+
+		vec3 camera_view_dir = view_vector - position;
+		vec3 view_dir_normal(-camera_view_dir.y, camera_view_dir.x, camera_view_dir.z);
+		float len = sqrt(view_dir_normal.x*view_dir_normal.x + view_dir_normal.y*view_dir_normal.y + view_dir_normal.z*view_dir_normal.z);
+		vec3 normalized = view_dir_normal / len;
+
+		camera_location += normalized*DeltaX;
+	}*/
+
 	//Look the vehicle body with the CameraLocation & the ViewVector & the Z_DIST defined
 	App->camera->Look(camera_location + camera_dist* normalize(camera_location - view_vector), view_vector, true);
 		

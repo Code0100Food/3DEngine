@@ -322,6 +322,21 @@ int ModuleInput::GetMouseY() const
 	return mouse_y;
 }
 
+int ModuleInput::GetMouseZ() const
+{
+	return mouse_z;
+}
+
+int ModuleInput::GetMouseXMotion() const
+{
+	return mouse_motion_x;
+}
+
+int ModuleInput::GetMouseYMotion() const
+{
+	return mouse_motion_y;
+}
+
 void ModuleInput::ResetInputMaps()
 {
 	// Keyboard keys ------------------
