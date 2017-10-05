@@ -24,6 +24,7 @@ private:
 public:
 
 	uint check_image = 0;
+	uint lenna_porn = 0;
 
 public:
 

@@ -45,13 +45,19 @@ bool ModuleTextures::Start()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 	glEnable(GL_TEXTURE_2D);
 
+	//Initialize the devil lib
+	ilInit();
+
+	//Load lenna image
+	lenna_porn = LoadTexture("lenna.png");
+
 	return true;
 }
 
 // Functionality ================================
 uint ModuleTextures::LoadTexture(const char * str)
 {
-	ILuint imageID;				// Create an image ID as a ULuint
+	ILuint imageID = 0;				// Create an image ID as a ULuint
 
 	GLuint textureID;			// Create a texture ID as a GLuint
 

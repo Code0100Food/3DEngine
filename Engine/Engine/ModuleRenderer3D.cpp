@@ -277,7 +277,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	GLfloat v6[3] = { 0,1,1 };
 	GLfloat v7[3] = { 0,0,1 };
 
-	glBindTexture(GL_TEXTURE_2D, App->textures->check_image);
+	glBindTexture(GL_TEXTURE_2D, App->textures->lenna_porn);
 
 	glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
 

@@ -6,6 +6,8 @@
 #include "Assimp/include/Importer.hpp"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
+#include "Application.h"
+#include "ModuleTextures.h"
 
 Model_::Model_(const char * path)
 {
@@ -146,6 +148,8 @@ unsigned int Model_::TextureFromFile(const char *path, const std::string &direct
 {
 	std::string filename = std::string(path);
 	filename = "Assets/" + filename;
+
+	return App->textures->LoadTexture(filename.c_str());
 
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
