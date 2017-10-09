@@ -121,7 +121,9 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 	//Build the different materials (textures)
 	if (mesh->mMaterialIndex >= 0)
 	{
+		//Get the material
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+
 		//Load Normal data
 		std::vector<Texture> normal_map = LoadMaterialTextures(material,aiTextureType_HEIGHT, "texture_normal");
 		textures.insert(textures.end(), normal_map.begin(), normal_map.end());

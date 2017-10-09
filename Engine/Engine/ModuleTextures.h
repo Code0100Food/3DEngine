@@ -15,6 +15,7 @@ public:
 
 public:
 
+	bool Awake(const JSON_Object* data_root)final;
 	bool Start()final;
 	
 private:

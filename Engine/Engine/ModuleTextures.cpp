@@ -20,6 +20,18 @@ ModuleTextures::~ModuleTextures()
 
 }
 
+bool ModuleTextures::Awake(const JSON_Object * data_root)
+{
+	//  ----- Initialise DevIL -----
+	ilutRenderer(ILUT_OPENGL);
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+
+	return true;
+}
+
 // Game Loop ====================================
 bool ModuleTextures::Start()
 {
@@ -45,9 +57,6 @@ bool ModuleTextures::Start()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 	glEnable(GL_TEXTURE_2D);
 
-	//Initialize the devil lib
-	ilInit();
-
 	//Load lenna image
 	lenna_porn = LoadTexture("texturacaja.jpg");
 
@@ -57,7 +66,7 @@ bool ModuleTextures::Start()
 // Functionality ================================
 uint ModuleTextures::LoadTexture(const char * str)
 {
-	ILuint imageID = 0;				// Create an image ID as a ULuint
+	ILuint imageID;				// Create an image ID as a ULuint
 
 	GLuint textureID;			// Create a texture ID as a GLuint
 
@@ -77,14 +86,15 @@ uint ModuleTextures::LoadTexture(const char * str)
 		// If the image is flipped (i.e. upside-down and mirrored, flip it the right way up!)
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
-		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+		
+		if (ImageInfo.Origin != IL_ORIGIN_UPPER_LEFT)
 		{
 			iluFlipImage();
 		}
 
 		// Convert the image into a suitable format to work with
 		// NOTE: If your image contains alpha channel you can replace IL_RGB with IL_RGBA
-		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+		//success = ilConvertImage(ilGetInteger(IL_IMAGE_FORMAT), IL_UNSIGNED_BYTE);
 
 		// Quit out if we failed the conversion
 		if (!success)
@@ -94,13 +104,12 @@ uint ModuleTextures::LoadTexture(const char * str)
 			exit(-1);
 		}
 
-		// Generate a new texture
 		glGenTextures(1, &textureID);
 
 		// Bind the texture to a name
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
-		// Set texture clamping method
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
@@ -111,13 +120,17 @@ uint ModuleTextures::LoadTexture(const char * str)
 		// Specify the texture specification
 		glTexImage2D(GL_TEXTURE_2D, 			// Type of texture
 			0,									// Pyramid level (for mip-mapping) - 0 is the top level
-			IL_RGBA,		// Internal pixel format to use. Can be a generic type like GL_RGB or GL_RGBA, or a sized type
+			ilGetInteger(IL_IMAGE_FORMAT),		// Internal pixel format to use. Can be a generic type like GL_RGB or GL_RGBA, or a sized type
 			ilGetInteger(IL_IMAGE_WIDTH),		// Image width
 			ilGetInteger(IL_IMAGE_HEIGHT),		// Image height
 			0,									// Border width in pixels (can either be 1 or 0)
-			IL_RGBA,		// Format of image pixel data
+			ilGetInteger(IL_IMAGE_FORMAT),		// Format of image pixel data
 			GL_UNSIGNED_BYTE,					// Image data type
 			ilGetData());						// The actual image data itself
+
+
+												// Set texture clamping method
+
 	}
 	else // If we failed to open the image file in the first place...
 	{

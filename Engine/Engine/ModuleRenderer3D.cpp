@@ -188,29 +188,33 @@ bool ModuleRenderer3D::Init()
 		}
 
 		//Initialize lighting states
-		if (lighting)glEnable(GL_LIGHTING);
-		GLfloat l_color[] = { lighting_color[0], lighting_color[1], lighting_color[2], lighting_color[3] };
-		glLightModelfv(GL_EMISSION, l_color);
+		if (lighting)
+		{
+			glEnable(GL_LIGHTING);
+			GLfloat l_color[] = { lighting_color[0], lighting_color[1], lighting_color[2], lighting_color[3] };
+			glLightModelfv(GL_EMISSION, l_color);
+		}
 
 		//Initialize material states
 		if (material_color)
 		{
 			glEnable(GL_COLOR_MATERIAL);
+
+			GLfloat m_ambient[] = { material_ambient[0], material_ambient[1], material_ambient[2], material_ambient[3] };
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_ambient);
+			GLfloat m_diffuse[] = { material_diffuse[0], material_diffuse[1], material_diffuse[2], material_diffuse[3] };
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_diffuse);
 		}
-		GLfloat m_ambient[] = { material_ambient[0], material_ambient[1], material_ambient[2], material_ambient[3] };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_ambient);
-		GLfloat m_diffuse[] = { material_diffuse[0], material_diffuse[1], material_diffuse[2], material_diffuse[3] };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_diffuse);
-		
 		//Initialize fog states
 		if (fog)
 		{
 			glEnable(GL_FOG);
+
+			const GLfloat f_color[4] = { fog_color[0], fog_color[1], fog_color[2], fog_color[3] };
+			glFogfv(GL_FOG_COLOR, f_color);
+			glFogf(GL_FOG_DENSITY, fog_density);
 		}
-		const GLfloat f_color[4] = { fog_color[0], fog_color[1], fog_color[2], fog_color[3] };
-		glFogfv(GL_FOG_COLOR, f_color);
-		glFogf(GL_FOG_DENSITY, fog_density);
-		
+
 		//Initialize default light
 		lights[0].ref = GL_LIGHT0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
