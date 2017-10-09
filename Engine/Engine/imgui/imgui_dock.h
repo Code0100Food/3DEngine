@@ -20,13 +20,13 @@ enum Slot_
 	Slot_None
 };
 
-extern void ShutdownDock();
+/*extern void ShutdownDock();
 extern void SetNextDock(Slot_ slot);
 extern void BeginWorkspace();
 extern void EndWorkspace();
 extern void SetDockActive();
 extern bool BeginDock(const char* label, bool* opened, ImGuiWindowFlags extra_flags);
-extern void EndDock();
+extern void EndDock();*/
 extern DockContext* getDockContext();
 
 
@@ -148,6 +148,14 @@ struct DockContext
 	void end();
 
 	int getDockIndex(Dock* dock);
+
+	void ShutdownDock();
+	void SetNextDock(Slot_ slot);
+	void BeginWorkspace(const char* name);
+	void EndWorkspace();
+	void SetDockActive();
+	bool BeginDock(const char* label, bool* opened, ImGuiWindowFlags extra_flags);
+	void EndDock();
 
 };
 

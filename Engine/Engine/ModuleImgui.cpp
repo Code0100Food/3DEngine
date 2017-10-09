@@ -86,17 +86,14 @@ bool ModuleImgui::Start()
 	else if (dark_theme)SetDarkTheme();
 	else if (light_theme)SetLightTheme();
 
+	//father dock
+	father_dock = new DockContext();
+
 	return true;
 }
 
 update_status ModuleImgui::PreUpdate(float dt)
 {
-	ImGui::SetNextWindowPos(ImVec2(0, 20));
-	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight() - 20));
-	ImGui::Begin("", 0, 0);
-
-	//Begin the workspace
-	BeginWorkspace();
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -307,7 +304,7 @@ update_status ModuleImgui::PostUpdate(float dt)
 
 bool ModuleImgui::CleanUp()
 {
-	ShutdownDock();
+	RELEASE(father_dock);
 	ImGui::Shutdown();
 
 	return true;
@@ -345,7 +342,7 @@ void ModuleImgui::BlitUIConfigWindow()
 {
 	ImGui::SetNextWindowPos(ImVec2(250, 50));
 	ImGui::SetNextWindowSize(ImVec2(750, 600));
-	ImGui::Begin("UI Config", &show_ui_conf_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	ImGui::Begin("UI Config", &show_ui_conf_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
 	
 	if (ImGui::Checkbox("Dark Theme", &dark_theme))
 	{
@@ -676,8 +673,7 @@ void ModuleImgui::SetCustomTheme()
 
 void ModuleImgui::RenderUI()
 {
-	EndWorkspace();
-	ImGui::End();
+
 	ImGui::Render();
 }
 

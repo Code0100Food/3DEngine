@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "SDL\include\SDL_version.h"
 
+class DockContext;
+
 class ModuleImgui : public Module
 {
 public:
@@ -54,6 +56,9 @@ private:
 
 	//To know sdl version
 	SDL_version sdl_version;
+
+	//Father Dock
+	DockContext*	father_dock = nullptr;
 
 public:
 

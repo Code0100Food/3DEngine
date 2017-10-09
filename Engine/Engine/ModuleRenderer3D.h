@@ -9,6 +9,8 @@
 
 #define MAX_LIGHTS 8
 
+class DockContext;
+
 class FrameTexture
 {
 public:
@@ -84,6 +86,8 @@ private:
 	mat4x4			ModelMatrix, ViewMatrix, ProjectionMatrix;
 
 	unsigned int quadVAO, quadVBO;
+
+	DockContext*	render_dock = nullptr;
 	FrameTexture*	render_to_texture = nullptr;
 
 public:

@@ -113,6 +113,9 @@ Application::Application()
 	PEEK(ms_timer);
 	profiler->CallProfBlock(APPLICATION, BUILD_STEP, prof_timer.ReadTicks());
 
+	//Dock Window
+	config_dock = new DockContext();
+
 }
 
 // Destructors ==================================
@@ -323,6 +326,8 @@ bool Application::CleanUp()
 	//Delete the profiler
 	RELEASE(profiler);
 
+	RELEASE(config_dock);
+
 	PEEK(ms_timer);
 
 	return ret;
@@ -389,11 +394,14 @@ bool Application::GetConfigWindowState() const
 
 void Application::BlitConfigWindow()
 {
-
+	//ImGui::SetNextWindowPos(ImVec2(100, 100));
+	ImGui::SetNextWindowSize(ImVec2(500, 500));
+	ImGui::Begin("Config Workspace##window", 0, 0);
+	config_dock->BeginWorkspace("Config Workspace");
 
 	//Begin aplication dock
 	bool ApplicationDock = true;
-	BeginDock("Application", &ApplicationDock, 0);
+	config_dock->BeginDock("Application", &ApplicationDock, 0);
 	{
 		if (ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
 		{
@@ -490,7 +498,7 @@ void Application::BlitConfigWindow()
 	}
 
 	//Close Dock
-	EndDock();
+	config_dock->EndDock();
 
 	//Build headers for the rest of modules
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
@@ -499,11 +507,14 @@ void Application::BlitConfigWindow()
 
 		bool cpy = true;
 
-		BeginDock((*item)->name.c_str(), &cpy, 0);
+		config_dock->BeginDock((*item)->name.c_str(), &cpy, 0);
 		(*item)->BlitConfigInfo();
-		EndDock();
+		config_dock->EndDock();
 
 	}
+
+	config_dock->EndWorkspace();
+	ImGui::End();
 }
 
 void Application::AddModule(Module* mod)

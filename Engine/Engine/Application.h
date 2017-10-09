@@ -26,6 +26,7 @@ class ModuleTextures;
 class GeometryManager;
 class Profiler;
 class Scene;
+class DockContext;
 
 enum MODULE_ID;
 
@@ -99,6 +100,8 @@ private:
 	float			miliseconds_array[GRAPH_ARRAY_SIZE];
 	bool			config_opened = false;
 	bool			show_config_window = false;
+
+	DockContext*	config_dock = nullptr;
 
 public:
 	

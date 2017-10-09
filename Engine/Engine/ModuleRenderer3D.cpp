@@ -94,6 +94,7 @@ bool ModuleRenderer3D::Init()
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
+	render_dock = new DockContext();
 	
 	//OPENGL initialization
 	//Create context
@@ -230,7 +231,7 @@ bool ModuleRenderer3D::Init()
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	render_to_texture = new FrameTexture();
-	render_to_texture->Create(1000, 1000);
+	render_to_texture->Create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return ret;
 }
@@ -269,7 +270,7 @@ update_status ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
+	
 	render_to_texture->Bind();
 
 	GLfloat v0[3] = { 1,1,0 };
@@ -347,13 +348,21 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	App->geometry->Draw();
 	render_to_texture->UnBind();
 
+
 	//Rendering Geometry
-	BeginDock("Scene", 0, ImGuiWindowFlags_HorizontalScrollbar);
+	//ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowSize(ImVec2(render_to_texture->width, render_to_texture->height));
+	ImGui::Begin("Render Workspace##window", 0, 0);
+
+	render_dock->BeginWorkspace("Render Workspace");
+	render_dock->BeginDock("Scene", 0, ImGuiWindowFlags_HorizontalScrollbar);
 
 	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width, render_to_texture->height), ImVec2(1, 1), ImVec2(0, 0));
 
-	EndDock();
+	render_dock->EndDock();
 
+	render_dock->EndWorkspace();
+	ImGui::End();
 
 	DisableGLRenderFlags();	
 
@@ -372,6 +381,7 @@ bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
 
+	RELEASE(render_dock);
 	RELEASE(render_to_texture);
 	SDL_GL_DeleteContext(context);
 

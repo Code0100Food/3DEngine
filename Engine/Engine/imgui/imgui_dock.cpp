@@ -160,7 +160,10 @@ DockContext::DockContext()
 }
 
 
-DockContext::~DockContext() {}
+DockContext::~DockContext() 
+{
+	ShutdownDock();
+}
 
 DockContext::Dock& DockContext::getDock(const char* label, bool opened)
 {
@@ -1002,46 +1005,46 @@ int DockContext::getDockIndex(Dock* dock)
 
 DockContext g_dock;
 
-void ShutdownDock()
+void DockContext::ShutdownDock()
 {
-	for (int i = 0; i < g_dock.m_docks.size(); ++i)
+	for (int i = 0; i < m_docks.size(); ++i)
 	{
-		g_dock.m_docks[i]->~Dock();
-		MemFree(g_dock.m_docks[i]);
+		m_docks[i]->~Dock();
+		MemFree(m_docks[i]);
 	}
-	g_dock.m_docks.clear();
+	m_docks.clear();
 }
 
-void SetNextDock(Slot_ slot) {
-	g_dock.m_next_dock_slot = slot;
+void DockContext::SetNextDock(Slot_ slot) {
+	m_next_dock_slot = slot;
 }
 
-void BeginWorkspace() {
+void DockContext::BeginWorkspace(const char* name) {
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
-	BeginChild("##workspace", ImVec2(0, 0), false, flags);
-	g_dock.m_workspace_pos = GetWindowPos();
-	g_dock.m_workspace_size = GetWindowSize();
+	BeginChild(name, ImVec2(0, 0), false, flags);
+	m_workspace_pos = GetWindowPos();
+	m_workspace_size = GetWindowSize();
 }
 
-void EndWorkspace() {
+void DockContext::EndWorkspace() {
 	EndChild();
 }
 
-void SetDockActive()
+void DockContext::SetDockActive()
 {
-	g_dock.setDockActive();
+	setDockActive();
 }
 
 
-bool BeginDock(const char* label, bool* opened, ImGuiWindowFlags extra_flags)
+bool DockContext::BeginDock(const char* label, bool* opened, ImGuiWindowFlags extra_flags)
 {
-	return g_dock.begin(label, opened, extra_flags);
+	return begin(label, opened, extra_flags);
 }
 
 
-void EndDock()
+void DockContext::EndDock()
 {
-	g_dock.end();
+	end();
 }
 
 DockContext* getDockContext()
