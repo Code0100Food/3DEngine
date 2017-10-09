@@ -369,6 +369,9 @@
     <ClInclude Include="Engine\ModuleTextures.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Grid_.h">
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -587,6 +590,7 @@
     <ClCompile Include="Engine\ModuleTextures.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Grid_.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

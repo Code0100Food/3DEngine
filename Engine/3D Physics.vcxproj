@@ -98,6 +98,7 @@
     <ClInclude Include="Engine\GeometryManager.h" />
     <ClInclude Include="Engine\glmath.h" />
     <ClInclude Include="Engine\Globals.h" />
+    <ClInclude Include="Engine\Grid_.h" />
     <ClInclude Include="Engine\imgui\imgui.h" />
     <ClInclude Include="Engine\imgui\imgui_dock.h" />
     <ClInclude Include="Engine\imgui\imgui_impl_sdl.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="Engine\Frustrum_.cpp" />
     <ClCompile Include="Engine\GeometryManager.cpp" />
     <ClCompile Include="Engine\glmath.cpp" />
+    <ClCompile Include="Engine\Grid_.cpp" />
     <ClCompile Include="Engine\imgui\imgui.cpp" />
     <ClCompile Include="Engine\imgui\imgui_demo.cpp" />
     <ClCompile Include="Engine\imgui\imgui_dock.cpp" />

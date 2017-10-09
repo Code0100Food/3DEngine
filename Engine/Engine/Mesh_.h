@@ -4,6 +4,9 @@
 #include "Primitive_.h"
 #include "Globals.h"
 #include "MathGeoLib/MathGeoLib.h"
+#include "Assimp/include/matrix4x4.h"
+#include "Assimp/include/vector3.h"
+#include "Assimp/include/quaternion.h"
 
 struct Vertex
 {
@@ -14,7 +17,7 @@ struct Vertex
 
 struct Texture
 {
-	uint id = 0;
+	uint		id = 0;
 	std::string type;
 	std::string path;
 };
@@ -33,16 +36,30 @@ public:
 
 public:
 
-	std::vector<Vertex>			vertices;
-	std::vector<uint>			indices;
-	std::vector<Texture>		textures;
+	std::string				name;
+
+	std::vector<Vertex>		vertices;
+	std::vector<uint>		indices;
+	std::vector<Texture>	textures;
 	
+	aiMatrix4x4				transformation;
+	aiVector3D				position;
+	aiQuaternion			rotation;
+	aiVector3D				scale;
+
 private:
 
 	uint VertexArrayObject = 0, VertexBufferObject = 0, ElementBufferObject = 0;
 	uint vectorsID = 0;
 	uint normalsID = 0;
 	uint text_coordsID = 0;
+
+public:
+
+	const char* GetName()const;
+
+	void	SetTransformation(aiMatrix4x4 mat);
+	void	BlitInfo()const;
 
 };
 #endif // !_MESH_H_

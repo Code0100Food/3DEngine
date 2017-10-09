@@ -38,12 +38,19 @@ void Model_::LoadModel(std::string path)
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		LOG("ERROR_ASSIMP: %s", import.GetErrorString());
+		LOG("[error] ASSIMP: %s", import.GetErrorString());
 		return;
 	}
-
+	
 	directory = path.substr(0, path.find_last_of('/'));
 
+	//Get root node transformation
+	this->SetTransformation(scene->mRootNode->mTransformation);
+	this->name = scene->mRootNode->mName.C_Str();
+	LOG("Loading %s model!", this->name.c_str());
+
+	LOG("Loading %i meshes...", scene->mNumMeshes);
+	
 	ProcessNode(scene->mRootNode, scene);
 }
 
@@ -52,8 +59,13 @@ void Model_::ProcessNode(aiNode * node, const aiScene * scene)
 	// process all the node's meshes (if any)
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
-		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(ProcessMesh(mesh, scene));
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		Mesh_ n_mesh = ProcessMesh(mesh, scene);
+		
+		n_mesh.SetTransformation(node->mTransformation);
+		n_mesh.name = node->mName.C_Str();
+
+		meshes.push_back(n_mesh);
 	}
 	// then do the same for each of its children
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -67,7 +79,9 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 	std::vector<Vertex>		vertices;
 	std::vector<uint>		indices;
 	std::vector<Texture>	textures;
-	
+
+	LOG("Processing %s mesh!", mesh->mName.C_Str());
+
 	//Iterate all the mesh vertices and load all the data
 	for (uint i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -103,6 +117,7 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		//Add the built vertex to the vertex vector
 		vertices.push_back(vertex);
 	}
+	LOG("- %i Vertices loaded!", mesh->mNumVertices);
 
 	//Build the triangles with the index
 	if (mesh->HasFaces())
@@ -117,6 +132,7 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 			}
 		}
 	}
+	LOG("- %i Faces loaded!", mesh->mNumFaces);
 
 	//Build the different materials (textures)
 	if (mesh->mMaterialIndex >= 0)
@@ -133,6 +149,8 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		//Load Specular data
 		std::vector<Texture> specular_map = LoadMaterialTextures(material,aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specular_map.begin(), specular_map.end());
+
+		LOG("- Material with index %i loaded!", mesh->mMaterialIndex);
 	}
 
 	return Mesh_(vertices, indices, textures);
@@ -159,7 +177,7 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 		{
 			// if texture hasn't been loaded already, load it
 			Texture texture;
-			texture.id = TextureFromFile(str.C_Str(), directory, true);
+			texture.id = App->textures->LoadTexture(str.C_Str());
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			n_textures.push_back(texture);
@@ -170,51 +188,58 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 	return n_textures;
 }
 
-unsigned int Model_::TextureFromFile(const char *path, const std::string &directory, bool gamma)
+const char * Model_::GetName() const
 {
-	std::string filename = std::string(path);
-	filename = "Assets/" + filename;
+	return name.c_str();
+}
 
-	return App->textures->LoadTexture(filename.c_str());
+void Model_::SetTransformation(aiMatrix4x4 mat)
+{
+	transformation = mat;
+	mat.Decompose(scale, rotation, position);
+}
 
-	unsigned int textureID = 0;
-	glGenTextures(1, &textureID);
-
-	int width, height, nrComponents;
-	unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-	if (data)
+void Model_::BlitInfo() const
+{
+	//Header of the model
+	if (ImGui::CollapsingHeader(("%s", name.c_str()), NULL))
 	{
-		GLenum format;
-		if (nrComponents == 1)
-		{
-			format = GL_RED;
-		}
-		else if (nrComponents == 3)
-		{
-			format = GL_RGB;
-		}
-		else if (nrComponents == 4)
-		{
-			format = GL_RGBA;
-		}
+		//Show model position
+		ImGui::Text("Position	");
+		ImGui::SameLine();
+		ImGui::Text("X %.1f		", position.x);
+		ImGui::SameLine();
+		ImGui::Text("Y %.1f		", position.y);
+		ImGui::SameLine();
+		ImGui::Text("Z %.1f", position.z);
 
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		float eX = atan2(-2 * (rotation.y*rotation.z - rotation.w*rotation.x), rotation.w*rotation.w - rotation.x*rotation.x - rotation.y*rotation.y + rotation.z*rotation.z);
+		float eY = asin(2 * (rotation.x*rotation.z + rotation.w*rotation.y));
+		float eZ = atan2(-2 * (rotation.x*rotation.y - rotation.w*rotation.z), rotation.w*rotation.w + rotation.x*rotation.x - rotation.y*rotation.y - rotation.z*rotation.z);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//Show model rotation
+		ImGui::Text("Rotation	");
+		ImGui::SameLine();
+		ImGui::Text("X %.1f		", eX);
+		ImGui::SameLine();
+		ImGui::Text("Y %.1f		", eY);
+		ImGui::SameLine();
+		ImGui::Text("Z %.1f", eZ);
 
-		stbi_image_free(data);
+		//Show model scale
+		ImGui::Text("Scale	");
+		ImGui::SameLine();
+		ImGui::Text("X %.1f		", scale.x);
+		ImGui::SameLine();
+		ImGui::Text("Y %.1f		", scale.y);
+		ImGui::SameLine();
+		ImGui::Text("Z %.1f", scale.z);
+
+		//Iterate all the meshes to blit the info
+		uint size = meshes.size();
+		for (uint k = 0; k < size; k++)
+		{
+			meshes[k].BlitInfo();
+		}
 	}
-
-	else
-	{
-		LOG("Texture failed to load at path: %s", path);
-		stbi_image_free(data);
-	}
-
-	return textureID;
 }

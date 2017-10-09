@@ -24,12 +24,13 @@ ModuleTextures::~ModuleTextures()
 
 bool ModuleTextures::Awake(const JSON_Object * data_root)
 {
-	//  ----- Initialise DevIL -----
+	//  ----- Initialize DevIL -----
 	ilutRenderer(ILUT_OPENGL);
 	ilInit();
 	iluInit();
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
+	LOG("DevIL lib initialized!");
 
 	return true;
 }
@@ -68,6 +69,9 @@ bool ModuleTextures::Start()
 // Functionality ================================
 uint ModuleTextures::LoadTexture(const char * str)
 {
+	std::string filename = std::string(str);
+	filename = "Assets/" + filename;
+
 	//Uint where the texture id will be saved
 	ILuint textureID = 0;
 	
@@ -78,7 +82,7 @@ uint ModuleTextures::LoadTexture(const char * str)
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	//Load the image
-	ILboolean success = ilLoadImage(str);
+	ILboolean success = ilLoadImage(filename.c_str());
 	
 	//If the image is correctly loaded
 	if (success)
@@ -97,7 +101,7 @@ uint ModuleTextures::LoadTexture(const char * str)
 		if (!success)
 		{
 			ILenum error = ilGetError();
-			LOG("[error] Loading texture from: %s",str);
+			LOG("[error] Loading texture from: %s", filename.c_str());
 			LOG("[error] %s", iluErrorString(error));
 			ilDeleteImages(1, &textureID);
 			return NULL;
@@ -123,12 +127,12 @@ uint ModuleTextures::LoadTexture(const char * str)
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 
-		LOG("Texture: %s correctly loaded!", str);
+		LOG("Texture: %s correctly loaded!", filename.c_str());
 	}
 	else
 	{
 		ILenum error = ilGetError();
-		LOG("[error] Loading texture from: %s", str);
+		LOG("[error] Loading texture from: %s", filename.c_str());
 		LOG("[error] %s", iluErrorString(error));
 		ilDeleteImages(1, &textureID);
 		return NULL;

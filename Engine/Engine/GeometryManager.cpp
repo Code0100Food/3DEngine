@@ -152,7 +152,8 @@ bool GeometryManager::CleanUp()
 
 void GeometryManager::BlitConfigInfo()
 {
-	ImGui::Checkbox("Show Grid", &show_grid);
+	ImGui::Text("Geometry Configuration");
+	
 	ImGui::Checkbox("Show Primitives", &show_primitives);
 	ImGui::Checkbox("Show Meshes", &show_meshes);
 	ImGui::SliderFloat("Mesh Lines Width", &mesh_lines_width, 0.1, 10.0, "%.1f");
@@ -160,8 +161,11 @@ void GeometryManager::BlitConfigInfo()
 	ImGui::SliderFloat("Primitive Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f");
 	ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Vertex Normals Color", vertex_normals_color, 0.0, 1.0, "%.2f");
+	
 	ImGui::Separator();
+	
 	ImGui::Text("Grid Configuration");
+	ImGui::Checkbox("Show Grid", &show_grid);
 	ImGui::Checkbox("Grid Axis", &grid->axis);
 	ImGui::SliderInt("Grid Divisions", (int*)(&grid->divisions), 1, 100);
 	ImGui::SliderFloat4("Grid Color", &grid->color, 0.0f, 1.0f, "%.1f");
@@ -220,13 +224,14 @@ bool GeometryManager::GetObjWindowState() const
 
 void GeometryManager::BlitObjectsWindow()
 {
-	ImGui::Begin("Test", &show_scene_objects);
+	//Iterate all the loaded models and show all the stats
+	ImGui::Begin("Scene Models", &show_scene_objects);
 	
-	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
-	while (geom != primitives_list.end())
+	std::list<Model_*>::const_iterator geom = models_list.begin();
+	while (geom != models_list.end())
 	{
-		geom._Ptr->_Myval->Draw();
-
+		geom._Ptr->_Myval->BlitInfo();
+		
 		geom++;
 	}
 	
@@ -280,8 +285,10 @@ bool GeometryManager::LoadScene(const char * folder)
 	{
 		RELEASE(models_list.back());
 		models_list.pop_back();
+		LOG("Previous model released!");
 	}
 
+	LOG("Loading new model...");
 	Model_* new_model = new Model_(folder);
 	models_list.push_back(new_model);
 

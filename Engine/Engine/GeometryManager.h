@@ -42,7 +42,8 @@ private:
 	std::list<Primitive_*>	primitives_list;
 	std::list<Model_*>		models_list;
 
-	Grid_* grid; //Ground grid
+	//Ground grid
+	Grid_*	grid = nullptr; 
 
 	// Config data
 	bool	show_grid = true;

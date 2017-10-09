@@ -22,9 +22,16 @@ public:
 
 private:
 
+	std::string				name;
+
 	std::vector<Texture>	textures;
 	std::vector<Mesh_>		meshes;
 	std::string				directory;
+	
+	aiMatrix4x4				transformation;
+	aiVector3D				position;
+	aiQuaternion			rotation;
+	aiVector3D				scale;
 
 private:
 
@@ -32,6 +39,13 @@ private:
 	void					ProcessNode(aiNode *node, const aiScene *scene);
 	Mesh_					ProcessMesh(aiMesh *mesh, const aiScene *scene);
 	std::vector<Texture>	LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
-	uint					TextureFromFile(const char *path, const std::string &directory, bool gamma);
+
+public:
+
+	const char*	GetName()const;
+
+	void	SetTransformation(aiMatrix4x4 mat);
+	void	BlitInfo()const;
+
 };
 #endif // !_MODEL_H_

@@ -18,7 +18,9 @@ Mesh_::Mesh_(std::vector<Vertex> vertices, std::vector<uint> indices, std::vecto
 // Destructors ==================================
 Mesh_::~Mesh_()
 {
-
+	vertices.clear();
+	textures.clear();
+	indices.clear();
 }
 
 void Mesh_::SetupMesh()
@@ -64,4 +66,54 @@ void Mesh_::Draw()
 	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+const char * Mesh_::GetName() const
+{
+	return name.c_str();
+}
+
+// Functionality ================================
+void Mesh_::SetTransformation(aiMatrix4x4 mat)
+{
+	transformation = mat;
+	mat.Decompose(scale, rotation, position);
+}
+
+void Mesh_::BlitInfo() const
+{
+	//Header of the mesh
+	if (ImGui::CollapsingHeader(("%s", name.c_str()), NULL))
+	{
+		//Show mesh position
+		ImGui::Text("Position	");
+		ImGui::SameLine();
+		ImGui::Text("X %.1f		", position.x);
+		ImGui::SameLine();
+		ImGui::Text("Y %.1f		", position.y);
+		ImGui::SameLine();
+		ImGui::Text("Z %.1f", position.z);
+
+		float eX = atan2(-2 * (rotation.y*rotation.z - rotation.w*rotation.x), rotation.w*rotation.w - rotation.x*rotation.x - rotation.y*rotation.y + rotation.z*rotation.z);
+		float eY = asin(2 * (rotation.x*rotation.z + rotation.w*rotation.y));
+		float eZ = atan2(-2 * (rotation.x*rotation.y - rotation.w*rotation.z), rotation.w*rotation.w + rotation.x*rotation.x - rotation.y*rotation.y - rotation.z*rotation.z);
+
+		//Show mesh rotation
+		ImGui::Text("Rotation	");
+		ImGui::SameLine();
+		ImGui::Text("X %.1f		", eX);
+		ImGui::SameLine();
+		ImGui::Text("Y %.1f		", eY);
+		ImGui::SameLine();
+		ImGui::Text("Z %.1f", eZ);
+
+		//Show mesh scale
+		ImGui::Text("Scale	");
+		ImGui::SameLine();
+		ImGui::Text("X %.1f		", scale.x);
+		ImGui::SameLine();
+		ImGui::Text("Y %.1f		", scale.y);
+		ImGui::SameLine();
+		ImGui::Text("Z %.1f", scale.z);
+	}
 }
