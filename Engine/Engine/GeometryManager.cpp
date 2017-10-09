@@ -44,17 +44,22 @@ bool GeometryManager::Awake(const JSON_Object * data_root)
 	primitive_color[2] = json_array_get_number(primitive_color_array, 2);
 	primitive_color[3] = json_array_get_number(primitive_color_array, 3);
 
+	//Initialize grid
+	grid = (Grid_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_GRID);
+	grid->axis = json_object_get_boolean(data_root,"grid_axis");
+	grid->divisions = json_object_get_number(data_root, "grid_divisions");
+	JSON_Array* grid_color_array = json_object_get_array(data_root, "grid_color");
+	grid->color.r = json_array_get_number(grid_color_array, 0);
+	grid->color.g = json_array_get_number(grid_color_array, 1);
+	grid->color.b = json_array_get_number(grid_color_array, 2);
+	grid->color.a = json_array_get_number(grid_color_array, 3);
+	
 	return true;
 }
 
 // Game Loop ====================================
 bool GeometryManager::Start()
 {
-	//Initialize grid
-	grid.constant = 0;
-	grid.normal = { 0, 1, 0 };
-	grid.axis = true;
-
 	// Stream log messages to Debug window
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
@@ -65,9 +70,6 @@ bool GeometryManager::Start()
 
 bool GeometryManager::Draw()
 {
-	//Blit ground grid
-	if (show_grid)grid.Render();
-
 	//Enable the vertex and elements flags
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
@@ -158,6 +160,11 @@ void GeometryManager::BlitConfigInfo()
 	ImGui::SliderFloat("Primitive Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f");
 	ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Vertex Normals Color", vertex_normals_color, 0.0, 1.0, "%.2f");
+	ImGui::Separator();
+	ImGui::Text("Grid Configuration");
+	ImGui::Checkbox("Grid Axis", &grid->axis);
+	ImGui::SliderInt("Grid Divisions", (int*)(&grid->divisions), 1, 100);
+	ImGui::SliderFloat4("Grid Color", &grid->color, 0.0f, 1.0f, "%.1f");
 }
 
 void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
@@ -189,6 +196,15 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 1, primitive_color[1]);
 	json_array_replace_number(_array, 2, primitive_color[2]);
 	json_array_replace_number(_array, 3, primitive_color[3]);
+
+	json_object_set_number(data_root, "grid_divisions", grid->divisions);
+	json_object_set_boolean(data_root, "grid_axis", grid->axis);
+	_array = json_object_get_array(data_root, "grid_color");
+	json_array_replace_number(_array, 0, grid->color.r);
+	json_array_replace_number(_array, 1, grid->color.g);
+	json_array_replace_number(_array, 2, grid->color.b);
+	json_array_replace_number(_array, 3, grid->color.a);
+
 }
 
 // Functionality ================================
@@ -245,6 +261,9 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 		break;
 	case PRIMITIVE_FRUSTUM:
 		new_primitive = new Frustrum_();
+		break;
+	case PRIMITIVE_GRID:
+		new_primitive = new Grid_();
 		break;
 	}
 

@@ -39,7 +39,7 @@ void _Primitive::Render() const
 
 	if(axis == true)
 	{
-		// Draw Axis Grid
+		/*// Draw Axis Grid
 		glLineWidth(2.0f);
 
 		glBegin(GL_LINES);
@@ -66,7 +66,7 @@ void _Primitive::Render() const
 
 		glEnd();
 
-		glLineWidth(1.0f);
+		glLineWidth(1.0f);*/
 	}
 
 	glColor3f(color.r, color.g, color.b);
@@ -469,7 +469,7 @@ void _Plane::InnerRender() const
 
 	glBegin(GL_LINES);
 
-	float d = 200.0f;
+	float d = 40.0f;
 
 	for(float i = -d; i <= d; i += 1.0f)
 	{

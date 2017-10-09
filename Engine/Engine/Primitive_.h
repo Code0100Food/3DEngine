@@ -16,7 +16,8 @@ enum PRIMITIVE_TYPE
 	PRIMITIVE_CYLINDER,
 	PRIMITIVE_RAY,
 	PRIMITIVE_CAPSULE,
-	PRIMITIVE_FRUSTUM
+	PRIMITIVE_FRUSTUM,
+	PRIMITIVE_GRID
 };
 
 struct SimpleMesh
@@ -50,7 +51,8 @@ public:
 public:
 
 	virtual void	Initialize();
-	void			Draw();
+	virtual void	Draw();
+	void			DrawAxis()const;
 
 protected:
 

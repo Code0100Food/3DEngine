@@ -12,6 +12,7 @@
 #include "Frustrum_.h"
 #include "Mesh_.h"
 #include "Model_.h"
+#include "Grid_.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -41,7 +42,7 @@ private:
 	std::list<Primitive_*>	primitives_list;
 	std::list<Model_*>		models_list;
 
-	_Plane grid; //Ground grid
+	Grid_* grid; //Ground grid
 
 	// Config data
 	bool	show_grid = true;
