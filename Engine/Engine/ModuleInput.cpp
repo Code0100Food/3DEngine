@@ -11,6 +11,7 @@
 #include "GeometryManager.h"
 #include "ModuleTextures.h"
 #include "ModuleImgui.h"
+#include "ModuleCamera3D.h"
 
 #define MAX_KEYS 300
 
@@ -277,6 +278,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			}
 
 			App->geometry->LoadScene(event.drop.file);
+			App->camera->LookAtModel(App->geometry->GetSelectedModel());
 			break;
 		}
 	}
