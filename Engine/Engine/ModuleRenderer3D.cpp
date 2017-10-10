@@ -285,7 +285,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ImGui::Begin("Render Workspace##window", 0, 0);
 
 	render_dock->BeginWorkspace("Render Workspace");
-	render_dock->BeginDock("Scene", 0, ImGuiWindowFlags_HorizontalScrollbar);
+	render_dock->BeginDock("Scene", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 
 	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width, render_to_texture->height), ImVec2(1, 1), ImVec2(0, 0));
 
