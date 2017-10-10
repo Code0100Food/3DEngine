@@ -50,6 +50,8 @@ public:
 	aiQuaternion			rotation;
 	aiVector3D				scale;
 
+	std::vector<math::float3> bounding_box;
+
 private:
 
 	uint VertexArrayObject = 0, VertexBufferObject = 0, ElementBufferObject = 0;
@@ -61,8 +63,9 @@ public:
 
 	const char* GetName()const;
 
-	void	SetTransformation(aiMatrix4x4 mat);
-	void	BlitInfo()const;
+	void		GenerateBoundingBox();
+	void		SetTransformation(aiMatrix4x4 mat);
+	void		BlitInfo()const;
 
 };
 #endif // !_MESH_H_

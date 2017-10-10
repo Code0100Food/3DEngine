@@ -67,6 +67,8 @@ void Mesh_::SetupMesh()
 	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(math::float3) * 2, &face_normals.data()[0], GL_STATIC_DRAW);
 
+	//Build bounding box
+	GenerateBoundingBox();
 }
 
 // Game Loop ====================================
@@ -83,12 +85,12 @@ void Mesh_::Draw()
 		glBindTexture(GL_TEXTURE_2D, App->textures->check_image);
 	}
 
-	if (App->textures->GetCustomMode())
+	else if (App->textures->GetCustomMode())
 	{
 		glBindTexture(GL_TEXTURE_2D, App->textures->custom_check_image);
 	}
 	
-	if (App->textures->GetMeshMode())
+	else if (App->textures->GetMeshMode())
 	{
 		for (int i = 0; i < textures.size(); i++)
 		{
@@ -97,7 +99,6 @@ void Mesh_::Draw()
 		}
 	}
 	
-
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
 	glNormalPointer(GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, normals));
@@ -110,7 +111,7 @@ void Mesh_::Draw()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-
+	/*
 	//Draw vertex normals
 	glDisable(GL_LIGHTING);
 	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
@@ -123,7 +124,9 @@ void Mesh_::Draw()
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	App->renderer3D->EnableGLRenderFlags();
+	*/
 
+	/*
 	//Draw face normals
 	glDisable(GL_LIGHTING);
 	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
@@ -136,19 +139,79 @@ void Mesh_::Draw()
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	App->renderer3D->EnableGLRenderFlags();
+	*/
 
+	/*
+	//Draw bounding box
+	glDisable(GL_LIGHTING);
+	glBegin(GL_LINES);
+	
+	for (uint k = 0; k < 4; k++)
+	{
+		glVertex3f(bounding_box.data()[k + 4].x, bounding_box.data()[k + 4].y, bounding_box.data()[k + 4].z);
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+	}
+
+	for (uint k = 0; k <= 4; k += 4)
+	{
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
+
+		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
+		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
+
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
+
+		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
+		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
+	}
+	glEnd();
+	App->renderer3D->EnableGLRenderFlags();
+	*/
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
+// Functionality ================================
 const char * Mesh_::GetName() const
 {
 	return name.c_str();
 }
 
-// Functionality ================================
+void Mesh_::GenerateBoundingBox()
+{
+	math::float3 min_pos(0, 0, 0);
+	math::float3 max_pos(0, 0, 0);
+
+	if (vertices.size() > 0) {
+		min_pos = vertices.data()[0].position;
+		max_pos = vertices.data()[0].position;
+	}
+
+	for (uint k = 0; k < vertices.size(); k++)
+	{
+		min_pos.x = MIN(min_pos.x, vertices.data()[k].position.x);
+		min_pos.y = MIN(min_pos.y, vertices.data()[k].position.y);
+		min_pos.z = MIN(min_pos.z, vertices.data()[k].position.z);
+		max_pos.x = MAX(max_pos.x, vertices.data()[k].position.x);
+		max_pos.y = MAX(max_pos.y, vertices.data()[k].position.y);
+		max_pos.z = MAX(max_pos.z, vertices.data()[k].position.z);
+	}
+
+	//Save the vertex of the built bounding box
+	math::AABB b_b;
+	b_b.minPoint = min_pos;
+	b_b.maxPoint = max_pos;
+	std::vector<math::float3> temp_vec;
+	temp_vec.reserve(8);
+	b_b.GetCornerPoints(temp_vec.data());
+	for (uint k = 0; k < 8; k++)bounding_box.push_back(temp_vec.data()[k]);
+	temp_vec.clear();
+}
+
 void Mesh_::SetTransformation(aiMatrix4x4 mat)
 {
 	transformation = mat;

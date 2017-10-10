@@ -33,6 +33,8 @@ private:
 	aiQuaternion			rotation;
 	aiVector3D				scale;
 
+	std::vector<math::float3> bounding_box;
+
 private:
 
 	void					LoadModel(std::string path);
@@ -44,6 +46,7 @@ public:
 
 	const char*	GetName()const;
 
+	void	GenerateBoundingBox();
 	void	SetTransformation(aiMatrix4x4 mat);
 	void	BlitInfo()const;
 

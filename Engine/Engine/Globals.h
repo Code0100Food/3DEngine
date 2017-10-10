@@ -21,6 +21,8 @@ void log(const char file[], int line, const char* format, ...);
 #define RADTODEG 57.295779513082320876f
 #define HAVE_M_PI 3.1415926535897932384f
 
+#define MIN( a, b ) ( ((a) < (b)) ? (a) : (b) )
+#define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
 
 #define GET_Y_LNG(size,angle) ((size * sinf(angle * DEGTORAD) / 2.0f)
 #define GET_X_LNG(size,angle) ((size * cosf(angle * DEGTORAD) / 2.0f)

@@ -8,6 +8,7 @@
 #include "Assimp/include/postprocess.h"
 #include "Application.h"
 #include "ModuleTextures.h"
+#include "ModuleRenderer3D.h"
 
 // Constructors =================================
 Model_::Model_(const char * path)
@@ -24,6 +25,33 @@ Model_::~Model_()
 // Game Loop ====================================
 void Model_::Draw()
 {
+	//Draw bounding box
+	glDisable(GL_LIGHTING);
+	glBegin(GL_LINES);
+
+	for (uint k = 0; k < 4; k++)
+	{
+		glVertex3f(bounding_box.data()[k + 4].x, bounding_box.data()[k + 4].y, bounding_box.data()[k + 4].z);
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+	}
+
+	for (uint k = 0; k <= 4; k += 4)
+	{
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
+
+		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
+		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
+
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
+
+		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
+		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
+	}
+	glEnd();
+	App->renderer3D->EnableGLRenderFlags();
+
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
 		meshes[i].Draw();
@@ -52,6 +80,8 @@ void Model_::LoadModel(std::string path)
 	LOG("Loading %i meshes...", scene->mNumMeshes);
 	
 	ProcessNode(scene->mRootNode, scene);
+
+	GenerateBoundingBox();
 }
 
 void Model_::ProcessNode(aiNode * node, const aiScene * scene)
@@ -197,6 +227,38 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 const char * Model_::GetName() const
 {
 	return name.c_str();
+}
+
+void Model_::GenerateBoundingBox()
+{
+	math::float3 min_pos(0, 0, 0);
+	math::float3 max_pos(0, 0, 0);
+
+	uint m_size = meshes.size();
+	for (uint h = 0; h < m_size; h++)
+	{
+		uint bound_size = meshes[h].bounding_box.size();
+		for (uint k = 0; k < bound_size; k++)
+		{
+			min_pos.x = MIN(min_pos.x, meshes[h].bounding_box[k].x);
+			min_pos.y = MIN(min_pos.y, meshes[h].bounding_box[k].y);
+			min_pos.z = MIN(min_pos.z, meshes[h].bounding_box[k].z);
+
+			max_pos.x = MAX(max_pos.x, meshes[h].bounding_box[k].x);
+			max_pos.y = MAX(max_pos.y, meshes[h].bounding_box[k].y);
+			max_pos.z = MAX(max_pos.z, meshes[h].bounding_box[k].z);
+		}
+	}
+
+	//Save the vertex of the built bounding box
+	math::AABB b_b;
+	b_b.minPoint = min_pos;
+	b_b.maxPoint = max_pos;
+	std::vector<math::float3> temp_vec;
+	temp_vec.reserve(8);
+	b_b.GetCornerPoints(temp_vec.data());
+	for (uint k = 0; k < 8; k++)bounding_box.push_back(temp_vec.data()[k]);
+	temp_vec.clear();
 }
 
 void Model_::SetTransformation(aiMatrix4x4 mat)
