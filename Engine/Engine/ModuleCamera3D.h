@@ -36,6 +36,7 @@ private:
 	float	camera_z_mov_vel = 0.0f;
 	float	rot_around_vel = 0.0f;
 	float	strafe_vel = 0.0f;
+	float	wasd_vel = 0.0f;
 
 public:
 

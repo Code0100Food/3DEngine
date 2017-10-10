@@ -47,6 +47,7 @@ bool ModuleCamera3D::Awake(const JSON_Object * data_root)
 	camera_z_mov_vel = json_object_get_number(data_root, "camera_z_mov_vel");
 	rot_around_vel = json_object_get_number(data_root, "rot_around_vel");
 	strafe_vel = json_object_get_number(data_root, "strafe_vel");
+	wasd_vel = json_object_get_number(data_root, "wasd_vel");
 
 	config_menu = true;
 
@@ -76,7 +77,7 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	//Camera rotate around point
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
 		int dx = App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
@@ -103,7 +104,7 @@ update_status ModuleCamera3D::Update(float dt)
 		if(Y.y > 0.0f)camera_location = view_vector + Z * length(camera_location);
 	}
 
-	//Camera move 
+	//Camera stafe 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
 	{
 		int dx = -App->input->GetMouseXMotion();
@@ -124,6 +125,41 @@ update_status ModuleCamera3D::Update(float dt)
 			view_vector -= Y * DeltaY;
 		}
 		
+	}
+
+	//Camera wasd movement
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		{
+			camera_location += Z * wasd_vel;
+			view_vector += Z * wasd_vel;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		{
+			camera_location -= Z * wasd_vel;
+			view_vector -= Z * wasd_vel;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			camera_location += X * wasd_vel;
+			view_vector += X * wasd_vel;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+			camera_location -= X * wasd_vel;
+			view_vector -= X * wasd_vel;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
+		{
+			camera_location += Y * wasd_vel;
+			view_vector += Y * wasd_vel;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
+		{
+			camera_location -= Y * wasd_vel;
+			view_vector -= Y * wasd_vel;
+		}
 	}
 
 	//Look the vehicle body with the CameraLocation & the ViewVector & the Z_DIST defined
@@ -159,10 +195,14 @@ void ModuleCamera3D::BlitConfigInfo()
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change main camera distance from the view target.");
 
+	ImGui::Separator();
+	
 	//Camera Velocities ui
+	ImGui::Text("Sensibilities");
 	ImGui::SliderFloat("Zoom Sensibility", &camera_z_mov_vel, 0.1f, 10.0f, "%.1f");
 	ImGui::SliderFloat("Rotate around Sensibility", &rot_around_vel, 0.1f, 10.0f, "%.1f");
 	ImGui::SliderFloat("Stafe Sensibility", &strafe_vel, 0.1f, 10.0f, "%.1f");
+	ImGui::SliderFloat("WASD Sensibility", &wasd_vel, 0.1f, 10.0f, "%.1f");
 }
 
 void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
@@ -183,6 +223,7 @@ void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
 	json_object_set_number(data_root, "camera_z_mov_vel", camera_z_mov_vel);
 	json_object_set_number(data_root, "rot_around_vel", rot_around_vel);
 	json_object_set_number(data_root, "strafe_vel", strafe_vel);
+	json_object_set_number(data_root, "wasd_vel", wasd_vel);
 }
 
 // Functionality ================================
