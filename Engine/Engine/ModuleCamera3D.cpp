@@ -43,6 +43,10 @@ bool ModuleCamera3D::Awake(const JSON_Object * data_root)
 	view_vector.z = json_array_get_number(_array, 2);
 	//Load camera distance
 	camera_dist = json_object_get_number(data_root, "camera_distance");
+	//Load camera velocities
+	camera_z_mov_vel = json_object_get_number(data_root, "camera_z_mov_vel");
+	rot_around_vel = json_object_get_number(data_root, "rot_around_vel");
+	strafe_vel = json_object_get_number(data_root, "strafe_vel");
 
 	config_menu = true;
 
@@ -77,13 +81,11 @@ update_status ModuleCamera3D::Update(float dt)
 		int dx = App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		float Sensitivity = 0.25f;
-
 		camera_location -= view_vector;
 
 		if (dx != 0)
 		{
-			float DeltaX = (float)dx * Sensitivity;
+			float DeltaX = (float)dx * rot_around_vel;
 
 			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
@@ -92,7 +94,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if (dy != 0)
 		{
-			float DeltaY = (float)dy * Sensitivity;
+			float DeltaY = (float)dy * rot_around_vel;
 
 			Y = rotate(Y, DeltaY, X);
 			Z = rotate(Z, DeltaY, X);
@@ -102,26 +104,25 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	//Camera move 
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
 	{
-		float Sensitivity = 0.25f;
-		
-		int dx = App->input->GetMouseXMotion();
+		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		float DeltaY = (float)dy * Sensitivity;
-		float DeltaX = (float)dx * Sensitivity;
+		if (dx != 0)
+		{
+			float DeltaX = (float)dx * strafe_vel;
 
-		vec3 camera_view_dir = view_vector - position;
-		vec3 view_dir_normal(-camera_view_dir.y, camera_view_dir.x, camera_view_dir.z);
-		float len = sqrt(view_dir_normal.x*view_dir_normal.x + view_dir_normal.y*view_dir_normal.y + view_dir_normal.z*view_dir_normal.z);
-		vec3 normalized = view_dir_normal / len;
-		
-		float r = sqrt(normalized.x * normalized.x + normalized.y * normalized.y + normalized.z * normalized.z);
-		float t = atan(normalized.y / normalized.x);
-		float p = acos(normalized.z / r);
+			camera_location -= X * DeltaX;
+			view_vector -= X * DeltaX;
+		}
+		if (dy != 0)
+		{
+			float DeltaY = (float)dy * strafe_vel;
 
-		vec3 move_vec(DeltaX, DeltaY, 0);
+			camera_location -= Y * DeltaY;
+			view_vector -= Y * DeltaY;
+		}
 		
 	}
 
@@ -157,6 +158,11 @@ void ModuleCamera3D::BlitConfigInfo()
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change main camera distance from the view target.");
+
+	//Camera Velocities ui
+	ImGui::SliderFloat("Zoom Sensibility", &camera_z_mov_vel, 0.1f, 10.0f, "%.1f");
+	ImGui::SliderFloat("Rotate around Sensibility", &rot_around_vel, 0.1f, 10.0f, "%.1f");
+	ImGui::SliderFloat("Stafe Sensibility", &strafe_vel, 0.1f, 10.0f, "%.1f");
 }
 
 void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
@@ -173,6 +179,10 @@ void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 2, view_vector.z);
 	//Save camera distance
 	json_object_set_number(data_root, "camera_distance", camera_dist);
+	//Save camera velocities
+	json_object_set_number(data_root, "camera_z_mov_vel", camera_z_mov_vel);
+	json_object_set_number(data_root, "rot_around_vel", rot_around_vel);
+	json_object_set_number(data_root, "strafe_vel", strafe_vel);
 }
 
 // Functionality ================================
