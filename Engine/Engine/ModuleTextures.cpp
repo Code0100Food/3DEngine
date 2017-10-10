@@ -127,6 +127,7 @@ uint ModuleTextures::LoadTexture(const char * str)
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 
+		LOG("%i x %i", ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT));
 		LOG("Texture: %s correctly loaded!", filename.c_str());
 	}
 	else

@@ -180,7 +180,13 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 			texture.id = App->textures->LoadTexture(str.C_Str());
 			texture.type = typeName;
 			texture.path = str.C_Str();
+			
+			//Set texture width and height
+			glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &texture.tex_width);
+			glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &texture.tex_height);
+				
 			n_textures.push_back(texture);
+			
 			textures.push_back(texture); // add to loaded textures
 		}
 	}
@@ -234,6 +240,8 @@ void Model_::BlitInfo() const
 		ImGui::Text("Y %.1f		", scale.y);
 		ImGui::SameLine();
 		ImGui::Text("Z %.1f", scale.z);
+
+		
 
 		//Iterate all the meshes to blit the info
 		uint size = meshes.size();

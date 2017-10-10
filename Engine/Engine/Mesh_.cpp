@@ -174,5 +174,15 @@ void Mesh_::BlitInfo() const
 		ImGui::Text("Y %.1f		", scale.y);
 		ImGui::SameLine();
 		ImGui::Text("Z %.1f", scale.z);
+
+		for (std::vector<Texture>::const_iterator it = textures.begin(); it != textures.end(); it++)
+		{
+			ImGui::Image((void*)(*it).id, ImVec2(100, 100));
+			ImGui::Text("Size: %ix%i", (*it).tex_width, (*it).tex_height);
+			ImGui::SameLine();
+		}
+
+		ImGui::NewLine();
+
 	}
 }

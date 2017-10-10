@@ -20,6 +20,9 @@ struct Texture
 	uint		id = 0;
 	std::string type;
 	std::string path;
+
+	int		tex_width = 0;
+	int		tex_height = 0;
 };
 
 class Mesh_
