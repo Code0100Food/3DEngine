@@ -179,7 +179,6 @@ void Mesh_::BlitInfo() const
 		{
 			ImGui::Image((void*)(*it).id, ImVec2(100, 100));
 			ImGui::Text("Size: %ix%i", (*it).tex_width, (*it).tex_height);
-			ImGui::SameLine();
 		}
 
 		ImGui::NewLine();
