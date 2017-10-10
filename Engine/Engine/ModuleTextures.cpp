@@ -61,9 +61,30 @@ bool ModuleTextures::Start()
 	glEnable(GL_TEXTURE_2D);
 
 	//Load lenna image
-	lenna_porn = LoadTexture("texturacaja.jpg");
+	custom_check_image = LoadTexture("texturacaja.jpg");
 
 	return true;
+}
+
+void ModuleTextures::BlitConfigInfo()
+{
+	ImGui::Text("DevIL Version: ");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%i", ilGetInteger(IL_VERSION_NUM));
+	ImGui::Separator();
+	
+	//Show checker texture
+	ImGui::Image((GLuint*)checkImage, ImVec2(50, 50));
+	ImGui::Text("Size: %ix%i", CHECKERS_WIDTH, CHECKERS_HEIGHT);
+	ImGui::Image((GLuint*)custom_check_image, ImVec2(50, 50));
+	
+	//Show custom texture
+	int width = 0;
+	int height = 0;
+	glBindTexture(GL_TEXTURE_2D, (GLuint)custom_check_image);
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
+	ImGui::Text("Size: %ix%i", width, height);
 }
 
 // Functionality ================================

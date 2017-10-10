@@ -17,7 +17,8 @@ public:
 
 	bool Awake(const JSON_Object* data_root)final;
 	bool Start()final;
-	
+	void BlitConfigInfo()final;
+
 private:
 
 	unsigned char checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
@@ -25,7 +26,7 @@ private:
 public:
 
 	uint check_image = 0;
-	uint lenna_porn = 0;
+	uint custom_check_image = 0;
 
 public:
 

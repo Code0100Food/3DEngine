@@ -10,6 +10,7 @@
 #include "ModuleRenderer3D.h"
 #include "GeometryManager.h"
 #include "imgui/imgui_dock.h"
+#include "Devil/include/il.h"
 
 // Constructors =================================
 ModuleImgui::ModuleImgui(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -496,7 +497,8 @@ void ModuleImgui::BlitAboutWindow()
 	ImGui::Text("-ImGui version: %s", ImGui::GetVersion());
 	ImGui::Text("-Bullet version: %i", btGetVersion());
 	ImGui::Text("-Parson");
-	
+	ImGui::Text("-DevIL: %i", ilGetInteger(IL_VERSION_NUM));
+
 	ImGui::Text("\nWe don't own all this libraries and are not made by us");
 	ImGui::Text("The engine is under MIT License");
 	
