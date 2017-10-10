@@ -177,7 +177,7 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 		{
 			// if texture hasn't been loaded already, load it
 			Texture texture;
-			texture.id = App->textures->LoadTexture(str.C_Str());
+			texture.id = App->textures->LoadTexture(str.C_Str(), "Assets/");
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			

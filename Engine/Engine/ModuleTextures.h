@@ -22,6 +22,10 @@ public:
 private:
 
 	unsigned char checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+
+	bool check_mode = false;
+	bool custom_mode = false;
+	bool mesh_mode = true;
 	
 public:
 
@@ -30,7 +34,12 @@ public:
 
 public:
 
-	uint LoadTexture(const char* str);
+	uint LoadTexture(const char* str, const char* folder);
+	bool LoadCustomTexture(const char* str);
+
+	bool GetCheckMode() const;
+	bool GetCustomMode() const;
+	bool GetMeshMode() const;
 
 };
 #endif

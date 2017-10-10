@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "GeometryManager.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleTextures.h"
 
 // Constructors =================================
 Mesh_::Mesh_(std::vector<Vertex> vertices, std::vector<uint> indices, std::vector<Texture> textures) :vertices(vertices), indices(indices), textures(textures)
@@ -76,11 +77,26 @@ void Mesh_::Draw()
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	for (int i = 0; i < textures.size(); i++)
+	//Select between the textures
+	if (App->textures->GetCheckMode())
 	{
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
-
+		glBindTexture(GL_TEXTURE_2D, App->textures->check_image);
 	}
+
+	if (App->textures->GetCustomMode())
+	{
+		glBindTexture(GL_TEXTURE_2D, App->textures->custom_check_image);
+	}
+	
+	if (App->textures->GetMeshMode())
+	{
+		for (int i = 0; i < textures.size(); i++)
+		{
+			glBindTexture(GL_TEXTURE_2D, textures[i].id);
+
+		}
+	}
+	
 
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);

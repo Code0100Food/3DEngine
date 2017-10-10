@@ -9,6 +9,7 @@
 #include "imgui/imgui_impl_sdl.h"
 #include "InputManager.h"
 #include "GeometryManager.h"
+#include "ModuleTextures.h"
 #include "ModuleImgui.h"
 
 #define MAX_KEYS 300
@@ -263,6 +264,18 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_DROPFILE:
+
+			
+
+			string tmp = event.drop.file;
+			int pos = tmp.length();
+
+			if (tmp[pos - 1] == 'g' && tmp[pos - 2] == 'n' && tmp[pos - 3] == 'p')
+			{
+				App->textures->LoadCustomTexture(event.drop.file);
+				break;
+			}
+
 			App->geometry->LoadScene(event.drop.file);
 			break;
 		}

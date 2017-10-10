@@ -61,7 +61,7 @@ bool ModuleTextures::Start()
 	glEnable(GL_TEXTURE_2D);
 
 	//Load lenna image
-	custom_check_image = LoadTexture("texturacaja.jpg");
+	custom_check_image = LoadTexture("texturacaja.jpg", "Assets/");
 
 	return true;
 }
@@ -73,6 +73,14 @@ void ModuleTextures::BlitConfigInfo()
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%i", ilGetInteger(IL_VERSION_NUM));
 	ImGui::Separator();
 	
+	ImGui::Text("Mode: ");
+	if (ImGui::Checkbox("Check Texture", &check_mode))	 { custom_mode = false; mesh_mode = false; }
+	ImGui::SameLine();
+	if (ImGui::Checkbox("Custom Texture", &custom_mode)) { check_mode = false; mesh_mode = false; }
+	ImGui::SameLine();
+	if (ImGui::Checkbox("Mesh Texture", &mesh_mode))	 { check_mode = false; custom_mode = false; }
+	ImGui::Separator();
+
 	//Show checker texture
 	ImGui::Image((GLuint*)checkImage, ImVec2(50, 50));
 	ImGui::Text("Size: %ix%i", CHECKERS_WIDTH, CHECKERS_HEIGHT);
@@ -88,10 +96,12 @@ void ModuleTextures::BlitConfigInfo()
 }
 
 // Functionality ================================
-uint ModuleTextures::LoadTexture(const char * str)
+uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 {
 	std::string filename = std::string(str);
-	filename = "Assets/" + filename;
+
+	if(folder != nullptr)
+		filename = folder + filename;
 
 	//Uint where the texture id will be saved
 	ILuint textureID = 0;
@@ -164,4 +174,32 @@ uint ModuleTextures::LoadTexture(const char * str)
 	ilDeleteImages(1, &textureID);
 
 	return textureID;
+}
+
+bool ModuleTextures::LoadCustomTexture(const char * str)
+{
+
+	if (custom_check_image != 0)
+	{
+		glDeleteTextures(1, &custom_check_image);
+		custom_check_image = 0;
+	}
+
+	custom_check_image = LoadTexture(str, nullptr);
+	return custom_check_image;
+}
+
+bool ModuleTextures::GetCheckMode() const
+{
+	return check_mode;
+}
+
+bool ModuleTextures::GetCustomMode() const
+{
+	return custom_mode;
+}
+
+bool ModuleTextures::GetMeshMode() const
+{
+	return mesh_mode;
 }
