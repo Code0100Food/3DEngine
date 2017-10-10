@@ -34,6 +34,12 @@ bool GeometryManager::Awake(const JSON_Object * data_root)
 	vertex_normals_color[2] = json_array_get_number(vertex_normals_color_array, 2);
 	vertex_normals_color[3] = json_array_get_number(vertex_normals_color_array, 3);
 
+	JSON_Array* face_normals_color_array = json_object_get_array(data_root, "face_normals_color");
+	face_normals_color[0] = json_array_get_number(face_normals_color_array, 0);
+	face_normals_color[1] = json_array_get_number(face_normals_color_array, 1);
+	face_normals_color[2] = json_array_get_number(face_normals_color_array, 2);
+	face_normals_color[3] = json_array_get_number(face_normals_color_array, 3);
+
 	show_primitives = json_object_get_boolean(data_root, "show_primitives");
 
 	primitive_lines_width = json_object_get_number(data_root, "primitive_lines_width");

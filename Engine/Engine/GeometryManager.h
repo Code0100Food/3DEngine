@@ -23,6 +23,9 @@
 
 class GeometryManager : public Module
 {
+
+	friend class Mesh_;
+
 public:
 
 	GeometryManager(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled = true);
@@ -37,7 +40,7 @@ public:
 	void BlitConfigInfo()final;
 	void SaveConfigInfo(JSON_Object* data_root)final;
 
-private:
+protected:
 
 	std::list<Primitive_*>	primitives_list;
 	std::list<Model_*>		models_list;
@@ -52,6 +55,7 @@ private:
 	float	mesh_lines_width = 1.0f;
 	float	mesh_color[4];
 	float	vertex_normals_color[4];
+	float	face_normals_color[4];
 
 	bool	show_primitives = true;
 	float	primitive_lines_width = 1.0f;

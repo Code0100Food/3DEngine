@@ -270,87 +270,17 @@ update_status ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	
+	//Focus viewport texture
 	render_to_texture->Bind();
 
-	GLfloat v0[3] = { 1,1,0 };
-	GLfloat v1[3] = { 0,1,0 };
-	GLfloat v2[3] = { 0,0,0 };
-	GLfloat v3[3] = { 1,0,0 };
-	GLfloat v4[3] = { 1,0,1 };
-	GLfloat v5[3] = { 1,1,1 };
-	GLfloat v6[3] = { 0,1,1 };
-	GLfloat v7[3] = { 0,0,1 };
-
-	glBindTexture(GL_TEXTURE_2D, App->textures->lenna_porn);
-
-	glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
-
-	// front face =================
-	glTexCoord2f(1.0f, 1.0f);  glVertex3fv(v0);
-	glTexCoord2f(0.0f, 0.0f);  glVertex3fv(v2);
-	glTexCoord2f(1.0f, 0.0f);  glVertex3fv(v1);
-	
-	glTexCoord2f(0.0f, 0.0f);  glVertex3fv(v2);
-	glTexCoord2f(1.0f, 1.0f);  glVertex3fv(v0);
-	glTexCoord2f(0.0f, 1.0f);  glVertex3fv(v3);
-	
-
-	// back face ==================
-	glTexCoord2f(0.0f, 1.0f);glVertex3fv(v5);
-	glTexCoord2f(1.0f, 1.0f);  glVertex3fv(v6);
-	glTexCoord2f(1.0f, 0.0f);  glVertex3fv(v7);
-	
-	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v5);
-	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v7);
-	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
-	
-	// right face =================
-	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v0);
-	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
-	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v3);
-
-	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v0);
-	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v5);
-	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
-
-	// left face ==================
-	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v1);
-	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v2);
-	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v7);
-
-	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v1);
-	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v7);
-	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v6);
-
-	// top face ===================
-	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v1);
-	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v5);
-	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v0);
-
-	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v1);
-	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v6);
-	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v5);
-
-	// bottom face ===================
-	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v2);
-	glTexCoord2f(1.0f, 0.0f); glVertex3fv(v3);
-	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
-
-	glTexCoord2f(1.0f, 1.0f); glVertex3fv(v2);
-	glTexCoord2f(0.0f, 0.0f); glVertex3fv(v4);
-	glTexCoord2f(0.0f, 1.0f); glVertex3fv(v7);
-
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
+	//Draw scene geometry
+	EnableGLRenderFlags();
 	App->geometry->Draw();
+	
+	//Focus render texture
 	render_to_texture->UnBind();
 
-
-	//Rendering Geometry
-	//ImGui::SetNextWindowPos(ImVec2(0, 20));
+	//Workspace window
 	ImGui::SetNextWindowSize(ImVec2(render_to_texture->width, render_to_texture->height));
 	ImGui::Begin("Render Workspace##window", 0, 0);
 
@@ -368,8 +298,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	// Rendering GUI
 	App->imgui->RenderUI();
-
-	EnableGLRenderFlags();
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -566,15 +494,13 @@ void ModuleRenderer3D::BlitConfigInfo()
 
 	//Wireframe -------------
 
-	if (ImGui::Checkbox("WireFrame", &wireframe));
+	ImGui::Checkbox("WireFrame", &wireframe);
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turns ON/OFF the WireFrame mode");
 
 	if (wireframe)
 	{
-		if (ImGui::Checkbox("Front Mode", &front_wireframe));
+		ImGui::Checkbox("Front Mode", &front_wireframe);
 	}
-	
-
 	//-----------------------
 
 	ImGui::Separator();
@@ -696,6 +622,17 @@ void ModuleRenderer3D::DisableGLRenderFlags()
 void ModuleRenderer3D::EnableGLRenderFlags()
 {
 	if (lighting)glEnable(GL_LIGHTING);
+	if (wireframe)
+	{
+		if (front_wireframe)
+		{
+			glPolygonMode(GL_FRONT, GL_LINE);
+		}
+		else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+	}
 }
 
 //------------------ FRAME TEXTURE ------------------\\

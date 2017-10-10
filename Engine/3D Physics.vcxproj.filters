@@ -590,7 +590,9 @@
     <ClCompile Include="Engine\ModuleTextures.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Grid_.cpp" />
+    <ClCompile Include="Engine\Grid_.cpp">
+      <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

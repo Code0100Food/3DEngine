@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "Application.h"
 #include "GeometryManager.h"
+#include "ModuleRenderer3D.h"
 
 // Constructors =================================
 Mesh_::Mesh_(std::vector<Vertex> vertices, std::vector<uint> indices, std::vector<Texture> textures) :vertices(vertices), indices(indices), textures(textures)
@@ -34,7 +35,7 @@ void Mesh_::SetupMesh()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObject);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint), &indices[0], GL_STATIC_DRAW);
 
-	
+	//Build mesh vertex normals
 	std::vector<math::float3> vertex_normals;
 	uint size = vertices.size();
 	for (uint k = 0; k < size; k++)
@@ -45,8 +46,26 @@ void Mesh_::SetupMesh()
 
 	glGenBuffers(1, &normalsID);
 	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(math::float3), &vertex_normals.data()[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(math::float3) * 2, &vertex_normals.data()[0], GL_STATIC_DRAW);
 	
+	//Build mesh face normals
+	std::vector<math::float3> face_normals;
+	size = indices.size();
+	for (uint k = 0; k < size - 2; k++)
+	{
+		math::float3 V(vertices[k + 1].position.x - vertices[k].position.x, vertices[k + 1].position.y - vertices[k].position.y, vertices[k + 1].position.z - vertices[k].position.z);
+		math::float3 W(vertices[k + 2].position.x - vertices[k].position.x, vertices[k + 2].position.y - vertices[k].position.y, vertices[k + 2].position.z - vertices[k].position.z);
+		math::float3 normal(V.Cross(W));
+		normal.Normalize();
+		math::float3 center_point((vertices[k].position.x + vertices[k + 1].position.x + vertices[k + 2].position.x) / 3, (vertices[k].position.y + vertices[k + 1].position.y + vertices[k + 2].position.y) / 3, (vertices[k].position.z + vertices[k + 1].position.z + vertices[k + 2].position.z) / 3);
+		face_normals.push_back(center_point);
+		face_normals.push_back(center_point + normal);
+	}
+
+	glGenBuffers(1, &face_normalsID);
+	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(math::float3) * 2, &face_normals.data()[0], GL_STATIC_DRAW);
+
 }
 
 // Game Loop ====================================
@@ -75,22 +94,37 @@ void Mesh_::Draw()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+
+	//Draw vertex normals
+	glDisable(GL_LIGHTING);
+	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glColor4f(App->geometry->vertex_normals_color[0], App->geometry->vertex_normals_color[1], App->geometry->vertex_normals_color[2], App->geometry->vertex_normals_color[3]);
+	glLineWidth(2.f);
+	glDrawArrays(GL_LINES, 0, vertices.size());
+	
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	App->renderer3D->EnableGLRenderFlags();
+
+	//Draw face normals
+	glDisable(GL_LIGHTING);
+	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glColor4f(App->geometry->vertex_normals_color[0], App->geometry->vertex_normals_color[1], App->geometry->vertex_normals_color[2], App->geometry->vertex_normals_color[3]);
+	glLineWidth(2.f);
+	glDrawArrays(GL_LINES, 0, vertices.size());
+
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	App->renderer3D->EnableGLRenderFlags();
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	glDisable(GL_LIGHTING);
-	glDisable(GL_DEPTH_TEST);
-
-	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
-	glColor3f(0.f, 1.f, 1.f);
-	glLineWidth(2.f);
-	glDrawArrays(GL_LINES, 0, vertices.size());
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
 }
 
 const char * Mesh_::GetName() const
