@@ -9,6 +9,7 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 #include "ModuleRenderer3D.h"
+#include "GeometryManager.h"
 
 // Constructors =================================
 Model_::Model_(const char * path)
@@ -25,32 +26,7 @@ Model_::~Model_()
 // Game Loop ====================================
 void Model_::Draw()
 {
-	//Draw bounding box
-	glDisable(GL_LIGHTING);
-	glBegin(GL_LINES);
-
-	for (uint k = 0; k < 4; k++)
-	{
-		glVertex3f(bounding_box.data()[k + 4].x, bounding_box.data()[k + 4].y, bounding_box.data()[k + 4].z);
-		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
-	}
-
-	for (uint k = 0; k <= 4; k += 4)
-	{
-		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
-		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
-
-		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
-		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
-
-		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
-		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
-
-		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
-		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
-	}
-	glEnd();
-	App->renderer3D->EnableGLRenderFlags();
+	if (render_flags & REND_BOUND_BOX)DrawBoundingBox();
 
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
@@ -224,11 +200,58 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 	return n_textures;
 }
 
+void Model_::DrawBoundingBox() const
+{
+	//Draw bounding box
+	App->renderer3D->DisableGLRenderFlags();
+	glBegin(GL_LINES);
+
+	glColor4f(App->geometry->bounding_box_color[0], App->geometry->bounding_box_color[1], App->geometry->bounding_box_color[2], App->geometry->bounding_box_color[3]);
+	glLineWidth(2.f);
+
+	for (uint k = 0; k < 4; k++)
+	{
+		glVertex3f(bounding_box.data()[k + 4].x, bounding_box.data()[k + 4].y, bounding_box.data()[k + 4].z);
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+	}
+
+	for (uint k = 0; k <= 4; k += 4)
+	{
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
+
+		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
+		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
+
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
+
+		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
+		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
+	}
+	glEnd();
+	App->renderer3D->EnableGLRenderFlags();
+}
+
+// Get Methods ==================================
 const char * Model_::GetName() const
 {
 	return name.c_str();
 }
 
+// Set Methods ==================================
+void Model_::SetTransformation(aiMatrix4x4 mat)
+{
+	transformation = mat;
+	mat.Decompose(scale, rotation, position);
+}
+
+void Model_::SetRenderFlags(RENDER_FLAGS n_flag)
+{
+	render_flags = n_flag;
+}
+
+// Functionality ================================
 void Model_::GenerateBoundingBox()
 {
 	math::float3 min_pos(0, 0, 0);
@@ -261,17 +284,13 @@ void Model_::GenerateBoundingBox()
 	temp_vec.clear();
 }
 
-void Model_::SetTransformation(aiMatrix4x4 mat)
-{
-	transformation = mat;
-	mat.Decompose(scale, rotation, position);
-}
-
-void Model_::BlitInfo() const
+void Model_::BlitInfo()
 {
 	//Header of the model
 	if (ImGui::CollapsingHeader(("%s", name.c_str()), NULL))
 	{
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Transformation");
+
 		//Show model position
 		ImGui::Text("Position	");
 		ImGui::SameLine();
@@ -303,13 +322,27 @@ void Model_::BlitInfo() const
 		ImGui::SameLine();
 		ImGui::Text("Z %.1f", scale.z);
 
-		
+		ImGui::Separator();
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Render Flags");
+		bool rend_b_b = bool(render_flags & REND_BOUND_BOX);
+		if (ImGui::Checkbox("Bounding Box", &rend_b_b))
+		{
+			if (rend_b_b)
+			{
+				render_flags |= REND_BOUND_BOX;
+			}
+			else
+			{
+				render_flags &= ~REND_BOUND_BOX;
+			}
+
+		}
 
 		//Iterate all the meshes to blit the info
 		uint size = meshes.size();
 		for (uint k = 0; k < size; k++)
 		{
-			meshes[k].BlitInfo();
+			meshes[k].BlitInfo(k);
 		}
 	}
 }

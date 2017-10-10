@@ -8,6 +8,31 @@
 #include "Assimp/include/vector3.h"
 #include "Assimp/include/quaternion.h"
 
+// Render Flags ---------------------------------
+enum RENDER_FLAGS
+{
+	REND_NONE = 1 << 0,
+	REND_VERTEX_NORMALS = 1 << 1,
+	REND_FACE_NORMALS = 1 << 2,
+	REND_BOUND_BOX = 1 << 3
+};
+
+inline RENDER_FLAGS operator~ (RENDER_FLAGS a)
+{
+	return (RENDER_FLAGS)~(int)a; 
+}
+
+inline RENDER_FLAGS& operator&= (RENDER_FLAGS& a, RENDER_FLAGS b)
+{
+	return (RENDER_FLAGS&)((int&)a &= (int)b);
+}
+
+inline RENDER_FLAGS& operator|= (RENDER_FLAGS& a, RENDER_FLAGS b)
+{
+	return (RENDER_FLAGS&)((int&)a |= (int)b);
+}
+// ----------------------------------------------
+
 struct Vertex
 {
 	math::float3 position = {0,0,0};
@@ -40,6 +65,7 @@ public:
 public:
 
 	std::string				name;
+	RENDER_FLAGS			render_flags = REND_NONE;
 
 	std::vector<Vertex>		vertices;
 	std::vector<uint>		indices;
@@ -59,13 +85,24 @@ private:
 	uint normalsID = 0;
 	uint text_coordsID = 0;
 
+private:
+
+	void DrawVertexNormals()const;
+	void DrawFaceNormals()const;
+	void DrawBoundingBox()const;
+	
 public:
 
-	const char* GetName()const;
+	//Get Methods -----------
+	const char*	GetName()const;
 
-	void		GenerateBoundingBox();
+	//Set Methods -----------
 	void		SetTransformation(aiMatrix4x4 mat);
-	void		BlitInfo()const;
+	void		SetRenderFlags(RENDER_FLAGS n_flag);
+
+	//Functionality ---------
+	void		GenerateBoundingBox();
+	void		BlitInfo(uint index);
 
 };
 #endif // !_MESH_H_

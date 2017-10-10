@@ -25,6 +25,7 @@ class GeometryManager : public Module
 {
 
 	friend class Mesh_;
+	friend class Model_;
 
 public:
 
@@ -56,6 +57,7 @@ protected:
 	float	mesh_color[4];
 	float	vertex_normals_color[4];
 	float	face_normals_color[4];
+	float	bounding_box_color[4];
 
 	bool	show_primitives = true;
 	float	primitive_lines_width = 1.0f;

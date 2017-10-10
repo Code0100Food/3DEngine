@@ -99,6 +99,7 @@ void Mesh_::Draw()
 		}
 	}
 	
+	//Draw the mesh
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
 	glNormalPointer(GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, normals));
@@ -111,7 +112,19 @@ void Mesh_::Draw()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	/*
+	//Draw mesh debug information
+	if (render_flags & REND_FACE_NORMALS)DrawFaceNormals();
+	if (render_flags & REND_VERTEX_NORMALS)DrawVertexNormals();
+	if (render_flags & REND_BOUND_BOX)DrawBoundingBox();
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+void Mesh_::DrawVertexNormals() const
+{
 	//Draw vertex normals
 	glDisable(GL_LIGHTING);
 	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
@@ -120,13 +133,14 @@ void Mesh_::Draw()
 	glColor4f(App->geometry->vertex_normals_color[0], App->geometry->vertex_normals_color[1], App->geometry->vertex_normals_color[2], App->geometry->vertex_normals_color[3]);
 	glLineWidth(2.f);
 	glDrawArrays(GL_LINES, 0, vertices.size());
-	
+
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	App->renderer3D->EnableGLRenderFlags();
-	*/
+}
 
-	/*
+void Mesh_::DrawFaceNormals() const
+{
 	//Draw face normals
 	glDisable(GL_LIGHTING);
 	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
@@ -139,13 +153,17 @@ void Mesh_::Draw()
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	App->renderer3D->EnableGLRenderFlags();
-	*/
+}
 
-	/*
+void Mesh_::DrawBoundingBox() const
+{
 	//Draw bounding box
-	glDisable(GL_LIGHTING);
+	App->renderer3D->DisableGLRenderFlags();
 	glBegin(GL_LINES);
 	
+	glColor4f(App->geometry->bounding_box_color[0], App->geometry->bounding_box_color[1], App->geometry->bounding_box_color[2], App->geometry->bounding_box_color[3]);
+	glLineWidth(2.f);
+
 	for (uint k = 0; k < 4; k++)
 	{
 		glVertex3f(bounding_box.data()[k + 4].x, bounding_box.data()[k + 4].y, bounding_box.data()[k + 4].z);
@@ -168,19 +186,27 @@ void Mesh_::Draw()
 	}
 	glEnd();
 	App->renderer3D->EnableGLRenderFlags();
-	*/
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
-// Functionality ================================
+// Get Methods ==================================
 const char * Mesh_::GetName() const
 {
 	return name.c_str();
 }
 
+// Set Methods ==================================
+void Mesh_::SetTransformation(aiMatrix4x4 mat)
+{
+	transformation = mat;
+	mat.Decompose(scale, rotation, position);
+}
+
+void Mesh_::SetRenderFlags(RENDER_FLAGS n_flag)
+{
+	render_flags = n_flag;
+}
+
+// Functionality ================================
 void Mesh_::GenerateBoundingBox()
 {
 	math::float3 min_pos(0, 0, 0);
@@ -212,17 +238,12 @@ void Mesh_::GenerateBoundingBox()
 	temp_vec.clear();
 }
 
-void Mesh_::SetTransformation(aiMatrix4x4 mat)
-{
-	transformation = mat;
-	mat.Decompose(scale, rotation, position);
-}
-
-void Mesh_::BlitInfo() const
+void Mesh_::BlitInfo(uint index)
 {
 	//Header of the mesh
 	if (ImGui::CollapsingHeader(("%s", name.c_str()), NULL))
 	{
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Transformation");
 		//Show mesh position
 		ImGui::Text("Position	");
 		ImGui::SameLine();
@@ -254,6 +275,56 @@ void Mesh_::BlitInfo() const
 		ImGui::SameLine();
 		ImGui::Text("Z %.1f", scale.z);
 
+		ImGui::Separator();
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Render Flags", index);
+		bool rend_bool = bool(render_flags & REND_BOUND_BOX);
+		char str_buff[30];
+		sprintf_s(str_buff, "Bounding Box##%i", index);
+		if (ImGui::Checkbox(str_buff, &rend_bool))
+		{
+			if (rend_bool)
+			{
+				render_flags |= REND_BOUND_BOX;
+			}
+			else
+			{
+				render_flags &= ~REND_BOUND_BOX;
+			}
+
+		}
+
+		rend_bool = bool(render_flags & REND_FACE_NORMALS);
+		sprintf_s(str_buff, "Face Normals##%i", index);
+		if (ImGui::Checkbox(str_buff, &rend_bool))
+		{
+			if (rend_bool)
+			{
+				render_flags |= REND_FACE_NORMALS;
+			}
+			else
+			{
+				render_flags &= ~REND_FACE_NORMALS;
+			}
+
+		}
+
+		rend_bool = bool(render_flags & REND_VERTEX_NORMALS);
+		sprintf_s(str_buff, "Vertex Normals##%i", index);
+		if (ImGui::Checkbox(str_buff, &rend_bool))
+		{
+			if (rend_bool)
+			{
+				render_flags |= REND_VERTEX_NORMALS;
+			}
+			else
+			{
+				render_flags &= ~REND_VERTEX_NORMALS;
+			}
+
+		}
+
+		ImGui::Separator();
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Textures");
 		for (std::vector<Texture>::const_iterator it = textures.begin(); it != textures.end(); it++)
 		{
 			ImGui::Image((void*)(*it).id, ImVec2(100, 100));

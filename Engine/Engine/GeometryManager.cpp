@@ -22,43 +22,50 @@ bool GeometryManager::Awake(const JSON_Object * data_root)
 
 	mesh_lines_width = json_object_get_number(data_root, "mesh_lines_width");
 
-	JSON_Array* mesh_color_array = json_object_get_array(data_root, "mesh_color");
-	mesh_color[0] = json_array_get_number(mesh_color_array, 0);
-	mesh_color[1] = json_array_get_number(mesh_color_array, 1);
-	mesh_color[2] = json_array_get_number(mesh_color_array, 2);
-	mesh_color[3] = json_array_get_number(mesh_color_array, 3);
+	JSON_Array* _array = json_object_get_array(data_root, "mesh_color");
+	mesh_color[0] = json_array_get_number(_array, 0);
+	mesh_color[1] = json_array_get_number(_array, 1);
+	mesh_color[2] = json_array_get_number(_array, 2);
+	mesh_color[3] = json_array_get_number(_array, 3);
 
-	JSON_Array* vertex_normals_color_array = json_object_get_array(data_root, "vertex_normals_color");
-	vertex_normals_color[0] = json_array_get_number(vertex_normals_color_array, 0);
-	vertex_normals_color[1] = json_array_get_number(vertex_normals_color_array, 1);
-	vertex_normals_color[2] = json_array_get_number(vertex_normals_color_array, 2);
-	vertex_normals_color[3] = json_array_get_number(vertex_normals_color_array, 3);
+	_array = json_object_get_array(data_root, "vertex_normals_color");
+	vertex_normals_color[0] = json_array_get_number(_array, 0);
+	vertex_normals_color[1] = json_array_get_number(_array, 1);
+	vertex_normals_color[2] = json_array_get_number(_array, 2);
+	vertex_normals_color[3] = json_array_get_number(_array, 3);
 
-	JSON_Array* face_normals_color_array = json_object_get_array(data_root, "face_normals_color");
-	face_normals_color[0] = json_array_get_number(face_normals_color_array, 0);
-	face_normals_color[1] = json_array_get_number(face_normals_color_array, 1);
-	face_normals_color[2] = json_array_get_number(face_normals_color_array, 2);
-	face_normals_color[3] = json_array_get_number(face_normals_color_array, 3);
+	_array = json_object_get_array(data_root, "face_normals_color");
+	face_normals_color[0] = json_array_get_number(_array, 0);
+	face_normals_color[1] = json_array_get_number(_array, 1);
+	face_normals_color[2] = json_array_get_number(_array, 2);
+	face_normals_color[3] = json_array_get_number(_array, 3);
+
+	_array = json_object_get_array(data_root, "bounding_box_color");
+	bounding_box_color[0] = json_array_get_number(_array, 0);
+	bounding_box_color[1] = json_array_get_number(_array, 1);
+	bounding_box_color[2] = json_array_get_number(_array, 2);
+	bounding_box_color[3] = json_array_get_number(_array, 3);
 
 	show_primitives = json_object_get_boolean(data_root, "show_primitives");
 
 	primitive_lines_width = json_object_get_number(data_root, "primitive_lines_width");
 
-	JSON_Array* primitive_color_array = json_object_get_array(data_root, "primitive_color");
-	primitive_color[0] = json_array_get_number(primitive_color_array, 0);
-	primitive_color[1] = json_array_get_number(primitive_color_array, 1);
-	primitive_color[2] = json_array_get_number(primitive_color_array, 2);
-	primitive_color[3] = json_array_get_number(primitive_color_array, 3);
+	_array = json_object_get_array(data_root, "primitive_color");
+	primitive_color[0] = json_array_get_number(_array, 0);
+	primitive_color[1] = json_array_get_number(_array, 1);
+	primitive_color[2] = json_array_get_number(_array, 2);
+	primitive_color[3] = json_array_get_number(_array, 3);
 
 	//Initialize grid
 	grid = (Grid_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_GRID);
 	grid->axis = json_object_get_boolean(data_root,"grid_axis");
 	grid->divisions = json_object_get_number(data_root, "grid_divisions");
-	JSON_Array* grid_color_array = json_object_get_array(data_root, "grid_color");
-	grid->color.r = json_array_get_number(grid_color_array, 0);
-	grid->color.g = json_array_get_number(grid_color_array, 1);
-	grid->color.b = json_array_get_number(grid_color_array, 2);
-	grid->color.a = json_array_get_number(grid_color_array, 3);
+	
+	_array = json_object_get_array(data_root, "grid_color");
+	grid->color.r = json_array_get_number(_array, 0);
+	grid->color.g = json_array_get_number(_array, 1);
+	grid->color.b = json_array_get_number(_array, 2);
+	grid->color.a = json_array_get_number(_array, 3);
 	
 	return true;
 }
@@ -168,6 +175,7 @@ void GeometryManager::BlitConfigInfo()
 	ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Vertex Normals Color", vertex_normals_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Face Normals Color", face_normals_color, 0.0, 1.0, "%.2f");
+	ImGui::SliderFloat4("Bounding Box Color", bounding_box_color, 0.0, 1.0, "%.2f");
 
 	ImGui::Separator();
 	
@@ -203,6 +211,12 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 1, face_normals_color[1]);
 	json_array_replace_number(_array, 2, face_normals_color[2]);
 	json_array_replace_number(_array, 3, face_normals_color[3]);
+
+	_array = json_object_get_array(data_root, "bounding_box_color");
+	json_array_replace_number(_array, 0, bounding_box_color[0]);
+	json_array_replace_number(_array, 1, bounding_box_color[1]);
+	json_array_replace_number(_array, 2, bounding_box_color[2]);
+	json_array_replace_number(_array, 3, bounding_box_color[3]);
 
 	json_object_set_boolean(data_root, "show_primitives", show_primitives);
 
