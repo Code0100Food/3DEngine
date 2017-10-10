@@ -50,7 +50,9 @@ private:
 public:
 
 	//Get Methods -----------
-	const char*	GetName()const;
+	const char*		GetName()const;
+	math::float3	GetPosition()const;
+	float			GetFocusDistance()const;
 
 	//Set Methods -----------
 	void		SetTransformation(aiMatrix4x4 mat);

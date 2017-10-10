@@ -1,10 +1,14 @@
 #include "Globals.h"
+
+#include <math.h>
+
 #include "Application.h"
 #include "ModuleCamera3D.h"
 #include "ModuleAudio.h"
 #include "FileSystem.h"
 #include "ModuleInput.h"
-#include <math.h>
+#include "Model_.h"
+#include "GeometryManager.h"
 
 // Constructors =================================
 ModuleCamera3D::ModuleCamera3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -162,6 +166,16 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 
+	//Focus current object
+	else if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+	{
+		Model_* target = App->geometry->GetSelectedModel();
+		if (target != nullptr)
+		{
+			LookAtModel(target);
+		}
+	}
+
 	//Look the vehicle body with the CameraLocation & the ViewVector & the Z_DIST defined
 	App->camera->Look(camera_location + camera_dist * normalize(camera_location - view_vector), view_vector, true);
 		
@@ -254,6 +268,13 @@ void ModuleCamera3D::LookAt( const vec3 &Spot)
 	Y = cross(Z, X);
 
 	CalculateViewMatrix();
+}
+
+void ModuleCamera3D::LookAtModel(Model_ * model)
+{
+	camera_dist = model->GetFocusDistance();
+	view_vector = model->GetPosition();
+	camera_location = view_vector + camera_dist * Z;
 }
 
 void ModuleCamera3D::Move(const vec3 &Movement)

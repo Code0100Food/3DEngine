@@ -239,6 +239,19 @@ const char * Model_::GetName() const
 	return name.c_str();
 }
 
+math::float3 Model_::GetPosition() const
+{
+	return math::float3(position.x, position.y, position.z);
+}
+
+float Model_::GetFocusDistance() const
+{
+	if (bounding_box.data() == NULL)return 0.0f;
+	math::float3 vec(bounding_box.data()[0].x - bounding_box.data()[7].x, bounding_box.data()[0].y - bounding_box.data()[7].y, bounding_box.data()[0].z - bounding_box.data()[7].z);
+	
+	return vec.Length();
+}
+
 // Set Methods ==================================
 void Model_::SetTransformation(aiMatrix4x4 mat)
 {

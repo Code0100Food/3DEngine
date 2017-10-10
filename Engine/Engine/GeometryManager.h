@@ -68,7 +68,10 @@ protected:
 
 public:
 
-	//Objects window  methods
+	//Temp Method
+	Model_*	GetSelectedModel()const;
+
+	//Objects window methods
 	void ShowSceneObjects();
 	bool GetObjWindowState()const;
 	void BlitObjectsWindow();

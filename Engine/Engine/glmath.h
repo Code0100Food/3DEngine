@@ -7,7 +7,7 @@
 #define _USE_MATH_DEFINES
 
 #include <math.h>
-
+#include "MathGeoLib/Math/float3.h"
 // ----------------------------------------------------------------------------------------------------------------------------
 
 class vec2
@@ -184,6 +184,10 @@ public:
 		this->x = x; this->y = y; this->z = z;
 	}
 	vec3& operator = (const vec3 &u)
+	{
+		x = u.x; y = u.y; z = u.z; return *this;
+	}
+	vec3& operator = (const math::float3 &u)
 	{
 		x = u.x; y = u.y; z = u.z; return *this;
 	}

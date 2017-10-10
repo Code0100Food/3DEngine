@@ -238,6 +238,12 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 
 }
 
+Model_ * GeometryManager::GetSelectedModel() const
+{
+	if (models_list.size() == 0)return nullptr;
+	return models_list.begin()._Ptr->_Myval;
+}
+
 // Functionality ================================
 void GeometryManager::ShowSceneObjects()
 {
