@@ -167,7 +167,8 @@ void GeometryManager::BlitConfigInfo()
 	ImGui::SliderFloat("Primitive Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f");
 	ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Vertex Normals Color", vertex_normals_color, 0.0, 1.0, "%.2f");
-	
+	ImGui::SliderFloat4("Face Normals Color", face_normals_color, 0.0, 1.0, "%.2f");
+
 	ImGui::Separator();
 	
 	ImGui::Text("Grid Configuration");
@@ -196,6 +197,12 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 1, vertex_normals_color[1]);
 	json_array_replace_number(_array, 2, vertex_normals_color[2]);
 	json_array_replace_number(_array, 3, vertex_normals_color[3]);
+
+	_array = json_object_get_array(data_root, "face_normals_color");
+	json_array_replace_number(_array, 0, face_normals_color[0]);
+	json_array_replace_number(_array, 1, face_normals_color[1]);
+	json_array_replace_number(_array, 2, face_normals_color[2]);
+	json_array_replace_number(_array, 3, face_normals_color[3]);
 
 	json_object_set_boolean(data_root, "show_primitives", show_primitives);
 

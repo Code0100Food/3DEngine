@@ -113,7 +113,7 @@ void Mesh_::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glColor4f(App->geometry->vertex_normals_color[0], App->geometry->vertex_normals_color[1], App->geometry->vertex_normals_color[2], App->geometry->vertex_normals_color[3]);
+	glColor4f(App->geometry->face_normals_color[0], App->geometry->face_normals_color[1], App->geometry->face_normals_color[2], App->geometry->face_normals_color[3]);
 	glLineWidth(2.f);
 	glDrawArrays(GL_LINES, 0, vertices.size());
 
