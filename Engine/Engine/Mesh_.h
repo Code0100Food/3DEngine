@@ -50,7 +50,7 @@ public:
 private:
 
 	uint VertexArrayObject = 0, VertexBufferObject = 0, ElementBufferObject = 0;
-	uint vectorsID = 0;
+	uint face_normalsID = 0;
 	uint normalsID = 0;
 	uint text_coordsID = 0;
 

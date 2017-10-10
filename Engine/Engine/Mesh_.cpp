@@ -34,6 +34,19 @@ void Mesh_::SetupMesh()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObject);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint), &indices[0], GL_STATIC_DRAW);
 
+	
+	std::vector<math::float3> vertex_normals;
+	uint size = vertices.size();
+	for (uint k = 0; k < size; k++)
+	{
+		vertex_normals.push_back(vertices.data()[k].position);
+		vertex_normals.push_back((vertices.data()[k].position + vertices.data()[k].normals));
+	}
+
+	glGenBuffers(1, &normalsID);
+	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(math::float3), &vertex_normals.data()[0], GL_STATIC_DRAW);
+	
 }
 
 // Game Loop ====================================
@@ -66,6 +79,18 @@ void Mesh_::Draw()
 	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
+
+	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
+	glColor3f(0.f, 1.f, 1.f);
+	glLineWidth(2.f);
+	glDrawArrays(GL_LINES, 0, vertices.size());
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
 }
 
 const char * Mesh_::GetName() const
