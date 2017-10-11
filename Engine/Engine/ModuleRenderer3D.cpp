@@ -19,6 +19,101 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Engine/Glew/lib/Win32/glew32.lib")
 
+// Frame Texture --------------------------------
+// Constructors =================================
+FrameTexture::FrameTexture() : frame_id(0), rbo_id(0), texture_id(0), width(0), height(0)
+{
+
+}
+
+// Destructors ==================================
+FrameTexture::~FrameTexture()
+{
+	Destroy();
+}
+
+// Functionality ================================
+void FrameTexture::Create(int width, int height)
+{
+	//Create The Frame Buffer
+	glGenFramebuffers(1, &frame_id);
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_id);
+
+	//Generate the Texture
+	glGenTextures(1, &texture_id);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	this->width = width;
+	this->height = height;
+
+	glGenTextures(1, &depth_id);
+	glBindTexture(GL_TEXTURE_2D, depth_id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	/*unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);*/
+
+
+	//Attach texture to the frame buffer
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture_id, 0);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth_id, 0);//optional
+
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+	{
+		LOG("Frame Buffer Load nice");
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+}
+
+void FrameTexture::Bind()
+{
+	glViewport(0, 0, width, height);
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_id);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	/*glTranslatef(0.5, 0.5, 0.0);
+	glRotatef(180, 0.0, 0.0, 1.0);
+	glTranslatef(-0.5, -0.5, 0.0);*/
+
+}
+
+void FrameTexture::UnBind()
+{
+	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FrameTexture::Destroy()
+{
+	glDeleteFramebuffers(1, &frame_id);
+	frame_id = 0;
+
+	glDeleteTextures(1, &texture_id);
+	texture_id = 0;
+
+	glDeleteRenderbuffers(1, &rbo_id);
+	rbo_id = 0;
+}
+
+// Module Renderer3D ----------------------------
 // Constructors =================================
 ModuleRenderer3D::ModuleRenderer3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
@@ -280,14 +375,21 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	render_to_texture->UnBind();
 
 	//Workspace window
-	ImGui::SetNextWindowSize(ImVec2(render_to_texture->width, render_to_texture->height));
-	ImGui::Begin("Render Workspace##window", 0, 0);
+	
+	/* Assigment 1 temporal */ImGui::SetNextWindowSize(ImVec2(render_to_texture->width - App->window->GetWidth() * 0.4f, App->window->GetHeight() - 23), ImGuiCond_Always);
+	/* Assigment 1 temporal */ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.4f, 23), ImGuiCond_Always);
 
+	ImGui::Begin("Render Workspace##window", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	ImGui::Text("Work Space");
+	
 	render_dock->BeginWorkspace("Render Workspace");
 	render_dock->BeginDock("Scene", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 
-	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width, render_to_texture->height), ImVec2(1, 1), ImVec2(0, 0));
+	//Detect if the mouse is inside the workspace
+	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
 
+	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width, render_to_texture->height), ImVec2(1, 1), ImVec2(0, 0));
+	
 	render_dock->EndDock();
 
 	render_dock->EndWorkspace();
@@ -582,6 +684,22 @@ void ModuleRenderer3D::SaveConfigInfo(JSON_Object * data_root)
 	json_object_set_number(data_root, "clear_depth", clear_depth);
 }
 
+// Get Methods ==================================
+bool ModuleRenderer3D::GetWireframe() const
+{
+	return wireframe;
+}
+
+bool ModuleRenderer3D::GetWireframeFront() const
+{
+	return front_wireframe;
+}
+
+bool ModuleRenderer3D::GetMouseOnWorkspace()const
+{
+	return mouse_on_workspace;
+}
+
 // Functionality ================================
 void ModuleRenderer3D::OnResize(int width, int height)
 {
@@ -600,16 +718,6 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-}
-
-bool ModuleRenderer3D::GetWireframe() const
-{
-	return wireframe;
-}
-
-bool ModuleRenderer3D::GetWireframeFront() const
-{
-	return front_wireframe;
 }
 
 void ModuleRenderer3D::DisableGLRenderFlags()
@@ -632,93 +740,4 @@ void ModuleRenderer3D::EnableGLRenderFlags()
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 	}
-}
-
-//------------------ FRAME TEXTURE ------------------\\
-
-FrameTexture::FrameTexture() : frame_id(0), rbo_id(0), texture_id(0), width(0), height(0) {}
-
-FrameTexture::~FrameTexture()
-{
-	Destroy();
-}
-
-void FrameTexture::Create(int width, int height)
-{
-	//Create The Frame Buffer
-	glGenFramebuffers(1, &frame_id);
-	glBindFramebuffer(GL_FRAMEBUFFER, frame_id);
-
-	//Generate the Texture
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	this->width = width;
-	this->height = height;
-	
-	glGenTextures(1, &depth_id);
-	glBindTexture(GL_TEXTURE_2D, depth_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	/*unsigned int rbo;
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);*/
-
-
-	//Attach texture to the frame buffer
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture_id, 0);
-	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth_id, 0);//optional
-	
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
-	{
-		LOG("Frame Buffer Load nice");
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-}
-
-void FrameTexture::Bind()
-{
-	glViewport(0, 0, width, height);
-	glBindFramebuffer(GL_FRAMEBUFFER, frame_id);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	/*glTranslatef(0.5, 0.5, 0.0);
-	glRotatef(180, 0.0, 0.0, 1.0);
-	glTranslatef(-0.5, -0.5, 0.0);*/
-	
-}
-
-void FrameTexture::UnBind()
-{
-	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void FrameTexture::Destroy()
-{
-	glDeleteFramebuffers(1, &frame_id);
-	frame_id = 0;
-
-	glDeleteTextures(1, &texture_id);
-	texture_id = 0;
-
-	glDeleteRenderbuffers(1, &rbo_id);
-	rbo_id = 0;
 }

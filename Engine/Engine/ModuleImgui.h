@@ -44,8 +44,6 @@ private:
 	bool		custom_theme = false;
 	ImGuiStyle	custom_style;
 	
-	bool	debug_text = false;
-
 	void	BlitUIConfigWindow();
 	void	BlitAboutWindow();
 	void	BlitExitWindow();

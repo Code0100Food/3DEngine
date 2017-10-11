@@ -188,9 +188,11 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 			texture.path = str.C_Str();
 			
 			//Set texture width and height
+			glBindTexture(GL_TEXTURE_2D, texture.id);
 			glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &texture.tex_width);
 			glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &texture.tex_height);
-				
+			glBindTexture(GL_TEXTURE_2D, 0);
+
 			n_textures.push_back(texture);
 			
 			textures.push_back(texture); // add to loaded textures

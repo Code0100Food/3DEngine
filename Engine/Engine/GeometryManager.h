@@ -64,7 +64,7 @@ protected:
 	float	primitive_color[4];
 
 	//Scene objects window data
-	bool	show_scene_objects = false;
+	bool	show_scene_objects = true;
 
 public:
 

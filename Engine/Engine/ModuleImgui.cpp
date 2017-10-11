@@ -58,12 +58,6 @@ bool ModuleImgui::Awake(const JSON_Object * data_root)
 bool ModuleImgui::Start()
 {
 	show_test_window = false;
-
-#ifdef  _DEBUG
-	debug_text = true;
-#else 
-	debug_text = false;
-#endif
 	
 	ImGui::GetStyle().Alpha = 1.0;
 	ImGui::GetStyle().WindowTitleAlign = ImVec2(0.5, 0.5);
@@ -110,24 +104,6 @@ update_status ModuleImgui::Update(float dt)
 		BlitExitWindow();
 		return update_status::UPDATE_CONTINUE;
 	}
-
-	//Shows if the program has been compiled in debug or release
-	ImGui::SetNextWindowPos(ImVec2(0, 30));
-	ImGui::SetNextWindowSize(ImVec2(220, 60));
-	ImGui::Begin("win", &debug_text, { 250, 100 }, 1.0, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
-
-	//Debug or release mode text
-	if (debug_text)
-	{
-		ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "Compiled in: Debug");
-	}
-	else
-	{
-		ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "Compiled in: Release");
-	}
-	ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-	ImGui::End();
 
 	//Top Menu [File, view, tools, help...] -----
 	ImGui::BeginMainMenuBar();

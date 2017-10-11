@@ -3,6 +3,7 @@
 #include "SDL/include/SDL_opengl.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleWindow.h"
 
 // Constructors =================================
 GeometryManager::GeometryManager(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _enabled)
@@ -270,8 +271,13 @@ bool GeometryManager::GetObjWindowState() const
 void GeometryManager::BlitObjectsWindow()
 {
 	//Iterate all the loaded models and show all the stats
-	ImGui::Begin("Scene Models", &show_scene_objects);
-	
+
+	/* Assigment 1 temporal */ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.4f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Once);
+	/* Assigment 1 temporal */ImGui::SetNextWindowPos(ImVec2(0, App->window->GetHeight() * 0.5f + 23 * 0.5f), ImGuiCond_Once);
+
+	ImGui::Begin("Scene Models", &show_scene_objects, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Scene Models");
+
 	std::list<Model_*>::const_iterator geom = models_list.begin();
 	while (geom != models_list.end())
 	{

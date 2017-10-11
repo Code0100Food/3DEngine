@@ -4,6 +4,7 @@
 
 #include "Application.h"
 #include "ModuleCamera3D.h"
+#include "ModuleRenderer3D.h"
 #include "ModuleAudio.h"
 #include "FileSystem.h"
 #include "ModuleInput.h"
@@ -70,109 +71,113 @@ bool ModuleCamera3D::Start()
 
 update_status ModuleCamera3D::Update(float dt)
 {
-	//Camera zoom in/out
-	if (App->input->GetMouseZ() == 1)
+	//Camera only accept input if the mouse is over the viewport
+	if (App->renderer3D->GetMouseOnWorkspace())
 	{
-		camera_dist -= camera_z_mov_vel;
-	}
-	else if (App->input->GetMouseZ() == -1)
-	{
-		camera_dist += camera_z_mov_vel;
-	}
-
-	//Camera rotate around point
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
-	{
-		int dx = App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
-
-		camera_location -= view_vector;
-
-		if (dx != 0)
+		//Camera zoom in/out
+		if (App->input->GetMouseZ() == 1)
 		{
-			float DeltaX = (float)dx * rot_around_vel;
-
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			camera_dist -= camera_z_mov_vel;
+		}
+		else if (App->input->GetMouseZ() == -1)
+		{
+			camera_dist += camera_z_mov_vel;
 		}
 
-		if (dy != 0)
+		//Camera rotate around point
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 		{
-			float DeltaY = (float)dy * rot_around_vel;
+			int dx = App->input->GetMouseXMotion();
+			int dy = -App->input->GetMouseYMotion();
 
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
+			camera_location -= view_vector;
+
+			if (dx != 0)
+			{
+				float DeltaX = (float)dx * rot_around_vel;
+
+				X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+				Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+				Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			}
+
+			if (dy != 0)
+			{
+				float DeltaY = (float)dy * rot_around_vel;
+
+				Y = rotate(Y, DeltaY, X);
+				Z = rotate(Z, DeltaY, X);
+			}
+
+			if (Y.y > 0.0f)camera_location = view_vector + Z * length(camera_location);
 		}
 
-		if(Y.y > 0.0f)camera_location = view_vector + Z * length(camera_location);
-	}
+		//Camera stafe 
+		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
+		{
+			int dx = -App->input->GetMouseXMotion();
+			int dy = -App->input->GetMouseYMotion();
 
-	//Camera stafe 
-	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
-	{
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
+			if (dx != 0)
+			{
+				float DeltaX = (float)dx * strafe_vel;
 
-		if (dx != 0)
-		{
-			float DeltaX = (float)dx * strafe_vel;
+				camera_location -= X * DeltaX;
+				view_vector -= X * DeltaX;
+			}
+			if (dy != 0)
+			{
+				float DeltaY = (float)dy * strafe_vel;
 
-			camera_location -= X * DeltaX;
-			view_vector -= X * DeltaX;
-		}
-		if (dy != 0)
-		{
-			float DeltaY = (float)dy * strafe_vel;
+				camera_location -= Y * DeltaY;
+				view_vector -= Y * DeltaY;
+			}
 
-			camera_location -= Y * DeltaY;
-			view_vector -= Y * DeltaY;
 		}
-		
-	}
 
-	//Camera wasd movement
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	{
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		//Camera wasd movement
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 		{
-			camera_location += Z * wasd_vel;
-			view_vector += Z * wasd_vel;
+			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+			{
+				camera_location += Z * wasd_vel;
+				view_vector += Z * wasd_vel;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+			{
+				camera_location -= Z * wasd_vel;
+				view_vector -= Z * wasd_vel;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+			{
+				camera_location += X * wasd_vel;
+				view_vector += X * wasd_vel;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+			{
+				camera_location -= X * wasd_vel;
+				view_vector -= X * wasd_vel;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
+			{
+				camera_location += Y * wasd_vel;
+				view_vector += Y * wasd_vel;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
+			{
+				camera_location -= Y * wasd_vel;
+				view_vector -= Y * wasd_vel;
+			}
 		}
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-		{
-			camera_location -= Z * wasd_vel;
-			view_vector -= Z * wasd_vel;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		{
-			camera_location += X * wasd_vel;
-			view_vector += X * wasd_vel;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		{
-			camera_location -= X * wasd_vel;
-			view_vector -= X * wasd_vel;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
-		{
-			camera_location += Y * wasd_vel;
-			view_vector += Y * wasd_vel;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
-		{
-			camera_location -= Y * wasd_vel;
-			view_vector -= Y * wasd_vel;
-		}
-	}
 
-	//Focus current object
-	else if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-	{
-		Model_* target = App->geometry->GetSelectedModel();
-		if (target != nullptr)
+		//Focus current object
+		else if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 		{
-			LookAtModel(target);
+			Model_* target = App->geometry->GetSelectedModel();
+			if (target != nullptr)
+			{
+				LookAtModel(target);
+			}
 		}
 	}
 

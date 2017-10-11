@@ -394,9 +394,12 @@ bool Application::GetConfigWindowState() const
 
 void Application::BlitConfigWindow()
 {
-	//ImGui::SetNextWindowPos(ImVec2(100, 100));
-	ImGui::SetNextWindowSize(ImVec2(500, 500));
-	ImGui::Begin("Config Workspace##window", &show_config_window, 0);
+
+	/* Assigment 1 temporal */ ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.4f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Once);
+	/* Assigment 1 temporal */ ImGui::SetNextWindowPos(ImVec2(0, 23), ImGuiCond_Once);
+
+	ImGui::Begin("Config Workspace##window", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Configuration");
 	config_dock->BeginWorkspace("Config Workspace");
 
 	//Begin aplication dock

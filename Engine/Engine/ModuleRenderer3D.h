@@ -24,13 +24,13 @@ public:
 
 public:
 
-	unsigned int			frame_id;
-	unsigned int			rbo_id;
-	unsigned int			texture_id;
+	unsigned int			frame_id = 0;
+	unsigned int			rbo_id = 0;
+	unsigned int			texture_id = 0;
 	unsigned int			depth_id = 0;
 
-	int		width;
-	int		height;
+	int		width = 0;
+	int		height = 0;
 
 };
 
@@ -85,19 +85,25 @@ private:
 	mat3x3			NormalMatrix;
 	mat4x4			ModelMatrix, ViewMatrix, ProjectionMatrix;
 
-	unsigned int quadVAO, quadVBO;
+	unsigned int	quadVAO = 0, quadVBO = 0;
 
 	DockContext*	render_dock = nullptr;
 	FrameTexture*	render_to_texture = nullptr;
+	bool			mouse_on_workspace = false;
 
 public:
 
-	void OnResize(int width, int height);
+	//Get Methods -----------
 	bool GetWireframe() const;
 	bool GetWireframeFront() const;
+	bool GetMouseOnWorkspace()const;
+
+
+	//Functionality ---------
+	void OnResize(int width, int height);
 	void DisableGLRenderFlags();
 	void EnableGLRenderFlags();
-
+	
 };
 
 
