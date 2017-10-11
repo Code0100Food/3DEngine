@@ -129,10 +129,6 @@ bool GeometryManager::Draw()
 		}
 	}
 
-	/*glLineWidth(1.0f);
-	glColor4f(1, 1, 1, 1);*/
-
-
 	//Reset the buffers focus
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -146,6 +142,8 @@ bool GeometryManager::Draw()
 
 bool GeometryManager::CleanUp()
 {
+	if (grid != nullptr)RELEASE(grid);
+
 	//Clean Primitives
 	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
 	while (geom != primitives_list.end())

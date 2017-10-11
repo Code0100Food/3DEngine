@@ -14,6 +14,8 @@ Mesh_::Mesh_(std::vector<Vertex> vertices, std::vector<uint> indices, std::vecto
 	this->textures = textures;
 	this->indices = indices;
 	
+	if(indices.size() % 3 == 0)num_tris = indices.size() / 3;
+	
 	SetupMesh();
 }
 
@@ -23,6 +25,7 @@ Mesh_::~Mesh_()
 	vertices.clear();
 	textures.clear();
 	indices.clear();
+	bounding_box.clear();
 }
 
 void Mesh_::SetupMesh()
@@ -32,40 +35,43 @@ void Mesh_::SetupMesh()
 
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+	num_vertex = vertices.size();
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObject);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint), &indices[0], GL_STATIC_DRAW);
 
 	//Build mesh vertex normals
 	std::vector<math::float3> vertex_normals;
-	uint size = vertices.size();
-	for (uint k = 0; k < size; k++)
+	for (uint k = 0; k < num_vertex; k++)
 	{
 		vertex_normals.push_back(vertices.data()[k].position);
 		vertex_normals.push_back((vertices.data()[k].position + vertices.data()[k].normals));
 	}
 
-	glGenBuffers(1, &normalsID);
-	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
+	glGenBuffers(1, &vertex_normalsID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_normalsID);
 	glBufferData(GL_ARRAY_BUFFER, vertex_normals.size() * sizeof(math::float3), &vertex_normals.data()[0], GL_STATIC_DRAW);
 	
 	//Build mesh face normals
-	std::vector<math::float3> face_normals;
-	size = indices.size();
-	for (uint k = 0; k < size - 2; k++)
+	if (num_tris != 0)
 	{
-		math::float3 V(vertices[indices[k + 1]].position.x - vertices[indices[k]].position.x, vertices[indices[k + 1]].position.y - vertices[indices[k]].position.y, vertices[indices[k + 1]].position.z - vertices[indices[k]].position.z);
-		math::float3 W(vertices[indices[k + 2]].position.x - vertices[indices[k]].position.x, vertices[indices[k + 2]].position.y - vertices[indices[k]].position.y, vertices[indices[k + 2]].position.z - vertices[indices[k]].position.z);
-		math::float3 normal(V.Cross(W));
-		normal.Normalize();
-		math::float3 center_point((vertices[indices[k]].position.x + vertices[indices[k + 1]].position.x + vertices[indices[k + 2]].position.x) / 3, (vertices[indices[k]].position.y + vertices[indices[k + 1]].position.y + vertices[indices[k + 2]].position.y) / 3, (vertices[indices[k]].position.z + vertices[indices[k + 1]].position.z + vertices[indices[k + 2]].position.z) / 3);
-		face_normals.push_back(center_point);
-		face_normals.push_back(center_point + normal);
-	}
+		std::vector<math::float3> face_normals;
+		uint size = indices.size();
+		for (uint k = 0; k < size - 2; k += 3)
+		{
+			math::float3 V(vertices[indices[k + 1]].position.x - vertices[indices[k]].position.x, vertices[indices[k + 1]].position.y - vertices[indices[k]].position.y, vertices[indices[k + 1]].position.z - vertices[indices[k]].position.z);
+			math::float3 W(vertices[indices[k + 2]].position.x - vertices[indices[k]].position.x, vertices[indices[k + 2]].position.y - vertices[indices[k]].position.y, vertices[indices[k + 2]].position.z - vertices[indices[k]].position.z);
+			math::float3 normal(V.Cross(W));
+			normal.Normalize();
+			math::float3 center_point((vertices[indices[k]].position.x + vertices[indices[k + 1]].position.x + vertices[indices[k + 2]].position.x) / 3, (vertices[indices[k]].position.y + vertices[indices[k + 1]].position.y + vertices[indices[k + 2]].position.y) / 3, (vertices[indices[k]].position.z + vertices[indices[k + 1]].position.z + vertices[indices[k + 2]].position.z) / 3);
+			face_normals.push_back(center_point);
+			face_normals.push_back(center_point + normal);
+		}
 
-	glGenBuffers(1, &face_normalsID);
-	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
-	glBufferData(GL_ARRAY_BUFFER, face_normals.size() * sizeof(math::float3), &face_normals.data()[0], GL_STATIC_DRAW);
+		glGenBuffers(1, &face_normalsID);
+		glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
+		glBufferData(GL_ARRAY_BUFFER, face_normals.size() * sizeof(math::float3), &face_normals.data()[0], GL_STATIC_DRAW);
+	}
 
 	//Build bounding box
 	GenerateBoundingBox();
@@ -126,15 +132,27 @@ void Mesh_::Draw()
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
+void Mesh_::ReleaseBuffers()
+{
+	if (VertexArrayObject != NULL)glDeleteBuffers(1, &VertexArrayObject);
+	if (VertexBufferObject != NULL)glDeleteBuffers(1, &VertexBufferObject);
+	if (ElementBufferObject != NULL)glDeleteBuffers(1, &ElementBufferObject);
+	if (face_normalsID != NULL)glDeleteBuffers(1, &face_normalsID);
+	if (vertex_normalsID != NULL)glDeleteBuffers(1, &vertex_normalsID);
+	if (text_coordsID != NULL)glDeleteBuffers(1, &text_coordsID);
+}
+
 void Mesh_::DrawVertexNormals() const
 {
+	if (vertex_normalsID == 0)return;
+
 	//Draw vertex normals
-	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_normalsID);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glColor4f(App->geometry->vertex_normals_color[0], App->geometry->vertex_normals_color[1], App->geometry->vertex_normals_color[2], App->geometry->vertex_normals_color[3]);
 	glLineWidth(2.f);
-	glDrawArrays(GL_LINES, 0, indices.size());
+	glDrawArrays(GL_LINES, 0, vertices.size() * 2);
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -142,13 +160,15 @@ void Mesh_::DrawVertexNormals() const
 
 void Mesh_::DrawFaceNormals() const
 {
+	if (face_normalsID == 0)return;
+
 	//Draw face normals
 	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glColor4f(App->geometry->face_normals_color[0], App->geometry->face_normals_color[1], App->geometry->face_normals_color[2], App->geometry->face_normals_color[3]);
 	glLineWidth(2.f);
-	glDrawArrays(GL_LINES, 0, indices.size());
+	glDrawArrays(GL_LINES, 0, num_tris * 2);
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -156,6 +176,8 @@ void Mesh_::DrawFaceNormals() const
 
 void Mesh_::DrawBoundingBox() const
 {
+	if (bounding_box.size() < 8)return;
+
 	//Draw bounding box
 	glBegin(GL_LINES);
 	
@@ -273,6 +295,16 @@ void Mesh_::BlitInfo(uint index)
 		ImGui::Text("Z %.1f", scale.z);
 
 		ImGui::Separator();
+		
+		//Show mesh Tris & Vertex
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Tris & Vertex");
+		ImGui::Text("Tris: %i", num_tris);
+		ImGui::SameLine();
+		ImGui::Text("Vertex: %i", num_vertex);
+
+		ImGui::Separator();
+
+		//Show mesh render flags
 		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Render Flags", index);
 		bool rend_bool = bool(render_flags & REND_BOUND_BOX);
 		char str_buff[30];
@@ -321,6 +353,8 @@ void Mesh_::BlitInfo(uint index)
 		}
 
 		ImGui::Separator();
+
+		//Show mesh textures
 		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Textures");
 		for (std::vector<Texture>::const_iterator it = textures.begin(); it != textures.end(); it++)
 		{
@@ -329,6 +363,5 @@ void Mesh_::BlitInfo(uint index)
 		}
 
 		ImGui::NewLine();
-
 	}
 }

@@ -36,6 +36,9 @@ private:
 	aiQuaternion			rotation;
 	aiVector3D				scale;
 
+	uint					num_tris = 0;
+	uint					num_vertex = 0;
+
 	std::vector<math::float3> bounding_box;
 
 private:

@@ -61,6 +61,7 @@ public:
 
 	void SetupMesh();
 	void Draw();
+	void ReleaseBuffers();
 
 public:
 
@@ -76,13 +77,16 @@ public:
 	aiQuaternion			rotation;
 	aiVector3D				scale;
 
+	uint					num_tris = 0;
+	uint					num_vertex = 0;
+
 	std::vector<math::float3> bounding_box;
 
 private:
 
 	uint VertexArrayObject = 0, VertexBufferObject = 0, ElementBufferObject = 0;
 	uint face_normalsID = 0;
-	uint normalsID = 0;
+	uint vertex_normalsID = 0;
 	uint text_coordsID = 0;
 
 private:

@@ -20,7 +20,12 @@ Model_::Model_(const char * path)
 // Destructors ==================================
 Model_::~Model_()
 {
-
+	uint size = meshes.size();
+	for (uint k = 0; k < size; k++)
+	{
+		meshes[k].ReleaseBuffers();
+	}
+	
 }
 
 // Game Loop ====================================
@@ -70,6 +75,9 @@ void Model_::ProcessNode(aiNode * node, const aiScene * scene)
 		
 		n_mesh.SetTransformation(node->mTransformation);
 		n_mesh.name = node->mName.C_Str();
+		
+		num_tris += n_mesh.num_tris;
+		num_vertex += n_mesh.num_vertex;
 
 		meshes.push_back(n_mesh);
 	}
@@ -338,6 +346,16 @@ void Model_::BlitInfo()
 		ImGui::Text("Z %.1f", scale.z);
 
 		ImGui::Separator();
+
+		//Show model Tris & Vertex
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Tris & Vertex");
+		ImGui::Text("Tris: %i", num_tris);
+		ImGui::SameLine();
+		ImGui::Text("Vertex: %i", num_vertex);
+
+		ImGui::Separator();
+		
+		//Show model render flags
 		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Render Flags");
 		bool rend_b_b = bool(render_flags & REND_BOUND_BOX);
 		if (ImGui::Checkbox("Bounding Box", &rend_b_b))
