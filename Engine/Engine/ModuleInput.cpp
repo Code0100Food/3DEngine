@@ -266,17 +266,26 @@ update_status ModuleInput::PreUpdate(float dt)
 
 		case SDL_DROPFILE:
 			string tmp = event.drop.file;
+
+			int next_to_point = tmp.find_last_of('.') + 1;
 			int pos = tmp.length();
 
-			if (tmp[pos - 1] == 'g' && tmp[pos - 2] == 'n' && tmp[pos - 3] == 'p')
+			int len = pos - next_to_point;
+			
+			if ((tmp.compare(next_to_point, len, "png") == 0) || (tmp.compare(next_to_point, len, "jpg") == 0))
 			{
 				App->textures->LoadCustomTexture(event.drop.file);
 				App->textures->SetCustomMode();
 				break;
 			}
 
-			App->geometry->LoadScene(event.drop.file);
-			App->camera->LookAtModel(App->geometry->GetSelectedModel());
+			if ((tmp.compare(next_to_point, len, "fbx") == 0) || (tmp.compare(next_to_point, len, "obj") == 0))
+			{
+				App->geometry->LoadScene(event.drop.file);
+				App->camera->LookAtModel(App->geometry->GetSelectedModel());
+			}
+
+			
 			break;
 		}
 	}
