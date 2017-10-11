@@ -77,7 +77,7 @@ public:
 	void BlitObjectsWindow();
 
 	//Geometry factory ------
-	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type);
+	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type, bool push_at_list = true);
 	bool		LoadScene(const char* folder);
 
 };

@@ -206,6 +206,7 @@ bool ModuleRenderer3D::Init()
 			GLfloat m_diffuse[] = { material_diffuse[0], material_diffuse[1], material_diffuse[2], material_diffuse[3] };
 			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_diffuse);
 		}
+
 		//Initialize fog states
 		if (fog)
 		{
@@ -261,9 +262,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	//Info Source
 	//http://www.pascalgamedevelopment.com/showthread.php?6617-drawing-3d-geometrical-shapes-using-opengl-but-without-glu
 
-
 	
-
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -670,6 +669,7 @@ void FrameTexture::Create(int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	/*unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);

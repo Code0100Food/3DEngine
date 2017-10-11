@@ -165,8 +165,6 @@ void ModuleAudio::BlitConfigInfo()
 
 	ImGui::EndChild();
 	ImGui::EndGroup();
-
-	//ImGui::NewLine();
 }
 
 void ModuleAudio::SaveConfigInfo(JSON_Object * data_root)

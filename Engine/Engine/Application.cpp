@@ -499,7 +499,7 @@ void Application::BlitConfigWindow()
 
 	//Close Dock
 	config_dock->EndDock();
-
+	
 	//Build headers for the rest of modules
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
 	{
@@ -512,7 +512,7 @@ void Application::BlitConfigWindow()
 		config_dock->EndDock();
 
 	}
-
+	
 	config_dock->EndWorkspace();
 	ImGui::End();
 }

@@ -58,6 +58,7 @@ bool ModuleTextures::Start()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glEnable(GL_TEXTURE_2D);
 
 	//Load lenna image
@@ -93,6 +94,7 @@ void ModuleTextures::BlitConfigInfo()
 	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
 	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
 	ImGui::Text("Size: %ix%i", width, height);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 // Functionality ================================
@@ -172,6 +174,7 @@ uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 	
 	//Delete the image 
 	ilDeleteImages(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	return textureID;
 }

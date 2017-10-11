@@ -11,6 +11,7 @@
 #include "GeometryManager.h"
 #include "imgui/imgui_dock.h"
 #include "Devil/include/il.h"
+#include "ModuleRenderer3D.h"
 
 // Constructors =================================
 ModuleImgui::ModuleImgui(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -101,6 +102,8 @@ update_status ModuleImgui::PreUpdate(float dt)
 
 update_status ModuleImgui::Update(float dt)
 {
+	App->renderer3D->DisableGLRenderFlags();
+
 	//Exit Window
 	if (show_exit_window)
 	{
@@ -293,6 +296,8 @@ update_status ModuleImgui::Update(float dt)
 		App->geometry->BlitObjectsWindow();
 	}
 	
+	App->renderer3D->EnableGLRenderFlags();
+
 	return update_status::UPDATE_CONTINUE;
 }
 

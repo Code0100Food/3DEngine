@@ -1,6 +1,8 @@
 #include "GeometryManager.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
+#include "Application.h"
+#include "ModuleRenderer3D.h"
 
 // Constructors =================================
 GeometryManager::GeometryManager(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _enabled)
@@ -57,7 +59,7 @@ bool GeometryManager::Awake(const JSON_Object * data_root)
 	primitive_color[3] = json_array_get_number(_array, 3);
 
 	//Initialize grid
-	grid = (Grid_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_GRID);
+	grid = (Grid_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_GRID, false);
 	grid->axis = json_object_get_boolean(data_root,"grid_axis");
 	grid->divisions = json_object_get_number(data_root, "grid_divisions");
 	
@@ -86,6 +88,13 @@ bool GeometryManager::Draw()
 	//Enable the vertex and elements flags
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
+
+	if (show_grid)
+	{
+		App->renderer3D->DisableGLRenderFlags();
+		grid->Draw();
+		App->renderer3D->EnableGLRenderFlags();
+	}
 
 	//Blit debug primitives
 	if (show_primitives)
@@ -119,8 +128,8 @@ bool GeometryManager::Draw()
 		}
 	}
 
-	glLineWidth(1.0f);
-	glColor4f(1, 1, 1, 1);
+	/*glLineWidth(1.0f);
+	glColor4f(1, 1, 1, 1);*/
 
 
 	//Reset the buffers focus
@@ -271,7 +280,7 @@ void GeometryManager::BlitObjectsWindow()
 	ImGui::End();
 }
 
-Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
+Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type, bool push_at_list)
 {
 	Primitive_* new_primitive = nullptr;
 	
@@ -306,7 +315,7 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type)
 	}
 
 	//Add the new primitive at the geometry list
-	primitives_list.push_back(new_primitive);
+	if (push_at_list)primitives_list.push_back(new_primitive);
 
 	return new_primitive;
 }
