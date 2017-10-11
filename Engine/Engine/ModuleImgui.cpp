@@ -102,7 +102,6 @@ update_status ModuleImgui::Update(float dt)
 	if (show_exit_window)
 	{
 		BlitExitWindow();
-		return update_status::UPDATE_CONTINUE;
 	}
 
 	//Top Menu [File, view, tools, help...] -----

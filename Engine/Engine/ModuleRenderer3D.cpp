@@ -379,7 +379,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	/* Assigment 1 temporal */ImGui::SetNextWindowSize(ImVec2(render_to_texture->width - App->window->GetWidth() * 0.4f, App->window->GetHeight() - 23), ImGuiCond_Always);
 	/* Assigment 1 temporal */ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.4f, 23), ImGuiCond_Always);
 
-	ImGui::Begin("Render Workspace##window", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	ImGui::Begin("Render Workspace##window", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
 	ImGui::Text("Work Space");
 	
 	render_dock->BeginWorkspace("Render Workspace");
