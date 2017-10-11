@@ -17,6 +17,28 @@ All those Libraries are not created by us.
 
 # Changelog
 
+	 -Release 0.1.9.9:
+		Camera input polished
+		Texture drag implemented
+		Geometry Inspector added 
+
+	 -Release 0.1.9.8:
+		Camera movement improved
+		Load Textures
+		Blit Textures
+		Docking improved
+		Viewport using docking implemented
+
+ 	 -Release 0.1.9.5:
+		Render meshes
+		Process meshes
+		Load meshes
+
+ 	 -Release 0.1.9:
+		Geometry Manager
+		ImGui Docking
+		ImGui Themes
+
 	 -Release 0.1.8:
 		Render Effects
 		Print simple geometry full and wireframe

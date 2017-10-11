@@ -265,15 +265,13 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_DROPFILE:
-
-			
-
 			string tmp = event.drop.file;
 			int pos = tmp.length();
 
 			if (tmp[pos - 1] == 'g' && tmp[pos - 2] == 'n' && tmp[pos - 3] == 'p')
 			{
 				App->textures->LoadCustomTexture(event.drop.file);
+				App->textures->SetCustomMode();
 				break;
 			}
 

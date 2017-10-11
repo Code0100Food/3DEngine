@@ -34,12 +34,17 @@ public:
 
 public:
 
-	uint LoadTexture(const char* str, const char* folder);
-	bool LoadCustomTexture(const char* str);
+	//Set Methods -----------
+	void SetCustomMode();
 
+	//Get Methods -----------
 	bool GetCheckMode() const;
 	bool GetCustomMode() const;
 	bool GetMeshMode() const;
+
+	//Functionality ---------
+	uint LoadTexture(const char* str, const char* folder);
+	bool LoadCustomTexture(const char* str);
 
 };
 #endif

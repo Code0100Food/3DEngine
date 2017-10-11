@@ -97,6 +97,29 @@ void ModuleTextures::BlitConfigInfo()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+// Set Methods ==================================
+void ModuleTextures::SetCustomMode()
+{
+	custom_mode = true;
+	check_mode = mesh_mode = false;
+}
+
+// Get Methods ==================================
+bool ModuleTextures::GetCheckMode() const
+{
+	return check_mode;
+}
+
+bool ModuleTextures::GetCustomMode() const
+{
+	return custom_mode;
+}
+
+bool ModuleTextures::GetMeshMode() const
+{
+	return mesh_mode;
+}
+
 // Functionality ================================
 uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 {
@@ -190,19 +213,4 @@ bool ModuleTextures::LoadCustomTexture(const char * str)
 
 	custom_check_image = LoadTexture(str, nullptr);
 	return custom_check_image;
-}
-
-bool ModuleTextures::GetCheckMode() const
-{
-	return check_mode;
-}
-
-bool ModuleTextures::GetCustomMode() const
-{
-	return custom_mode;
-}
-
-bool ModuleTextures::GetMeshMode() const
-{
-	return mesh_mode;
 }
