@@ -174,14 +174,17 @@ bool GeometryManager::CleanUp()
 
 void GeometryManager::BlitConfigInfo()
 {
-	ImGui::Text("Geometry Configuration");
-	
+	ImGui::Text("Primitives Configuration");
 	ImGui::Checkbox("Show Primitives", &show_primitives);
+	ImGui::SliderFloat("Primitive Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f");
+	ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f");
+	
+	ImGui::Separator();
+
+	ImGui::Text("Meshes Configuration");
 	ImGui::Checkbox("Show Meshes", &show_meshes);
 	ImGui::SliderFloat("Mesh Lines Width", &mesh_lines_width, 0.1, 10.0, "%.1f");
 	ImGui::SliderFloat4("Mesh Color", mesh_color, 0.0, 1.0, "%.2f");
-	ImGui::SliderFloat("Primitive Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f");
-	ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Vertex Normals Color", vertex_normals_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Face Normals Color", face_normals_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Bounding Box Color", bounding_box_color, 0.0, 1.0, "%.2f");

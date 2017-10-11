@@ -396,7 +396,7 @@ void Application::BlitConfigWindow()
 {
 	//ImGui::SetNextWindowPos(ImVec2(100, 100));
 	ImGui::SetNextWindowSize(ImVec2(500, 500));
-	ImGui::Begin("Config Workspace##window", 0, 0);
+	ImGui::Begin("Config Workspace##window", &show_config_window, 0);
 	config_dock->BeginWorkspace("Config Workspace");
 
 	//Begin aplication dock

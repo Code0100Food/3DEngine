@@ -614,8 +614,8 @@ bool ModuleRenderer3D::GetWireframeFront() const
 
 void ModuleRenderer3D::DisableGLRenderFlags()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDisable(GL_LIGHTING);
+	if (wireframe)glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if (lighting)glDisable(GL_LIGHTING);
 }
 
 void ModuleRenderer3D::EnableGLRenderFlags()

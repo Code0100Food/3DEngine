@@ -78,7 +78,7 @@ void Mesh_::Draw()
 	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
+	
 	//Select between the textures
 	if (App->textures->GetCheckMode())
 	{
@@ -100,6 +100,7 @@ void Mesh_::Draw()
 	}
 	
 	//Draw the mesh
+	glColor4f(App->geometry->mesh_color[0], App->geometry->mesh_color[1], App->geometry->mesh_color[2], App->geometry->mesh_color[3]);
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
 	glNormalPointer(GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, normals));
@@ -113,9 +114,11 @@ void Mesh_::Draw()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//Draw mesh debug information
+	App->renderer3D->DisableGLRenderFlags();
 	if (render_flags & REND_FACE_NORMALS)DrawFaceNormals();
 	if (render_flags & REND_VERTEX_NORMALS)DrawVertexNormals();
 	if (render_flags & REND_BOUND_BOX)DrawBoundingBox();
+	App->renderer3D->EnableGLRenderFlags();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
@@ -126,7 +129,6 @@ void Mesh_::Draw()
 void Mesh_::DrawVertexNormals() const
 {
 	//Draw vertex normals
-	glDisable(GL_LIGHTING);
 	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -136,13 +138,11 @@ void Mesh_::DrawVertexNormals() const
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	App->renderer3D->EnableGLRenderFlags();
 }
 
 void Mesh_::DrawFaceNormals() const
 {
 	//Draw face normals
-	glDisable(GL_LIGHTING);
 	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -152,13 +152,11 @@ void Mesh_::DrawFaceNormals() const
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	App->renderer3D->EnableGLRenderFlags();
 }
 
 void Mesh_::DrawBoundingBox() const
 {
 	//Draw bounding box
-	App->renderer3D->DisableGLRenderFlags();
 	glBegin(GL_LINES);
 	
 	glColor4f(App->geometry->bounding_box_color[0], App->geometry->bounding_box_color[1], App->geometry->bounding_box_color[2], App->geometry->bounding_box_color[3]);
@@ -185,7 +183,6 @@ void Mesh_::DrawBoundingBox() const
 		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
 	}
 	glEnd();
-	App->renderer3D->EnableGLRenderFlags();
 }
 
 // Get Methods ==================================
