@@ -91,10 +91,12 @@
     <ClInclude Include="Engine\BasicConsole.h" />
     <ClInclude Include="Engine\Capsule_.h" />
     <ClInclude Include="Engine\Color.h" />
+    <ClInclude Include="Engine\Component.h" />
     <ClInclude Include="Engine\Cube_.h" />
     <ClInclude Include="Engine\Cylinder_.h" />
     <ClInclude Include="Engine\FileSystem.h" />
     <ClInclude Include="Engine\Frustrum_.h" />
+    <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\GeometryManager.h" />
     <ClInclude Include="Engine\glmath.h" />
     <ClInclude Include="Engine\Globals.h" />
@@ -198,10 +200,12 @@
     <ClCompile Include="Engine\BasicConsole.cpp" />
     <ClCompile Include="Engine\Capsule_.cpp" />
     <ClCompile Include="Engine\Color.cpp" />
+    <ClCompile Include="Engine\Component.cpp" />
     <ClCompile Include="Engine\Cube_.cpp" />
     <ClCompile Include="Engine\Cylinder_.cpp" />
     <ClCompile Include="Engine\FileSystem.cpp" />
     <ClCompile Include="Engine\Frustrum_.cpp" />
+    <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\GeometryManager.cpp" />
     <ClCompile Include="Engine\glmath.cpp" />
     <ClCompile Include="Engine\Grid_.cpp" />
