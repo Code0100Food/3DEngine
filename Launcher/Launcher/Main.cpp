@@ -299,7 +299,7 @@ int main(int argc, char ** argv)
 
 	//Launcher logic
 	string download_url;
-	string json_url = "http://fiestaengine.dx.am/updates.json";
+	string json_url = "https://raw.githubusercontent.com/Code0100Food/3DEngine/master/Engine/Data/DATA/update.json";
 	JSON_Value* reader = json_parse_file("DATA/update.json");
 	JSON_Object* root_object = json_value_get_object(reader);
 	JSON_Object* update_data = json_object_dotget_object(root_object, "Fiesta Engine");
