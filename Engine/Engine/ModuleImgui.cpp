@@ -142,16 +142,6 @@ update_status ModuleImgui::Update(float dt)
 			App->geometry->ShowSceneObjects();
 		}
 
-		if (ImGui::MenuItem("Random Generator"))
-		{
-			App->scene->ShowRandom();
-		}
-
-		if (ImGui::MenuItem("Maths Tests"))
-		{
-			App->scene->ShowMaths();
-		}
-
 		if (ImGui::MenuItem("Configuration"))
 		{
 			App->ShowConfiguration();

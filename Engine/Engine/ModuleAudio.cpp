@@ -113,6 +113,8 @@ bool ModuleAudio::CleanUp()
 	Mix_Quit();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 
+	audio_logs.clear();
+
 	return true;
 }
 
