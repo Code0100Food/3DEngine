@@ -270,8 +270,8 @@ void GeometryManager::BlitObjectsWindow()
 {
 	//Iterate all the loaded models and show all the stats
 
-	/* Assigment 1 temporal */ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.4f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Once);
-	/* Assigment 1 temporal */ImGui::SetNextWindowPos(ImVec2(0, App->window->GetHeight() * 0.5f + 23 * 0.5f), ImGuiCond_Once);
+	/* Assigment 1 temporal */ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.4f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Always);
+	/* Assigment 1 temporal */ImGui::SetNextWindowPos(ImVec2(0, App->window->GetHeight() * 0.5f + 23 * 0.5f), ImGuiCond_Always);
 
 	ImGui::Begin("Scene Models", &show_scene_objects, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Scene Models");
