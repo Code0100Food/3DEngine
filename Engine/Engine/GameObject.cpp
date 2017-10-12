@@ -1,5 +1,7 @@
 #include "GameObject.h"
 #include "Component.h"
+#include "Application.h"
+#include "ModuleScene.h"
 
 // Constructors =================================
 GameObject::GameObject()
@@ -236,15 +238,27 @@ bool GameObject::PopChild(GameObject * child, bool search_in)
 	return ret;
 }
 
-void GameObject::BlitGameObject()
+void GameObject::BlitGameObjectHierarchy()
 {
-	if (ImGui::TreeNodeEx(name.c_str()))
+	if (ImGui::TreeNode(name.c_str()))
 	{
 		uint size = childs.size();
 		for (uint k = 0; k < size; k++)
 		{
-			childs[k]->BlitGameObject();
+			childs[k]->BlitGameObjectHierarchy();
 		}
 		ImGui::TreePop();
 	}
+
+	if (ImGui::IsItemClicked())
+	{
+		App->scene->EnableInspector();
+		App->scene->SetSelectedGameObject(this);
+	}
+}
+
+void GameObject::BlitGameObjectInspector()
+{
+	//Blit game object base data
+	ImGui::Text(name.c_str());
 }

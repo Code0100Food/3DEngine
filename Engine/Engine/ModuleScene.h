@@ -21,8 +21,13 @@ private:
 
 	GameObject*		root_gameobject = nullptr;
 	bool			hierarchy_win_state = false;
+	bool			inspector_state = false;
+	GameObject*		selected_gameobject = nullptr;
 
 public:
+
+	//Set Methods -----------
+	void	SetSelectedGameObject(const GameObject* target);
 
 	//Functionality ---------
 	GameObject* CreateGameObject();
@@ -31,6 +36,11 @@ public:
 	void		BlitHierarchy();
 	bool		GetHierarchyWinState()const;
 	void		SwapHierarchyWinState();
+
+	void		BlitInspector();
+	bool		GetInspectorState()const;
+	void		EnableInspector();
+	void		DisableInspector();
 
 };
 #endif

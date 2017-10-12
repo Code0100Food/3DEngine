@@ -272,6 +272,12 @@ update_status ModuleImgui::Update(float dt)
 		App->scene->BlitHierarchy();
 	}
 
+	//Inspector Window
+	if (App->scene->GetInspectorState())
+	{
+		App->scene->BlitInspector();
+	}
+
 	App->renderer3D->EnableGLRenderFlags();
 
 	return update_status::UPDATE_CONTINUE;
