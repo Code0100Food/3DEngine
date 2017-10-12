@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "Profiler.h"
 #include "ModuleWindow.h"
-#include "Scene.h"
 #include "ModuleAudio.h"
 #include "SDL/include/SDL_opengl.h"
 #include "imgui/imgui_impl_sdl.h"

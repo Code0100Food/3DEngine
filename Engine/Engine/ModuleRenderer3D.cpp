@@ -12,7 +12,6 @@
 #include "ModuleAudio.h"
 #include "ModuleImgui.h"
 #include "imgui/imgui_dock.h"
-#include "Scene.h"
 #include "ModuleTextures.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */

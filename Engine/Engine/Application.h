@@ -18,14 +18,13 @@ class InputManager;
 class ModuleAudio;
 class ModuleRenderer3D;
 class ModuleCamera3D;
-class ModulePhysics3D;
 class ModuleImgui;
 class ModuleConsole;
 class ModuleHardware;
 class ModuleTextures;
 class GeometryManager;
 class Profiler;
-class Scene;
+class ModuleScene;
 class DockContext;
 
 enum MODULE_ID;
@@ -65,13 +64,12 @@ public:
 	ModuleAudio*		audio = nullptr;
 	ModuleRenderer3D*	renderer3D = nullptr;
 	ModuleCamera3D*		camera = nullptr;
-	ModulePhysics3D*	physics = nullptr;
 	ModuleImgui*		imgui = nullptr;
 	ModuleConsole*		console = nullptr;
 	ModuleHardware*		hard = nullptr;
 	ModuleTextures*		textures = nullptr;
 	GeometryManager*	geometry = nullptr;
-	Scene*				scene = nullptr;
+	ModuleScene*		scene = nullptr;
 
 	//Tools 
 	Profiler*			profiler = nullptr;

@@ -1,7 +1,6 @@
 #include "Mesh_.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
-#include "Primitive.h"
 #include "Application.h"
 #include "GeometryManager.h"
 #include "ModuleRenderer3D.h"

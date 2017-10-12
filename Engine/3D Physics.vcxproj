@@ -14,13 +14,13 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>3DEngine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
@@ -177,18 +177,15 @@
     <ClInclude Include="Engine\ModuleHardware.h" />
     <ClInclude Include="Engine\ModuleImgui.h" />
     <ClInclude Include="Engine\ModuleInput.h" />
-    <ClInclude Include="Engine\ModulePhysics3D.h" />
     <ClInclude Include="Engine\ModuleRenderer3D.h" />
     <ClInclude Include="Engine\ModuleTextures.h" />
     <ClInclude Include="Engine\ModuleWindow.h" />
     <ClInclude Include="Engine\p2Point.h" />
     <ClInclude Include="Engine\Parson\parson.h" />
     <ClInclude Include="Engine\PerfTimer.h" />
-    <ClInclude Include="Engine\PhysBody3D.h" />
-    <ClInclude Include="Engine\Primitive.h" />
     <ClInclude Include="Engine\Profiler.h" />
     <ClInclude Include="Engine\Quadtree.h" />
-    <ClInclude Include="Engine\Scene.h" />
+    <ClInclude Include="Engine\ModuleScene.h" />
     <ClInclude Include="Engine\Sphere_.h" />
     <ClInclude Include="Engine\stb\stb.h" />
     <ClInclude Include="Engine\stb\stb_image.h" />
@@ -258,16 +255,13 @@
     <ClCompile Include="Engine\ModuleHardware.cpp" />
     <ClCompile Include="Engine\ModuleImgui.cpp" />
     <ClCompile Include="Engine\ModuleInput.cpp" />
-    <ClCompile Include="Engine\ModulePhysics3D.cpp" />
     <ClCompile Include="Engine\ModuleRenderer3D.cpp" />
     <ClCompile Include="Engine\ModuleTextures.cpp" />
     <ClCompile Include="Engine\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Parson\parson.c" />
     <ClCompile Include="Engine\PerfTimer.cpp" />
-    <ClCompile Include="Engine\PhysBody3D.cpp" />
-    <ClCompile Include="Engine\Primitive.cpp" />
     <ClCompile Include="Engine\Profiler.cpp" />
-    <ClCompile Include="Engine\Scene.cpp" />
+    <ClCompile Include="Engine\ModuleScene.cpp" />
     <ClCompile Include="Engine\Sphere_.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\Primitive_.cpp" />

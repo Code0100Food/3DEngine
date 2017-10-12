@@ -54,11 +54,6 @@ void Profiler::BlitInfo(bool* flag)
 	BlitModuleProfile(M_INPUT,"##Input");
 	ImGui::Separator();
 
-	//Show physics time tracking ----------------
-	ImGui::Text("Physics:");
-	BlitModuleProfile(M_PHYSICS3D,"##Physics");
-	ImGui::Separator();
-
 	//Show window time tracking -----------------
 	ImGui::Text("Window:");
 	BlitModuleProfile(M_WINDOW,"##Window");
@@ -83,7 +78,6 @@ bool Profiler::LoadConfiguration(const JSON_Object * data_root)
 	SetMilliLimit(M_IMGUI, json_object_get_number(data_root, "ImGui"));
 	SetMilliLimit(M_INPUT, json_object_get_number(data_root, "Input"));
 	SetMilliLimit(M_INPUT_MANAGER, json_object_get_number(data_root, "InputManager"));
-	SetMilliLimit(M_PHYSICS3D, json_object_get_number(data_root, "Physics"));
 	SetMilliLimit(M_RENDERER, json_object_get_number(data_root, "Renderer"));
 	SetMilliLimit(M_WINDOW, json_object_get_number(data_root, "Window"));
 	SetMilliLimit(M_SCENE, json_object_get_number(data_root, "Scene"));
@@ -103,7 +97,6 @@ void Profiler::SaveConfiguration(JSON_Object * data_root) const
 	json_object_set_number(data_root, "ImGui", GetMilliLimit(M_IMGUI)->second);
 	json_object_set_number(data_root, "Input", GetMilliLimit(M_INPUT)->second);
 	json_object_set_number(data_root, "InputManager", GetMilliLimit(M_INPUT_MANAGER)->second);
-	json_object_set_number(data_root, "Physics", GetMilliLimit(M_PHYSICS3D)->second);
 	json_object_set_number(data_root, "Renderer", GetMilliLimit(M_RENDERER)->second);
 	json_object_set_number(data_root, "Window", GetMilliLimit(M_WINDOW)->second);
 	json_object_set_number(data_root, "Scene", GetMilliLimit(M_SCENE)->second);
