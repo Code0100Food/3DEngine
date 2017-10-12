@@ -5,7 +5,6 @@
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
 #include "ModuleImgui.h"
 #include "ModuleConsole.h"
 #include "FileSystem.h"
@@ -58,10 +57,6 @@ Application::Application()
 	profiler->CallProfBlock(M_CAMERA3D, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	physics = new ModulePhysics3D("Physics", M_PHYSICS3D, false);
-	profiler->CallProfBlock(M_PHYSICS3D, BUILD_STEP, prof_timer.ReadTicks());
-
-	START(m_prof_timer);
 	imgui = new ModuleImgui("ImGui", M_IMGUI, false);
 	profiler->CallProfBlock(M_IMGUI, BUILD_STEP, prof_timer.ReadTicks());
 
@@ -96,7 +91,6 @@ Application::Application()
 	AddModule(input);
 	AddModule(input_manager);
 	AddModule(audio);
-	AddModule(physics);
 	AddModule(console);
 	AddModule(hard);
 	AddModule(textures);
@@ -365,7 +359,6 @@ MODULE_ID Application::StrToModuleID(const char * str) const
 	if (strcmp(str, "ImGui") == 0)			return M_IMGUI;
 	if (strcmp(str, "Input") == 0)			return M_INPUT;
 	if (strcmp(str, "InputManager") == 0)	return M_INPUT_MANAGER;
-	if (strcmp(str, "Physics") == 0)		return M_PHYSICS3D;
 	if (strcmp(str, "Renderer") == 0)		return M_RENDERER;
 	if (strcmp(str, "Window") == 0)			return M_WINDOW;
 	if (strcmp(str, "Scene") == 0)			return M_SCENE;

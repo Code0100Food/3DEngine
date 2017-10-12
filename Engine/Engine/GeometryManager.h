@@ -3,7 +3,6 @@
 
 #include "Module.h"
 
-#include "Primitive.h"
 #include "Primitive_.h"
 #include "Cube_.h"
 #include "Sphere_.h"

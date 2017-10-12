@@ -55,9 +55,6 @@
     <Filter Include="Sources\Tools\stb">
       <UniqueIdentifier>{6958ef8c-c4ef-47dc-b9a7-71c6a60de134}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\GameObject &amp; Components">
-      <UniqueIdentifier>{d8bad644-2d5a-41e7-bdb8-6641e3181d51}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Color.h">
@@ -72,19 +69,10 @@
     <ClInclude Include="Engine\Light.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\PhysBody3D.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Primitive.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ModuleAudio.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModuleCamera3D.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ModulePhysics3D.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModuleRenderer3D.h">
@@ -375,19 +363,10 @@
     <ClInclude Include="Engine\Grid_.h">
       <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameObject.h">
-      <Filter>Sources\GameObject &amp; Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component.h">
-      <Filter>Sources\GameObject &amp; Components</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
       <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Primitive.cpp">
-      <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Application.cpp">
       <Filter>Sources</Filter>
@@ -410,14 +389,8 @@
     <ClCompile Include="Engine\ModuleWindow.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ModulePhysics3D.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ModuleRenderer3D.cpp">
       <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\PhysBody3D.cpp">
-      <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Timer.cpp">
       <Filter>Sources\Tools</Filter>
@@ -601,12 +574,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Grid_.cpp">
       <Filter>Sources\Helpers\Meshes &amp; Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameObject.cpp">
-      <Filter>Sources\GameObject &amp; Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component.cpp">
-      <Filter>Sources\GameObject &amp; Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
