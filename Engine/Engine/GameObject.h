@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "Component.h"
+#include "ComponentTransform.h"
 
 class GameObject
 {
@@ -37,6 +37,7 @@ public:
 	Component*	CreateComponent(COMPONENT_TYPE c_type);
 	bool		RemoveComponent(Component* cmp);
 	bool		FindComponent(Component* cmp)const;
+	Component*	CloneComponent(const Component* target)const;
 
 	void		AddChild(const GameObject* child);
 	bool		RemoveChild(GameObject* child, bool search_in = false);

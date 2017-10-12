@@ -15,6 +15,7 @@ public:
 
 	bool			Start()final;
 	update_status	Update(float dt)final;
+	bool			CleanUp()final;
 
 private:
 

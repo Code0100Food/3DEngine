@@ -1,12 +1,12 @@
 #include "Component.h"
 
 // Constructors =================================
-Component::Component()
+Component::Component(COMPONENT_TYPE _type) :type(_type)
 {
 
 }
 
-Component::Component(const Component & cpy)
+Component::Component(const Component & cpy) : type(cpy.type), parent(cpy.parent), actived(cpy.actived)
 {
 
 }
@@ -38,4 +38,9 @@ void Component::SetActiveState(bool act)
 void Component::SetParent(const GameObject * target)
 {
 	parent = (GameObject*)target;
+}
+
+COMPONENT_TYPE Component::GetType() const
+{
+	return type;
 }

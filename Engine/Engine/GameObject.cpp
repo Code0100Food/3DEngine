@@ -7,8 +7,21 @@ GameObject::GameObject()
 
 }
 
-GameObject::GameObject(const GameObject & cpy)
+GameObject::GameObject(const GameObject & cpy) :actived(cpy.actived), name(cpy.name), parent(cpy.parent)
 {
+	//Clone all the components
+	uint size = cpy.components.size();
+	for (uint k = 0; k < size; k++)
+	{
+		components.push_back(CloneComponent(cpy.components[k]));
+	}
+
+	//Clone all the childs
+	size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		childs.push_back(new GameObject(*cpy.childs[k]));
+	}
 
 }
 
@@ -130,6 +143,24 @@ bool GameObject::FindComponent(Component * cmp) const
 	}
 
 	return false;
+}
+
+Component * GameObject::CloneComponent(const Component * target) const
+{
+	Component* new_c = nullptr;
+
+	switch (target->GetType())
+	{
+	case COMP_TRANSFORMATION:
+		new_c = new ComponentTransform(*(const ComponentTransform*)target);
+		break;
+	case COMP_MESH:
+		break;
+	case COMP_MATERIAL:
+		break;
+	}
+
+	return nullptr;
 }
 
 void GameObject::AddChild(const GameObject * child)

@@ -17,7 +17,7 @@ class Component
 {
 public:
 	
-	Component();
+	Component(COMPONENT_TYPE _type = COMP_NONE);
 	Component(const Component& cpy);
 	~Component();
 
@@ -29,7 +29,7 @@ public:
 
 	virtual bool Update();
 
-private:
+protected:
 
 	bool			actived = true;
 	COMPONENT_TYPE	type = COMP_NONE;
@@ -40,6 +40,9 @@ public:
 	//Set Methods -----------
 	void SetActiveState(bool act);
 	void SetParent(const GameObject* target);
+
+	//Get Methods -----------
+	COMPONENT_TYPE GetType()const;
 
 };
 #endif // !_COMPONENT_H_

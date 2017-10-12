@@ -42,6 +42,14 @@ update_status ModuleScene::Update(float dt)
 	return update_status::UPDATE_CONTINUE;
 }
 
+bool ModuleScene::CleanUp()
+{
+	RELEASE(root_gameobject);
+	
+	return true;
+}
+
+// Functionality ================================
 GameObject * ModuleScene::CreateGameObject()
 {
 	return new GameObject();
