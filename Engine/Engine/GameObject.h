@@ -1,11 +1,10 @@
 #ifndef _GAME_OBJECT_H_
 #define _GAME_OBJECT_H_
 
-#include "Globals.h"
-#include <list>
+#include <vector>
 #include <string>
 
-class Component;
+#include "Component.h"
 
 class GameObject
 {
@@ -17,22 +16,30 @@ public:
 
 public:
 
-	bool Update();
-
+	virtual bool	Update();
+	bool			UpdateChilds();
 private:
 
-	bool					actived = true;
-	std::string				name = "Unnamed";
-	std::list<Component*>	components;
+	bool						actived = true;
+	std::string					name = "Unnamed";
+	GameObject*					parent = nullptr;
+	std::vector<Component*>		components;
+	std::vector<GameObject*>	childs;
 
 public:
 
 	//Set Methods -----------
 	void SetActiveState(bool act);
+	void SetName(const char* str);
+	void SetParent(GameObject* target);
 
 	//Functionality ---------
-	void PushComponent(const Component* cmp);
-	void RemoveComponent(const Component* cmp);
+	Component*	CreateComponent(COMPONENT_TYPE c_type);
+	bool		RemoveComponent(Component* cmp);
+	bool		FindComponent(Component* cmp)const;
+
+	void		AddChild(const GameObject* child);
+	bool		RemoveChild(GameObject* child, bool search_in = false);
 
 };
 #endif // !_GAME_OBJECT_H_

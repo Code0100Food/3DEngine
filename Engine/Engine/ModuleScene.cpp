@@ -15,6 +15,15 @@ ModuleScene::~ModuleScene()
 }
 
 // Game Loop ====================================
+bool ModuleScene::Start()
+{
+	//Create the root game object
+	root_gameobject = CreateGameObject();
+	root_gameobject->SetName("Root Object");
+
+	return true;
+}
+
 update_status ModuleScene::Update(float dt)
 {
 	bool ret = true;
@@ -26,21 +35,22 @@ update_status ModuleScene::Update(float dt)
 	}
 	
 	//Update the scene game objects
-	uint size = objects.size();
-	for (uint k = 0; k < size; k++)
-	{
-		ret = objects[k]->Update();
-	}
+	ret = root_gameobject->Update();
 
 	if (!ret)return update_status::UPDATE_ERROR;
 
 	return update_status::UPDATE_CONTINUE;
 }
 
-GameObject * ModuleScene::CreateGameObject(bool push_at_vec)
+GameObject * ModuleScene::CreateGameObject()
 {
-	GameObject* n_obj = new GameObject();
-	if (push_at_vec)objects.push_back(n_obj);
-	
-	return n_obj;
+	return new GameObject();
+}
+
+bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * parent, bool search_in)
+{
+	GameObject* root = (GameObject*)parent;
+	if (root == nullptr)root = root_gameobject;
+
+	return root->RemoveChild(target, search_in);
 }

@@ -13,15 +13,16 @@ public:
 
 public:
 
+	bool			Start()final;
 	update_status	Update(float dt)final;
 
 private:
 
-	std::vector<GameObject*> objects;
+	GameObject*		root_gameobject = nullptr;
 
 public:
 
-	GameObject* CreateGameObject(bool push_at_vec = true);
-
+	GameObject* CreateGameObject();
+	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
 };
 #endif
