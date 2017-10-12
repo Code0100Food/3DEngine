@@ -20,10 +20,17 @@ public:
 private:
 
 	GameObject*		root_gameobject = nullptr;
+	bool			hierarchy_win_state = false;
 
 public:
 
+	//Functionality ---------
 	GameObject* CreateGameObject();
 	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
+
+	void		BlitHierarchy();
+	bool		GetHierarchyWinState()const;
+	void		SwapHierarchyWinState();
+
 };
 #endif

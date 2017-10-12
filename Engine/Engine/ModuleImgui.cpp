@@ -11,6 +11,7 @@
 #include "imgui/imgui_dock.h"
 #include "Devil/include/il.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleScene.h"
 
 // Constructors =================================
 ModuleImgui::ModuleImgui(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -141,6 +142,11 @@ update_status ModuleImgui::Update(float dt)
 			App->geometry->ShowSceneObjects();
 		}
 
+		if (ImGui::MenuItem("Hierarchy"))
+		{
+			App->scene->SwapHierarchyWinState();
+		}
+
 		if (ImGui::MenuItem("Configuration"))
 		{
 			App->ShowConfiguration();
@@ -260,6 +266,12 @@ update_status ModuleImgui::Update(float dt)
 		App->geometry->BlitObjectsWindow();
 	}
 	
+	//Hierarchy Window
+	if (App->scene->GetHierarchyWinState())
+	{
+		App->scene->BlitHierarchy();
+	}
+
 	App->renderer3D->EnableGLRenderFlags();
 
 	return update_status::UPDATE_CONTINUE;

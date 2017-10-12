@@ -8,8 +8,7 @@ class aiMesh;
 struct aiScene;
 enum aiTextureType;
 class aiMaterial;
-
-
+class GameObject;
 
 class Model_
 {
@@ -44,7 +43,7 @@ private:
 private:
 
 	void					LoadModel(std::string path);
-	void					ProcessNode(aiNode *node, const aiScene *scene);
+	void					ProcessNode(aiNode *node, const aiScene *scene, GameObject* parent);
 	Mesh_					ProcessMesh(aiMesh *mesh, const aiScene *scene);
 	std::vector<Texture>	LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
 

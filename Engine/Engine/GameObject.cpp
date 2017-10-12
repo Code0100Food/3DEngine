@@ -87,6 +87,16 @@ void GameObject::SetName(const char * str)
 
 void GameObject::SetParent(GameObject * target)
 {
+	if (parent != nullptr)
+	{
+		parent->PopChild(this);
+	}
+
+	if (target != nullptr)
+	{
+		target->AddChild(this);
+	}
+
 	parent = (GameObject*)target;
 }
 
@@ -196,4 +206,45 @@ bool GameObject::RemoveChild(GameObject * child, bool search_in)
 	}
 
 	return ret;
+}
+
+bool GameObject::PopChild(GameObject * child, bool search_in)
+{
+	bool ret = false;
+	uint size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (childs[k] == child)
+		{
+			for (uint h = k; h < size - 1; h++)
+			{
+				childs[h] == childs[h + 1];
+			}
+
+			childs.pop_back();
+
+			ret = true;
+			break;
+		}
+		else if (search_in)
+		{
+			ret = childs[k]->PopChild(child, search_in);
+			if (ret)break;
+		}
+	}
+
+	return ret;
+}
+
+void GameObject::BlitGameObject()
+{
+	if (ImGui::TreeNodeEx(name.c_str()))
+	{
+		uint size = childs.size();
+		for (uint k = 0; k < size; k++)
+		{
+			childs[k]->BlitGameObject();
+		}
+		ImGui::TreePop();
+	}
 }

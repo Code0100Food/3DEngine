@@ -2,6 +2,7 @@
 #define _COMPONENT_H_
 
 #include "Globals.h"
+#include "imgui/imgui.h"
 
 class GameObject;
 
@@ -43,6 +44,8 @@ public:
 
 	//Get Methods -----------
 	COMPONENT_TYPE GetType()const;
+
+	//Functionality ---------
 
 };
 #endif // !_COMPONENT_H_

@@ -52,7 +52,11 @@ bool ModuleScene::CleanUp()
 // Functionality ================================
 GameObject * ModuleScene::CreateGameObject()
 {
-	return new GameObject();
+	GameObject * obj = new GameObject();
+	
+	obj->SetParent(root_gameobject);
+	
+	return obj;
 }
 
 bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * parent, bool search_in)
@@ -61,4 +65,24 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 	if (root == nullptr)root = root_gameobject;
 
 	return root->RemoveChild(target, search_in);
+}
+
+void ModuleScene::BlitHierarchy()
+{
+	ImGui::SetNextWindowSize(ImVec2(300, 500));
+	ImGui::Begin("Hierarchy");
+	
+	root_gameobject->BlitGameObject();
+	
+	ImGui::End();
+}
+
+bool ModuleScene::GetHierarchyWinState() const
+{
+	return hierarchy_win_state;
+}
+
+void ModuleScene::SwapHierarchyWinState()
+{
+	hierarchy_win_state = !hierarchy_win_state;
 }

@@ -10,6 +10,7 @@
 #include "ModuleTextures.h"
 #include "ModuleRenderer3D.h"
 #include "GeometryManager.h"
+#include "ModuleScene.h"
 
 // Constructors =================================
 Model_::Model_(const char * path)
@@ -62,6 +63,10 @@ void Model_::LoadModel(std::string path)
 	
 	directory = path.substr(0, path.find_last_of('/'));
 
+	//Generate root game object
+	GameObject* obj = App->scene->CreateGameObject();
+	obj->SetName(scene->mRootNode->mName.C_Str());
+
 	//Get root node transformation
 	this->SetTransformation(scene->mRootNode->mTransformation);
 	this->name = scene->mRootNode->mName.C_Str();
@@ -69,16 +74,20 @@ void Model_::LoadModel(std::string path)
 
 	LOG("Loading %i meshes...", scene->mNumMeshes);
 	
-	ProcessNode(scene->mRootNode, scene);
+	ProcessNode(scene->mRootNode, scene, obj);
 
 	GenerateBoundingBox();
 }
 
-void Model_::ProcessNode(aiNode * node, const aiScene * scene)
+void Model_::ProcessNode(aiNode * node, const aiScene * scene, GameObject* parent)
 {
 	// process all the node's meshes (if any)
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
+		GameObject* obj = App->scene->CreateGameObject();
+		obj->SetName(node->mName.C_Str());
+		obj->SetParent(parent);
+
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		Mesh_ n_mesh = ProcessMesh(mesh, scene);
 		
@@ -93,7 +102,7 @@ void Model_::ProcessNode(aiNode * node, const aiScene * scene)
 	// then do the same for each of its children
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene);
+		ProcessNode(node->mChildren[i], scene, parent);
 	}
 }
 
