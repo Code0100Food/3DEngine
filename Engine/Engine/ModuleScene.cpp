@@ -49,6 +49,12 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
+// Set Methods ==================================
+void ModuleScene::SetSelectedGameObject(const GameObject * target)
+{
+	selected_gameobject = (GameObject*)target;
+}
+
 // Functionality ================================
 GameObject * ModuleScene::CreateGameObject()
 {
@@ -70,9 +76,9 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 void ModuleScene::BlitHierarchy()
 {
 	ImGui::SetNextWindowSize(ImVec2(300, 500));
-	ImGui::Begin("Hierarchy");
+	ImGui::Begin("Hierarchy", &hierarchy_win_state);
 	
-	root_gameobject->BlitGameObject();
+	root_gameobject->BlitGameObjectHierarchy();
 	
 	ImGui::End();
 }
@@ -85,4 +91,29 @@ bool ModuleScene::GetHierarchyWinState() const
 void ModuleScene::SwapHierarchyWinState()
 {
 	hierarchy_win_state = !hierarchy_win_state;
+}
+
+void ModuleScene::BlitInspector()
+{
+	ImGui::SetNextWindowSize(ImVec2(300, 500));
+	ImGui::Begin("Inspector", &inspector_state);
+
+	if (selected_gameobject != nullptr)selected_gameobject->BlitGameObjectInspector();
+
+	ImGui::End();
+}
+
+bool ModuleScene::GetInspectorState() const
+{
+	return inspector_state;
+}
+
+void ModuleScene::EnableInspector()
+{
+	inspector_state = true;
+}
+
+void ModuleScene::DisableInspector()
+{
+	inspector_state = false;
 }
