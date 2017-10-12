@@ -25,7 +25,16 @@ Model_::~Model_()
 	{
 		meshes[k].ReleaseBuffers();
 	}
+	meshes.clear();
+
+	size = textures.size();
+	for (uint k = 0; k < size; k++)
+	{
+		glDeleteBuffers(1, (GLuint*)&textures[k].id);
+	}
+	textures.clear();
 	
+	bounding_box.clear();
 }
 
 // Game Loop ====================================

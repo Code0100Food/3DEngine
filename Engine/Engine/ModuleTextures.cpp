@@ -43,10 +43,10 @@ bool ModuleTextures::Start()
 		for (int j = 0; j < CHECKERS_WIDTH; j++) 
 		{
 			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-			checkImage[i][j][0] = (GLubyte)c;
-			checkImage[i][j][1] = (GLubyte)c;
-			checkImage[i][j][2] = (GLubyte)c;
-			checkImage[i][j][3] = (GLubyte)255;
+			check_image_array[i][j][0] = (GLubyte)c;
+			check_image_array[i][j][1] = (GLubyte)c;
+			check_image_array[i][j][2] = (GLubyte)c;
+			check_image_array[i][j][3] = (GLubyte)255;
 		}
 	}
 
@@ -57,7 +57,7 @@ bool ModuleTextures::Start()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, check_image_array);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEnable(GL_TEXTURE_2D);
 
@@ -83,7 +83,7 @@ void ModuleTextures::BlitConfigInfo()
 	ImGui::Separator();
 
 	//Show checker texture
-	ImGui::Image((GLuint*)checkImage, ImVec2(50, 50));
+	ImGui::Image((GLuint*)check_image, ImVec2(50, 50));
 	ImGui::Text("Size: %ix%i", CHECKERS_WIDTH, CHECKERS_HEIGHT);
 	ImGui::Image((GLuint*)custom_check_image, ImVec2(50, 50));
 	
@@ -95,6 +95,14 @@ void ModuleTextures::BlitConfigInfo()
 	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
 	ImGui::Text("Size: %ix%i", width, height);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+bool ModuleTextures::CleanUp()
+{
+	if (check_image != NULL)glDeleteBuffers(1, (GLuint*)&check_image);
+	if (custom_check_image != NULL)glDeleteBuffers(1, (GLuint*)&custom_check_image);
+
+	return true;
 }
 
 // Set Methods ==================================

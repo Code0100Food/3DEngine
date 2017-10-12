@@ -18,10 +18,11 @@ public:
 	bool Awake(const JSON_Object* data_root)final;
 	bool Start()final;
 	void BlitConfigInfo()final;
+	bool CleanUp()final;
 
 private:
 
-	unsigned char checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	unsigned char check_image_array[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 
 	bool check_mode = false;
 	bool custom_mode = false;
