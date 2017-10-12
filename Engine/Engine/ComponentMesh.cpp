@@ -17,6 +17,10 @@ ComponentMesh::ComponentMesh(std::vector<Vertex> vertices, std::vector<uint> ind
 
 ComponentMesh::~ComponentMesh()
 {
+	vertices.clear();
+	indices.clear();
+
+	DeleteBuffers();
 }
 
 void ComponentMesh::SetMesh()
