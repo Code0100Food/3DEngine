@@ -404,118 +404,145 @@ void Application::BlitConfigWindow()
 
 	//Begin aplication dock
 	bool ApplicationDock = true;
-	config_dock->BeginDock("Application", &ApplicationDock, 0);
+	config_dock->BeginDock("Config", &ApplicationDock, 0);
 	{
-		if (ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+		bool cpy = config_opened;
+		if (ImGui::CollapsingHeader("Application"))
 		{
-			App->audio->PlayFxForInput(FX_ID::APPLY_FX);
-			App->window->SetTitle(app_name.c_str());
+			//Play fx on first open
+			config_opened = true;
+			if (cpy != config_opened)App->audio->PlayFxForInput(WINDOW_FX);
+
+			//UI config Application 
+			if (ImGui::InputText("Title", (char*)app_name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				App->audio->PlayFxForInput(FX_ID::APPLY_FX);
+				App->window->SetTitle(app_name.c_str());
+			}
+			ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application title.");
+
+			ImGui::InputText("Organization", (char*)organization.c_str(), 20);
+			ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application organization.");
+
+			if (ImGui::SliderInt("Max FPS", &max_fps, 0, 120))
+			{
+				capped_ms = 1000 / (float)max_fps;
+				App->audio->PlayFxForInput(SLICE_TICK_FX);
+			}
+			ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Limit max FPS.");
+
+			ImGui::Separator();
+
+			//Update framerate graphic
+			for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
+			{
+				fps_array[k] = fps_array[k + 1];
+			}
+			fps_array[GRAPH_ARRAY_SIZE - 1] = ImGui::GetIO().Framerate;
+
+			//Blit framerate graphic
+			char fps_title[25];
+			sprintf_s(fps_title, 25, "Framerate %.1f", fps_array[29]);
+			ImGui::PlotHistogram("", fps_array, IM_ARRAYSIZE(fps_array), 30, fps_title, 0.0f, 130.0f, ImVec2(0, 80));
+
+			//Update framerate graphic
+			for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
+			{
+				miliseconds_array[k] = miliseconds_array[k + 1];
+			}
+			miliseconds_array[GRAPH_ARRAY_SIZE - 1] = dt * 1000;
+
+			//Blit milliseconds graphic
+			char mili_title[25];
+			sprintf_s(mili_title, 25, "Milliseconds %.1f", miliseconds_array[29]);
+			ImGui::PlotHistogram("", miliseconds_array, IM_ARRAYSIZE(miliseconds_array), 30, mili_title, 0.0f, 100.0f, ImVec2(0, 80));
+
+			ImGui::Separator();
+
+			//Blit memory data
+			sMStats memory_stats = m_getMemoryStatistics();
+			//Total reported memory
+			char total_rep_mem[60];
+			sprintf_s(total_rep_mem, 60, "Total Reported Mem: %i", memory_stats.totalReportedMemory);
+			ImGui::Text("%s", total_rep_mem);
+
+			//Total actual memory
+			char total_actual_mem[60];
+			sprintf_s(total_actual_mem, 60, "Total Actual Mem: %i", memory_stats.totalActualMemory);
+			ImGui::Text("%s", total_actual_mem);
+
+			//Peak reported memory
+			char peak_reported_mem[60];
+			sprintf_s(peak_reported_mem, 60, "Peak Reported Mem: %i", memory_stats.peakReportedMemory);
+			ImGui::Text("%s", peak_reported_mem);
+
+			//Peak actual memory
+			char peak_actual_mem[60];
+			sprintf_s(peak_actual_mem, 60, "Peak Actual Mem: %i", memory_stats.peakActualMemory);
+			ImGui::Text("%s", peak_actual_mem);
+
+			//Accumulated reported memory
+			char accumulated_reported_mem[60];
+			sprintf_s(accumulated_reported_mem, 60, "Accumulated Reported Mem: %i", memory_stats.accumulatedReportedMemory);
+			ImGui::Text("%s", accumulated_reported_mem);
+
+			//Accumulated reported memory
+			char accumulated_actual_mem[60];
+			sprintf_s(accumulated_actual_mem, 60, "Accumulated Actual Mem: %i", memory_stats.accumulatedActualMemory);
+			ImGui::Text("%s", accumulated_actual_mem);
+
+			//Accumulated alloc unit count
+			char accumulated_alloc_unit_count[60];
+			sprintf_s(accumulated_alloc_unit_count, 60, "Accumulated Alloc Unit Count: %i", memory_stats.accumulatedAllocUnitCount);
+			ImGui::Text("%s", accumulated_alloc_unit_count);
+
+			//Total alloc unit count
+			char total_alloc_unit_count[60];
+			sprintf_s(total_alloc_unit_count, 60, "Total Alloc Unit Count: %i", memory_stats.totalAllocUnitCount);
+			ImGui::Text("%s", total_alloc_unit_count);
+
+			//Peak alloc unit count
+			char peak_alloc_unit_count[60];
+			sprintf_s(peak_alloc_unit_count, 60, "Peak Alloc Unit Count: %i", memory_stats.peakAllocUnitCount);
+			ImGui::Text("%s", peak_alloc_unit_count);
 		}
-		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application title.");
-
-		ImGui::InputText("Organization", (char*)organization.c_str(), 20);
-		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application organization.");
-
-		if (ImGui::SliderInt("Max FPS", &max_fps, 0, 120))
+		else if (config_opened)
 		{
-			capped_ms = 1000 / (float)max_fps;
-			App->audio->PlayFxForInput(SLICE_TICK_FX);
+			App->audio->PlayFxForInput(WINDOW_FX);
+			config_opened = false;
 		}
-		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Limit max FPS.");
-
-		ImGui::Separator();
-
-		//Update framerate graphic
-		for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
-		{
-			fps_array[k] = fps_array[k + 1];
-		}
-		fps_array[GRAPH_ARRAY_SIZE - 1] = ImGui::GetIO().Framerate;
-
-		//Blit framerate graphic
-		char fps_title[25];
-		sprintf_s(fps_title, 25, "Framerate %.1f", fps_array[29]);
-		ImGui::PlotHistogram("", fps_array, IM_ARRAYSIZE(fps_array), 30, fps_title, 0.0f, 130.0f, ImVec2(0, 80));
-
-		//Update framerate graphic
-		for (uint k = 0; k < GRAPH_ARRAY_SIZE; k++)
-		{
-			miliseconds_array[k] = miliseconds_array[k + 1];
-		}
-		miliseconds_array[GRAPH_ARRAY_SIZE - 1] = dt * 1000;
-
-		//Blit milliseconds graphic
-		char mili_title[25];
-		sprintf_s(mili_title, 25, "Milliseconds %.1f", miliseconds_array[29]);
-		ImGui::PlotHistogram("", miliseconds_array, IM_ARRAYSIZE(miliseconds_array), 30, mili_title, 0.0f, 100.0f, ImVec2(0, 80));
-
-		ImGui::Separator();
-
-		//Blit memory data
-		sMStats memory_stats = m_getMemoryStatistics();
-		//Total reported memory
-		char total_rep_mem[60];
-		sprintf_s(total_rep_mem, 60, "Total Reported Mem: %i", memory_stats.totalReportedMemory);
-		ImGui::Text("%s", total_rep_mem);
-
-		//Total actual memory
-		char total_actual_mem[60];
-		sprintf_s(total_actual_mem, 60, "Total Actual Mem: %i", memory_stats.totalActualMemory);
-		ImGui::Text("%s", total_actual_mem);
-
-		//Peak reported memory
-		char peak_reported_mem[60];
-		sprintf_s(peak_reported_mem, 60, "Peak Reported Mem: %i", memory_stats.peakReportedMemory);
-		ImGui::Text("%s", peak_reported_mem);
-
-		//Peak actual memory
-		char peak_actual_mem[60];
-		sprintf_s(peak_actual_mem, 60, "Peak Actual Mem: %i", memory_stats.peakActualMemory);
-		ImGui::Text("%s", peak_actual_mem);
-
-		//Accumulated reported memory
-		char accumulated_reported_mem[60];
-		sprintf_s(accumulated_reported_mem, 60, "Accumulated Reported Mem: %i", memory_stats.accumulatedReportedMemory);
-		ImGui::Text("%s", accumulated_reported_mem);
-
-		//Accumulated reported memory
-		char accumulated_actual_mem[60];
-		sprintf_s(accumulated_actual_mem, 60, "Accumulated Actual Mem: %i", memory_stats.accumulatedActualMemory);
-		ImGui::Text("%s", accumulated_actual_mem);
-
-		//Accumulated alloc unit count
-		char accumulated_alloc_unit_count[60];
-		sprintf_s(accumulated_alloc_unit_count, 60, "Accumulated Alloc Unit Count: %i", memory_stats.accumulatedAllocUnitCount);
-		ImGui::Text("%s", accumulated_alloc_unit_count);
-
-		//Total alloc unit count
-		char total_alloc_unit_count[60];
-		sprintf_s(total_alloc_unit_count, 60, "Total Alloc Unit Count: %i", memory_stats.totalAllocUnitCount);
-		ImGui::Text("%s", total_alloc_unit_count);
-
-		//Peak alloc unit count
-		char peak_alloc_unit_count[60];
-		sprintf_s(peak_alloc_unit_count, 60, "Peak Alloc Unit Count: %i", memory_stats.peakAllocUnitCount);
-		ImGui::Text("%s", peak_alloc_unit_count);
+		
 
 	}
 
-	//Close Dock
-	config_dock->EndDock();
+	
 	
 	//Build headers for the rest of modules
 	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++)
 	{
 		if (!(*item)->config_menu)continue;
 
-		bool cpy = true;
+		bool cpy = (*item)->config_open;
 
-		config_dock->BeginDock((*item)->name.c_str(), &cpy, 0);
-		(*item)->BlitConfigInfo();
-		config_dock->EndDock();
+
+		//Play fx on first open
+		if (ImGui::CollapsingHeader((*item)->name.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_NoTreePushOnOpen))
+		{
+			(*item)->config_open = true;
+			if (cpy != (*item)->config_open)App->audio->PlayFxForInput(WINDOW_FX);
+			bool cpy = true;
+			(*item)->BlitConfigInfo();
+		}
+		//Play fx when is closed
+		else if ((*item)->config_open)
+		{
+			App->audio->PlayFxForInput(WINDOW_FX);
+			(*item)->config_open = false;
+		}
 
 	}
-	
+	//Close Dock
+	config_dock->EndDock();
 	config_dock->EndWorkspace();
 	ImGui::End();
 }
