@@ -26,14 +26,11 @@ ComponentMesh::ComponentMesh(std::vector<Vertex> vertices, std::vector<uint> ind
 // Destructors ==================================
 ComponentMesh::~ComponentMesh()
 {
-<<<<<<< HEAD
-	this->DeleteBuffers();
-=======
 	vertices.clear();
 	indices.clear();
+	draw_material = nullptr;
 
-	DeleteBuffers();
->>>>>>> origin/master
+	this->DeleteBuffers();
 }
 
 // Game Loop ====================================
