@@ -24,6 +24,7 @@ class ModuleHardware;
 class ModuleTextures;
 class GeometryManager;
 class Profiler;
+class Importer;
 class ModuleScene;
 class DockContext;
 
@@ -73,6 +74,7 @@ public:
 
 	//Tools 
 	Profiler*			profiler = nullptr;
+	Importer*			importer = nullptr;
 
 	APP_CONTEXT			app_context = UNKNOWN_CONTEXT;
 

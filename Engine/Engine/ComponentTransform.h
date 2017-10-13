@@ -26,8 +26,10 @@ public:
 	//Set Methods -----------
 	void SetTransformation(aiMatrix4x4 trans);
 
+	//Get Methods -----------
+	aiVector3D	GetPosition()const;
+
 	//Functionality ---------
 	void BlitComponentInspector();
 };
-
 #endif // !_COMPONENT_TRANSFORM_H_

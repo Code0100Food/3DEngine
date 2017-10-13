@@ -8,8 +8,8 @@
 #include "ModuleAudio.h"
 #include "FileSystem.h"
 #include "ModuleInput.h"
-#include "Model_.h"
 #include "GeometryManager.h"
+#include "ModuleScene.h"
 
 // Constructors =================================
 ModuleCamera3D::ModuleCamera3D(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -173,10 +173,10 @@ update_status ModuleCamera3D::Update(float dt)
 		//Focus current object
 		else if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 		{
-			Model_* target = App->geometry->GetSelectedModel();
+				GameObject* target = App->scene->GetSelectedGameObject();
 			if (target != nullptr)
 			{
-				LookAtModel(target);
+				LookAtGameObject(target);
 			}
 		}
 	}
@@ -275,10 +275,11 @@ void ModuleCamera3D::LookAt( const vec3 &Spot)
 	CalculateViewMatrix();
 }
 
-void ModuleCamera3D::LookAtModel(Model_ * model)
+void ModuleCamera3D::LookAtGameObject(GameObject * obj)
 {
-	camera_dist = model->GetFocusDistance();
-	view_vector = model->GetPosition();
+	ComponentTransform* trans_cmp = (ComponentTransform*)obj->FindComponent(COMP_TRANSFORMATION);
+	view_vector = trans_cmp->GetPosition();
+	camera_dist = 10;
 	camera_location = view_vector + camera_dist * Z;
 }
 

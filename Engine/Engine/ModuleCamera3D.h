@@ -6,7 +6,7 @@
 #include "glmath.h"
 
 struct PhysVehicle3D;
-class Model_;
+class GameObject;
 
 class ModuleCamera3D : public Module
 {
@@ -43,7 +43,7 @@ public:
 
 	void	Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
 	void	LookAt(const vec3 &Spot);
-	void	LookAtModel(Model_* model);
+	void	LookAtGameObject(GameObject* obj);
 	void	Move(const vec3 &Movement);
 	float*	GetViewMatrix();
 

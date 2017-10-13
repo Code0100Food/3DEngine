@@ -21,8 +21,6 @@ bool GeometryManager::Awake(const JSON_Object * data_root)
 {
 	show_grid = json_object_get_boolean(data_root, "show_grid");
 
-	show_meshes = json_object_get_boolean(data_root, "show_meshes");
-
 	mesh_lines_width = json_object_get_number(data_root, "mesh_lines_width");
 
 	JSON_Array* _array = json_object_get_array(data_root, "mesh_color");
@@ -48,8 +46,6 @@ bool GeometryManager::Awake(const JSON_Object * data_root)
 	bounding_box_color[1] = json_array_get_number(_array, 1);
 	bounding_box_color[2] = json_array_get_number(_array, 2);
 	bounding_box_color[3] = json_array_get_number(_array, 3);
-
-	show_primitives = json_object_get_boolean(data_root, "show_primitives");
 
 	primitive_lines_width = json_object_get_number(data_root, "primitive_lines_width");
 
@@ -98,35 +94,17 @@ bool GeometryManager::Draw()
 	}
 
 	//Blit debug primitives
-	if (show_primitives)
+
+	//Set Primitives render states
+	glLineWidth(primitive_lines_width);
+	glColor4f(primitive_color[0], primitive_color[1], primitive_color[2], primitive_color[3]);
+
+	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
+	while (geom != primitives_list.end())
 	{
-		//Set Primitives render states
-		glLineWidth(primitive_lines_width);
-		glColor4f(primitive_color[0], primitive_color[1], primitive_color[2], primitive_color[3]);
+		geom._Ptr->_Myval->Draw();
 
-		std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
-		while (geom != primitives_list.end())
-		{
-			geom._Ptr->_Myval->Draw();
-
-			geom++;
-		}
-	}
-
-	if (show_meshes)
-	{
-		//Set meshes render states
-		glLineWidth(mesh_lines_width);
-		glColor4f(mesh_color[0], mesh_color[1], mesh_color[2], mesh_color[3]);
-
-		//Blit meshes
-		std::list<Model_*>::const_iterator mesh = models_list.begin();
-		while (mesh != models_list.end())
-		{
-			mesh._Ptr->_Myval->Draw();
-
-			mesh++;
-		}
+		geom++;
 	}
 
 	//Reset the buffers focus
@@ -155,14 +133,14 @@ bool GeometryManager::CleanUp()
 	primitives_list.clear();
 
 	//Clean meshes
-	std::list<Model_*>::const_iterator mesh = models_list.begin();
+	/*std::list<Model_*>::const_iterator mesh = models_list.begin();
 	while (mesh != models_list.end())
 	{
 		RELEASE(mesh._Ptr->_Myval);
 
 		mesh++;
 	}
-	models_list.clear();
+	models_list.clear();*/
 
 
 	// detach log stream
@@ -174,14 +152,12 @@ bool GeometryManager::CleanUp()
 void GeometryManager::BlitConfigInfo()
 {
 	ImGui::Text("Primitives Configuration");
-	ImGui::Checkbox("Show Primitives", &show_primitives);
 	ImGui::SliderFloat("Primitive Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f");
 	ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f");
 	
 	ImGui::Separator();
 
 	ImGui::Text("Meshes Configuration");
-	ImGui::Checkbox("Show Meshes", &show_meshes);
 	ImGui::SliderFloat("Mesh Lines Width", &mesh_lines_width, 0.1, 10.0, "%.1f");
 	ImGui::SliderFloat4("Mesh Color", mesh_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Vertex Normals Color", vertex_normals_color, 0.0, 1.0, "%.2f");
@@ -201,8 +177,6 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 {
 	json_object_set_boolean(data_root, "show_grid", show_grid);
 		
-	json_object_set_boolean(data_root, "show_meshes", show_meshes);
-
 	json_object_set_number(data_root, "mesh_lines_width", mesh_lines_width);
 
 	json_array_t*_array = json_object_get_array(data_root, "mesh_color");
@@ -229,8 +203,6 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 2, bounding_box_color[2]);
 	json_array_replace_number(_array, 3, bounding_box_color[3]);
 
-	json_object_set_boolean(data_root, "show_primitives", show_primitives);
-
 	json_object_set_number(data_root, "primitive_lines_width", primitive_lines_width);
 
 	_array = json_object_get_array(data_root, "primitive_color");
@@ -247,44 +219,6 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 2, grid->color.b);
 	json_array_replace_number(_array, 3, grid->color.a);
 
-}
-
-Model_ * GeometryManager::GetSelectedModel() const
-{
-	if (models_list.size() == 0)return nullptr;
-	return models_list.begin()._Ptr->_Myval;
-}
-
-// Functionality ================================
-void GeometryManager::ShowSceneObjects()
-{
-	show_scene_objects = !show_scene_objects;
-}
-
-bool GeometryManager::GetObjWindowState() const
-{
-	return show_scene_objects;
-}
-
-void GeometryManager::BlitObjectsWindow()
-{
-	//Iterate all the loaded models and show all the stats
-
-	/* Assigment 1 temporal */ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.4f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Always);
-	/* Assigment 1 temporal */ImGui::SetNextWindowPos(ImVec2(0, App->window->GetHeight() * 0.5f + 23 * 0.5f), ImGuiCond_Always);
-
-	ImGui::Begin("Scene Models", &show_scene_objects, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
-	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Scene Models");
-
-	std::list<Model_*>::const_iterator geom = models_list.begin();
-	while (geom != models_list.end())
-	{
-		geom._Ptr->_Myval->BlitInfo();
-		
-		geom++;
-	}
-	
-	ImGui::End();
 }
 
 Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type, bool push_at_list)
@@ -325,21 +259,4 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type, bool push_at_l
 	if (push_at_list)primitives_list.push_back(new_primitive);
 
 	return new_primitive;
-}
-
-bool GeometryManager::LoadScene(const char * folder)
-{
-	//Temporal for the first assignment
-	if (models_list.size() >= 1)
-	{
-		RELEASE(models_list.back());
-		models_list.pop_back();
-		LOG("Previous model released!");
-	}
-
-	LOG("Loading new model...");
-	Model_* new_model = new Model_(folder);
-	models_list.push_back(new_model);
-
-	return true;
 }

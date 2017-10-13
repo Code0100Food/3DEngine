@@ -12,6 +12,8 @@
 #include "ModuleTextures.h"
 #include "ModuleImgui.h"
 #include "ModuleCamera3D.h"
+#include "Importer.h"
+#include "ModuleScene.h"
 
 #define MAX_KEYS 300
 
@@ -281,8 +283,8 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			if ((tmp.compare(next_to_point, len, "FBX") == 0) || (tmp.compare(next_to_point, len, "fbx") == 0) || (tmp.compare(next_to_point, len, "OBJ") == 0) || (tmp.compare(next_to_point, len, "obj") == 0))
 			{
-				App->geometry->LoadScene(event.drop.file);
-				App->camera->LookAtModel(App->geometry->GetSelectedModel());
+				App->importer->ImportScene(event.drop.file);
+				App->camera->LookAtGameObject(App->scene->GetSelectedGameObject());
 			}
 
 			

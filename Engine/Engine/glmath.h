@@ -8,6 +8,8 @@
 
 #include <math.h>
 #include "MathGeoLib/Math/float3.h"
+#include "Assimp/include/vector3.h"
+
 // ----------------------------------------------------------------------------------------------------------------------------
 
 class vec2
@@ -188,6 +190,10 @@ public:
 		x = u.x; y = u.y; z = u.z; return *this;
 	}
 	vec3& operator = (const math::float3 &u)
+	{
+		x = u.x; y = u.y; z = u.z; return *this;
+	}
+	vec3& operator = (const aiVector3D &u)
 	{
 		x = u.x; y = u.y; z = u.z; return *this;
 	}

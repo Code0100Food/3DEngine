@@ -15,6 +15,7 @@
 #include "ModuleScene.h"
 #include "FileSystem.h"
 #include "Profiler.h"
+#include "Importer.h"
 #include "Parson/parson.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "mmgr/mmgr.h"
@@ -25,6 +26,8 @@ Application::Application()
 {
 	START(ms_timer);
 	START(prof_timer);
+
+	importer = new Importer();
 
 	profiler = new Profiler();
 	
@@ -319,6 +322,9 @@ bool Application::CleanUp()
 
 	//Delete the profiler
 	RELEASE(profiler);
+
+	//Delete the importer
+	RELEASE(importer);
 
 	RELEASE(config_dock);
 

@@ -53,6 +53,12 @@ void ModuleScene::SetSelectedGameObject(const GameObject * target)
 	selected_gameobject = (GameObject*)target;
 }
 
+// Get Methods ==================================
+GameObject * ModuleScene::GetSelectedGameObject() const
+{
+	return selected_gameobject;
+}
+
 // Functionality ================================
 GameObject * ModuleScene::CreateGameObject()
 {

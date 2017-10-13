@@ -29,6 +29,9 @@ public:
 	//Set Methods -----------
 	void	SetSelectedGameObject(const GameObject* target);
 
+	//Get Methods -----------
+	GameObject*	GetSelectedGameObject()const;
+
 	//Functionality ---------
 	GameObject* CreateGameObject();
 	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);

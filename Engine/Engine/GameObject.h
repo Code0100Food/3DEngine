@@ -42,6 +42,7 @@ public:
 	Component*	CreateComponent(COMPONENT_TYPE c_type);
 	bool		RemoveComponent(Component* cmp);
 	bool		FindComponent(Component* cmp)const;
+	Component*	FindComponent(COMPONENT_TYPE type)const;
 	Component*	CloneComponent(const Component* target)const;
 
 	void		AddChild(const GameObject* child);

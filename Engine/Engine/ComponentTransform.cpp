@@ -20,7 +20,13 @@ ComponentTransform::~ComponentTransform()
 // Set Methods ==================================
 void ComponentTransform::SetTransformation(aiMatrix4x4 trans)
 {
-	trans.Decompose(scale, rotation, position);
+	//trans.Decompose(scale, rotation, position);
+}
+
+// Get Methods ==================================
+aiVector3D ComponentTransform::GetPosition() const
+{
+	return position;
 }
 
 // Functionality ================================

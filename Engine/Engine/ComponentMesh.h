@@ -3,14 +3,55 @@
 
 #include "Component.h"
 #include "MathGeoLib/MathGeoLib.h"
-#include "Mesh_.h"
 
-/*struct Vertex
+// Render Flags ---------------------------------
+enum RENDER_FLAGS
+{
+	REND_NONE = 1 << 0,
+	REND_VERTEX_NORMALS = 1 << 1,
+	REND_FACE_NORMALS = 1 << 2,
+	REND_BOUND_BOX = 1 << 3
+};
+
+inline RENDER_FLAGS operator~ (RENDER_FLAGS a)
+{
+	return (RENDER_FLAGS)~(int)a;
+}
+
+inline RENDER_FLAGS& operator&= (RENDER_FLAGS& a, RENDER_FLAGS b)
+{
+	return (RENDER_FLAGS&)((int&)a &= (int)b);
+}
+
+inline RENDER_FLAGS& operator|= (RENDER_FLAGS& a, RENDER_FLAGS b)
+{
+	return (RENDER_FLAGS&)((int&)a |= (int)b);
+}
+// ----------------------------------------------
+
+// Vertex ---------------------------------------
+struct Vertex
 {
 	math::float3 position = { 0,0,0 };
 	math::float3 normals = { 0,0,0 };
 	math::float2 tex_coords = { 0,0 };
-};*/
+};
+// ----------------------------------------------
+
+// Texture --------------------------------------
+struct Texture
+{
+	uint		id = 0;
+	std::string type;
+	std::string path;
+
+	int			tex_width = 0;
+	int			tex_height = 0;
+
+	//Methods ---------------
+	void BlitUI()const;
+};
+// ----------------------------------------------
 
 class ComponentMaterial;
 

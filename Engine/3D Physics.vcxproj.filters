@@ -13,9 +13,6 @@
     <Filter Include="Sources\Tools">
       <UniqueIdentifier>{7e4dfaf7-022c-4f7d-92aa-f3b3fa9d6248}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Helpers">
-      <UniqueIdentifier>{121f8e6b-df36-4ab0-be0d-601ddfc9e503}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Tools\Imgui">
       <UniqueIdentifier>{9b539853-c6e5-453b-8105-11ca9c60e654}</UniqueIdentifier>
     </Filter>
@@ -55,8 +52,11 @@
     <Filter Include="Sources\GameObject &amp; Components">
       <UniqueIdentifier>{d8bad644-2d5a-41e7-bdb8-6641e3181d51}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Meshes &amp; Primitives">
+    <Filter Include="Sources\Containers\Primitives">
       <UniqueIdentifier>{4406f9e8-a687-4c4a-b604-15079471fd54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Importers">
+      <UniqueIdentifier>{71703e85-0e1f-4715-87f7-cc6cec5a046d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -68,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="Engine\p2Point.h">
       <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Light.h">
-      <Filter>Sources\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModuleAudio.h">
       <Filter>Sources\Modules</Filter>
@@ -319,10 +316,10 @@
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Cube_.h">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Primitive_.h">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\GeometryManager.h">
       <Filter>Sources\Modules</Filter>
@@ -331,25 +328,19 @@
       <Filter>Sources\Tools\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Sphere_.h">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Capsule_.h">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Frustrum_.h">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Cylinder_.h">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\MathGeoLib\Geometry\Cylinder.h">
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Mesh_.h">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Model_.h">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\stb\stb_image.h">
       <Filter>Sources\Tools\stb</Filter>
@@ -361,7 +352,7 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Grid_.h">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\GameObject.h">
       <Filter>Sources\GameObject &amp; Components</Filter>
@@ -381,6 +372,15 @@
     <ClInclude Include="Engine\ComponentMaterial.h">
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Light.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ModelImporter.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Importer.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -391,9 +391,6 @@
     </ClCompile>
     <ClCompile Include="Engine\glmath.cpp">
       <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Light.cpp">
-      <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Engine\log.cpp">
       <Filter>Sources\Tools</Filter>
@@ -552,10 +549,10 @@
       <Filter>Sources\Modules\Input</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Primitive_.cpp">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Cube_.cpp">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GeometryManager.cpp">
       <Filter>Sources\Modules</Filter>
@@ -564,31 +561,25 @@
       <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Sphere_.cpp">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Frustrum_.cpp">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Capsule_.cpp">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Cylinder_.cpp">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\MathGeoLib\Geometry\Cylinder.cpp">
       <Filter>Sources\Tools\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Mesh_.cpp">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Model_.cpp">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ModuleTextures.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Grid_.cpp">
-      <Filter>Sources\Meshes &amp; Primitives</Filter>
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GameObject.cpp">
       <Filter>Sources\GameObject &amp; Components</Filter>
@@ -607,6 +598,15 @@
     </ClCompile>
     <ClCompile Include="Engine\ComponentMaterial.cpp">
       <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Light.cpp">
+      <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ModelImporter.cpp">
+      <Filter>Sources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Importer.cpp">
+      <Filter>Sources\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -9,8 +9,6 @@
 #include "Capsule_.h"
 #include "Cylinder_.h"
 #include "Frustrum_.h"
-#include "Mesh_.h"
-#include "Model_.h"
 #include "Grid_.h"
 
 #include "Assimp/include/cimport.h"
@@ -23,8 +21,6 @@
 class GeometryManager : public Module
 {
 
-	friend class Mesh_;
-	friend class Model_;
 	friend class ComponentMesh;
 
 public:
@@ -44,7 +40,6 @@ public:
 protected:
 
 	std::list<Primitive_*>	primitives_list;
-	std::list<Model_*>		models_list;
 
 	//Ground grid
 	Grid_*	grid = nullptr; 
@@ -52,33 +47,19 @@ protected:
 	// Config data
 	bool	show_grid = true;
 
-	bool	show_meshes = true;
 	float	mesh_lines_width = 1.0f;
 	float	mesh_color[4];
 	float	vertex_normals_color[4];
 	float	face_normals_color[4];
 	float	bounding_box_color[4];
 
-	bool	show_primitives = true;
 	float	primitive_lines_width = 1.0f;
 	float	primitive_color[4];
 
-	//Scene objects window data
-	bool	show_scene_objects = true;
-
 public:
-
-	//Temp Method
-	Model_*	GetSelectedModel()const;
-
-	//Objects window methods
-	void ShowSceneObjects();
-	bool GetObjWindowState()const;
-	void BlitObjectsWindow();
 
 	//Geometry factory ------
 	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type, bool push_at_list = true);
-	bool		LoadScene(const char* folder);
 
 };
 

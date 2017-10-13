@@ -165,6 +165,22 @@ bool GameObject::FindComponent(Component * cmp) const
 	return false;
 }
 
+Component * GameObject::FindComponent(COMPONENT_TYPE type) const
+{
+	Component* cmp = nullptr;
+	uint size = components.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (components[k]->GetType() == type)
+		{
+			cmp = components[k];
+			break;
+		}
+	}
+
+	return cmp;
+}
+
 Component * GameObject::CloneComponent(const Component * target) const
 {
 	Component* new_c = nullptr;

@@ -137,11 +137,6 @@ update_status ModuleImgui::Update(float dt)
 		view_menu_open = true;
 		if (view_menu_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
 
-		if (ImGui::MenuItem("Scene Objects"))
-		{
-			App->geometry->ShowSceneObjects();
-		}
-
 		if (ImGui::MenuItem("Hierarchy"))
 		{
 			App->scene->SwapHierarchyWinState();
@@ -260,12 +255,6 @@ update_status ModuleImgui::Update(float dt)
 		App->BlitConfigWindow();
 	}
 
-	//Scene Objects Window
-	if (App->geometry->GetObjWindowState())
-	{
-		App->geometry->BlitObjectsWindow();
-	}
-	
 	//Hierarchy Window
 	if (App->scene->GetHierarchyWinState())
 	{

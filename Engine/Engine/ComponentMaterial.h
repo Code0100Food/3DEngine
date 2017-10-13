@@ -1,9 +1,8 @@
 #ifndef _COMPONENT_MATERIAL_H_
 #define _COMPONENT_MATERIAL_H_
 
-#include "Component.h"
+#include "ComponentMesh.h"
 #include <vector>
-#include "Mesh_.h"
 
 class ComponentMaterial : public Component
 {
