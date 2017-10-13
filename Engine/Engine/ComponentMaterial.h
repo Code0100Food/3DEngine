@@ -7,7 +7,7 @@
 class ComponentMaterial : public Component
 {
 
-	friend class ComponentMesh;
+	friend class ComponentMeshRenderer;
 
 public:
 

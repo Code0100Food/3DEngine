@@ -14,8 +14,11 @@ class DockContext;
 class FrameTexture
 {
 public:
+
 	FrameTexture();
 	~FrameTexture();
+
+public:
 
 	void Create(int, int);
 	void Bind();
@@ -24,10 +27,10 @@ public:
 
 public:
 
-	unsigned int			frame_id = 0;
-	unsigned int			rbo_id = 0;
-	unsigned int			texture_id = 0;
-	unsigned int			depth_id = 0;
+	uint	frame_id = 0;
+	uint	rbo_id = 0;
+	uint	texture_id = 0;
+	uint	depth_id = 0;
 
 	int		width = 0;
 	int		height = 0;
@@ -105,8 +108,6 @@ public:
 	void EnableGLRenderFlags();
 	
 };
-
-
 #endif // !_MODULE_RENDER_3D_H_
 
 

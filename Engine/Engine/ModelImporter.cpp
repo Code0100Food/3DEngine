@@ -77,6 +77,10 @@ void ModelImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene, GameObject
 	//Generate the container mesh component
 	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
 
+	//Generate the container mesh renderer component
+	ComponentMeshRenderer* comp_mesh_renderer = (ComponentMeshRenderer*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+	comp_mesh_renderer->SetTargetMesh(comp_mesh);
+
 	std::vector<Vertex>		vertices;
 	std::vector<uint>		indices;
 	std::vector<Texture>	textures;

@@ -6,6 +6,7 @@
 
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
+#include "ComponentMeshRenderer.h"
 #include "ComponentMaterial.h"
 
 class GameObject

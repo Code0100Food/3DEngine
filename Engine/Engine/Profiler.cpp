@@ -59,6 +59,11 @@ void Profiler::BlitInfo(bool* flag)
 	BlitModuleProfile(M_WINDOW,"##Window");
 	ImGui::Separator();
 
+	//Show renderer time tracking ---------------
+	ImGui::Text("Renderer:");
+	BlitModuleProfile(M_RENDERER, "##Renderer");
+	ImGui::Separator();
+
 	//Show scene time tracking ------------------
 	ImGui::Text("Scene:");
 	BlitModuleProfile(M_SCENE,"##Scene");

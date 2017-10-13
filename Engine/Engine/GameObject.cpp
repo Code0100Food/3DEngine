@@ -119,6 +119,7 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 	case COMP_TRANSFORMATION:	comp = new ComponentTransform();	break;
 	case COMP_MESH:				comp = new ComponentMesh();			break;
 	case COMP_MATERIAL:			comp = new ComponentMaterial();		break;
+	case COMP_MESH_RENDERER:	comp = new ComponentMeshRenderer();	break;
 	}
 
 	if (comp != nullptr)
@@ -187,9 +188,10 @@ Component * GameObject::CloneComponent(const Component * target) const
 
 	switch (target->GetType())
 	{
-	case COMP_TRANSFORMATION:		new_c = new ComponentTransform(*(const ComponentTransform*)target);		break;
-	case COMP_MESH:					new_c = new ComponentMesh(*(const ComponentMesh*)target);				break;
-	case COMP_MATERIAL:				new_c = new ComponentMaterial(*(const ComponentMaterial*)target);		break;
+	case COMP_TRANSFORMATION:		new_c = new ComponentTransform(*(const ComponentTransform*)target);			break;
+	case COMP_MESH:					new_c = new ComponentMesh(*(const ComponentMesh*)target);					break;
+	case COMP_MATERIAL:				new_c = new ComponentMaterial(*(const ComponentMaterial*)target);			break;
+	case COMP_MESH_RENDERER:		new_c = new ComponentMeshRenderer(*(const ComponentMeshRenderer*)target);	break;
 	}
 
 	return new_c;

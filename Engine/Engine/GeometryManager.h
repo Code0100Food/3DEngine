@@ -21,7 +21,7 @@
 class GeometryManager : public Module
 {
 
-	friend class ComponentMesh;
+	friend class ComponentMeshRenderer;
 
 public:
 

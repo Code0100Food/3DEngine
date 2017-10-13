@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "MathGeoLib/MathGeoLib.h"
 
+class ComponentMeshRenderer;
+
 // Render Flags ---------------------------------
 enum RENDER_FLAGS
 {
@@ -57,29 +59,25 @@ class ComponentMaterial;
 
 class ComponentMesh : public Component
 {
+
+	friend class ComponentMeshRenderer;
+
 public:
 
 	ComponentMesh();
 	ComponentMesh(const ComponentMesh& cpy);
-	ComponentMesh(std::vector<Vertex> vertices, std::vector<uint> indices, ComponentMaterial* material);
 	~ComponentMesh();
 
-public:
-
-	bool Update();
-
 private:
-
-	RENDER_FLAGS				render_flags = REND_NONE;
 
 	std::vector<Vertex>			vertices;
 	std::vector<uint>			indices;
 	std::vector<math::float3>	bounding_box;
 
-	uint				num_tris = 0;
-	uint				num_vertex = 0;
+	uint						num_tris = 0;
+	uint						num_vertex = 0;
 
-	ComponentMaterial*	draw_material = nullptr;
+	ComponentMaterial*			draw_material = nullptr;
 
 private:
 
@@ -89,13 +87,10 @@ private:
 	uint vertex_normalsID = 0;
 	uint text_coordsID = 0;
 
-private:
-
-	void DrawVertexNormals()const;
-	void DrawFaceNormals()const;
-	void DrawBoundingBox()const;
-
 public:
+
+	//Get Methods -----------
+	ComponentMaterial* GetDrawMaterial()const;
 
 	//Set Methods -----------
 	void	SetVertices(std::vector<Vertex> v);
