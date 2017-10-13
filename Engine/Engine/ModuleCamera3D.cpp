@@ -218,10 +218,22 @@ void ModuleCamera3D::BlitConfigInfo()
 	
 	//Camera Velocities ui
 	ImGui::Text("Sensibilities");
-	ImGui::SliderFloat("Zoom Sensibility", &camera_z_mov_vel, 0.1f, 10.0f, "%.1f");
-	ImGui::SliderFloat("Rotate around Sensibility", &rot_around_vel, 0.1f, 10.0f, "%.1f");
-	ImGui::SliderFloat("Stafe Sensibility", &strafe_vel, 0.1f, 10.0f, "%.1f");
-	ImGui::SliderFloat("WASD Sensibility", &wasd_vel, 0.1f, 10.0f, "%.1f");
+	if(ImGui::SliderFloat("Zoom Sensibility", &camera_z_mov_vel, 0.1f, 10.0f, "%.1f"))
+	{
+		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
+	}
+	if(ImGui::SliderFloat("Rotate around Sensibility", &rot_around_vel, 0.1f, 10.0f, "%.1f"))
+	{
+		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
+	}
+	if(ImGui::SliderFloat("Stafe Sensibility", &strafe_vel, 0.1f, 10.0f, "%.1f"))
+	{
+		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
+	}
+	if(ImGui::SliderFloat("WASD Sensibility", &wasd_vel, 0.1f, 10.0f, "%.1f"))
+	{
+	App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
+	}
 }
 
 void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)

@@ -10,6 +10,7 @@
 #include "ModuleTextures.h"
 #include "ModuleRenderer3D.h"
 #include "GeometryManager.h"
+#include "ModuleAudio.h"
 
 // Constructors =================================
 Model_::Model_(const char * path)
@@ -319,8 +320,16 @@ void Model_::GenerateBoundingBox()
 void Model_::BlitInfo()
 {
 	//Header of the model
+	bool ui_state = ui_opened;
 	if (ImGui::CollapsingHeader(("%s", name.c_str()), NULL))
 	{
+		ui_opened = true;
+		if (ui_state != ui_opened)
+		{
+			App->audio->PlayFxForInput(CHECKBOX_FX);
+			ui_state = ui_opened;
+		}
+
 		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Transformation");
 
 		//Show model position
@@ -377,7 +386,7 @@ void Model_::BlitInfo()
 			{
 				render_flags &= ~REND_BOUND_BOX;
 			}
-
+			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 		}
 
 		//Iterate all the meshes to blit the info
@@ -385,6 +394,15 @@ void Model_::BlitInfo()
 		for (uint k = 0; k < size; k++)
 		{
 			meshes[k].BlitInfo(k);
+		}
+	}
+	else
+	{
+		ui_opened = false;
+		if (ui_state != ui_opened)
+		{
+			ui_state = ui_opened;
+			App->audio->PlayFxForInput(CHECKBOX_FX);
 		}
 	}
 }

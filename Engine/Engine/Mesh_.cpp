@@ -5,6 +5,7 @@
 #include "GeometryManager.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleTextures.h"
+#include "ModuleAudio.h"
 
 // Constructors =================================
 Mesh_::Mesh_(std::vector<Vertex> vertices, std::vector<uint> indices, std::vector<Texture> textures) :vertices(vertices), indices(indices), textures(textures)
@@ -259,8 +260,15 @@ void Mesh_::GenerateBoundingBox()
 void Mesh_::BlitInfo(uint index)
 {
 	//Header of the mesh
+	bool ui_state = ui_opened;
 	if (ImGui::CollapsingHeader(("%s", name.c_str()), NULL))
 	{
+		ui_opened = true;
+		if (ui_state != ui_opened)
+		{
+			ui_state = ui_opened;
+			App->audio->PlayFxForInput(CHECKBOX_FX);
+		}
 		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Transformation");
 		//Show mesh position
 		ImGui::Text("Position	");
@@ -318,7 +326,7 @@ void Mesh_::BlitInfo(uint index)
 			{
 				render_flags &= ~REND_BOUND_BOX;
 			}
-
+			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 		}
 
 		rend_bool = bool(render_flags & REND_FACE_NORMALS);
@@ -333,7 +341,7 @@ void Mesh_::BlitInfo(uint index)
 			{
 				render_flags &= ~REND_FACE_NORMALS;
 			}
-
+			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 		}
 
 		rend_bool = bool(render_flags & REND_VERTEX_NORMALS);
@@ -348,7 +356,7 @@ void Mesh_::BlitInfo(uint index)
 			{
 				render_flags &= ~REND_VERTEX_NORMALS;
 			}
-
+			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 		}
 
 		ImGui::Separator();
@@ -362,5 +370,14 @@ void Mesh_::BlitInfo(uint index)
 		}
 
 		ImGui::NewLine();
+	}
+	else
+	{
+		ui_opened = false;
+		if (ui_state != ui_opened)
+		{
+			ui_state = ui_opened;
+			App->audio->PlayFxForInput(CHECKBOX_FX);
+		}
 	}
 }

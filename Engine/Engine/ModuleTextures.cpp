@@ -1,6 +1,9 @@
 #include "ModuleTextures.h"
 #include "Glew/include/glew.h"
 
+#include "Application.h"
+#include "ModuleAudio.h"
+
 #include "Devil/include/il.h"
 #include "Devil/include/ilu.h"
 #include "Devil/include/ilut.h"
@@ -75,11 +78,23 @@ void ModuleTextures::BlitConfigInfo()
 	ImGui::Separator();
 	
 	ImGui::Text("Mode: ");
-	if (ImGui::Checkbox("Check Texture", &check_mode))	 { custom_mode = false; mesh_mode = false; }
+	if (ImGui::Checkbox("Check Texture", &check_mode))
+	{
+		custom_mode = false; mesh_mode = false; 
+		App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+	}
 	ImGui::SameLine();
-	if (ImGui::Checkbox("Custom Texture", &custom_mode)) { check_mode = false; mesh_mode = false; }
+	if (ImGui::Checkbox("Custom Texture", &custom_mode))
+	{
+		check_mode = false; mesh_mode = false; 
+		App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+	}
 	ImGui::SameLine();
-	if (ImGui::Checkbox("Mesh Texture", &mesh_mode))	 { check_mode = false; custom_mode = false; }
+	if (ImGui::Checkbox("Mesh Texture", &mesh_mode))
+	{
+		check_mode = false; custom_mode = false; 
+		App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+	}
 	ImGui::Separator();
 
 	//Show checker texture

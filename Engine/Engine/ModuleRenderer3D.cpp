@@ -523,6 +523,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 	{
 		if (ImGui::DragFloat4("Lighting Color", lighting_color, 0.05, 0.0, 1.0, "%.2f"))
 		{
+			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			GLfloat LightModelAmbient[] = { lighting_color[0], lighting_color[1], lighting_color[2],lighting_color[3] };
 			glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 		}
@@ -549,11 +550,13 @@ void ModuleRenderer3D::BlitConfigInfo()
 	{
 		if (ImGui::DragFloat4("Material Ambient", material_ambient, 0.05, 0.0, 1.0, "%.2f"))
 		{
+			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			GLfloat m_ambient[] = { material_ambient[0], material_ambient[1], material_ambient[2], material_ambient[3] };
 			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_ambient);
 		}
 		if (ImGui::DragFloat4("Material Diffuse", material_diffuse, 0.05, 0.0, 1.0, "%.2f"))
 		{
+			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			GLfloat m_diffuse[] = { material_diffuse[0], material_diffuse[1], material_diffuse[2], material_diffuse[3] };
 			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_diffuse);
 		}
@@ -582,6 +585,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 	{
 		if (ImGui::DragFloat4("Fog Color", fog_color, 0.05, 0.0, 1.0, "%.2f"))
 		{
+			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			GLfloat color[] = { fog_color[0], fog_color[1], fog_color[2], fog_color[3] };
 			glFogfv(GL_FOG_COLOR, color);
 		}
@@ -597,12 +601,18 @@ void ModuleRenderer3D::BlitConfigInfo()
 
 	//Wireframe -------------
 
-	ImGui::Checkbox("WireFrame", &wireframe);
+	if (ImGui::Checkbox("WireFrame", &wireframe))
+	{
+		App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turns ON/OFF the WireFrame mode");
 
 	if (wireframe)
 	{
-		ImGui::Checkbox("Front Mode", &front_wireframe);
+		if (ImGui::Checkbox("Front Mode", &front_wireframe))
+		{
+			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+		}
 	}
 	//-----------------------
 
@@ -628,14 +638,17 @@ void ModuleRenderer3D::BlitConfigInfo()
 	{
 		if (ImGui::DragFloat4("Clear Color", clear_color, 0.05, 0.0, 1.0, "%.2f"))
 		{
+			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
 		}
 		if (ImGui::DragFloat("Clear Depth", &clear_depth, 0.001, 0.0, 2.0, "%.2f"))
 		{
+			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			glClearDepth(clear_depth);
 		}
 		if (ImGui::DragFloat("Min Render Distance", &min_render_distance, 1.0, 0.1, 2000.0, "%.2f"))
 		{
+			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
@@ -645,6 +658,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 		}
 		if (ImGui::DragFloat("Max Render Distance", &max_render_distance, 1.0, 1.0, 2000.0, "%.2f"))
 		{
+			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);

@@ -180,6 +180,7 @@ void ModuleWindow::BlitConfigInfo()
 	{
 		//Apply brightness
 		SDL_SetWindowBrightness(window, brightness);
+		App->audio->PlayFxForInput(SLICE_TICK_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change the global light brightness.");
 

@@ -33,13 +33,16 @@ inline RENDER_FLAGS& operator|= (RENDER_FLAGS& a, RENDER_FLAGS b)
 }
 // ----------------------------------------------
 
+// Vertex ---------------------------------------
 struct Vertex
 {
 	math::float3 position = {0,0,0};
 	math::float3 normals = {0,0,0};
 	math::float2 tex_coords = {0,0};
 };
+// ----------------------------------------------
 
+// Texture --------------------------------------
 struct Texture
 {
 	uint		id = 0;
@@ -49,9 +52,14 @@ struct Texture
 	int		tex_width = 0;
 	int		tex_height = 0;
 };
+// ----------------------------------------------
 
+// Mesh_ ----------------------------------------
 class Mesh_
 {
+
+	friend class  Model_;
+
 public:
 
 	Mesh_(std::vector<Vertex> vertices, std::vector<uint> indices, std::vector<Texture> textures);
@@ -63,7 +71,7 @@ public:
 	void Draw();
 	void ReleaseBuffers();
 
-public:
+private:
 
 	std::string				name;
 	RENDER_FLAGS			render_flags = REND_NONE;
@@ -81,6 +89,8 @@ public:
 	uint					num_vertex = 0;
 
 	std::vector<math::float3> bounding_box;
+
+	bool					ui_opened = false;
 
 private:
 
@@ -109,4 +119,5 @@ public:
 	void		BlitInfo(uint index);
 
 };
+// ----------------------------------------------
 #endif // !_MESH_H_

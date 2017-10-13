@@ -41,6 +41,8 @@ private:
 
 	std::vector<math::float3> bounding_box;
 
+	bool					ui_opened = false;
+
 private:
 
 	void					LoadModel(std::string path);

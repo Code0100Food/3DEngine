@@ -414,7 +414,10 @@ void Application::BlitConfigWindow()
 			}
 			ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application title.");
 
-			ImGui::InputText("Organization", (char*)organization.c_str(), 20);
+			if (ImGui::InputText("Organization", (char*)organization.c_str(), 20))
+			{
+				App->audio->PlayFxForInput(FX_ID::APPLY_FX);
+			}
 			ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application organization.");
 
 			if (ImGui::SliderInt("Max FPS", &max_fps, 0, 120))
