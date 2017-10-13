@@ -12,6 +12,16 @@ FileSystem::~FileSystem()
 
 }
 
+bool FileSystem::Start()
+{
+	root_dir = CreateDir("Assets", false);
+	focus_dir = root_dir;
+
+	LoadDirs(root_dir);
+
+	return true;
+}
+
 // Functionality ================================
 const JSON_Value * FileSystem::LoadJSONFile(const char * str)
 {
@@ -45,4 +55,121 @@ JSON_Object* FileSystem::AccessObject(const JSON_Value * config_data, uint str_n
 	va_end(str_list);
 	
 	return app_object;
+}
+
+Directory* FileSystem::CreateDir(const char* name, bool hidden, Directory* parent)
+{
+
+	Directory* ret = nullptr;
+
+	//Get the current Dir
+	char my_path[MAX_PATH + 1];
+	GetCurrentDirectory(MAX_PATH, my_path);
+
+	//Create the New Directory path
+	std::string new_dir;
+
+	if (parent)
+	{
+		new_dir = parent->GetPath();
+	}
+	else
+	{
+		new_dir = my_path;
+	}
+
+	new_dir += "\\";
+	new_dir += name;
+
+	//Create the Dir
+	if (CreateDirectory(new_dir.c_str(), NULL))
+	{
+		if (hidden)
+		{
+			SetFileAttributes(new_dir.c_str(), FILE_ATTRIBUTE_HIDDEN);
+		}
+		ret = new Directory(new_dir.c_str());
+		if (parent)
+		{
+			parent->AddChild(ret);
+		}
+		LOG("Created New Directory: %s, path: %s", name, new_dir.c_str());
+	}
+	else
+	{
+		if (GetLastError() == ERROR_ALREADY_EXISTS)
+		{
+			ret = new Directory(new_dir.c_str());
+			if (parent)
+			{
+				parent->AddChild(ret);
+			}
+			LOG("Directory (%s) already exists", new_dir.c_str());
+		}
+
+		if (GetLastError() == ERROR_PATH_NOT_FOUND)
+			LOG("Path (%s) not found", new_dir.c_str());
+	}
+
+	return ret;
+}
+
+void FileSystem::BlitDirsUI()
+{
+
+	
+}
+
+void FileSystem::LoadDirs(Directory* parent)
+{
+	//Set String to look inside Parent folder
+	string look_path = parent->GetPath();
+	look_path += "\\*.*";
+
+	//Will recieve all de files list
+	WIN32_FIND_DATA files_list;
+
+	//Will handle the list when changing the looked element
+	HANDLE file_handle = FindFirstFileA(LPCSTR(look_path.c_str()), &files_list);
+	
+	if (file_handle == INVALID_HANDLE_VALUE)
+	{
+		LOG("Error in path");
+	}
+
+	DWORD attribute;
+
+	string dir_name;
+
+	bool still_elements = true;
+	while (still_elements)
+	{
+		attribute = GetFileAttributes(files_list.cFileName);
+
+		//Search for directories
+		if (FILE_ATTRIBUTE_DIRECTORY & files_list.dwFileAttributes)
+		{
+			dir_name = files_list.cFileName;
+
+			if (dir_name != "." && dir_name != "..")
+			{
+				//If dir added to the file system
+				CreateDir(dir_name.c_str(), false, parent);
+			}
+		}
+
+		//Jump to the other element
+		if (!FindNextFile(file_handle, &files_list))
+			still_elements = false;
+
+	}
+}
+
+void Directory::AddChild(Directory * new_child)
+{
+	if (new_child)
+	{
+		new_child->parent = this;
+		childs.push_back(new_child);
+	}
 }
