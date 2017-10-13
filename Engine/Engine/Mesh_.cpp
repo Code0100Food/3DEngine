@@ -79,7 +79,7 @@ void Mesh_::SetupMesh()
 // Game Loop ====================================
 void Mesh_::Draw()
 {
-	glEnableClientState(GL_VERTEX_ARRAY);
+	/*glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -128,7 +128,7 @@ void Mesh_::Draw()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
 	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);*/
 }
 
 void Mesh_::ReleaseBuffers()
@@ -363,4 +363,11 @@ void Mesh_::BlitInfo(uint index)
 
 		ImGui::NewLine();
 	}
+}
+
+void Texture::BlitUI()
+{
+	ImGui::Text("%s", type.c_str());
+	ImGui::Image((void*)id, ImVec2(100, 100));
+	ImGui::Text("Size: %ix%i", tex_width, tex_height);
 }

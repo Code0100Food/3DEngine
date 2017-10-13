@@ -48,6 +48,8 @@ struct Texture
 
 	int		tex_width = 0;
 	int		tex_height = 0;
+
+	void BlitUI();
 };
 
 class Mesh_

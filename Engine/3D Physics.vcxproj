@@ -92,6 +92,8 @@
     <ClInclude Include="Engine\Capsule_.h" />
     <ClInclude Include="Engine\Color.h" />
     <ClInclude Include="Engine\Component.h" />
+    <ClInclude Include="Engine\ComponentMaterial.h" />
+    <ClInclude Include="Engine\ComponentMesh.h" />
     <ClInclude Include="Engine\ComponentTransform.h" />
     <ClInclude Include="Engine\Cube_.h" />
     <ClInclude Include="Engine\Cylinder_.h" />
@@ -199,6 +201,8 @@
     <ClCompile Include="Engine\Capsule_.cpp" />
     <ClCompile Include="Engine\Color.cpp" />
     <ClCompile Include="Engine\Component.cpp" />
+    <ClCompile Include="Engine\ComponentMaterial.cpp" />
+    <ClCompile Include="Engine\ComponentMesh.cpp" />
     <ClCompile Include="Engine\ComponentTransform.cpp" />
     <ClCompile Include="Engine\Cube_.cpp" />
     <ClCompile Include="Engine\Cylinder_.cpp" />

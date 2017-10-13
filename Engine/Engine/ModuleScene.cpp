@@ -24,7 +24,7 @@ bool ModuleScene::Start()
 	return true;
 }
 
-update_status ModuleScene::Update(float dt)
+bool ModuleScene::SceneUpdate(float dt)
 {
 	bool ret = true;
 
@@ -37,9 +37,7 @@ update_status ModuleScene::Update(float dt)
 	//Update the scene game objects
 	ret = root_gameobject->Update();
 
-	if (!ret)return update_status::UPDATE_ERROR;
-
-	return update_status::UPDATE_CONTINUE;
+	return ret;
 }
 
 bool ModuleScene::CleanUp()

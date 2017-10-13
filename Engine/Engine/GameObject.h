@@ -5,6 +5,8 @@
 #include <string>
 
 #include "ComponentTransform.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 
 class GameObject
 {
@@ -16,8 +18,8 @@ public:
 
 public:
 
-	virtual bool	Update();
-	bool			UpdateChilds();
+	bool	Update();
+
 private:
 
 	bool						actived = true;
@@ -32,6 +34,9 @@ public:
 	void SetActiveState(bool act);
 	void SetName(const char* str);
 	void SetParent(GameObject* target);
+
+	//Get Methods -----------
+	bool GetActive();
 
 	//Functionality ---------
 	Component*	CreateComponent(COMPONENT_TYPE c_type);

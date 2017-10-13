@@ -25,6 +25,7 @@ class GeometryManager : public Module
 
 	friend class Mesh_;
 	friend class Model_;
+	friend class ComponentMesh;
 
 public:
 

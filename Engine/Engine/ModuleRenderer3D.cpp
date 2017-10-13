@@ -13,6 +13,7 @@
 #include "ModuleImgui.h"
 #include "imgui/imgui_dock.h"
 #include "ModuleTextures.h"
+#include "ModuleScene.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -369,6 +370,9 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Draw scene geometry
 	EnableGLRenderFlags();
 	App->geometry->Draw();
+	
+	//Draw / update scene objects
+	App->scene->SceneUpdate(dt);
 	
 	//Focus render texture
 	render_to_texture->UnBind();

@@ -44,7 +44,7 @@ private:
 
 	void					LoadModel(std::string path);
 	void					ProcessNode(aiNode *node, const aiScene *scene, GameObject* parent);
-	Mesh_					ProcessMesh(aiMesh *mesh, const aiScene *scene);
+	Mesh_					ProcessMesh(aiMesh *mesh, const aiScene *scene, GameObject* container);
 	std::vector<Texture>	LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
 
 	void DrawBoundingBox()const;

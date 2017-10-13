@@ -43,9 +43,11 @@ public:
 	void SetParent(const GameObject* target);
 
 	//Get Methods -----------
-	COMPONENT_TYPE GetType()const;
+	COMPONENT_TYPE	GetType()const;
+	bool			GetActive()const;
 
 	//Functionality ---------
+	virtual void BlitComponentInspector();
 
 };
 #endif // !_COMPONENT_H_

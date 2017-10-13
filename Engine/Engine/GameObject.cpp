@@ -56,21 +56,22 @@ bool GameObject::Update()
 	bool ret = true;
 
 	/* This update*/
-
-	//Update childs
-	ret = UpdateChilds();
-
-	return ret;
-}
-
-bool GameObject::UpdateChilds()
-{
-	bool ret = true;
-
-	uint size = childs.size();
+	uint size = components.size();
 	for (uint k = 0; k < size; k++)
 	{
-		ret = childs[k]->Update();
+		if (components[k]->GetActive())
+		{
+			ret = components[k]->Update();
+		}
+	}
+
+	size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (childs[k]->GetActive())
+		{
+			ret = childs[k]->Update();
+		}
 	}
 
 	return ret;
@@ -102,6 +103,12 @@ void GameObject::SetParent(GameObject * target)
 	parent = (GameObject*)target;
 }
 
+// Get Methods ==================================
+bool GameObject::GetActive()
+{
+	return actived;
+}
+
 // Functionality ================================
 Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 {
@@ -109,15 +116,16 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 
 	switch (c_type)
 	{
-	case COMP_TRANSFORMATION:
-		break;
-	case COMP_MESH:
-		break;
-	case COMP_MATERIAL:
-		break;
+	case COMP_TRANSFORMATION:	comp = new ComponentTransform();	break;
+	case COMP_MESH:				comp = new ComponentMesh();			break;
+	case COMP_MATERIAL:			comp = new ComponentMaterial();		break;
 	}
 
-	if (comp != nullptr)comp->SetParent(this);
+	if (comp != nullptr)
+	{
+		comp->SetParent(this);
+		components.push_back(comp);
+	}
 
 	return comp;
 }
@@ -163,16 +171,12 @@ Component * GameObject::CloneComponent(const Component * target) const
 
 	switch (target->GetType())
 	{
-	case COMP_TRANSFORMATION:
-		new_c = new ComponentTransform(*(const ComponentTransform*)target);
-		break;
-	case COMP_MESH:
-		break;
-	case COMP_MATERIAL:
-		break;
+	case COMP_TRANSFORMATION:		new_c = new ComponentTransform(*(const ComponentTransform*)target);		break;
+	case COMP_MESH:					new_c = new ComponentMesh(*(const ComponentMesh*)target);				break;
+	case COMP_MATERIAL:				new_c = new ComponentMaterial(*(const ComponentMaterial*)target);		break;
 	}
 
-	return nullptr;
+	return new_c;
 }
 
 void GameObject::AddChild(const GameObject * child)
@@ -240,7 +244,15 @@ bool GameObject::PopChild(GameObject * child, bool search_in)
 
 void GameObject::BlitGameObjectHierarchy()
 {
-	if (ImGui::TreeNode(name.c_str()))
+	bool op = ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_OpenOnDoubleClick);
+
+	if (ImGui::IsItemClicked() && ImGui::IsItemHovered())
+	{
+		App->scene->EnableInspector();
+		App->scene->SetSelectedGameObject(this);
+	}
+
+	if(op)
 	{
 		uint size = childs.size();
 		for (uint k = 0; k < size; k++)
@@ -250,15 +262,18 @@ void GameObject::BlitGameObjectHierarchy()
 		ImGui::TreePop();
 	}
 
-	if (ImGui::IsItemClicked())
-	{
-		App->scene->EnableInspector();
-		App->scene->SetSelectedGameObject(this);
-	}
 }
 
 void GameObject::BlitGameObjectInspector()
 {
 	//Blit game object base data
+	ImGui::Checkbox("##object_active", &actived);
+	ImGui::SameLine();
 	ImGui::Text(name.c_str());
+
+	uint size = components.size();
+	for (uint k = 0; k < size; k++)
+	{
+		components[k]->BlitComponentInspector();
+	}
 }

@@ -44,3 +44,15 @@ COMPONENT_TYPE Component::GetType() const
 {
 	return type;
 }
+
+bool Component::GetActive() const
+{
+	return actived;
+}
+
+// Functionality ================================
+void Component::BlitComponentInspector()
+{
+	ImGui::Text("Undef Component");
+	ImGui::Checkbox("Active", &actived);
+}

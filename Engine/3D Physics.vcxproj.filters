@@ -375,6 +375,12 @@
     <ClInclude Include="Engine\ComponentTransform.h">
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ComponentMesh.h">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ComponentMaterial.h">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -594,6 +600,12 @@
       <Filter>Sources\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ComponentTransform.cpp">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ComponentMesh.cpp">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ComponentMaterial.cpp">
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClCompile>
   </ItemGroup>

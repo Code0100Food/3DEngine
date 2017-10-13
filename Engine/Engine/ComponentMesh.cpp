@@ -1,25 +1,182 @@
 #include "ComponentMesh.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
+#include "ComponentMaterial.h"
+#include "Application.h"
+#include "GeometryManager.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleTextures.h"
 
-ComponentMesh::ComponentMesh()
+// Constructors =================================
+ComponentMesh::ComponentMesh() :Component(COMP_MESH)
 {
+
 }
 
-ComponentMesh::ComponentMesh(const ComponentMesh & cpy) : vertices(cpy.vertices), indices(cpy.indices), bounding_box(cpy.bounding_box)
+ComponentMesh::ComponentMesh(const ComponentMesh & cpy) : Component(cpy), vertices(cpy.vertices), indices(cpy.indices), bounding_box(cpy.bounding_box)
 {	
+
 }
 
-ComponentMesh::ComponentMesh(std::vector<Vertex> vertices, std::vector<uint> indices, ComponentMaterial * material) : vertices(vertices), indices(indices)
+ComponentMesh::ComponentMesh(std::vector<Vertex> vertices, std::vector<uint> indices, ComponentMaterial * material) : Component(COMP_MESH), vertices(vertices), indices(indices)
 {
 	if (indices.size() % 3 == 0)num_tris = indices.size() / 3;
 }
 
+// Destructors ==================================
 ComponentMesh::~ComponentMesh()
 {
+	this->DeleteBuffers();
 }
 
-void ComponentMesh::SetMesh()
+// Game Loop ====================================
+bool ComponentMesh::Update()
+{
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	//Select between the textures
+	if (App->textures->GetCheckMode())
+	{
+		glBindTexture(GL_TEXTURE_2D, App->textures->check_image);
+	}
+
+	else if (App->textures->GetCustomMode())
+	{
+		glBindTexture(GL_TEXTURE_2D, App->textures->custom_check_image);
+	}
+
+	else if (App->textures->GetMeshMode())
+	{
+		if (draw_material->GetActive())
+		{
+			for (int i = 0; i < draw_material->textures.size(); i++)
+			{
+				glBindTexture(GL_TEXTURE_2D, draw_material->textures[i].id);
+
+			}
+		}
+	}
+
+	//Draw the mesh
+	glLineWidth(App->geometry->mesh_lines_width);
+	glColor4f(App->geometry->mesh_color[0], App->geometry->mesh_color[1], App->geometry->mesh_color[2], App->geometry->mesh_color[3]);
+	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
+	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
+	glNormalPointer(GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, normals));
+	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObject);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//Draw mesh debug information
+	App->renderer3D->DisableGLRenderFlags();
+	if (render_flags & REND_FACE_NORMALS)DrawFaceNormals();
+	if (render_flags & REND_VERTEX_NORMALS)DrawVertexNormals();
+	if (render_flags & REND_BOUND_BOX)DrawBoundingBox();
+	App->renderer3D->EnableGLRenderFlags();
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	return true;
+}
+
+void ComponentMesh::DrawVertexNormals() const
+{
+	if (vertex_normalsID == 0)return;
+
+	//Draw vertex normals
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_normalsID);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glColor4f(App->geometry->vertex_normals_color[0], App->geometry->vertex_normals_color[1], App->geometry->vertex_normals_color[2], App->geometry->vertex_normals_color[3]);
+	glLineWidth(2.f);
+	glDrawArrays(GL_LINES, 0, vertices.size() * 2);
+
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void ComponentMesh::DrawFaceNormals() const
+{
+	if (face_normalsID == 0)return;
+
+	//Draw face normals
+	glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glColor4f(App->geometry->face_normals_color[0], App->geometry->face_normals_color[1], App->geometry->face_normals_color[2], App->geometry->face_normals_color[3]);
+	glLineWidth(2.f);
+	glDrawArrays(GL_LINES, 0, num_tris * 2);
+
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void ComponentMesh::DrawBoundingBox() const
+{
+	if (bounding_box.size() < 8)return;
+
+	//Draw bounding box
+	glBegin(GL_LINES);
+
+	glColor4f(App->geometry->bounding_box_color[0], App->geometry->bounding_box_color[1], App->geometry->bounding_box_color[2], App->geometry->bounding_box_color[3]);
+	glLineWidth(2.f);
+
+	for (uint k = 0; k < 4; k++)
+	{
+		glVertex3f(bounding_box.data()[k + 4].x, bounding_box.data()[k + 4].y, bounding_box.data()[k + 4].z);
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+	}
+
+	for (uint k = 0; k <= 4; k += 4)
+	{
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
+
+		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
+		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
+
+		glVertex3f(bounding_box.data()[k].x, bounding_box.data()[k].y, bounding_box.data()[k].z);
+		glVertex3f(bounding_box.data()[k + 2].x, bounding_box.data()[k + 2].y, bounding_box.data()[k + 2].z);
+
+		glVertex3f(bounding_box.data()[k + 1].x, bounding_box.data()[k + 1].y, bounding_box.data()[k + 1].z);
+		glVertex3f(bounding_box.data()[k + 3].x, bounding_box.data()[k + 3].y, bounding_box.data()[k + 3].z);
+	}
+	glEnd();
+}
+
+// Set Methods ==================================
+void ComponentMesh::SetVertices(std::vector<Vertex> v)
+{
+	vertices = v;
+	num_vertex = vertices.size();
+}
+
+void ComponentMesh::SetIndices(std::vector<uint> i)
+{
+	indices = i;
+	if (indices.size() % 3 == 0)num_tris = indices.size() / 3;
+}
+
+void ComponentMesh::SetDrawMaterial(ComponentMaterial * mat)
+{
+	draw_material = mat;
+}
+
+// Functionality ================================
+void ComponentMesh::SetupMesh()
 {
 	glGenBuffers(1, &VertexBufferObject);
 	glGenBuffers(1, &ElementBufferObject);
@@ -64,6 +221,8 @@ void ComponentMesh::SetMesh()
 		glBufferData(GL_ARRAY_BUFFER, face_normals.size() * sizeof(math::float3), &face_normals.data()[0], GL_STATIC_DRAW);
 	}
 
+	//Build bounding box
+	GenerateBoundingBox();
 }
 
 void ComponentMesh::GenerateBoundingBox()
@@ -71,7 +230,8 @@ void ComponentMesh::GenerateBoundingBox()
 	math::float3 min_pos(0, 0, 0);
 	math::float3 max_pos(0, 0, 0);
 
-	if (vertices.size() > 0) {
+	if (vertices.size() > 0)
+	{
 		min_pos = vertices.data()[0].position;
 		max_pos = vertices.data()[0].position;
 	}
@@ -105,4 +265,68 @@ void ComponentMesh::DeleteBuffers()
 	if (face_normalsID != NULL)		glDeleteBuffers(1, &face_normalsID);
 	if (vertex_normalsID != NULL)	glDeleteBuffers(1, &vertex_normalsID);
 	if (text_coordsID != NULL)		glDeleteBuffers(1, &text_coordsID);
+}
+
+void ComponentMesh::BlitComponentInspector()
+{
+	ImGui::Separator();
+
+	ImGui::Checkbox("##mesh_comp", &actived);
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Mesh");
+
+	//Show mesh Tris & Vertex
+	ImGui::Text("Tris: %i", num_tris);
+	ImGui::SameLine();
+	ImGui::Text("Vertex: %i", num_vertex);
+
+	ImGui::NewLine();
+
+	//Show mesh render flags
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Render Flags");
+	bool rend_bool = bool(render_flags & REND_BOUND_BOX);
+	char str_buff[30];
+	sprintf_s(str_buff, "Bounding Box");
+	if (ImGui::Checkbox(str_buff, &rend_bool))
+	{
+		if (rend_bool)
+		{
+			render_flags |= REND_BOUND_BOX;
+		}
+		else
+		{
+			render_flags &= ~REND_BOUND_BOX;
+		}
+
+	}
+
+	rend_bool = bool(render_flags & REND_FACE_NORMALS);
+	sprintf_s(str_buff, "Face Normals");
+	if (ImGui::Checkbox(str_buff, &rend_bool))
+	{
+		if (rend_bool)
+		{
+			render_flags |= REND_FACE_NORMALS;
+		}
+		else
+		{
+			render_flags &= ~REND_FACE_NORMALS;
+		}
+
+	}
+
+	rend_bool = bool(render_flags & REND_VERTEX_NORMALS);
+	sprintf_s(str_buff, "Vertex Normals");
+	if (ImGui::Checkbox(str_buff, &rend_bool))
+	{
+		if (rend_bool)
+		{
+			render_flags |= REND_VERTEX_NORMALS;
+		}
+		else
+		{
+			render_flags &= ~REND_VERTEX_NORMALS;
+		}
+
+	}
 }

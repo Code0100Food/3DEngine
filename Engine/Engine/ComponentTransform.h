@@ -17,15 +17,17 @@ public:
 
 private:
 
-	aiVector3D				position;
-	aiVector3D				scale;
-	aiQuaternion			rotation;
+	aiVector3D		position;
+	aiVector3D		scale;
+	aiQuaternion	rotation;
 
 public:
 
 	//Set Methods -----------
 	void SetTransformation(aiMatrix4x4 trans);
 
+	//Functionality ---------
+	void BlitComponentInspector();
 };
 
 #endif // !_COMPONENT_TRANSFORM_H_

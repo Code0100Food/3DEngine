@@ -66,6 +66,9 @@ void Model_::LoadModel(std::string path)
 	//Generate root game object
 	GameObject* obj = App->scene->CreateGameObject();
 	obj->SetName(scene->mRootNode->mName.C_Str());
+	//Set root transformation
+	ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	comp->SetTransformation(scene->mRootNode->mTransformation);
 
 	//Get root node transformation
 	this->SetTransformation(scene->mRootNode->mTransformation);
@@ -84,12 +87,15 @@ void Model_::ProcessNode(aiNode * node, const aiScene * scene, GameObject* paren
 	// process all the node's meshes (if any)
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
+		//Generate game object
 		GameObject* obj = App->scene->CreateGameObject();
 		obj->SetName(node->mName.C_Str());
 		obj->SetParent(parent);
+		//Set transformation component
+		ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		comp->SetTransformation(node->mTransformation);
 
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		Mesh_ n_mesh = ProcessMesh(mesh, scene);
+		Mesh_ n_mesh = ProcessMesh(scene->mMeshes[node->mMeshes[i]], scene, obj);
 		
 		n_mesh.SetTransformation(node->mTransformation);
 		n_mesh.name = node->mName.C_Str();
@@ -106,8 +112,11 @@ void Model_::ProcessNode(aiNode * node, const aiScene * scene, GameObject* paren
 	}
 }
 
-Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
+Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene, GameObject* container)
 {
+	//Generate the container mesh component
+	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+
 	std::vector<Vertex>		vertices;
 	std::vector<uint>		indices;
 	std::vector<Texture>	textures;
@@ -169,6 +178,9 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 	//Build the different materials (textures)
 	if (mesh->mMaterialIndex >= 0)
 	{
+		//Generate the container material component (used by mesh too)
+		ComponentMaterial* comp_material = (ComponentMaterial*)container->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
+
 		//Get the material
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
@@ -182,8 +194,18 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		std::vector<Texture> specular_map = LoadMaterialTextures(material,aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specular_map.begin(), specular_map.end());
 
+		
+		comp_material->SetTextures(textures);
+		comp_mesh->SetDrawMaterial(comp_material);
+
 		LOG("- Material with index %i loaded!", mesh->mMaterialIndex);
 	}
+
+	//Set the built vertex & indices to the mesh component
+	comp_mesh->SetVertices(vertices);
+	comp_mesh->SetIndices(indices);
+	//Initialize the mesh buffers
+	comp_mesh->SetupMesh();
 
 	return Mesh_(vertices, indices, textures);
 }
