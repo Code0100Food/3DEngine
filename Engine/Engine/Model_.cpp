@@ -60,7 +60,7 @@ void Model_::LoadModel(std::string path)
 		return;
 	}
 	
-	directory = path.substr(0, path.find_last_of('/'));
+	directory = path.substr(0, path.find_last_of('\\'));
 
 	//Get root node transformation
 	this->SetTransformation(scene->mRootNode->mTransformation);
@@ -200,7 +200,7 @@ std::vector<Texture> Model_::LoadMaterialTextures(aiMaterial *mat, aiTextureType
 		{
 			// if texture hasn't been loaded already, load it
 			Texture texture;
-			texture.id = App->textures->LoadTexture(str.C_Str(), "Assets/");
+			texture.id = App->textures->LoadTexture(str.C_Str(), directory.c_str());
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			

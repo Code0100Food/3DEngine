@@ -8,6 +8,8 @@
 struct PhysVehicle3D;
 class Model_;
 
+#define RENDER_DIST_ON_FOCUS 4
+
 class ModuleCamera3D : public Module
 {
 public:
@@ -41,6 +43,7 @@ private:
 
 public:
 
+	void	FocusOnLook();
 	void	Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
 	void	LookAt(const vec3 &Spot);
 	void	LookAtModel(Model_* model);

@@ -62,7 +62,7 @@ bool ModuleTextures::Start()
 	glEnable(GL_TEXTURE_2D);
 
 	//Load lenna image
-	custom_check_image = LoadTexture("texturacaja.jpg", "Assets/");
+	custom_check_image = LoadTexture("texturacaja.jpg", "Assets");
 
 	return true;
 }
@@ -133,8 +133,11 @@ uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 {
 	std::string filename = std::string(str);
 
-	if(folder != nullptr)
-		filename = folder + filename;
+	if (folder != nullptr)
+	{
+		std::string f = '\\' + filename;
+		filename = folder + f;
+	}
 
 	//Uint where the texture id will be saved
 	ILuint textureID = 0;

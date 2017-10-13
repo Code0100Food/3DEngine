@@ -176,8 +176,12 @@ bool ModuleRenderer3D::Awake(const JSON_Object * data_root)
 	clear_color[1] = json_array_get_number(clear_color_array, 1);
 	clear_color[2] = json_array_get_number(clear_color_array, 2);
 	clear_color[3] = json_array_get_number(clear_color_array, 3);
+	
 	clear_depth = json_object_get_number(data_root, "clear_depth");
 	
+	min_render_distance = json_object_get_number(data_root, "min_render_distance");
+	max_render_distance = json_object_get_number(data_root, "max_render_distance");
+
 	config_menu = true;
 
 	return true;
@@ -320,7 +324,6 @@ bool ModuleRenderer3D::Init()
 		lights[0].Init();
 			
 		lights[0].Active(true);
-	
 	}
 
 	// Projection matrix for
@@ -627,9 +630,27 @@ void ModuleRenderer3D::BlitConfigInfo()
 		{
 			glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
 		}
-		if (ImGui::DragFloat("Clear Depth", &clear_depth, 0.05, 0.0, 1.0, "%.2f"))
+		if (ImGui::DragFloat("Clear Depth", &clear_depth, 0.001, 0.0, 2.0, "%.2f"))
 		{
 			glClearDepth(clear_depth);
+		}
+		if (ImGui::DragFloat("Min Render Distance", &min_render_distance, 1.0, 0.1, 2000.0, "%.2f"))
+		{
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
+			glLoadMatrixf(&ProjectionMatrix);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+		}
+		if (ImGui::DragFloat("Max Render Distance", &max_render_distance, 1.0, 1.0, 2000.0, "%.2f"))
+		{
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
+			glLoadMatrixf(&ProjectionMatrix);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
 		}
 	}
 	// ----------------------
@@ -680,7 +701,23 @@ void ModuleRenderer3D::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 1, clear_color[1]);
 	json_array_replace_number(_array, 2, clear_color[2]);
 	json_array_replace_number(_array, 3, clear_color[3]);
+	
 	json_object_set_number(data_root, "clear_depth", clear_depth);
+
+	json_object_set_number(data_root, "min_render_distance", min_render_distance);
+	json_object_set_number(data_root, "max_render_distance", max_render_distance);
+}
+
+// Set Methods ==================================
+void ModuleRenderer3D::SetMaxRenderDistance(float val)
+{
+	max_render_distance = val;
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
+	glLoadMatrixf(&ProjectionMatrix);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 // Get Methods ==================================
@@ -699,6 +736,11 @@ bool ModuleRenderer3D::GetMouseOnWorkspace()const
 	return mouse_on_workspace;
 }
 
+float ModuleRenderer3D::GetMaxRenderDistance() const
+{
+	return max_render_distance;
+}
+
 // Functionality ================================
 void ModuleRenderer3D::OnResize(int width, int height)
 {
@@ -706,7 +748,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, min_render_distance, max_render_distance);
 	glLoadMatrixf(&ProjectionMatrix);
 
 	if (render_to_texture)

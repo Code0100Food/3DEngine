@@ -28,7 +28,7 @@ public:
 	unsigned int			rbo_id = 0;
 	unsigned int			texture_id = 0;
 	unsigned int			depth_id = 0;
-
+	
 	int		width = 0;
 	int		height = 0;
 
@@ -77,6 +77,8 @@ private:
 	bool	custom_clear = false;
 	float	clear_color[4];
 	float	clear_depth = 0.0f;
+	float   min_render_distance = 0.0f;
+	float	max_render_distance = 0.0f;
 
 private:
 
@@ -93,11 +95,14 @@ private:
 
 public:
 
+	//Set Methods -----------
+	void SetMaxRenderDistance(float val);
+	
 	//Get Methods -----------
 	bool GetWireframe() const;
 	bool GetWireframeFront() const;
 	bool GetMouseOnWorkspace()const;
-
+	float GetMaxRenderDistance()const;
 
 	//Functionality ---------
 	void OnResize(int width, int height);

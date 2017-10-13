@@ -278,6 +278,10 @@ void ModuleCamera3D::LookAt( const vec3 &Spot)
 void ModuleCamera3D::LookAtModel(Model_ * model)
 {
 	camera_dist = model->GetFocusDistance();
+	if (App->renderer3D->GetMaxRenderDistance() < camera_dist * RENDER_DIST_ON_FOCUS)
+	{
+		App->renderer3D->SetMaxRenderDistance(camera_dist * RENDER_DIST_ON_FOCUS);
+	}
 	view_vector = model->GetPosition();
 	camera_location = view_vector + camera_dist * Z;
 }

@@ -159,10 +159,13 @@ void ModuleAudio::BlitConfigInfo()
 		ImGui::SetScrollFromPosY(ImGui::GetScrollMaxY(), 0.25f);
 		scroll_audio_calls = false;
 	}
-	uint vec_size = audio_logs.size();
-	for (uint k = 0; k < vec_size; k++)
+
+	std::list<std::string>::const_iterator log = audio_logs.begin();
+	while (log != audio_logs.end())
 	{
-		ImGui::Text(audio_logs[k].c_str());
+		ImGui::Text(log._Ptr->_Myval.c_str());
+
+		log++;
 	}
 
 	ImGui::EndChild();
@@ -355,5 +358,10 @@ void ModuleAudio::AddConsoleLabel(const char* action,...)
 	va_end(args);
 
 	audio_logs.push_back(buf);
+	if (audio_logs.size() > MAX_CONSOLE_LABELS)
+	{
+		audio_logs.pop_front();
+	}
+
 	scroll_audio_calls = true;
 }

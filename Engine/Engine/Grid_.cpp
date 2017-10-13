@@ -23,7 +23,7 @@ Grid_::~Grid_()
 // Game Loop ====================================
 void Grid_::Draw()
 {
-	glLineWidth(1.0f);
+	glLineWidth(2.5f);
 
 	glBegin(GL_LINES);
 	
