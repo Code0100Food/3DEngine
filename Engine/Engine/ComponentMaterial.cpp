@@ -1,5 +1,6 @@
 #include "ComponentMaterial.h"
 
+<<<<<<< HEAD
 // Constructors =================================
 ComponentMaterial::ComponentMaterial() :Component(COMPONENT_TYPE::COMP_MATERIAL)
 {
@@ -37,4 +38,17 @@ void ComponentMaterial::BlitComponentInspector()
 	{
 		textures[k].BlitUI();
 	}
+=======
+ComponentMaterial::ComponentMaterial()
+{
+}
+
+ComponentMaterial::ComponentMaterial(const ComponentMaterial & cpy) : textures(cpy.textures)
+{
+}
+
+ComponentMaterial::~ComponentMaterial()
+{
+	textures.clear();
+>>>>>>> origin/master
 }

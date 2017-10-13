@@ -327,7 +327,7 @@ bool ModuleRenderer3D::Init()
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	render_to_texture = new FrameTexture();
-	render_to_texture->Create(SCREEN_WIDTH, SCREEN_HEIGHT);
+	render_to_texture->Create(App->window->GetWidth(), App->window->GetHeight());
 
 	return ret;
 }
@@ -391,7 +391,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Detect if the mouse is inside the workspace
 	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
 
-	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width, render_to_texture->height), ImVec2(1, 1), ImVec2(0, 0));
+	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width * 0.55f, render_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
 	
 	render_dock->EndDock();
 
