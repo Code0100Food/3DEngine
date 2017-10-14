@@ -14,10 +14,15 @@ FileSystem::~FileSystem()
 
 bool FileSystem::Start()
 {
-	root_dir = CreateDir("Assets", false);
-	focus_dir = root_dir;
+	user_root_dir = CreateDir("Assets", false);
+	focus_dir = user_root_dir;
 
-	LoadDirs(root_dir);
+	LoadDirs(user_root_dir);
+
+	//Starts library folder
+	engine_root_dir = CreateDir("Library", true);
+	CreateDir("Meshes", true, engine_root_dir);
+	CreateDir("Materials", true, engine_root_dir);
 
 	return true;
 }
@@ -154,7 +159,7 @@ void FileSystem::LoadDirs(Directory* parent)
 			if (dir_name != "." && dir_name != "..")
 			{
 				//If dir added to the file system
-				CreateDir(dir_name.c_str(), false, parent);
+				LoadDirs(CreateDir(dir_name.c_str(), false, parent));
 			}
 		}
 

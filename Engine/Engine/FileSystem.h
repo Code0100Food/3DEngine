@@ -49,7 +49,8 @@ public:
 	void				BlitDirsUI();
 private:
 
-	Directory* root_dir = nullptr;
+	Directory* user_root_dir = nullptr;
+	Directory* engine_root_dir = nullptr;
 	Directory* focus_dir = nullptr;
 
 private:
