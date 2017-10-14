@@ -1,4 +1,7 @@
 #include "FileSystem.h"
+#include "Globals.h"
+#include <fstream>
+#include <iostream>
 
 // Constructors =================================
 FileSystem::FileSystem(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
@@ -23,6 +26,7 @@ bool FileSystem::Start()
 	engine_root_dir = CreateDir("Library", true);
 	CreateDir("Meshes", true, engine_root_dir);
 	CreateDir("Materials", true, engine_root_dir);
+
 
 	return true;
 }
@@ -117,6 +121,40 @@ Directory* FileSystem::CreateDir(const char* name, bool hidden, Directory* paren
 	}
 
 	return ret;
+}
+
+int FileSystem::LoadFile(const char * path, char ** buffer_to_fill)
+{
+	std::ifstream f_read(path, std::ifstream::binary);
+	int size = 0;
+	
+	if (f_read.good())
+	{
+		if (f_read.is_open())
+		{
+			f_read.seekg(0, f_read.end);
+			std::streamsize lenght = f_read.tellg();
+			f_read.seekg(0, f_read.beg);
+
+			*buffer_to_fill = new char[lenght];
+
+			f_read.read(*buffer_to_fill, lenght);
+
+			if (f_read)
+			{
+				LOG("All chars readed");
+				size = lenght;
+			}
+			else
+			{
+				LOG("[error] Only %i could be read", f_read.gcount());
+			}
+
+			f_read.close();
+		}
+	}
+
+	return size;
 }
 
 void FileSystem::BlitDirsUI()

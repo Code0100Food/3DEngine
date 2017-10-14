@@ -45,6 +45,7 @@ public:
 	JSON_Object*		AccessObject(const JSON_Value* config_data, uint str_num, ...);
 
 	Directory*			CreateDir(const char* name, bool hidden, Directory* parent = nullptr);
+	int					LoadFile(const char* path, char** buffer_to_fill);
 
 	void				BlitDirsUI();
 private:
