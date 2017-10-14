@@ -17,6 +17,10 @@ All those Libraries are not created by us.
 
 # Instructions
 
+To start the engine, execute the Party Engine.exe, if you execute the Launcher.exe it will only execute the launcher not the engine. 
+
+The engine executable calls the launcher executable and then starts the engine.
+
 ## Launcher
 
 When you start the program the launcher will be executed. 
@@ -46,6 +50,21 @@ You can acceed to all the UI elements using the top bar menu that have four sub 
 		- Download last: Links to the last github release page.
 		- Report a bug: Links to the issues page of the github repository.
 		- About: Show basic information about the engine (Libraries, license, authors,...)
+
+Camera movement:
+- Right click turns on “WASD” fps-like movement
+- Mouse wheel zoom in and out
+- Alt+Left click orbit the object
+- Pressing “f” focus the camera around the geometry
+
+Console:
+
+Console is initially closed.
+
+To open/close the console pulse the grave key.
+Console shows information of the engine operations and can handle some basic input.(help,quit,clear).
+
+To see all the console commands you can open the console header in the configuration window or enter “help” in the console
 
 # Changelog
 	 -Release 0.2:

@@ -20,9 +20,6 @@ BasicConsole::BasicConsole()
 	Commands.push_back("QUIT");
 	commands_str.push_back("QUIT");
 	commands_desc_str.push_back("Quit the engine");
-	Commands.push_back("HISTORY");
-	commands_str.push_back("HISTORY");
-	commands_desc_str.push_back("Show the console history");
 	Commands.push_back("CLEAR");
 	commands_str.push_back("CLEAR");
 	commands_desc_str.push_back("Clear the console labels");

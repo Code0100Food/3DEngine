@@ -65,7 +65,7 @@ bool ModuleTextures::Start()
 	glEnable(GL_TEXTURE_2D);
 
 	//Load lenna image
-	custom_check_image = LoadTexture("texturacaja.jpg", "Assets");
+	custom_check_image = LoadTexture("custom_texture.png", "DATA/textures/");
 
 	return true;
 }
