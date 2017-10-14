@@ -15,12 +15,45 @@ ImGui is suggested to MIT License
 MathGeoLib is suggested to Apache 2 License. -> http://www.apache.org/licenses/LICENSE-2.0.html
 All those Libraries are not created by us.
 
+# Instructions
+
+## Launcher
+
+When you start the program the launcher will be executed. 
+If you dont have the last engine version a download button and a message of the new version will appear on the top of the window.
+The download button links the new release page where you can download it.
+
+Then you can pulse start and open the engine or close and end the execution.
+
+At the bottom of the window there are links to our github pages where you can see our projects.
+
+## Engine
+
+The engine UI starts showing you the scene, the configuration and the scene models windows.
+
+You can acceed to all the UI elements using the top bar menu that have four sub menus.
+
+- File:
+		- Exit: Close the engine
+- View:
+		- Scene Objects: Show you the states of the objects loaded in the scene.
+		- Configuration: Show all the modules configuration  and let you modify it.
+- Tools:
+		- Profiler: Show a simple time tracking of all the modules. You can modify the times to define when a module is exceeding his process time.
+		- UI Config: You can choose one of the two defined UI themes or edit your own.
+- Help:
+		- GitHub Repository: A link to the github repository of the engine.
+		- Download last: Links to the last github release page.
+		- Report a bug: Links to the issues page of the github repository.
+		- About: Show basic information about the engine (Libraries, license, authors,...)
+
 # Changelog
 	 -Release 0.2:
 		Files can be loaded from any folder
 		UI polished to show models stats
 		UI audio effects updated
 		Windows are resized on window resize
+		Load cancelled in bugged fbx
 
 	 -Release 0.1.9.9:
 		Camera input polished

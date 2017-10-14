@@ -646,7 +646,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			glClearDepth(clear_depth);
 		}
-		if (ImGui::DragFloat("Min Render Distance", &min_render_distance, 1.0, 0.1, 2000.0, "%.2f"))
+		if (ImGui::DragFloat("Min Render Dist", &min_render_distance, 1.0, 0.1, 2000.0, "%.2f"))
 		{
 			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			glMatrixMode(GL_PROJECTION);
@@ -656,7 +656,7 @@ void ModuleRenderer3D::BlitConfigInfo()
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 		}
-		if (ImGui::DragFloat("Max Render Distance", &max_render_distance, 1.0, 1.0, 2000.0, "%.2f"))
+		if (ImGui::DragFloat("Max Render Dist", &max_render_distance, 1.0, 1.0, 2000.0, "%.2f"))
 		{
 			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			glMatrixMode(GL_PROJECTION);

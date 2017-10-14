@@ -179,11 +179,11 @@ void GeometryManager::BlitConfigInfo()
 	{
 		App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 	}
-	if (ImGui::SliderFloat("Primitive Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f"))
+	if (ImGui::SliderFloat("Lines Width", &primitive_lines_width, 0.0, 10.0, "%.1f"))
 	{
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
-	if(ImGui::SliderFloat4("Primitive Color", primitive_color, 0.0, 1.0, "%.2f"))
+	if(ImGui::SliderFloat4("Color", primitive_color, 0.0, 1.0, "%.2f"))
 	{
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
@@ -195,23 +195,24 @@ void GeometryManager::BlitConfigInfo()
 	{
 		App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 	}
-	if(ImGui::SliderFloat("Mesh Lines Width", &mesh_lines_width, 0.1, 10.0, "%.1f"))
+	if(ImGui::SliderFloat("Lines Width", &mesh_lines_width, 0.1, 10.0, "%.1f"))
 	{
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
-	if(ImGui::SliderFloat4("Mesh Color", mesh_color, 0.0, 1.0, "%.2f"))
+	ImGui::Text("Colors");
+	if(ImGui::SliderFloat4("Mesh", mesh_color, 0.0, 1.0, "%.2f"))
 	{
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
-	if(ImGui::SliderFloat4("Vertex Normals Color", vertex_normals_color, 0.0, 1.0, "%.2f"))
+	if(ImGui::SliderFloat4("Vertex Normals", vertex_normals_color, 0.0, 1.0, "%.2f"))
 	{
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
-	if(ImGui::SliderFloat4("Face Normals Color", face_normals_color, 0.0, 1.0, "%.2f"))
+	if(ImGui::SliderFloat4("Face Normals", face_normals_color, 0.0, 1.0, "%.2f"))
 	{
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
-	if(ImGui::SliderFloat4("Bounding Box Color", bounding_box_color, 0.0, 1.0, "%.2f"))
+	if(ImGui::SliderFloat4("Bounding Box", bounding_box_color, 0.0, 1.0, "%.2f"))
 	{
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
