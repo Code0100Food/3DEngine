@@ -33,6 +33,9 @@ void log(const char file[], int line, const char* format, ...);
 #define START(timer) timer.Start()
 #define PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadSec())
 
+#define LIBRARY_TEXTURES_FOLDER "Library\\Materials\\"
+#define LIBRARY_MESH_FOLDER "Library\\Meshes\\"
+
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 typedef unsigned int uint;
