@@ -9,6 +9,7 @@
 #pragma comment (lib, "Engine/Devil/libx86/ILU.lib")
 #pragma comment (lib, "Engine/Devil/libx86/ILUT.lib")
 
+#include "MaterialImporter.h"
 
 // Constructors =================================
 ModuleTextures::ModuleTextures(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _enabled)
@@ -62,7 +63,7 @@ bool ModuleTextures::Start()
 	glEnable(GL_TEXTURE_2D);
 
 	//Load lenna image
-	custom_check_image = LoadTexture("texturacaja.jpg", "Assets/");
+	custom_check_image = LoadTexture("Baker_house.png", "Assets/");
 
 	return true;
 }
@@ -133,8 +134,10 @@ uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 {
 	std::string filename = std::string(str);
 
-	if(folder != nullptr)
+	if (folder != nullptr)
+	{
 		filename = folder + filename;
+	}
 
 	//Uint where the texture id will be saved
 	ILuint textureID = 0;
@@ -151,10 +154,15 @@ uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 	//If the image is correctly loaded
 	if (success)
 	{
-		/*ILinfo ImageInfo;
+		
+
+		ILinfo ImageInfo;
+		
 		iluGetImageInfo(&ImageInfo);
 		
-		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+		MaterialImporter imp_test = MaterialImporter(str, (void*)ImageInfo.Data, ImageInfo.SizeOfData);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		/*if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 		{
 			iluFlipImage();
 		}*/
@@ -190,6 +198,7 @@ uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 
+		
 
 		LOG("%i x %i", ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT));
 		LOG("Texture: %s correctly loaded!", filename.c_str());

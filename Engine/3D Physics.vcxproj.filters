@@ -384,6 +384,12 @@
     <ClInclude Include="Engine\ComponentMeshRenderer.h">
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\MaterialImporter.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MeshImporter.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -613,6 +619,12 @@
     </ClCompile>
     <ClCompile Include="Engine\ComponentMeshRenderer.cpp">
       <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MaterialImporter.cpp">
+      <Filter>Sources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MeshImporter.cpp">
+      <Filter>Sources\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

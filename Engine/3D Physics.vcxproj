@@ -27,7 +27,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -112,6 +112,7 @@
     <ClInclude Include="Engine\Importer.h" />
     <ClInclude Include="Engine\InputManager.h" />
     <ClInclude Include="Engine\Light.h" />
+    <ClInclude Include="Engine\MaterialImporter.h" />
     <ClInclude Include="Engine\MathGeoLib\Algorithm\Random\LCG.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\AABB.h" />
     <ClInclude Include="Engine\MathGeoLib\Geometry\AABB2D.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Engine\MathGeoLib\Math\sse_mathfun.h" />
     <ClInclude Include="Engine\MathGeoLib\Math\TransformOps.h" />
     <ClInclude Include="Engine\MathGeoLib\Time\Clock.h" />
+    <ClInclude Include="Engine\MeshImporter.h" />
     <ClInclude Include="Engine\mmgr\mmgr.h" />
     <ClInclude Include="Engine\mmgr\nommgr.h" />
     <ClInclude Include="Engine\ModelImporter.h" />
@@ -224,6 +226,7 @@
     <ClCompile Include="Engine\Light.cpp" />
     <ClCompile Include="Engine\log.cpp" />
     <ClCompile Include="Engine\main.cpp" />
+    <ClCompile Include="Engine\MaterialImporter.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Geometry\AABB.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Geometry\Capsule.cpp" />
@@ -255,6 +258,7 @@
     <ClCompile Include="Engine\MathGeoLib\Math\SSEMath.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Math\TransformOps.cpp" />
     <ClCompile Include="Engine\MathGeoLib\Time\Clock.cpp" />
+    <ClCompile Include="Engine\MeshImporter.cpp" />
     <ClCompile Include="Engine\mmgr\mmgr.cpp" />
     <ClCompile Include="Engine\ModelImporter.cpp" />
     <ClCompile Include="Engine\ModuleAudio.cpp" />
