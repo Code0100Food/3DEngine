@@ -1,4 +1,6 @@
 #include "MaterialImporter.h"
+#include "Application.h"
+#include "FileSystem.h"
 
 #include "Devil/include/il.h"
 #include "Devil/include/ilu.h"
@@ -13,17 +15,21 @@
 #include <fstream>
 #include <iostream>
 
-MaterialImporter::MaterialImporter(const char * path, const void * buffer, unsigned int  _size)
+MaterialImporter::MaterialImporter(const char* path)
 {
 	bool ret = false;
 
-	if (buffer)
+	//Texture buffer
+	char* buffer;
+	int	  lenght = App->fs->LoadFile(path, &buffer);
+
+	if (buffer && lenght)
 	{
 		ILuint ImageName;
 		ilGenImages(1, &ImageName);
 		ilBindImage(ImageName);
 
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, _size))
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, lenght))
 		{
 			ilEnable(IL_FILE_OVERWRITE);
 
@@ -36,7 +42,9 @@ MaterialImporter::MaterialImporter(const char * path, const void * buffer, unsig
 			{
 				data = new ILubyte[size]; // allocate data buffer
 				if (ilSaveL(IL_DDS, data, size) > 0) // Save with the ilSaveIL function
-					
+				{
+					App->fs->SaveFile("Salu2.dds", (char*)data, size, LIBRARY_TEXTURES_FOLDER);
+				}
 
 				RELEASE_ARRAY(data);
 			}

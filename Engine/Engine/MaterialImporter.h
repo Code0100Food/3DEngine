@@ -7,7 +7,7 @@ class MaterialImporter : public Importer
 {
 public:
 	
-	MaterialImporter(const char* path, const void * buffer, unsigned int size);
+	MaterialImporter(const char* path);
 
 private:
 
