@@ -272,7 +272,6 @@ void Mesh_::BlitInfo(uint index)
 		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Transformation");
 		//Show mesh position
 		ImGui::Text("Position	");
-		ImGui::SameLine();
 		ImGui::Text("X %.1f		", position.x);
 		ImGui::SameLine();
 		ImGui::Text("Y %.1f		", position.y);
@@ -285,19 +284,17 @@ void Mesh_::BlitInfo(uint index)
 
 		//Show mesh rotation
 		ImGui::Text("Rotation	");
+		ImGui::Text("X %.1f     ", eX);
 		ImGui::SameLine();
-		ImGui::Text("X %.1f		", eX);
-		ImGui::SameLine();
-		ImGui::Text("Y %.1f		", eY);
+		ImGui::Text("Y %.1f     ", eY);
 		ImGui::SameLine();
 		ImGui::Text("Z %.1f", eZ);
 
 		//Show mesh scale
 		ImGui::Text("Scale	");
+		ImGui::Text("X %.1f     ", scale.x);
 		ImGui::SameLine();
-		ImGui::Text("X %.1f		", scale.x);
-		ImGui::SameLine();
-		ImGui::Text("Y %.1f		", scale.y);
+		ImGui::Text("Y %.1f     ", scale.y);
 		ImGui::SameLine();
 		ImGui::Text("Z %.1f", scale.z);
 
@@ -367,6 +364,7 @@ void Mesh_::BlitInfo(uint index)
 		{
 			ImGui::Image((void*)(*it).id, ImVec2(100, 100));
 			ImGui::Text("Size: %ix%i", (*it).tex_width, (*it).tex_height);
+			ImGui::Text("Path: %s", (*it).path.c_str());
 		}
 
 		ImGui::NewLine();

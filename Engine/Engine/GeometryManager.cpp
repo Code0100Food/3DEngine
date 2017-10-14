@@ -378,8 +378,13 @@ bool GeometryManager::LoadScene(const char * folder)
 	}
 
 	LOG("Loading new model...");
-	Model_* new_model = new Model_(folder);
-	models_list.push_back(new_model);
+	bool check = false;
+	Model_* new_model = new Model_(folder, check);
+	if (check)
+	{
+		models_list.push_back(new_model);
+	}
+	else RELEASE(new_model);
 
-	return true;
+	return check;
 }

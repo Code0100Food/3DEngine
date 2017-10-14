@@ -281,8 +281,9 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			if ((tmp.compare(next_to_point, len, "FBX") == 0) || (tmp.compare(next_to_point, len, "fbx") == 0) || (tmp.compare(next_to_point, len, "OBJ") == 0) || (tmp.compare(next_to_point, len, "obj") == 0))
 			{
-				App->geometry->LoadScene(event.drop.file);
-				App->camera->LookAtModel(App->geometry->GetSelectedModel());
+				bool ret = App->geometry->LoadScene(event.drop.file);
+				if(ret)App->camera->LookAtModel(App->geometry->GetSelectedModel());
+				else LOG("[error] Error loading FXB");
 			}
 
 			

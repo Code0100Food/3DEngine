@@ -13,9 +13,9 @@
 #include "ModuleAudio.h"
 
 // Constructors =================================
-Model_::Model_(const char * path)
+Model_::Model_(const char * path, bool& check)
 {
-	LoadModel(path);
+	check = LoadModel(path);
 }
 
 // Destructors ==================================
@@ -50,7 +50,7 @@ void Model_::Draw()
 }
 
 // Functionality ================================
-void Model_::LoadModel(std::string path)
+bool Model_::LoadModel(std::string path)
 {
 	Assimp::Importer import;
 	const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -58,7 +58,7 @@ void Model_::LoadModel(std::string path)
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		LOG("[error] ASSIMP: %s", import.GetErrorString());
-		return;
+		return false;
 	}
 	
 	directory = path.substr(0, path.find_last_of('\\'));
@@ -73,6 +73,8 @@ void Model_::LoadModel(std::string path)
 	ProcessNode(scene->mRootNode, scene);
 
 	GenerateBoundingBox();
+
+	return true;
 }
 
 void Model_::ProcessNode(aiNode * node, const aiScene * scene)
@@ -332,9 +334,8 @@ void Model_::BlitInfo()
 
 		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Transformation");
 
-		//Show model position
+		//Show mesh position
 		ImGui::Text("Position	");
-		ImGui::SameLine();
 		ImGui::Text("X %.1f		", position.x);
 		ImGui::SameLine();
 		ImGui::Text("Y %.1f		", position.y);
@@ -345,21 +346,19 @@ void Model_::BlitInfo()
 		float eY = asin(2 * (rotation.x*rotation.z + rotation.w*rotation.y));
 		float eZ = atan2(-2 * (rotation.x*rotation.y - rotation.w*rotation.z), rotation.w*rotation.w + rotation.x*rotation.x - rotation.y*rotation.y - rotation.z*rotation.z);
 
-		//Show model rotation
+		//Show mesh rotation
 		ImGui::Text("Rotation	");
+		ImGui::Text("X %.1f     ", eX);
 		ImGui::SameLine();
-		ImGui::Text("X %.1f		", eX);
-		ImGui::SameLine();
-		ImGui::Text("Y %.1f		", eY);
+		ImGui::Text("Y %.1f     ", eY);
 		ImGui::SameLine();
 		ImGui::Text("Z %.1f", eZ);
 
-		//Show model scale
+		//Show mesh scale
 		ImGui::Text("Scale	");
+		ImGui::Text("X %.1f     ", scale.x);
 		ImGui::SameLine();
-		ImGui::Text("X %.1f		", scale.x);
-		ImGui::SameLine();
-		ImGui::Text("Y %.1f		", scale.y);
+		ImGui::Text("Y %.1f     ", scale.y);
 		ImGui::SameLine();
 		ImGui::Text("Z %.1f", scale.z);
 

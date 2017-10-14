@@ -15,7 +15,7 @@ class Model_
 {
 public:
 
-	Model_(const char* path);
+	Model_(const char* path, bool& check);
 	~Model_();
 
 public:
@@ -45,7 +45,7 @@ private:
 
 private:
 
-	void					LoadModel(std::string path);
+	bool					LoadModel(std::string path);
 	void					ProcessNode(aiNode *node, const aiScene *scene);
 	Mesh_					ProcessMesh(aiMesh *mesh, const aiScene *scene);
 	std::vector<Texture>	LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);

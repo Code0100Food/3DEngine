@@ -16,6 +16,11 @@ MathGeoLib is suggested to Apache 2 License. -> http://www.apache.org/licenses/L
 All those Libraries are not created by us.
 
 # Changelog
+	 -Release 0.2:
+		Files can be loaded from any folder
+		UI polished to show models stats
+		UI audio effects updated
+		Windows are resized on window resize
 
 	 -Release 0.1.9.9:
 		Camera input polished
