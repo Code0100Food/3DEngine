@@ -46,6 +46,7 @@ public:
 
 	Directory*			CreateDir(const char* name, bool hidden, Directory* parent = nullptr);
 	int					LoadFile(const char* path, char** buffer_to_fill);
+	void				SaveFile(const char* file, const char* buffer, unsigned int size, const char* library_folder);
 
 	void				BlitDirsUI();
 private:

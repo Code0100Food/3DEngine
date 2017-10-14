@@ -157,6 +157,28 @@ int FileSystem::LoadFile(const char * path, char ** buffer_to_fill)
 	return size;
 }
 
+void FileSystem::SaveFile(const char * file, const char* buffer, unsigned int size, const char* library_folder)
+{
+	string full_path = library_folder;
+	full_path += file;
+
+	std::ofstream outfile(full_path.c_str(), std::ofstream::binary);
+
+	if (outfile.good())
+	{
+		// write to outfile
+		outfile.write(buffer, size);
+		outfile.close();
+	}
+	else
+	{
+		LOG("[error] Couldn't open file to write")
+	}
+	
+	
+
+}
+
 void FileSystem::BlitDirsUI()
 {
 
