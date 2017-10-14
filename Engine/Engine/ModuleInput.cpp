@@ -274,7 +274,7 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			int len = pos - next_to_point;
 			
-			if ((tmp.compare(next_to_point, len, "PNG") == 0) || (tmp.compare(next_to_point, len, "png") == 0) || (tmp.compare(next_to_point, len, "JPG") == 0) || (tmp.compare(next_to_point, len, "jpg") == 0))
+			if ((tmp.compare(next_to_point, len, "PNG") == 0) || (tmp.compare(next_to_point, len, "png") == 0) || (tmp.compare(next_to_point, len, "JPG") == 0) || (tmp.compare(next_to_point, len, "jpg") == 0) || (tmp.compare(next_to_point, len, "dds") == 0))
 			{
 				App->textures->LoadCustomTexture(event.drop.file);
 				App->textures->SetCustomMode();
