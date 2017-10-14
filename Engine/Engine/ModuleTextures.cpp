@@ -63,7 +63,7 @@ bool ModuleTextures::Start()
 	glEnable(GL_TEXTURE_2D);
 
 	//Load lenna image
-	custom_check_image = LoadTexture("Baker_house.png", "Assets/");
+	//custom_check_image = LoadTexture("Baker_house.png", "Assets/");
 
 	return true;
 }
@@ -160,13 +160,14 @@ uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 		
 		iluGetImageInfo(&ImageInfo);
 		
-		MaterialImporter imp_test = MaterialImporter(str, (void*)ImageInfo.Data, ImageInfo.SizeOfData);
+		
+
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		/*if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 		{
 			iluFlipImage();
 		}*/
-
+			
 		success = ilConvertImage(ilGetInteger(IL_IMAGE_FORMAT), IL_UNSIGNED_BYTE);
 
 		// Quit out if we failed the conversion
@@ -198,8 +199,8 @@ uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 
+		MaterialImporter imp_test = MaterialImporter(filename.c_str());
 		
-
 		LOG("%i x %i", ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT));
 		LOG("Texture: %s correctly loaded!", filename.c_str());
 	}
