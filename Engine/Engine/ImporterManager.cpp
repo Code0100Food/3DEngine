@@ -28,13 +28,13 @@ bool ImporterManager::ImportFile(const char * str)
 
 	case MATERIAL_IMPORT:
 	{
-		material_importer.Load(str);
+		material_importer.Import(str);
 	}
 	break;
 
 	case MESH_IMPORT:
 	{
-		
+		mesh_importer.Load(str);
 	}
 	break;
 
@@ -58,5 +58,6 @@ IMPORT_TYPE ImporterManager::GetImportTypeFromFormat(const char * str) const
 	if (strcmp(str, "PNG") == 0)return MATERIAL_IMPORT;
 	if (strcmp(str, "jpg") == 0)return MATERIAL_IMPORT;
 	if (strcmp(str, "JPG") == 0)return MATERIAL_IMPORT;
+	if (strcmp(str, "fiesta") == 0)return MESH_IMPORT;
 	return UNDEF_IMPORT;
 }

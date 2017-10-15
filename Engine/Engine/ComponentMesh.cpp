@@ -3,6 +3,19 @@
 #include "SDL/include/SDL_opengl.h"
 #include "ComponentMaterial.h"
 
+
+// Vertex ---------------------------------------
+Vertex::Vertex()
+{
+
+}
+
+Vertex::Vertex(math::float3 position, math::float3 normals, math::float2 tex_coords): position(position), normals(normals), tex_coords(tex_coords)
+{
+
+}
+// ----------------------------------------------
+
 // Texture --------------------------------------
 void Texture::BlitUI()const
 {

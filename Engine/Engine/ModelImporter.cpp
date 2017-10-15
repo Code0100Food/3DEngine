@@ -53,6 +53,10 @@ void ModelImporter::Load(const char* path)
 	//GenerateBoundingBox();
 }
 
+void ModelImporter::Import(const char * path)
+{
+}
+
 void ModelImporter::ProcessNode(aiNode * node, const aiScene * scene, GameObject* parent)
 {
 	// process all the node's meshes (if any)
@@ -183,7 +187,7 @@ void ModelImporter::ProcessMesh(const char* name, aiMesh * mesh, const aiScene *
 	comp_mesh->SetupMesh();
 
 	//Import the mesh 
-	App->importer->mesh_importer.Load(name, vertices_pos, indices);
+	App->importer->mesh_importer.Import(name, vertices_pos, indices);
 }
 
 std::vector<Texture> ModelImporter::LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)

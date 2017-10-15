@@ -13,7 +13,8 @@ public:
 
 public:
 
-	void Load(const char* name, std::vector<math::float3> vertices, std::vector<uint> indices);
+	void Import(const char* name, std::vector<math::float3> vertices, std::vector<uint> indices);
+	void Load(const char* path);
 
 };
 #endif

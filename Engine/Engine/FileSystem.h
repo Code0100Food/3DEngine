@@ -12,14 +12,14 @@ private:
 
 public:
 
-	Directory() {};
-	Directory(const char* _path) : path(_path) {};
-	~Directory() { path.clear(); name.clear(); };
+	Directory();
+	Directory(const char* _path);
+	~Directory();
 
-	void		SetPath(const char* _path)	{ path = _path; };
-	void		SetName(const char* _name)	{ name = _name; };
-	const char* GetPath() const				{ return path.c_str(); };
-
+	void		SetPath(const char* _path);
+	void		SetName(const char* _name);
+	const char* GetPath() const;
+	
 	void		AddChild(Directory* new_child);
 
 private:
@@ -48,7 +48,10 @@ private:
 
 public:
 
-	bool				Start();
+	bool	Start();
+	bool	CleanUp();
+
+public:
 
 	const JSON_Value*	LoadJSONFile(const char* str);
 	bool				SaveJSONFile(const JSON_Value* data, const char* name);

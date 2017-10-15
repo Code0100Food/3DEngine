@@ -21,7 +21,7 @@ public:
 	
 	Component(COMPONENT_TYPE _type = COMP_NONE);
 	Component(const Component& cpy);
-	~Component();
+	virtual ~Component();
 
 public:
 

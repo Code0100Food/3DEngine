@@ -23,6 +23,7 @@ private:
 public:
 
 	void	Load(const char* path);
+	void	Import(const char* path);
 
 private:
 	

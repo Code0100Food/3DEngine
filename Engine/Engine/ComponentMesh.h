@@ -34,6 +34,9 @@ inline RENDER_FLAGS& operator|= (RENDER_FLAGS& a, RENDER_FLAGS b)
 // Vertex ---------------------------------------
 struct Vertex
 {
+	Vertex();
+	Vertex(math::float3 position, math::float3 normals, math::float2 tex_coords);
+	
 	math::float3 position = { 0,0,0 };
 	math::float3 normals = { 0,0,0 };
 	math::float2 tex_coords = { 0,0 };

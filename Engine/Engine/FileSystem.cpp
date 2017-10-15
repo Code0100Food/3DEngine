@@ -3,6 +3,55 @@
 #include <fstream>
 #include <iostream>
 
+//Directory -------------------------------------
+Directory::Directory()
+{
+
+}
+
+Directory::Directory(const char * _path) : path(_path)
+{
+
+}
+
+Directory::~Directory()
+{
+	path.clear();
+	name.clear();
+	parent = nullptr;
+	uint size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		RELEASE(childs[k]);
+	}
+	childs.clear();
+}
+
+void Directory::SetPath(const char * _path)
+{
+	path = _path;
+}
+
+void Directory::SetName(const char * _name)
+{
+	name = _name;
+}
+
+const char * Directory::GetPath() const
+{
+	return path.c_str();
+}
+
+void Directory::AddChild(Directory * new_child)
+{
+	if (new_child)
+	{
+		new_child->parent = this;
+		childs.push_back(new_child);
+	}
+}
+//-----------------------------------------------
+
 // Constructors =================================
 FileSystem::FileSystem(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
@@ -27,6 +76,15 @@ bool FileSystem::Start()
 	CreateDir("Meshes", true, engine_root_dir);
 	CreateDir("Materials", true, engine_root_dir);
 
+
+	return true;
+}
+
+bool FileSystem::CleanUp()
+{
+	if (user_root_dir != nullptr)RELEASE(user_root_dir);
+	if (engine_root_dir != nullptr)RELEASE(engine_root_dir);
+	focus_dir = nullptr;
 
 	return true;
 }
@@ -258,13 +316,6 @@ void FileSystem::LoadDirs(Directory* parent)
 			still_elements = false;
 
 	}
-}
-
-void Directory::AddChild(Directory * new_child)
-{
-	if (new_child)
-	{
-		new_child->parent = this;
-		childs.push_back(new_child);
-	}
+	
+	FindClose(file_handle);
 }

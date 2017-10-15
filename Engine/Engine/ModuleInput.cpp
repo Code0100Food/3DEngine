@@ -268,29 +268,28 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_DROPFILE:
+			
+			//Import/load the file in the engine file system
 			App->importer->ImportFile(event.drop.file);
+			
+			//Get the file format to do extra processes
 			std::string format;
 			App->fs->GetFileFormatFromPath(event.drop.file, &format);
-			string tmp = event.drop.file;
-
-			int next_to_point = tmp.find_last_of('.') + 1;
-			int pos = tmp.length();
-
-			int len = pos - next_to_point;
 			
-			if ((tmp.compare(next_to_point, len, "PNG") == 0) || (tmp.compare(next_to_point, len, "png") == 0) || (tmp.compare(next_to_point, len, "JPG") == 0) || (tmp.compare(next_to_point, len, "jpg") == 0) || (tmp.compare(next_to_point, len, "dds") == 0))
+			//If is an image sets it as custom texture and enable custom mode
+			if (strcmp(format.c_str(), "PNG") == 0 || strcmp(format.c_str(), "png") == 0 || strcmp(format.c_str(), "jpg") == 0 || strcmp(format.c_str(), "JPG") == 0 || strcmp(format.c_str(), "dds") == 0)
 			{
 				App->textures->LoadCustomTexture(event.drop.file);
 				App->textures->SetCustomMode();
 				break;
 			}
 
+			//If is a model focus the camera to the model size
 			if (strcmp(format.c_str(), "FBX") == 0 || strcmp(format.c_str(), "fbx") == 0 || strcmp(format.c_str(), "OBJ") == 0 || strcmp(format.c_str(), "obj") == 0 )
 			{
 				App->camera->LookAtGameObject(App->scene->GetSelectedGameObject());
 			}
 
-			
 			break;
 		}
 	}

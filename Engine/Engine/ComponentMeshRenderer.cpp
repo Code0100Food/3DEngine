@@ -47,7 +47,7 @@ bool ComponentMeshRenderer::Update()
 	else if (App->textures->GetMeshMode())
 	{
 		ComponentMaterial* mat = target_mesh->GetDrawMaterial();
-		if (mat->GetActive())
+		if (mat!= nullptr && mat->GetActive())
 		{
 			for (int i = 0; i < mat->textures.size(); i++)
 			{

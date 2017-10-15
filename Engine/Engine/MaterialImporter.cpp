@@ -23,7 +23,7 @@ MaterialImporter::MaterialImporter()
 }
 
 // Functionality ================================
-void MaterialImporter::Load(const char* path)
+void MaterialImporter::Import(const char* path)
 {
 	//Texture buffer
 	char* buffer = nullptr;
