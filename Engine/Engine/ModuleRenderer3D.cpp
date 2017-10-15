@@ -141,26 +141,11 @@ bool ModuleRenderer3D::Awake(const JSON_Object * data_root)
 
 	wireframe = json_object_get_boolean(data_root, "wireframe");
 
-	front_wireframe = json_object_get_boolean(data_root, "front_wireframe");
-
 	lighting = json_object_get_boolean(data_root, "lighting");
 	JSON_Array* lighting_color_array = json_object_get_array(data_root, "lighting_color");
 	lighting_color[0] = json_array_get_number(lighting_color_array, 0);
 	lighting_color[1] = json_array_get_number(lighting_color_array, 1);
 	lighting_color[2] = json_array_get_number(lighting_color_array, 2);
-	lighting_color[3] = json_array_get_number(lighting_color_array, 3);
-	
-	material_color = json_object_get_boolean(data_root, "material_color");
-	JSON_Array* material_ambient_array = json_object_get_array(data_root, "material_ambient");
-	material_ambient[0] = json_array_get_number(material_ambient_array, 0);
-	material_ambient[1] = json_array_get_number(material_ambient_array, 1);
-	material_ambient[2] = json_array_get_number(material_ambient_array, 2);
-	material_ambient[3] = json_array_get_number(material_ambient_array, 3);
-	JSON_Array* material_diffuse_array = json_object_get_array(data_root, "material_diffuse");
-	material_diffuse[0] = json_array_get_number(material_diffuse_array, 0);
-	material_diffuse[1] = json_array_get_number(material_diffuse_array, 1);
-	material_diffuse[2] = json_array_get_number(material_diffuse_array, 2);
-	material_diffuse[3] = json_array_get_number(material_diffuse_array, 3);
 	
 	fog = json_object_get_boolean(data_root, "fog");
 	fog_density = json_object_get_number(data_root, "fog_density");
@@ -296,15 +281,9 @@ bool ModuleRenderer3D::Init()
 		}
 
 		//Initialize material states
-		if (material_color)
-		{
-			glEnable(GL_COLOR_MATERIAL);
-
-			GLfloat m_ambient[] = { material_ambient[0], material_ambient[1], material_ambient[2], material_ambient[3] };
-			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_ambient);
-			GLfloat m_diffuse[] = { material_diffuse[0], material_diffuse[1], material_diffuse[2], material_diffuse[3] };
-			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_diffuse);
-		}
+		glEnable(GL_COLOR_MATERIAL);
+		glDisable(GL_COLOR_MATERIAL);
+		//For this release material are not enabled
 
 		//Initialize fog states
 		if (fog)
@@ -521,44 +500,11 @@ void ModuleRenderer3D::BlitConfigInfo()
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turn ON/OFF the lights");
 	if (lighting)
 	{
-		if (ImGui::DragFloat4("Lighting Color", lighting_color, 0.05, 0.0, 1.0, "%.2f"))
+		if (ImGui::DragFloat3("Lighting Color", lighting_color, 0.05, 0.0, 1.0, "%.2f"))
 		{
 			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 			GLfloat LightModelAmbient[] = { lighting_color[0], lighting_color[1], lighting_color[2],lighting_color[3] };
 			glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-		}
-	}
-	// ----------------------
-
-	ImGui::Separator();
-	
-	//Material Data ---------
-	if (ImGui::Checkbox("Color Material", &material_color))
-	{
-		App->audio->PlayFxForInput(CHECKBOX_FX);
-		if (material_color)
-		{
-			glEnable(GL_COLOR_MATERIAL);
-		}
-		else
-		{
-			glDisable(GL_COLOR_MATERIAL);
-		}
-	}
-	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Allows to have one or more material parameters tracking the current color");
-	if (material_color)
-	{
-		if (ImGui::DragFloat4("Material Ambient", material_ambient, 0.05, 0.0, 1.0, "%.2f"))
-		{
-			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
-			GLfloat m_ambient[] = { material_ambient[0], material_ambient[1], material_ambient[2], material_ambient[3] };
-			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_ambient);
-		}
-		if (ImGui::DragFloat4("Material Diffuse", material_diffuse, 0.05, 0.0, 1.0, "%.2f"))
-		{
-			App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
-			GLfloat m_diffuse[] = { material_diffuse[0], material_diffuse[1], material_diffuse[2], material_diffuse[3] };
-			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_diffuse);
 		}
 	}
 	// ----------------------
@@ -606,14 +552,6 @@ void ModuleRenderer3D::BlitConfigInfo()
 		App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Turns ON/OFF the WireFrame mode");
-
-	if (wireframe)
-	{
-		if (ImGui::Checkbox("Front Mode", &front_wireframe))
-		{
-			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
-		}
-	}
 	//-----------------------
 
 	ImGui::Separator();
@@ -684,21 +622,8 @@ void ModuleRenderer3D::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 1, lighting_color[1]);
 	json_array_replace_number(_array, 2, lighting_color[2]);
 	json_array_replace_number(_array, 3, lighting_color[3]);
-	// Material data
-	json_object_set_boolean(data_root, "material_color", material_color);
-	_array = json_object_get_array(data_root, "material_ambient");
-	json_array_replace_number(_array, 0, material_ambient[0]);
-	json_array_replace_number(_array, 1, material_ambient[1]);
-	json_array_replace_number(_array, 2, material_ambient[2]);
-	json_array_replace_number(_array, 3, material_ambient[3]);
-	_array = json_object_get_array(data_root, "material_diffuse");
-	json_array_replace_number(_array, 0, material_diffuse[0]);
-	json_array_replace_number(_array, 1, material_diffuse[1]);
-	json_array_replace_number(_array, 2, material_diffuse[2]);
-	json_array_replace_number(_array, 3, material_diffuse[3]);
 	//Wireframe data
 	json_object_set_boolean(data_root, "wireframe", wireframe);
-	json_object_set_boolean(data_root, "front_wireframe", front_wireframe);
 
 	//Fog data
 	json_object_set_boolean(data_root, "fog", fog);
@@ -738,11 +663,6 @@ void ModuleRenderer3D::SetMaxRenderDistance(float val)
 bool ModuleRenderer3D::GetWireframe() const
 {
 	return wireframe;
-}
-
-bool ModuleRenderer3D::GetWireframeFront() const
-{
-	return front_wireframe;
 }
 
 bool ModuleRenderer3D::GetMouseOnWorkspace()const
@@ -786,13 +706,6 @@ void ModuleRenderer3D::EnableGLRenderFlags()
 	if (lighting)glEnable(GL_LIGHTING);
 	if (wireframe)
 	{
-		if (front_wireframe)
-		{
-			glPolygonMode(GL_FRONT, GL_LINE);
-		}
-		else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 }

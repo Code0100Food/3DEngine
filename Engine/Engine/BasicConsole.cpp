@@ -7,6 +7,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleConsole.h"
+#include "ModuleWindow.h"
 
 // Constructors =================================
 BasicConsole::BasicConsole()
@@ -57,8 +58,8 @@ void BasicConsole::AddLog(const char * fmt, ...) IM_PRINTFARGS(2)
 
 void BasicConsole::_Draw(const char * title, bool * p_open)
 {
-	ImGui::SetNextWindowSize(ImVec2(520, 300), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(0, 700));
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.4, App->window->GetHeight() * 0.45), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(0, App->window->GetHeight() - App->window->GetHeight() * 0.45), ImGuiCond_Always);
 	if (!ImGui::Begin(title, p_open, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar))
 	{
 		ImGui::End();

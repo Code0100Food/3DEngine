@@ -178,12 +178,12 @@ void Mesh_::DrawBoundingBox() const
 {
 	if (bounding_box.size() < 8)return;
 
+	glLineWidth(3.0f);
+	glColor4f(App->geometry->bounding_box_color[0], App->geometry->bounding_box_color[1], App->geometry->bounding_box_color[2], App->geometry->bounding_box_color[3]);
+
 	//Draw bounding box
 	glBegin(GL_LINES);
 	
-	glColor4f(App->geometry->bounding_box_color[0], App->geometry->bounding_box_color[1], App->geometry->bounding_box_color[2], App->geometry->bounding_box_color[3]);
-	glLineWidth(2.f);
-
 	for (uint k = 0; k < 4; k++)
 	{
 		glVertex3f(bounding_box.data()[k + 4].x, bounding_box.data()[k + 4].y, bounding_box.data()[k + 4].z);
@@ -261,7 +261,9 @@ void Mesh_::BlitInfo(uint index)
 {
 	//Header of the mesh
 	bool ui_state = ui_opened;
-	if (ImGui::CollapsingHeader(("%s", name.c_str()), NULL))
+	char str_m__buff[60];
+	sprintf_s(str_m__buff, "%s##%i", name.c_str(), index);
+	if (ImGui::CollapsingHeader(str_m__buff, NULL))
 	{
 		ui_opened = true;
 		if (ui_state != ui_opened)

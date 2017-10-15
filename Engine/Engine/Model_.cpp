@@ -167,8 +167,8 @@ Mesh_ Model_::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
 		//Load Normal data
-		std::vector<Texture> normal_map = LoadMaterialTextures(material,aiTextureType_HEIGHT, "texture_normal");
-		textures.insert(textures.end(), normal_map.begin(), normal_map.end());
+		/*std::vector<Texture> normal_map = LoadMaterialTextures(material,aiTextureType_HEIGHT, "texture_normal");
+		textures.insert(textures.end(), normal_map.begin(), normal_map.end());*/
 		//Load diffuse data
 		std::vector<Texture> diffuse_map = LoadMaterialTextures(material,aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuse_map.begin(), diffuse_map.end());
@@ -226,11 +226,12 @@ void Model_::DrawBoundingBox() const
 {
 	//Draw bounding box
 	App->renderer3D->DisableGLRenderFlags();
-	glBegin(GL_LINES);
-
+	
+	glLineWidth(3.0f);
 	glColor4f(App->geometry->bounding_box_color[0], App->geometry->bounding_box_color[1], App->geometry->bounding_box_color[2], App->geometry->bounding_box_color[3]);
-	glLineWidth(2.f);
-
+	
+	glBegin(GL_LINES);
+	
 	for (uint k = 0; k < 4; k++)
 	{
 		glVertex3f(bounding_box.data()[k + 4].x, bounding_box.data()[k + 4].y, bounding_box.data()[k + 4].z);

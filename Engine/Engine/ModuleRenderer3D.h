@@ -64,11 +64,7 @@ private:
 	bool	front_wireframe = false;
 
 	bool	lighting = false;
-	float	lighting_color[4];
-
-	bool	material_color = false;
-	float	material_ambient[4];
-	float	material_diffuse[4];
+	float	lighting_color[3];
 
 	bool	fog = false;
 	float	fog_density = 0.0f;
@@ -100,7 +96,6 @@ public:
 	
 	//Get Methods -----------
 	bool GetWireframe() const;
-	bool GetWireframeFront() const;
 	bool GetMouseOnWorkspace()const;
 	float GetMaxRenderDistance()const;
 
