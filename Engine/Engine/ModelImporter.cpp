@@ -13,16 +13,16 @@
 #include "FileSystem.h"
 
 // Constructors =================================
-ModelImporter::ModelImporter(const char * path)
+ModelImporter::ModelImporter()
 {
-	LoadModel(path);
+
 }
 
 // Functionality ================================
-void ModelImporter::LoadModel(std::string path)
+void ModelImporter::Load(const char* path)
 {
 	//Get the model path
-	App->fs->GetFolderFromPath(path.c_str(), &cur_path);
+	App->fs->GetFolderFromPath(path, &cur_path);
 
 	Assimp::Importer import;
 	const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -183,7 +183,7 @@ void ModelImporter::ProcessMesh(const char* name, aiMesh * mesh, const aiScene *
 	comp_mesh->SetupMesh();
 
 	//Import the mesh 
-	App->importer->ImportMesh(name, vertices_pos, indices);
+	App->importer->mesh_importer.Load(name, vertices_pos, indices);
 }
 
 std::vector<Texture> ModelImporter::LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)

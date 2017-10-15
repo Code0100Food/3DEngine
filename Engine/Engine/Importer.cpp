@@ -1,17 +1,14 @@
 #include "Importer.h"
 #include "ModelImporter.h"
 
+// Constructors =================================
 Importer::Importer()
 {
 
 }
 
+// Destructors ==================================
 Importer::~Importer()
 {
 
-}
-
-void Importer::ImportScene(const char * path)
-{
-	ModelImporter imp(path);
 }

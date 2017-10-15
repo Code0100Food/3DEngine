@@ -7,7 +7,11 @@ class MaterialImporter : public Importer
 {
 public:
 	
-	MaterialImporter(const char* path);
+	MaterialImporter();
+
+public:
+
+	void Load(const char* path);
 
 };
 #endif // !_MATERIAL_IMPORTER_H_

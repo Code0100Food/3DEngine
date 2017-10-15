@@ -18,9 +18,5 @@ public:
 	Importer();
 	~Importer();
 
-public:
-
-	void	ImportScene(const char* path);
-
 };
 #endif // !_IMPORTER_H_

@@ -15,7 +15,15 @@
 #include <fstream>
 #include <iostream>
 
-MaterialImporter::MaterialImporter(const char* path)
+
+// Constructors =================================
+MaterialImporter::MaterialImporter()
+{
+
+}
+
+// Functionality ================================
+void MaterialImporter::Load(const char* path)
 {
 	//Texture buffer
 	char* buffer = nullptr;

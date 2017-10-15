@@ -2,7 +2,15 @@
 #include "Application.h"
 #include "FileSystem.h"
 
-MeshImporter::MeshImporter(const char* name, std::vector<math::float3> vertices, std::vector<uint> indices)
+
+// Constructors =================================
+MeshImporter::MeshImporter()
+{
+
+}
+
+// Functionality ================================
+void MeshImporter::Load(const char* name, std::vector<math::float3> vertices, std::vector<uint> indices)
 {
 	// amount of indices / vertices / colors / normals / texture_coords / AABB
 	uint num_indices = indices.size();

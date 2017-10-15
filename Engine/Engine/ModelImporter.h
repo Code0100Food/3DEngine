@@ -12,17 +12,20 @@ class	GameObject;
 
 class ModelImporter
 {
+public:
+
+	ModelImporter();
+
 private:
 
 	std::string cur_path;
 
 public:
 
-	ModelImporter(const char* path);
+	void	Load(const char* path);
 
 private:
-
-	void					LoadModel(std::string path);
+	
 	void					ProcessNode(aiNode *node, const aiScene *scene, GameObject* parent);
 	void					ProcessMesh(const char* name, aiMesh *mesh, const aiScene *scene, GameObject* container);
 	std::vector<Texture>	LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);

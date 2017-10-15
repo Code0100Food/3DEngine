@@ -3,7 +3,10 @@
 
 #include "Module.h"
 #include "Importer.h"
-#include"MathGeoLib/Math/float3.h"
+
+#include "MeshImporter.h"
+#include "MaterialImporter.h"
+#include "ModelImporter.h"
 
 class ImporterManager
 {
@@ -13,9 +16,14 @@ public:
 
 public:
 
-	bool ImportFile(const char* str);
-	bool ImportMesh(const char* name, std::vector<math::float3> vertices, std::vector<uint> indices);
+	MeshImporter		mesh_importer;
+	MaterialImporter	material_importer;
+	ModelImporter		model_importer;
 
+public:
+
+	bool ImportFile(const char* str);
+	
 	IMPORT_TYPE	GetImportTypeFromFormat(const char* str)const;
 
 };

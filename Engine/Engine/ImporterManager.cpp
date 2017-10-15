@@ -28,7 +28,7 @@ bool ImporterManager::ImportFile(const char * str)
 
 	case MATERIAL_IMPORT:
 	{
-		MaterialImporter mat = MaterialImporter(str);
+		material_importer.Load(str);
 	}
 	break;
 
@@ -40,19 +40,12 @@ bool ImporterManager::ImportFile(const char * str)
 
 	case MODEL_IMPORT:
 	{
-		ModelImporter imp = ModelImporter(str);
+		model_importer.Load(str);
 	}
 	break;
 	}
 
 	return ret;
-}
-
-bool ImporterManager::ImportMesh(const char * name, std::vector<math::float3> vertices, std::vector<uint> indices)
-{
-	MeshImporter imp = MeshImporter(name, vertices, indices);
-
-	return true;
 }
 
 IMPORT_TYPE ImporterManager::GetImportTypeFromFormat(const char * str) const
