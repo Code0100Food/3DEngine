@@ -9,8 +9,6 @@
 #pragma comment (lib, "Engine/Devil/libx86/ILU.lib")
 #pragma comment (lib, "Engine/Devil/libx86/ILUT.lib")
 
-#include "MaterialImporter.h"
-
 // Constructors =================================
 ModuleTextures::ModuleTextures(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _enabled)
 {
@@ -63,7 +61,7 @@ bool ModuleTextures::Start()
 	glEnable(GL_TEXTURE_2D);
 
 	//Load lenna image
-	//custom_check_image = LoadTexture("Baker_house.png", "Assets/");
+	custom_check_image = LoadTexture("Lenna.png", "DATA/Textures/");
 
 	return true;
 }
@@ -198,9 +196,7 @@ uint ModuleTextures::LoadTexture(const char * str, const char* folder)
 			ilGetData());					// The actual image data itself
 
 		glGenerateMipmap(GL_TEXTURE_2D);
-
-		MaterialImporter imp_test = MaterialImporter(filename.c_str());
-		
+	
 		LOG("%i x %i", ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT));
 		LOG("Texture: %s correctly loaded!", filename.c_str());
 	}

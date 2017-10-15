@@ -17,46 +17,47 @@
 
 MaterialImporter::MaterialImporter(const char* path)
 {
-	bool ret = false;
-
 	//Texture buffer
-	char* buffer;
+	char* buffer = nullptr;
 	int	  lenght = App->fs->LoadFile(path, &buffer);
 
 	if (buffer && lenght)
 	{
-		ILuint ImageName;
-		ilGenImages(1, &ImageName);
-		ilBindImage(ImageName);
+		ILuint image_name;
+		ilGenImages(1, &image_name);
+		ilBindImage(image_name);
 
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, lenght))
 		{
 			ilEnable(IL_FILE_OVERWRITE);
 
-			ILuint   size;
-			ILubyte *data;
+			ILuint   size = 0;
+			ILubyte* data = nullptr;
+
 			// To pick a specific DXT compression use 
 			ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
-			size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
+			// Get the size of the data buffer
+			size = ilSaveL(IL_DDS, NULL, 0);
 			if (size > 0)
 			{
-				data = new ILubyte[size]; // allocate data buffer
-				if (ilSaveL(IL_DDS, data, size) > 0) // Save with the ilSaveIL function
+				// allocate data buffer
+				data = new ILubyte[size]; 
+				// Save with the ilSaveIL function
+				if (ilSaveL(IL_DDS, data, size) > 0) 
 				{
-					App->fs->SaveFile("Salu2.dds", (char*)data, size, LIBRARY_TEXTURES_FOLDER);
+					std::string name;
+					App->fs->GetFileNameFromPath(path, &name);
+					App->fs->ChangeFileFormat(name.c_str(), "dds", &name);
+					App->fs->SaveFile(name.c_str(), (char*)data, size, LIBRARY_TEXTURES_FOLDER);
 				}
 
 				RELEASE_ARRAY(data);
 			}
-			ilDeleteImages(1, &ImageName);
+			ilDeleteImages(1, &image_name);
 		}
 	}
-
-	if (ret == false)
+	else
 	{
-		//LOG("Cannot load texture from buffer of size %u", size);
+		LOG("Cannot load texture from path: %s", path);
 	}
-
-	//return ret;
-	
 }

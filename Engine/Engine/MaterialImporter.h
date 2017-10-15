@@ -9,8 +9,5 @@ public:
 	
 	MaterialImporter(const char* path);
 
-private:
-
-
 };
 #endif // !_MATERIAL_IMPORTER_H_

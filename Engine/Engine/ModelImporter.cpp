@@ -9,7 +9,8 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
-
+#include "ImporterManager.h"
+#include "FileSystem.h"
 
 // Constructors =================================
 ModelImporter::ModelImporter(const char * path)
@@ -20,6 +21,9 @@ ModelImporter::ModelImporter(const char * path)
 // Functionality ================================
 void ModelImporter::LoadModel(std::string path)
 {
+	//Get the model path
+	App->fs->GetFolderFromPath(path.c_str(), &cur_path);
+
 	Assimp::Importer import;
 	const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -64,7 +68,7 @@ void ModelImporter::ProcessNode(aiNode * node, const aiScene * scene, GameObject
 		comp->SetTransformation(node->mTransformation);
 
 		//Generate mesh obj
-		ProcessMesh(scene->mMeshes[node->mMeshes[i]], scene, obj);
+		ProcessMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, obj);
 	}
 	// then do the same for each of its children
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -73,7 +77,7 @@ void ModelImporter::ProcessNode(aiNode * node, const aiScene * scene, GameObject
 	}
 }
 
-void ModelImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene, GameObject* container)
+void ModelImporter::ProcessMesh(const char* name, aiMesh * mesh, const aiScene * scene, GameObject* container)
 {
 	//Generate the container mesh component
 	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
@@ -82,9 +86,10 @@ void ModelImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene, GameObject
 	ComponentMeshRenderer* comp_mesh_renderer = (ComponentMeshRenderer*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 	comp_mesh_renderer->SetTargetMesh(comp_mesh);
 
-	std::vector<Vertex>		vertices;
-	std::vector<uint>		indices;
-	std::vector<Texture>	textures;
+	std::vector<Vertex>			vertices;
+	std::vector<uint>			indices;
+	std::vector<Texture>		textures;
+	std::vector<math::float3>	vertices_pos;
 
 	LOG("Processing %s mesh!", mesh->mName.C_Str());
 
@@ -101,6 +106,7 @@ void ModelImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene, GameObject
 			data.y = mesh->mVertices[i].y;
 			data.z = mesh->mVertices[i].z;
 			vertex.position = data;
+			vertices_pos.push_back(data);
 		}
 
 		//Build vertex normals
@@ -154,7 +160,7 @@ void ModelImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene, GameObject
 
 		//Get the material
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-
+		
 		//Load Normal data
 		std::vector<Texture> normal_map = LoadMaterialTextures(material,aiTextureType_HEIGHT, "texture_normal");
 		textures.insert(textures.end(), normal_map.begin(), normal_map.end());
@@ -175,6 +181,9 @@ void ModelImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene, GameObject
 
 	//Initialize the mesh buffers
 	comp_mesh->SetupMesh();
+
+	//Import the mesh 
+	App->importer->ImportMesh(name, vertices_pos, indices);
 }
 
 std::vector<Texture> ModelImporter::LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
@@ -212,7 +221,13 @@ std::vector<Texture> ModelImporter::LoadMaterialTextures(aiMaterial *mat, aiText
 
 			n_textures.push_back(texture);
 			
-			textures.push_back(texture); // add to loaded textures
+			// add to loaded textures
+			textures.push_back(texture); 
+
+			//Import material
+			std::string file_folder = cur_path;
+			file_folder += texture.path.c_str();
+			App->importer->ImportFile(file_folder.c_str());
 		}
 	}
 

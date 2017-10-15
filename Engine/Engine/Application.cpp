@@ -15,7 +15,7 @@
 #include "ModuleScene.h"
 #include "FileSystem.h"
 #include "Profiler.h"
-#include "Importer.h"
+#include "ImporterManager.h"
 #include "Parson/parson.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "mmgr/mmgr.h"
@@ -27,7 +27,7 @@ Application::Application()
 	START(ms_timer);
 	START(prof_timer);
 
-	importer = new Importer();
+	importer = new ImporterManager();
 
 	profiler = new Profiler();
 	

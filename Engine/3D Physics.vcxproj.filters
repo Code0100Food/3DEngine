@@ -390,6 +390,9 @@
     <ClInclude Include="Engine\MeshImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ImporterManager.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -624,6 +627,9 @@
       <Filter>Sources\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Engine\MeshImporter.cpp">
+      <Filter>Sources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ImporterManager.cpp">
       <Filter>Sources\Importers</Filter>
     </ClCompile>
   </ItemGroup>

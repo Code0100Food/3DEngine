@@ -27,6 +27,7 @@ class Profiler;
 class Importer;
 class ModuleScene;
 class DockContext;
+class ImporterManager;
 
 enum MODULE_ID;
 
@@ -74,7 +75,7 @@ public:
 
 	//Tools 
 	Profiler*			profiler = nullptr;
-	Importer*			importer = nullptr;
+	ImporterManager*	importer = nullptr;
 
 	APP_CONTEXT			app_context = UNKNOWN_CONTEXT;
 

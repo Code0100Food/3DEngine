@@ -182,6 +182,7 @@
     <ClInclude Include="Engine\ModuleConsole.h" />
     <ClInclude Include="Engine\ModuleHardware.h" />
     <ClInclude Include="Engine\ModuleImgui.h" />
+    <ClInclude Include="Engine\ImporterManager.h" />
     <ClInclude Include="Engine\ModuleInput.h" />
     <ClInclude Include="Engine\ModuleRenderer3D.h" />
     <ClInclude Include="Engine\ModuleTextures.h" />
@@ -266,6 +267,7 @@
     <ClCompile Include="Engine\ModuleConsole.cpp" />
     <ClCompile Include="Engine\ModuleHardware.cpp" />
     <ClCompile Include="Engine\ModuleImgui.cpp" />
+    <ClCompile Include="Engine\ImporterManager.cpp" />
     <ClCompile Include="Engine\ModuleInput.cpp" />
     <ClCompile Include="Engine\ModuleRenderer3D.cpp" />
     <ClCompile Include="Engine\ModuleTextures.cpp" />

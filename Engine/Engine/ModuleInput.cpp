@@ -12,8 +12,9 @@
 #include "ModuleTextures.h"
 #include "ModuleImgui.h"
 #include "ModuleCamera3D.h"
-#include "Importer.h"
+#include "ImporterManager.h"
 #include "ModuleScene.h"
+#include "FileSystem.h"
 
 #define MAX_KEYS 300
 
@@ -267,6 +268,9 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_DROPFILE:
+			App->importer->ImportFile(event.drop.file);
+			std::string format;
+			App->fs->GetFileFormatFromPath(event.drop.file, &format);
 			string tmp = event.drop.file;
 
 			int next_to_point = tmp.find_last_of('.') + 1;
@@ -281,9 +285,8 @@ update_status ModuleInput::PreUpdate(float dt)
 				break;
 			}
 
-			if ((tmp.compare(next_to_point, len, "FBX") == 0) || (tmp.compare(next_to_point, len, "fbx") == 0) || (tmp.compare(next_to_point, len, "OBJ") == 0) || (tmp.compare(next_to_point, len, "obj") == 0))
+			if (strcmp(format.c_str(), "FBX") == 0 || strcmp(format.c_str(), "fbx") == 0 || strcmp(format.c_str(), "OBJ") == 0 || strcmp(format.c_str(), "obj") == 0 )
 			{
-				App->importer->ImportScene(event.drop.file);
 				App->camera->LookAtGameObject(App->scene->GetSelectedGameObject());
 			}
 

@@ -6,10 +6,12 @@
 class Directory
 {
 private:
+
 	std::string path;
 	std::string name;
 
 public:
+
 	Directory() {};
 	Directory(const char* _path) : path(_path) {};
 	~Directory() { path.clear(); name.clear(); };
@@ -21,8 +23,10 @@ public:
 	void		AddChild(Directory* new_child);
 
 private:
+
 	Directory*				parent = nullptr;
 	std::vector<Directory*> childs;
+
 };
 
 class FileSystem : public Module
@@ -36,6 +40,12 @@ public:
 
 	std::string data_folder = "DATA";
 
+private:
+
+	Directory* user_root_dir = nullptr;
+	Directory* engine_root_dir = nullptr;
+	Directory* focus_dir = nullptr;
+
 public:
 
 	bool				Start();
@@ -47,13 +57,12 @@ public:
 	Directory*			CreateDir(const char* name, bool hidden, Directory* parent = nullptr);
 	int					LoadFile(const char* path, char** buffer_to_fill);
 	void				SaveFile(const char* file, const char* buffer, unsigned int size, const char* library_folder);
+	void				GetFileNameFromPath(const char* path, std::string* name)const;
+	void				GetFileFormatFromPath(const char* path, std::string* format)const;
+	void				GetFolderFromPath(const char* path, std::string* folder)const;
+	void				ChangeFileFormat(const char* path,const char* new_format, std::string* new_path)const;
 
 	void				BlitDirsUI();
-private:
-
-	Directory* user_root_dir = nullptr;
-	Directory* engine_root_dir = nullptr;
-	Directory* focus_dir = nullptr;
 
 private:
 

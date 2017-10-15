@@ -179,6 +179,36 @@ void FileSystem::SaveFile(const char * file, const char* buffer, unsigned int si
 
 }
 
+void FileSystem::GetFileNameFromPath(const char * path, std::string* name)const
+{
+	std::string str = path;
+	size_t pos_separator = str.find_last_of("\\/");
+	*name = str.substr(pos_separator + 1);
+}
+
+void FileSystem::GetFileFormatFromPath(const char * path, std::string* format)const
+{
+	std::string str = path;
+	size_t pos_separator = str.find_last_of(".");
+	*format = str.substr(pos_separator + 1).c_str();
+}
+
+void FileSystem::GetFolderFromPath(const char * path, std::string * folder) const
+{
+	std::string str = path;
+	size_t pos_separator = str.find_last_of("\\/");
+	*folder = str.substr(0, pos_separator + 1);
+}
+
+void FileSystem::ChangeFileFormat(const char * path, const char* new_format, std::string* new_path) const
+{
+	std::string str = path;
+	size_t pos_separator = str.find_last_of(".");
+	std::string unformated_str = str.substr(0,pos_separator + 1);
+	unformated_str += new_format;
+	*new_path = unformated_str;
+}
+
 void FileSystem::BlitDirsUI()
 {
 
