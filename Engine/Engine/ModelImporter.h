@@ -22,8 +22,8 @@ private:
 
 public:
 
-	void	Load(const char* path);
-	void	Import(const char* path);
+	bool	Load(const char* path);
+	bool	Import(const char* path);
 
 private:
 	

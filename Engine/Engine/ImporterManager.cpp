@@ -28,19 +28,19 @@ bool ImporterManager::ImportFile(const char * str)
 
 	case MATERIAL_IMPORT:
 	{
-		material_importer.Import(str);
+		ret = material_importer.Import(str);
 	}
 	break;
 
 	case MESH_IMPORT:
 	{
-		mesh_importer.Load(str);
+		ret = mesh_importer.Load(str);
 	}
 	break;
 
 	case MODEL_IMPORT:
 	{
-		model_importer.Load(str);
+		ret = model_importer.Load(str);
 	}
 	break;
 	}

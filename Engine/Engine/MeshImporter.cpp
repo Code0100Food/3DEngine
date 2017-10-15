@@ -10,8 +10,10 @@ MeshImporter::MeshImporter()
 }
 
 // Functionality ================================
-void MeshImporter::Import(const char* name, std::vector<math::float3> vertices, std::vector<uint> indices)
+bool MeshImporter::Import(const char* name, std::vector<math::float3> vertices, std::vector<uint> indices)
 {
+	if (name == nullptr || vertices.size() == 0 || indices.size() == 0)return false;
+
 	// amount of indices / vertices / colors / normals / texture_coords / AABB
 	uint num_indices = indices.size();
 	uint num_vertices = vertices.size();
@@ -43,9 +45,11 @@ void MeshImporter::Import(const char* name, std::vector<math::float3> vertices, 
 	App->fs->SaveFile(file_name.c_str(), (char*)data, size, LIBRARY_MESH_FOLDER);
 
 	file_name.clear();
+
+	return true;
 }
 
-void MeshImporter::Load(const char * path)
+bool MeshImporter::Load(const char * path)
 {
 	//Load the buffer from the file
 	char* buffer;
@@ -96,6 +100,11 @@ void MeshImporter::Load(const char * path)
 		//Active mesh renderer
 		mesh_rend_comp->SetTargetMesh(mesh_comp);
 	}
-	
+	else
+	{
+		LOG("[error] Error loading mesh!");
+		return false;
+	}
 	RELEASE_ARRAY(buffer);
+	return true;
 }

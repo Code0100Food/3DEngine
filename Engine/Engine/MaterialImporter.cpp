@@ -23,7 +23,7 @@ MaterialImporter::MaterialImporter()
 }
 
 // Functionality ================================
-void MaterialImporter::Import(const char* path)
+bool MaterialImporter::Import(const char* path)
 {
 	//Texture buffer
 	char* buffer = nullptr;
@@ -67,5 +67,7 @@ void MaterialImporter::Import(const char* path)
 	else
 	{
 		LOG("Cannot load texture from path: %s", path);
+		return false;
 	}
+	return true;
 }

@@ -118,28 +118,28 @@ void Profiler::BlitModuleProfile(MODULE_ID id, const char* str_id, bool graph)
 	if (block_ptr != nullptr)
 	{
 		ImGui::BulletText("Build		"); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000000.0f);
 	}
 	//Awake -----------------
 	block_ptr = GetProfBlock(id, AWAKE_STEP);
 	if (block_ptr != nullptr)
 	{
 		ImGui::BulletText("Awake		"); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000000.0f);
 	}
 	//Init ------------------
 	block_ptr = GetProfBlock(id, INIT_STEP);
 	if (block_ptr != nullptr)
 	{
 		ImGui::BulletText("Init		 "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000000.0f);
 	}
 	//Start -----------------
 	block_ptr = GetProfBlock(id, START_STEP);
 	if (block_ptr != nullptr)
 	{
 		ImGui::BulletText("Start		"); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Sec)", block_ptr->time_in_nanoseconds / 1000000.0f);
+		ImGui::TextColored(ImVec4(0.5, 1.0, 0.5, 1.0), "%.3f (Mil)", block_ptr->time_in_nanoseconds / 1000000.0f);
 	}
 
 	//Game Loop -------------

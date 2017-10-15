@@ -11,7 +11,7 @@ public:
 
 public:
 
-	void Import(const char* path);
+	bool Import(const char* path);
 
 };
 #endif // !_MATERIAL_IMPORTER_H_

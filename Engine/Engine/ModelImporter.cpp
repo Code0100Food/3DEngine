@@ -19,7 +19,7 @@ ModelImporter::ModelImporter()
 }
 
 // Functionality ================================
-void ModelImporter::Load(const char* path)
+bool ModelImporter::Load(const char* path)
 {
 	//Get the model path
 	App->fs->GetFolderFromPath(path, &cur_path);
@@ -30,7 +30,7 @@ void ModelImporter::Load(const char* path)
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		LOG("[error] ASSIMP: %s", import.GetErrorString());
-		return;
+		return false;
 	}
 	
 	LOG("Loading %s model!", scene->mRootNode->mName.C_Str());
@@ -51,10 +51,12 @@ void ModelImporter::Load(const char* path)
 	App->scene->SetSelectedGameObject(obj);
 
 	//GenerateBoundingBox();
+	return true;
 }
 
-void ModelImporter::Import(const char * path)
+bool ModelImporter::Import(const char * path)
 {
+	return true;
 }
 
 void ModelImporter::ProcessNode(aiNode * node, const aiScene * scene, GameObject* parent)

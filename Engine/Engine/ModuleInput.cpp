@@ -270,8 +270,10 @@ update_status ModuleInput::PreUpdate(float dt)
 		case SDL_DROPFILE:
 			
 			//Import/load the file in the engine file system
-			App->importer->ImportFile(event.drop.file);
+			bool res = App->importer->ImportFile(event.drop.file);
 			
+			if (!res)break;
+
 			//Get the file format to do extra processes
 			std::string format;
 			App->fs->GetFileFormatFromPath(event.drop.file, &format);

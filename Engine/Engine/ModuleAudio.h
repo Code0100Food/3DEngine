@@ -7,6 +7,8 @@
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 #define MAX_VOLUME 128
 
+#define MAX_AUD_CONSOLE_LABELS 80
+
 enum FX_ID
 {
 	UNDEF_FX= 0,
@@ -55,7 +57,7 @@ private:
 	int					num_audio_devices = 0;
 
 	//Audio Log Console(no input just output)
-	std::vector<std::string>	audio_logs;
+	std::list<std::string>		audio_logs;
 	bool						scroll_audio_calls = false;
 
 public:
