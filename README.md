@@ -2,7 +2,7 @@
 A 3D engine developed by two students of videogames development.
 This code is under the MIT License
 
--Libraries Used:
+- Libraries Used:
    MathGeoLib -> http://clb.demon.fi/MathGeoLib/nightly/
    ImGui -> https://github.com/ocornut/imgui
    Bullet -> http://bulletphysics.org
@@ -54,6 +54,7 @@ You can acceed to all the UI elements using the top bar menu that have four sub 
 Camera movement:
 - Right click turns on “WASD” fps-like movement
 - Mouse wheel zoom in and out
+- Mouse wheel pressed moves camera up, down, left and right
 - Alt+Left click orbit the object
 - Pressing “f” focus the camera around the geometry
 
@@ -73,6 +74,7 @@ To see all the console commands you can open the console header in the configura
 		UI audio effects updated
 		Windows are resized on window resize
 		Load cancelled in bugged fbx
+            Camera adapt distance deppending on fbx size 
 
 	 -Release 0.1.9.9:
 		Camera input polished
