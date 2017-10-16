@@ -189,7 +189,7 @@ void ModelImporter::ProcessMesh(const char* name, aiMesh * mesh, const aiScene *
 	comp_mesh->SetupMesh();
 
 	//Import the mesh 
-	App->importer->mesh_importer.Import(name, vertices_pos, indices);
+	App->importer->mesh_importer.Import(name, indices, vertices, textures);
 }
 
 std::vector<Texture> ModelImporter::LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
