@@ -8,6 +8,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMeshRenderer.h"
 #include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 
 class GameObject
 {

@@ -14,13 +14,13 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>3DEngine</ProjectName>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
@@ -92,6 +92,7 @@
     <ClInclude Include="Engine\Capsule_.h" />
     <ClInclude Include="Engine\Color.h" />
     <ClInclude Include="Engine\Component.h" />
+    <ClInclude Include="Engine\ComponentCamera.h" />
     <ClInclude Include="Engine\ComponentMaterial.h" />
     <ClInclude Include="Engine\ComponentMesh.h" />
     <ClInclude Include="Engine\ComponentMeshRenderer.h" />
@@ -205,6 +206,7 @@
     <ClCompile Include="Engine\Capsule_.cpp" />
     <ClCompile Include="Engine\Color.cpp" />
     <ClCompile Include="Engine\Component.cpp" />
+    <ClCompile Include="Engine\ComponentCamera.cpp" />
     <ClCompile Include="Engine\ComponentMaterial.cpp" />
     <ClCompile Include="Engine\ComponentMesh.cpp" />
     <ClCompile Include="Engine\ComponentMeshRenderer.cpp" />
