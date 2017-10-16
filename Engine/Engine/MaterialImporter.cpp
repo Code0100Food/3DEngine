@@ -23,6 +23,13 @@ MaterialImporter::MaterialImporter()
 }
 
 // Functionality ================================
+bool MaterialImporter::Load(const char * path)
+{
+
+
+	return true;
+}
+
 bool MaterialImporter::Import(const char* path)
 {
 	//Texture buffer

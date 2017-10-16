@@ -23,7 +23,8 @@ public:
 public:
 
 	bool ImportFile(const char* str);
-	
+	bool LoadFile(const char* str);
+
 	IMPORT_TYPE	GetImportTypeFromFormat(const char* str)const;
 
 };

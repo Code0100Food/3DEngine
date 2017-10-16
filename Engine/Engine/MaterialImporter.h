@@ -11,6 +11,7 @@ public:
 
 public:
 
+	bool Load(const char* path);
 	bool Import(const char* path);
 
 };

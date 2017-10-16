@@ -271,7 +271,8 @@ update_status ModuleInput::PreUpdate(float dt)
 			
 			//Import/load the file in the engine file system
 			bool res = App->importer->ImportFile(event.drop.file);
-			
+			if (res)App->importer->LoadFile(event.drop.file);
+
 			if (!res)break;
 
 			//Get the file format to do extra processes
