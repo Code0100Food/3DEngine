@@ -30,6 +30,7 @@ public:
 
 public:
 
+	virtual bool Start();
 	virtual bool Update();
 
 protected:

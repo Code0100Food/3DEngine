@@ -23,6 +23,11 @@ bool Component::operator==(const Component & target)
 	return bool(parent == target.parent &&type == target.type && actived == target.actived);
 }
 
+bool Component::Start()
+{
+	return true;
+}
+
 // Game Loop ====================================
 bool Component::Update()
 {
