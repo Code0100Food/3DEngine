@@ -309,16 +309,24 @@ void FileSystem::SaveFile(const char * file, const char* buffer, unsigned int si
 
 void FileSystem::CloneFile(const char * file, Directory * folder)
 {
-	char* buffer = nullptr;
+	//Get file path
+	std::string file_path;
+	GetFolderFromPath(file, &file_path);
+	//Get folder path
+	std::string d_str;
+	folder->GetDirPath(&d_str);
+	//Check if the file already exists in the target directory
+	if (strcmp(file_path.c_str(),d_str.c_str()) == 0)return;
 
+	char* buffer = nullptr;
+	
 	//Load the file
 	LoadFile(file, &buffer);
 
 	//Get file name
 	std::string f_str;
 	GetFileNameFromPath(file, &f_str);
-	std::string d_str;
-	folder->GetDirPath(&d_str);
+
 
 	//Save the file
 	SaveFile(f_str.c_str(), buffer, sizeof(buffer), d_str.c_str());
