@@ -20,7 +20,6 @@ private:
 
 	math::float4x4	transform_matrix;
 	math::float3	position;
-	math::Quat		rotation;
 	math::float3	rotation_euler_angles;
 	math::float3	scale;
 
