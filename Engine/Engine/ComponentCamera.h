@@ -16,10 +16,16 @@ public:
 
 private:
 
-	math::Frustum frustum;
+	math::Frustum	frustum;
+	uint			far_plane_distance = 0;
+	uint			near_plane_distance = 0;
+	
 
 public:
 
+	bool Start();
+
 	void SetTransform(const ComponentTransform* trans);
+	void SetFrustrum();
 };
 #endif // !_COMPONENT_CAMERA_H_
