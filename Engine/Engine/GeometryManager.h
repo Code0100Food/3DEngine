@@ -21,6 +21,7 @@
 class GeometryManager : public Module
 {
 
+	friend class GameObject;
 	friend class ComponentMeshRenderer;
 
 public:

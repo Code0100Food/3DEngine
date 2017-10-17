@@ -49,8 +49,8 @@ bool ModelImporter::Load(const char* path)
 	
 	//Focus the loaded game object
 	App->scene->SetSelectedGameObject(obj);
+	obj->AdjustBoundingBox();
 
-	//GenerateBoundingBox();
 	return true;
 }
 

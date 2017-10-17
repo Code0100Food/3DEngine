@@ -24,7 +24,6 @@ private:
 
 	void DrawVertexNormals()const;
 	void DrawFaceNormals()const;
-	void DrawBoundingBox()const;
 
 public:
 

@@ -79,7 +79,7 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 
 void ModuleScene::BlitHierarchy()
 {
-	ImGui::SetNextWindowSize(ImVec2(300, 500));
+	ImGui::SetNextWindowSize(ImVec2(500, 500));
 	ImGui::Begin("Hierarchy", &hierarchy_win_state);
 	
 	root_gameobject->BlitGameObjectHierarchy();
@@ -120,4 +120,9 @@ void ModuleScene::EnableInspector()
 void ModuleScene::DisableInspector()
 {
 	inspector_state = false;
+}
+
+bool ModuleScene::IsRoot(const GameObject * target) const
+{
+	return (target == root_gameobject);
 }

@@ -11,8 +11,7 @@ enum RENDER_FLAGS
 {
 	REND_NONE = 1 << 0,
 	REND_VERTEX_NORMALS = 1 << 1,
-	REND_FACE_NORMALS = 1 << 2,
-	REND_BOUND_BOX = 1 << 3
+	REND_FACE_NORMALS = 1 << 2
 };
 
 inline RENDER_FLAGS operator~ (RENDER_FLAGS a)
@@ -75,8 +74,7 @@ private:
 
 	std::vector<Vertex>			vertices;
 	std::vector<uint>			indices;
-	std::vector<math::float3>	bounding_box;
-
+	
 	uint						num_tris = 0;
 	uint						num_vertex = 0;
 
@@ -94,6 +92,7 @@ public:
 
 	//Get Methods -----------
 	ComponentMaterial* GetDrawMaterial()const;
+	std::vector<math::float3> GetVertexPositions()const;
 
 	//Set Methods -----------
 	void	SetVertices(std::vector<Vertex> v);
@@ -102,7 +101,6 @@ public:
 
 	//Functionality ---------
 	void	SetupMesh();
-	void	GenerateBoundingBox();
 	void	DeleteBuffers();
 	void	BlitComponentInspector();
 };

@@ -29,6 +29,8 @@ private:
 	GameObject*					parent = nullptr;
 	std::vector<Component*>		components;
 	std::vector<GameObject*>	childs;
+	bool						draw_bounding_box = false;
+	math::AABB					bounding_box;
 
 public:
 
@@ -53,6 +55,9 @@ public:
 
 	void		BlitGameObjectHierarchy();
 	void		BlitGameObjectInspector();
+
+	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);
+	void									DrawBoundingBox();
 
 };
 #endif // !_GAME_OBJECT_H_

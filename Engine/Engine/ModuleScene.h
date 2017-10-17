@@ -45,5 +45,7 @@ public:
 	void		EnableInspector();
 	void		DisableInspector();
 
+	bool		IsRoot(const GameObject* target)const;
+
 };
 #endif
