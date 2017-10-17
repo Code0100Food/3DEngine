@@ -1,5 +1,8 @@
 #include "FileSystem.h"
 #include "Globals.h"
+#include "imgui/imgui_dock.h"
+#include "Application.h"
+#include "ModuleWindow.h"
 #include <fstream>
 #include <iostream>
 
@@ -37,9 +40,14 @@ void Directory::SetName(const char * _name)
 	name = _name;
 }
 
-const char * Directory::GetPath() const
+const char* Directory::GetPath() const
 {
 	return path.c_str();
+}
+
+const char* Directory::GetName() const
+{
+	return name.c_str();
 }
 
 void Directory::AddChild(Directory * new_child)
@@ -48,6 +56,20 @@ void Directory::AddChild(Directory * new_child)
 	{
 		new_child->parent = this;
 		childs.push_back(new_child);
+	}
+}
+void Directory::BlitDirectoryChilds()
+{
+	bool opened = ImGui::TreeNode(name.c_str());
+
+	if (opened)
+	{
+		for (std::vector<Directory*>::iterator it = childs.begin(); it != childs.end(); it++)
+		{
+			(*it)->BlitDirectoryChilds();
+		}
+		
+		ImGui::TreePop();
 	}
 }
 //-----------------------------------------------
@@ -76,6 +98,7 @@ bool FileSystem::Start()
 	CreateDir("Meshes", true, engine_root_dir);
 	CreateDir("Materials", true, engine_root_dir);
 
+	file_system_dock = new DockContext();
 
 	return true;
 }
@@ -86,6 +109,7 @@ bool FileSystem::CleanUp()
 	if (engine_root_dir != nullptr)RELEASE(engine_root_dir);
 	focus_dir = nullptr;
 
+	RELEASE(file_system_dock);
 	return true;
 }
 
@@ -156,6 +180,7 @@ Directory* FileSystem::CreateDir(const char* name, bool hidden, Directory* paren
 			SetFileAttributes(new_dir.c_str(), FILE_ATTRIBUTE_HIDDEN);
 		}
 		ret = new Directory(new_dir.c_str());
+		ret->SetName(name);
 		if (parent)
 		{
 			parent->AddChild(ret);
@@ -167,6 +192,7 @@ Directory* FileSystem::CreateDir(const char* name, bool hidden, Directory* paren
 		if (GetLastError() == ERROR_ALREADY_EXISTS)
 		{
 			ret = new Directory(new_dir.c_str());
+			ret->SetName(name);
 			if (parent)
 			{
 				parent->AddChild(ret);
@@ -267,10 +293,17 @@ void FileSystem::ChangeFileFormat(const char * path, const char* new_format, std
 	*new_path = unformated_str;
 }
 
-void FileSystem::BlitDirsUI()
+void FileSystem::BlitFileSystemInfo()
 {
-
 	
+	file_system_dock->BeginWorkspace("File system info");
+	file_system_dock->BeginDock("Directories", 0, 0);
+
+	user_root_dir->BlitDirectoryChilds();
+
+	file_system_dock->EndDock();
+	file_system_dock->EndWorkspace();
+
 }
 
 void FileSystem::LoadDirs(Directory* parent)

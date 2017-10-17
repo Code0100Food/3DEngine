@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+class DockContext;
+
 class Directory
 {
 private:
@@ -19,8 +21,10 @@ public:
 	void		SetPath(const char* _path);
 	void		SetName(const char* _name);
 	const char* GetPath() const;
+	const char* GetName() const;
 	
 	void		AddChild(Directory* new_child);
+	void		BlitDirectoryChilds();
 
 private:
 
@@ -65,13 +69,15 @@ public:
 	void				GetFolderFromPath(const char* path, std::string* folder)const;
 	void				ChangeFileFormat(const char* path,const char* new_format, std::string* new_path)const;
 
-	void				BlitDirsUI();
+	void				BlitFileSystemInfo();
 
 private:
 
 	//Creates dirs for all folders in root node aka Assets
 	void LoadDirs(Directory* parent);
 
+	//Dock context for directories window
+	DockContext*	file_system_dock = nullptr;
 };
 
 #endif

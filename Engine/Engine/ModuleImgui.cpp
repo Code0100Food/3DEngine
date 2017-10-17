@@ -12,6 +12,7 @@
 #include "Devil/include/il.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
+#include "FileSystem.h"
 
 // Constructors =================================
 ModuleImgui::ModuleImgui(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -266,6 +267,9 @@ update_status ModuleImgui::Update(float dt)
 	{
 		App->scene->BlitInspector();
 	}
+
+	//Directories Window
+	App->fs->BlitFileSystemInfo();
 
 	App->renderer3D->EnableGLRenderFlags();
 
