@@ -2,6 +2,7 @@
 #define _COMPONENT_TRANSFORM_H_
 
 #include "Component.h"
+#include "MathGeoLib/Math/MathAll.h"
 
 #include "Assimp/include/vector3.h"
 #include "Assimp/include/quaternion.h"
@@ -17,9 +18,15 @@ public:
 
 private:
 
-	aiVector3D		position;
+	math::float4x4	transform_matrix;
+	math::float3	position;
+	math::Quat		rotation;
+	math::float3	rotation_euler_angles;
+	math::float3	scale;
+
+	/*aiVector3D		position;
 	aiVector3D		scale;
-	aiQuaternion	rotation;
+	aiQuaternion	rotation;*/
 
 public:
 
@@ -27,7 +34,7 @@ public:
 	void SetTransformation(aiMatrix4x4 trans);
 
 	//Get Methods -----------
-	aiVector3D	GetPosition()const;
+	math::float3	GetPosition()const;
 
 	//Functionality ---------
 	void BlitComponentInspector();

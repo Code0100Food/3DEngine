@@ -21,13 +21,26 @@ ComponentTransform::~ComponentTransform()
 void ComponentTransform::SetTransformation(aiMatrix4x4 trans)
 {
 	//trans.Decompose(scale, rotation, position);
+	
+	float values[16] = 
+	{ 
+		trans.a1, trans.a2, trans.a3, trans.a4,
+		trans.b1, trans.b2, trans.b3, trans.b4,
+		trans.c1, trans.c2, trans.c3, trans.c4,
+		trans.d1, trans.d2, trans.d3, trans.d4 
+	};
+
+	transform_matrix.Set(values);
+	transform_matrix.Decompose(position, rotation, scale);
+	rotation_euler_angles = rotation.ToEulerXYZ();
 }
 
 // Get Methods ==================================
-aiVector3D ComponentTransform::GetPosition() const
+math::float3 ComponentTransform::GetPosition() const
 {
 	return position;
 }
+
 
 // Functionality ================================
 void ComponentTransform::BlitComponentInspector()
@@ -37,35 +50,38 @@ void ComponentTransform::BlitComponentInspector()
 	ImGui::Checkbox("##transform_comp", &actived);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Transform");
-	
-	//Show mesh position
-	ImGui::Text("Position	");
-	ImGui::SameLine();
-	ImGui::Text("X %.1f		", position.x);
-	ImGui::SameLine();
-	ImGui::Text("Y %.1f		", position.y);
-	ImGui::SameLine();
-	ImGui::Text("Z %.1f", position.z);
 
-	float eX = atan2(-2 * (rotation.y*rotation.z - rotation.w*rotation.x), rotation.w*rotation.w - rotation.x*rotation.x - rotation.y*rotation.y + rotation.z*rotation.z);
-	float eY = asin(2 * (rotation.x*rotation.z + rotation.w*rotation.y));
-	float eZ = atan2(-2 * (rotation.x*rotation.y - rotation.w*rotation.z), rotation.w*rotation.w + rotation.x*rotation.x - rotation.y*rotation.y - rotation.z*rotation.z);
+	//Transform Position
+	ImGui::Text("Position ");
+	ImGui::SameLine();
+	ImGui::PushItemWidth(50);
+	ImGui::DragFloat("X", &position.x, 0.5f, 0.0f, 0.0f, "%.2f");
+	ImGui::SameLine();
+	ImGui::DragFloat("Y", &position.y, 0.5f, 0.0f, 0.0f, "%.2f");
+	ImGui::PushItemWidth(50);
+	ImGui::SameLine();
+	ImGui::DragFloat("Z", &position.z, 0.5f, 0.0f, 0.0f, "%.2f");
 
-	//Show mesh rotation
-	ImGui::Text("Rotation	");
-	ImGui::SameLine();
-	ImGui::Text("X %.1f		", eX);
-	ImGui::SameLine();
-	ImGui::Text("Y %.1f		", eY);
-	ImGui::SameLine();
-	ImGui::Text("Z %.1f", eZ);
 
-	//Show mesh scale
-	ImGui::Text("Scale	");
+	//Transform rotation
+	ImGui::Text("Rotation ");
 	ImGui::SameLine();
-	ImGui::Text("X %.1f		", scale.x);
+	ImGui::PushItemWidth(50);
+	ImGui::DragFloat("X", &rotation_euler_angles.x, 0.5f, 0.0f, 0.0f, "%.2f");
 	ImGui::SameLine();
-	ImGui::Text("Y %.1f		", scale.y);
+	ImGui::DragFloat("Y", &rotation_euler_angles.y, 0.5f, 0.0f, 0.0f, "%.2f");
+	ImGui::PushItemWidth(50);
 	ImGui::SameLine();
-	ImGui::Text("Z %.1f", scale.z);
+	ImGui::DragFloat("Z", &rotation_euler_angles.z, 0.5f, 0.0f, 0.0f, "%.2f");
+
+	//Transform rotation
+	ImGui::Text("Scale    ");
+	ImGui::SameLine();
+	ImGui::PushItemWidth(50);
+	ImGui::DragFloat("X", &scale.x, 0.5f, 0.0f, 0.0f, "%.2f");
+	ImGui::SameLine();
+	ImGui::DragFloat("Y", &scale.y, 0.5f, 0.0f, 0.0f, "%.2f");
+	ImGui::PushItemWidth(50);
+	ImGui::SameLine();
+	ImGui::DragFloat("Z", &scale.z, 0.5f, 0.0f, 0.0f, "%.2f");
 }
