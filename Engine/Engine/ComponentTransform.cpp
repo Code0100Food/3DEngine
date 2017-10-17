@@ -3,7 +3,10 @@
 // Constructors =================================
 ComponentTransform::ComponentTransform() : Component(COMP_TRANSFORMATION)
 {
-
+	transform_matrix = math::float4x4::identity;
+	position = { 0,0,0 };
+	rotation_euler_angles = { 0,0,0 };
+	scale = { 0,0,0 };
 }
 
 ComponentTransform::ComponentTransform(const ComponentTransform & cpy) : Component(cpy), position(cpy.position), scale(cpy.scale), rotation_euler_angles(cpy.rotation_euler_angles), transform_matrix(cpy.transform_matrix)
@@ -35,6 +38,15 @@ void ComponentTransform::SetTransformation(aiMatrix4x4 trans)
 	math::Quat	rotation;
 	transform_matrix.Decompose(position, rotation, scale);
 	rotation_euler_angles = (rotation.ToEulerXYZ() * RADTODEG);
+}
+
+void ComponentTransform::SetTransformation(math::float4x4 trans)
+{
+	transform_matrix = trans;
+	math::Quat rot;
+
+	transform_matrix.Decompose(position, rot, scale);
+	rotation_euler_angles = rot.ToEulerXYZ();
 }
 
 // Get Methods ==================================

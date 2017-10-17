@@ -23,14 +23,11 @@ private:
 	math::float3	rotation_euler_angles;
 	math::float3	scale;
 
-	/*aiVector3D		position;
-	aiVector3D		scale;
-	aiQuaternion	rotation;*/
-
 public:
 
 	//Set Methods -----------
 	void SetTransformation(aiMatrix4x4 trans);
+	void SetTransformation(math::float4x4 trans);
 
 	//Get Methods -----------
 	math::float3	GetPosition()const;
