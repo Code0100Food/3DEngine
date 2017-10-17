@@ -21,6 +21,11 @@ bool ModuleScene::Start()
 	root_gameobject = CreateGameObject();
 	root_gameobject->SetName("Root Object");
 
+	GameObject* test = CreateGameObject();
+	
+	test->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	test->CreateComponent(COMPONENT_TYPE::COMP_CAMERA);
+	
 	return true;
 }
 
@@ -125,4 +130,9 @@ void ModuleScene::DisableInspector()
 bool ModuleScene::IsRoot(const GameObject * target) const
 {
 	return (target == root_gameobject);
+}
+
+GameObject * ModuleScene::GetRoot() const
+{
+	return root_gameobject;
 }

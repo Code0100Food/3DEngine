@@ -14,18 +14,24 @@ public:
 	ComponentCamera(const  ComponentCamera& cpy);
 	~ComponentCamera();
 
-private:
-
-	math::Frustum	frustum;
-	uint			far_plane_distance = 0;
-	uint			near_plane_distance = 0;
-	
-
 public:
 
 	bool Start();
+	bool Update();
 
+private:
+
+	math::Frustum	frustum;
+	bool			frustum_culling = false;
+
+public:
+
+	//Functionality ---------
 	void SetTransform(const ComponentTransform* trans);
-	void SetFrustrum();
+	void UpdateFrustrum();
+	void DrawFrustum()const;
+
+	void BlitComponentInspector();
+	
 };
 #endif // !_COMPONENT_CAMERA_H_

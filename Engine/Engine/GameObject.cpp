@@ -139,6 +139,7 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 	if (comp != nullptr)
 	{
 		comp->SetParent(this);
+		comp->Start();
 		components.push_back(comp);
 	}
 
