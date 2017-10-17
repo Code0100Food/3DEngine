@@ -116,6 +116,12 @@ bool GameObject::GetActive()
 	return actived;
 }
 
+float GameObject::GetBoundingBoxDiagonalSize() const
+{
+	math::float3 vec = bounding_box.maxPoint - bounding_box.minPoint;
+	return abs(vec.Length());;
+}
+
 // Functionality ================================
 Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 {

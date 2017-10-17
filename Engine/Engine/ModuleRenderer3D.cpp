@@ -751,6 +751,11 @@ bool ModuleRenderer3D::GetMouseOnWorkspace()const
 	return mouse_on_workspace;
 }
 
+float ModuleRenderer3D::GetMaxRenderDistance() const
+{
+	return max_render_distance;
+}
+
 // Functionality ================================
 void ModuleRenderer3D::OnResize(int width, int height)
 {

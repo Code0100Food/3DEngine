@@ -18,18 +18,26 @@ public:
 	Directory(const char* _path);
 	~Directory();
 
-	void		SetPath(const char* _path);
-	void		SetName(const char* _name);
-	const char* GetPath() const;
-	const char* GetName() const;
-	
-	void		AddChild(Directory* new_child);
-	void		BlitDirectoryChilds();
-
 private:
 
 	Directory*				parent = nullptr;
 	std::vector<Directory*> childs;
+
+public:
+
+	//Set Methods -----------
+	void		SetPath(const char* _path);
+	void		SetName(const char* _name);
+
+	//Get Methods -----------
+	const char* GetPath() const;
+	void		GetDirPath(std::string* str); //Return the path with final slashes
+	const char* GetName() const;
+	
+	//Functionality ---------
+	void		AddChild(Directory* new_child);
+	void		BlitDirectoryChilds();
+	void		BlitFilesInside()const;
 
 };
 
@@ -42,7 +50,8 @@ public:
 
 public:
 
-	std::string data_folder = "DATA";
+	bool	Start();
+	bool	CleanUp();
 
 private:
 
@@ -52,8 +61,7 @@ private:
 
 public:
 
-	bool	Start();
-	bool	CleanUp();
+	std::string data_folder = "DATA";
 
 public:
 
@@ -64,9 +72,11 @@ public:
 	Directory*			CreateDir(const char* name, bool hidden, Directory* parent = nullptr);
 	int					LoadFile(const char* path, char** buffer_to_fill);
 	void				SaveFile(const char* file, const char* buffer, unsigned int size, const char* library_folder);
+	void				CloneFile(const char* file, Directory* folder);
 	void				GetFileNameFromPath(const char* path, std::string* name)const;
 	void				GetFileFormatFromPath(const char* path, std::string* format)const;
 	void				GetFolderFromPath(const char* path, std::string* folder)const;
+	Directory*			GetAssetsFolder()const;
 	void				ChangeFileFormat(const char* path,const char* new_format, std::string* new_path)const;
 
 	void				BlitFileSystemInfo();

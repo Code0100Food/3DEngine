@@ -5,6 +5,9 @@
 #include "Globals.h"
 #include "glmath.h"
 
+#define CAMERA_DIST_ON_FOCUS 0.6
+#define RENDER_DIST_ON_FOCUS 4
+
 struct PhysVehicle3D;
 class GameObject;
 

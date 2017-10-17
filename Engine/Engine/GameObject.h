@@ -41,6 +41,7 @@ public:
 
 	//Get Methods -----------
 	bool GetActive();
+	float GetBoundingBoxDiagonalSize()const;
 
 	//Functionality ---------
 	Component*	CreateComponent(COMPONENT_TYPE c_type);

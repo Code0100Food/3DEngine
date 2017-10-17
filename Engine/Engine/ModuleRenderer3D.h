@@ -103,10 +103,11 @@ public:
 	void SetMaxRenderDistance(float val);
 
 	//Get Methods -----------
-	bool GetWireframe() const;
-	bool GetWireframeFront() const;
-	bool GetMouseOnWorkspace()const;
-	
+	bool	GetWireframe() const;
+	bool	GetWireframeFront() const;
+	bool	GetMouseOnWorkspace()const;
+	float	GetMaxRenderDistance()const;
+
 	//Functionality ---------
 	void OnResize(int width, int height);
 	void DisableGLRenderFlags();

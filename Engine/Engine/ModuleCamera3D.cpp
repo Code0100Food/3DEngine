@@ -279,7 +279,8 @@ void ModuleCamera3D::LookAtGameObject(GameObject * obj)
 {
 	ComponentTransform* trans_cmp = (ComponentTransform*)obj->FindComponent(COMP_TRANSFORMATION);
 	view_vector = trans_cmp->GetPosition();
-	camera_dist = 10;
+	camera_dist = obj->GetBoundingBoxDiagonalSize() * CAMERA_DIST_ON_FOCUS;
+	if(App->renderer3D->GetMaxRenderDistance() < camera_dist * RENDER_DIST_ON_FOCUS)App->renderer3D->SetMaxRenderDistance(camera_dist * RENDER_DIST_ON_FOCUS);
 	camera_location = view_vector + camera_dist * Z;
 }
 

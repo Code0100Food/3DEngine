@@ -45,6 +45,12 @@ const char* Directory::GetPath() const
 	return path.c_str();
 }
 
+void Directory::GetDirPath(std::string* str)
+{
+	*str = path;
+	*str += "\\";
+}
+
 const char* Directory::GetName() const
 {
 	return name.c_str();
@@ -64,13 +70,54 @@ void Directory::BlitDirectoryChilds()
 
 	if (opened)
 	{
-		for (std::vector<Directory*>::iterator it = childs.begin(); it != childs.end(); it++)
+		for (std::vector<Directory*>::const_iterator it = childs.begin(); it != childs.end(); it++)
 		{
 			(*it)->BlitDirectoryChilds();
 		}
 		
 		ImGui::TreePop();
 	}
+}
+
+void Directory::BlitFilesInside() const
+{
+	//Set String to look inside Parent folder
+	string look_path = path;
+	look_path += "\\*.*";
+
+	//Will recieve all the files list
+	WIN32_FIND_DATA files_list;
+
+	//Will handle the list when changing the looked element
+	HANDLE file_handle = FindFirstFileA(LPCSTR(look_path.c_str()), &files_list);
+
+	if (file_handle == INVALID_HANDLE_VALUE)
+	{
+		LOG("Error in path");
+	}
+
+	DWORD attribute;
+
+	bool still_elements = true;
+	while (still_elements)
+	{
+		attribute = GetFileAttributes(files_list.cFileName);
+
+		//Search for directories
+		if (FILE_ATTRIBUTE_ARCHIVE & files_list.dwFileAttributes)
+		{
+			ImGui::Text(files_list.cFileName);
+		}
+
+		//Jump to the other element
+		if (!FindNextFile(file_handle, &files_list))
+		{
+			still_elements = false;
+		}
+
+	}
+
+	FindClose(file_handle);
 }
 //-----------------------------------------------
 
@@ -258,9 +305,23 @@ void FileSystem::SaveFile(const char * file, const char* buffer, unsigned int si
 	{
 		LOG("[error] Couldn't open file to write")
 	}
-	
-	
+}
 
+void FileSystem::CloneFile(const char * file, Directory * folder)
+{
+	char* buffer = nullptr;
+
+	//Load the file
+	LoadFile(file, &buffer);
+
+	//Get file name
+	std::string f_str;
+	GetFileNameFromPath(file, &f_str);
+	std::string d_str;
+	folder->GetDirPath(&d_str);
+
+	//Save the file
+	SaveFile(f_str.c_str(), buffer, sizeof(buffer), d_str.c_str());
 }
 
 void FileSystem::GetFileNameFromPath(const char * path, std::string* name)const
@@ -284,6 +345,11 @@ void FileSystem::GetFolderFromPath(const char * path, std::string * folder) cons
 	*folder = str.substr(0, pos_separator + 1);
 }
 
+Directory * FileSystem::GetAssetsFolder() const
+{
+	return user_root_dir;
+}
+
 void FileSystem::ChangeFileFormat(const char * path, const char* new_format, std::string* new_path) const
 {
 	std::string str = path;
@@ -295,15 +361,19 @@ void FileSystem::ChangeFileFormat(const char * path, const char* new_format, std
 
 void FileSystem::BlitFileSystemInfo()
 {
-	
 	file_system_dock->BeginWorkspace("File system info");
+	
+	//Blit directories
 	file_system_dock->BeginDock("Directories", 0, 0);
-
 	user_root_dir->BlitDirectoryChilds();
-
 	file_system_dock->EndDock();
-	file_system_dock->EndWorkspace();
 
+	//Blit data inside the selected directory
+	file_system_dock->BeginDock("Files", 0, 0);
+	focus_dir->BlitFilesInside();
+	file_system_dock->EndDock();
+
+	file_system_dock->EndWorkspace();
 }
 
 void FileSystem::LoadDirs(Directory* parent)
@@ -325,8 +395,6 @@ void FileSystem::LoadDirs(Directory* parent)
 
 	DWORD attribute;
 
-	string dir_name;
-
 	bool still_elements = true;
 	while (still_elements)
 	{
@@ -335,7 +403,7 @@ void FileSystem::LoadDirs(Directory* parent)
 		//Search for directories
 		if (FILE_ATTRIBUTE_DIRECTORY & files_list.dwFileAttributes)
 		{
-			dir_name = files_list.cFileName;
+			string dir_name = files_list.cFileName;
 
 			if (dir_name != "." && dir_name != "..")
 			{
@@ -346,7 +414,9 @@ void FileSystem::LoadDirs(Directory* parent)
 
 		//Jump to the other element
 		if (!FindNextFile(file_handle, &files_list))
+		{
 			still_elements = false;
+		}
 
 	}
 	
