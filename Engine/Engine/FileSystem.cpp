@@ -369,6 +369,11 @@ void FileSystem::ChangeFileFormat(const char * path, const char* new_format, std
 
 void FileSystem::BlitFileSystemInfo()
 {
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.6f, App->window->GetHeight()*0.4f), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.4f, App->window->GetHeight()*0.6f), ImGuiCond_Always);
+
+	ImGui::Begin("fs_data", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
+
 	file_system_dock->BeginWorkspace("File system info");
 	
 	//Blit directories
@@ -382,6 +387,8 @@ void FileSystem::BlitFileSystemInfo()
 	file_system_dock->EndDock();
 
 	file_system_dock->EndWorkspace();
+
+	ImGui::End();
 }
 
 void FileSystem::LoadDirs(Directory* parent)

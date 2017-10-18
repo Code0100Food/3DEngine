@@ -1,6 +1,8 @@
 #include "ModuleScene.h"
+
 #include "Application.h"
 #include "InputManager.h"
+#include "ModuleWindow.h"
 
 // Constructors =================================
 ModuleScene::ModuleScene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -19,7 +21,7 @@ bool ModuleScene::Start()
 {
 	//Create the root game object
 	root_gameobject = CreateGameObject();
-	root_gameobject->SetName("Root Object");
+	root_gameobject->SetName("Scene");
 
 	GameObject* test = CreateGameObject();
 	
@@ -84,10 +86,13 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 
 void ModuleScene::BlitHierarchy()
 {
-	ImGui::SetNextWindowSize(ImVec2(500, 500));
-	ImGui::Begin("Hierarchy", &hierarchy_win_state);
-	
-	root_gameobject->BlitGameObjectHierarchy();
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.15f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(0, (App->window->GetHeight() * 0.5f)), ImGuiCond_Always);
+
+	ImGui::Begin("Hierarchy", &hierarchy_win_state, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Hierarchy");
+
+	root_gameobject->BlitGameObjectHierarchy(0);
 	
 	ImGui::End();
 }
@@ -104,10 +109,16 @@ void ModuleScene::SwapHierarchyWinState()
 
 void ModuleScene::BlitInspector()
 {
-	ImGui::SetNextWindowSize(ImVec2(300, 500));
-	ImGui::Begin("Inspector", &inspector_state);
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.25f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.15f, (App->window->GetHeight() * 0.5f)), ImGuiCond_Always);
 
-	if (selected_gameobject != nullptr)selected_gameobject->BlitGameObjectInspector();
+	ImGui::Begin("Inspector", &inspector_state, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Inspector");
+
+	if (selected_gameobject != nullptr)
+	{
+		selected_gameobject->BlitGameObjectInspector();
+	}
 
 	ImGui::End();
 }

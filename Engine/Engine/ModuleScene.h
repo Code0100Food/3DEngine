@@ -20,8 +20,8 @@ public:
 private:
 
 	GameObject*		root_gameobject = nullptr;
-	bool			hierarchy_win_state = false;
-	bool			inspector_state = false;
+	bool			hierarchy_win_state = true;
+	bool			inspector_state = true;
 	GameObject*		selected_gameobject = nullptr;
 
 public:

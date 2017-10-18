@@ -55,7 +55,7 @@ public:
 	bool						PopChild(GameObject* child, bool search_in = false);
 	std::vector<GameObject*>*	GetChilds();
 
-	void		BlitGameObjectHierarchy();
+	void		BlitGameObjectHierarchy(uint index);
 	void		BlitGameObjectInspector();
 
 	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);

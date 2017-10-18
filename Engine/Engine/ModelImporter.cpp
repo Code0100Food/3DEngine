@@ -37,7 +37,7 @@ bool ModelImporter::Load(const char* path)
 
 	//Generate root game object
 	GameObject* obj = App->scene->CreateGameObject();
-	obj->SetName(scene->mRootNode->mName.C_Str());
+	obj->SetName("GameObject");
 	
 	//Set root transformation
 	ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);

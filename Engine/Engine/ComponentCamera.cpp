@@ -38,7 +38,7 @@ bool ComponentCamera::Start()
 
 	frustum.type = math::PerspectiveFrustum;
 
-	frustum.pos = math::float3(0, 0, 0);
+	frustum.pos = parent_transform->GetPosition();
 	frustum.front = math::float3(0, 0, 1);
 	frustum.up = math::float3(0, 1, 0);
 
@@ -172,8 +172,28 @@ void ComponentCamera::BlitComponentInspector()
 	}
 
 	//Camera frustum variables
+
+	//Front Vec
+	float f_vec[3] = { frustum.front.x ,frustum.front.y,frustum.front.z };
+	ImGui::DragFloat3("Front Vec", f_vec);
+	frustum.front = { f_vec[0],f_vec[1],f_vec[2] };
+
+	//Up Vec
+	float u_vec[3] = { frustum.up.x ,frustum.up.y,frustum.up.z };
+	ImGui::DragFloat3("Up Vec", u_vec);
+	frustum.up = { u_vec[0],u_vec[1],u_vec[2] };
+
+	//Near plane dist
 	ImGui::DragFloat("Near Plane Dist", &frustum.nearPlaneDistance, 0.2f, 0.01f, 50, "%.2f");
+
+	//Far plane dist
 	ImGui::DragFloat("Far Plane Dist", &frustum.farPlaneDistance, 0.2f, 0.1f, 50, "%.2f");
+
+	//Ortographic Height
+	ImGui::DragFloat("Ortographic Height", &frustum.orthographicHeight, 0.05, 0.0, 2);
+
+	//Ortographic Width
+	ImGui::DragFloat("Ortographic Width", &frustum.orthographicWidth, 0.05, 0.0, 2);
 
 	//Temporal for test
 	float pos[3] = { frustum.pos.x ,frustum.pos.y,frustum.pos.z };

@@ -7,6 +7,8 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "GeometryManager.h"
+#include "ModuleAudio.h"
+#include "ModuleRenderer3D.h"
 
 // Constructors =================================
 GameObject::GameObject()
@@ -280,9 +282,11 @@ std::vector<GameObject*>* GameObject::GetChilds()
 	return &childs;
 }
 
-void GameObject::BlitGameObjectHierarchy()
+void GameObject::BlitGameObjectHierarchy(uint index)
 {
-	bool op = ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_OpenOnDoubleClick);
+	char name_str[40];
+	sprintf_s(name_str, 40, "%s##%i", name.c_str(), index);
+	bool op = ImGui::TreeNodeEx(name_str, ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_OpenOnDoubleClick);
 
 	if (ImGui::IsItemClicked() && ImGui::IsItemHovered())
 	{
@@ -295,7 +299,7 @@ void GameObject::BlitGameObjectHierarchy()
 		uint size = childs.size();
 		for (uint k = 0; k < size; k++)
 		{
-			childs[k]->BlitGameObjectHierarchy();
+			childs[k]->BlitGameObjectHierarchy(k);
 		}
 		ImGui::TreePop();
 	}
@@ -305,21 +309,34 @@ void GameObject::BlitGameObjectHierarchy()
 void GameObject::BlitGameObjectInspector()
 {
 	//Blit game object base data
+	//Enable / disable
 	ImGui::Checkbox("##object_active", &actived);
 	ImGui::SameLine();
-	ImGui::Text(name.c_str());
-
+	
+	//Name
+	if (ImGui::InputText("Name", (char*)name.c_str(), 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
+	}
+	
+	//Bounding box
 	ImGui::Checkbox("Bounding Box", &draw_bounding_box);
 	
+	//Components inspectors
 	uint size = components.size();
 	for (uint k = 0; k < size; k++)
 	{
 		components[k]->BlitComponentInspector();
 	}
+
+	//Add a margin to scroll
+	ImGui::NewLine();ImGui::NewLine();ImGui::NewLine();ImGui::NewLine();
 }
 
 void GameObject::DrawBoundingBox()
 {
+	App->renderer3D->DisableGLRenderFlags();
+
 	std::vector<math::float3> bb_vertex;
 	bb_vertex.reserve(8);
 	bounding_box.GetCornerPoints(bb_vertex.data());
@@ -351,6 +368,8 @@ void GameObject::DrawBoundingBox()
 		glVertex3f(bb_vertex.data()[k + 3].x, bb_vertex.data()[k + 3].y, bb_vertex.data()[k + 3].z);
 	}
 	glEnd();
+
+	App->renderer3D->EnableGLRenderFlags();
 }
 
 math::AABB * GameObject::GetBoundingBox()
