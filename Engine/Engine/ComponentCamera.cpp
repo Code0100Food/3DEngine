@@ -8,6 +8,7 @@
 
 #include "Application.h"
 #include "ModuleScene.h"
+#include "ModuleRenderer3D.h"
 
 // Constructors =================================
 ComponentCamera::ComponentCamera()
@@ -89,13 +90,15 @@ void ComponentCamera::UpdateFrustrum()
 
 void ComponentCamera::DrawFrustum() const
 {
+	App->renderer3D->DisableGLRenderFlags();
+
 	std::vector<math::float3> bb_vertex;
 	bb_vertex.reserve(8);
 	frustum.GetCornerPoints(bb_vertex.data());
 
 	//Draw bounding box
 	glLineWidth(3.f);
-	glColor4f(0.2f, 0.2f, 0.2f, 1);
+	glColor4f(0.7f, 0.5f, 0.5f, 1);
 
 	glBegin(GL_LINES);
 
@@ -120,6 +123,8 @@ void ComponentCamera::DrawFrustum() const
 		glVertex3f(bb_vertex.data()[k + 3].x, bb_vertex.data()[k + 3].y, bb_vertex.data()[k + 3].z);
 	}
 	glEnd();
+
+	App->renderer3D->EnableGLRenderFlags();
 }
 
 void ComponentCamera::ApplyFrustum(GameObject * target)

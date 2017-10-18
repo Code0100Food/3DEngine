@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "GameObject.h"
+#include "Octree.h"
 
 class ModuleScene : public Module
 {
@@ -19,10 +20,13 @@ public:
 
 private:
 
-	GameObject*		root_gameobject = nullptr;
-	bool			hierarchy_win_state = true;
-	bool			inspector_state = true;
-	GameObject*		selected_gameobject = nullptr;
+	GameObject*				root_gameobject = nullptr;
+	GameObject*				selected_gameobject = nullptr;
+
+	bool					hierarchy_win_state = true;
+	bool					inspector_state = true;
+
+	Octree<GameObject*>		octree;
 
 public:
 

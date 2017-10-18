@@ -188,6 +188,7 @@
     <ClInclude Include="Engine\ModuleRenderer3D.h" />
     <ClInclude Include="Engine\ModuleTextures.h" />
     <ClInclude Include="Engine\ModuleWindow.h" />
+    <ClInclude Include="Engine\Octree.h" />
     <ClInclude Include="Engine\p2Point.h" />
     <ClInclude Include="Engine\Parson\parson.h" />
     <ClInclude Include="Engine\PerfTimer.h" />

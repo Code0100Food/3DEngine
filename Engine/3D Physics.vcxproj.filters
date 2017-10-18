@@ -396,6 +396,9 @@
     <ClInclude Include="Engine\ComponentCamera.h">
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Octree.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">

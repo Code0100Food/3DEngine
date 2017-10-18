@@ -23,11 +23,12 @@ bool ModuleScene::Start()
 	root_gameobject = CreateGameObject();
 	root_gameobject->SetName("Scene");
 
+	//Generate a default main camera
 	GameObject* test = CreateGameObject();
-	
 	test->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 	test->CreateComponent(COMPONENT_TYPE::COMP_CAMERA);
-	
+	test->SetName("Main Camera");
+
 	return true;
 }
 
