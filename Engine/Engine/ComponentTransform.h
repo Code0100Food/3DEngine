@@ -18,7 +18,12 @@ public:
 
 public:
 
+	//Local transform
 	math::float4x4	transform_matrix = math::float4x4::identity;
+
+	//Inherited transform from GameObject parents
+	math::float4x4	inherited_transform = math::float4x4::identity;
+
 	math::float3	position = { 0,0,0 };
 	math::float3	scale = { 0,0,0 };
 

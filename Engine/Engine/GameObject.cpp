@@ -129,6 +129,11 @@ const GameObject * GameObject::GetParent() const
 	return parent;
 }
 
+bool GameObject::IsRoot() const
+{
+	return App->scene->IsRoot(this);
+}
+
 // Functionality ================================
 Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 {

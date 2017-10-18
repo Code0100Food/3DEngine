@@ -40,9 +40,10 @@ public:
 	void SetParent(GameObject* target);
 
 	//Get Methods -----------
-	bool GetActive();
-	float GetBoundingBoxDiagonalSize()const;
-	const GameObject* GetParent() const;
+	bool				GetActive();
+	float				GetBoundingBoxDiagonalSize()const;
+	const GameObject*	GetParent() const;
+	bool				IsRoot() const;
 
 	//Functionality ---------
 	Component*	CreateComponent(COMPONENT_TYPE c_type);

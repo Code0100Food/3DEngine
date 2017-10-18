@@ -25,6 +25,11 @@ bool ComponentTransform::Update()
 		UpdateTransform();
 	}
 
+	if (!(parent->GetParent()->IsRoot()))
+	{
+		inherited_transform = transform_matrix * ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION))->inherited_transform;
+	}
+
 	return true;
 }
 
@@ -137,6 +142,15 @@ void ComponentTransform::UpdateTransform()
 	transform_matrix = math::float4x4::FromQuat(rotation_quaternion);
 	transform_matrix = math::float4x4::Scale(scale, math::float3(0, 0, 0)) * transform_matrix;
 	transform_matrix.SetTranslatePart(position.x, position.y, position.z);
+
+	//If its parent is scene update inherited matrix
+
+	if (parent->GetParent()->IsRoot())
+	{
+		inherited_transform = transform_matrix;
+	}
+
+
 	has_been_modified = false;
 }
 
@@ -145,20 +159,7 @@ void ComponentTransform::SetMatrixToDraw()
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
-	ComponentTransform lol;
-	lol.SetTransformation(transform_matrix);
-
-	if (parent->GetParent())
-	{
-		ComponentTransform* parent_transform = (ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-		if (parent_transform)
-		{
-			//lol.SetTransformation(parent_transform->transform_matrix * transform_matrix);
-			glMultMatrixf(parent_transform->GetTransformMatrixColumns());
-		}
-	}
-
-	glMultMatrixf(GetTransformMatrixColumns());
+	glMultMatrixf(inherited_transform.Transposed().ptr());
 	
 
 }
