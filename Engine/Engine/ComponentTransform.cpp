@@ -7,6 +7,7 @@ ComponentTransform::ComponentTransform() : Component(COMP_TRANSFORMATION)
 	position = { 0,0,0 };
 	rotation_euler_angles = { 0,0,0 };
 	scale = { 0,0,0 };
+	rotation_quaternion = math::Quat::identity;
 }
 
 ComponentTransform::ComponentTransform(const ComponentTransform & cpy) : Component(cpy), position(cpy.position), scale(cpy.scale), rotation_euler_angles(cpy.rotation_euler_angles), transform_matrix(cpy.transform_matrix)
@@ -18,6 +19,16 @@ ComponentTransform::ComponentTransform(const ComponentTransform & cpy) : Compone
 ComponentTransform::~ComponentTransform()
 {
 
+}
+
+bool ComponentTransform::Update()
+{
+	if (has_been_modified)
+	{
+		UpdateTransform();
+	}
+
+	return true;
 }
 
 // Set Methods ==================================
@@ -35,24 +46,47 @@ void ComponentTransform::SetTransformation(aiMatrix4x4 trans)
 	transform_matrix.Set(values);
 
 	//Set the variables that will be shown in the UI
-	math::Quat	rotation;
-	transform_matrix.Decompose(position, rotation, scale);
-	rotation_euler_angles = (rotation.ToEulerXYZ() * RADTODEG);
+	transform_matrix.Decompose(position, rotation_quaternion, scale);
+	rotation_euler_angles = (rotation_quaternion.ToEulerXYZ() * RADTODEG);
 }
 
 void ComponentTransform::SetTransformation(math::float4x4 trans)
 {
 	transform_matrix = trans;
-	math::Quat rot;
 
-	transform_matrix.Decompose(position, rot, scale);
-	rotation_euler_angles = rot.ToEulerXYZ();
+	transform_matrix.Decompose(position, rotation_quaternion, scale);
+	rotation_euler_angles = rotation_quaternion.ToEulerXYZ();
 }
 
 // Get Methods ==================================
 math::float3 ComponentTransform::GetPosition() const
 {
 	return position;
+}
+
+math::float3 ComponentTransform::GetRotationEuler() const
+{
+	return rotation_euler_angles;
+}
+
+math::Quat ComponentTransform::GetRotationQuat() const
+{
+	return rotation_quaternion;
+}
+
+math::float3 ComponentTransform::GetScale() const
+{
+	return scale;
+}
+
+const float* ComponentTransform::GetTransformMatrixRows() const
+{
+	return transform_matrix.ptr();
+}
+
+const float* ComponentTransform::GetTransformMatrixColumns() const
+{
+	return transform_matrix.Transposed().ptr();
 }
 
 
@@ -64,9 +98,6 @@ void ComponentTransform::BlitComponentInspector()
 	ImGui::Checkbox("##transform_comp", &actived);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Transform");
-
-	//Modified
-	bool has_been_modified = false;
 
 	//Transform Position
 	ImGui::Text("Position ");
@@ -100,10 +131,14 @@ void ComponentTransform::BlitComponentInspector()
 	if (ImGui::DragFloat("Z##scale", &scale.z, 0.5f, 0.0f, 0.0f, "%.2f")) has_been_modified = true;
 	ImGui::PopItemWidth();
 
-	if (has_been_modified)
-	{
-		transform_matrix = transform_matrix.FromEulerXYZ(rotation_euler_angles.x * DEGTORAD, rotation_euler_angles.y  * DEGTORAD, rotation_euler_angles.z  * DEGTORAD);
-		transform_matrix = transform_matrix * transform_matrix.Scale(scale, math::float3(0, 0, 0));
-		transform_matrix.SetTranslatePart(position.x, position.y, position.z);
-	}
+}
+
+void ComponentTransform::UpdateTransform()
+{
+	rotation_quaternion = math::Quat::FromEulerXYZ(rotation_euler_angles.x * DEGTORAD, rotation_euler_angles.y  * DEGTORAD, rotation_euler_angles.z  * DEGTORAD);
+
+	transform_matrix = math::float4x4::FromQuat(rotation_quaternion);
+	transform_matrix = math::float4x4::Scale(scale, math::float3(0, 0, 0)) * transform_matrix;
+	transform_matrix.SetTranslatePart(position.x, position.y, position.z);
+	has_been_modified = false;
 }
