@@ -4,7 +4,9 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 #include "ComponentMaterial.h"
+#include "ComponentTransform.h"
 #include "GeometryManager.h"
+#include "GameObject.h"
 #include "ModuleRenderer3D.h"
 
 // Constructors =================================
@@ -33,6 +35,9 @@ bool ComponentMeshRenderer::Update()
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+	//Transform to rotate/move/scale mesh
+	ComponentTransform* tmp = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+
 	//Select between the textures
 	if (App->textures->GetCheckMode())
 	{
@@ -57,6 +62,17 @@ bool ComponentMeshRenderer::Update()
 		}
 	}
 
+	//Transform the mesh before drawing
+	if (tmp)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		//glLoadIdentity();
+		//glLoadMatrixf(tmp->GetTransformMatrixColumns());
+		glMultMatrixf(tmp->GetTransformMatrixColumns());
+		
+	}
+
 	//Draw the mesh
 	glLineWidth(App->geometry->mesh_lines_width);
 	glColor4f(App->geometry->mesh_color[0], App->geometry->mesh_color[1], App->geometry->mesh_color[2], App->geometry->mesh_color[3]);
@@ -70,13 +86,20 @@ bool ComponentMeshRenderer::Update()
 	glDrawElements(GL_TRIANGLES, target_mesh->indices.size(), GL_UNSIGNED_INT, NULL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	
 
 	//Draw mesh debug information
 	App->renderer3D->DisableGLRenderFlags();
 	if (render_flags & REND_FACE_NORMALS)DrawFaceNormals();
 	if (render_flags & REND_VERTEX_NORMALS)DrawVertexNormals();
 	App->renderer3D->EnableGLRenderFlags();
+
+
+	if (tmp)
+		glPopMatrix();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);
