@@ -65,12 +65,7 @@ bool ComponentMeshRenderer::Update()
 	//Transform the mesh before drawing
 	if (tmp)
 	{
-		//glMatrixMode(GL_MODELVIEW);
-		//glPushMatrix();
-		//glLoadIdentity();
-		//glLoadMatrixf(tmp->GetTransformMatrixColumns());
-		//glMultMatrixf(tmp->GetTransformMatrixColumns());
-		
+		tmp->SetMatrixToDraw();		
 	}
 
 	//Draw the mesh
@@ -99,7 +94,7 @@ bool ComponentMeshRenderer::Update()
 
 
 	if (tmp)
-		glPopMatrix();
+		tmp->QuitMatrixToDraw();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_ELEMENT_ARRAY_BUFFER);

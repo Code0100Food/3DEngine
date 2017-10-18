@@ -16,17 +16,17 @@ public:
 	ComponentTransform(const ComponentTransform& cpy);
 	~ComponentTransform();
 
-private:
+public:
 
-	math::float4x4	transform_matrix;
-	math::float3	position;
-	math::float3	scale;
+	math::float4x4	transform_matrix = math::float4x4::identity;
+	math::float3	position = { 0,0,0 };
+	math::float3	scale = { 0,0,0 };
 
 	//Rotation for user
-	math::float3	rotation_euler_angles;
+	math::float3	rotation_euler_angles = { 0,0,0 };
 
 	//Rotation for computer
-	math::Quat		rotation_quaternion;
+	math::Quat		rotation_quaternion = math::Quat::identity;
 
 public:
 
@@ -50,5 +50,8 @@ public:
 
 	bool has_been_modified = false;
 	void UpdateTransform();
+
+	void SetMatrixToDraw();
+	void QuitMatrixToDraw();
 };
 #endif // !_COMPONENT_TRANSFORM_H_

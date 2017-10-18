@@ -1,18 +1,15 @@
 #include "ComponentTransform.h"
+#include "GameObject.h"
+#include "Glew/include/glew.h"
+#include "SDL/include/SDL_opengl.h"
 
 // Constructors =================================
 ComponentTransform::ComponentTransform() : Component(COMP_TRANSFORMATION)
 {
-	transform_matrix = math::float4x4::identity;
-	position = { 0,0,0 };
-	rotation_euler_angles = { 0,0,0 };
-	scale = { 0,0,0 };
-	rotation_quaternion = math::Quat::identity;
 }
 
 ComponentTransform::ComponentTransform(const ComponentTransform & cpy) : Component(cpy), position(cpy.position), scale(cpy.scale), rotation_euler_angles(cpy.rotation_euler_angles), transform_matrix(cpy.transform_matrix)
 {
-
 }
 
 // Destructors ==================================
@@ -141,4 +138,35 @@ void ComponentTransform::UpdateTransform()
 	transform_matrix = math::float4x4::Scale(scale, math::float3(0, 0, 0)) * transform_matrix;
 	transform_matrix.SetTranslatePart(position.x, position.y, position.z);
 	has_been_modified = false;
+}
+
+void ComponentTransform::SetMatrixToDraw()
+{
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+
+	ComponentTransform lol;
+	lol.SetTransformation(transform_matrix);
+
+	if (parent->GetParent())
+	{
+		ComponentTransform* parent_transform = (ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		if (parent_transform)
+		{
+			//lol.SetTransformation(parent_transform->transform_matrix * transform_matrix);
+			glMultMatrixf(parent_transform->GetTransformMatrixColumns());
+		}
+	}
+
+	glMultMatrixf(GetTransformMatrixColumns());
+	
+
+}
+
+void ComponentTransform::QuitMatrixToDraw()
+{
+	glPopMatrix();
+
+	if (parent)
+		glPopMatrix();
 }
