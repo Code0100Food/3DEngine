@@ -275,6 +275,11 @@ bool GameObject::PopChild(GameObject * child, bool search_in)
 	return ret;
 }
 
+std::vector<GameObject*>* GameObject::GetChilds()
+{
+	return &childs;
+}
+
 void GameObject::BlitGameObjectHierarchy()
 {
 	bool op = ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_OpenOnDoubleClick);
@@ -346,6 +351,11 @@ void GameObject::DrawBoundingBox()
 		glVertex3f(bb_vertex.data()[k + 3].x, bb_vertex.data()[k + 3].y, bb_vertex.data()[k + 3].z);
 	}
 	glEnd();
+}
+
+math::AABB * GameObject::GetBoundingBox()
+{
+	return &bounding_box;
 }
 
 std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_childs)

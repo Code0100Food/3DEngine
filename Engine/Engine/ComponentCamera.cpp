@@ -57,7 +57,7 @@ bool ComponentCamera::Update()
 
 	if (frustum_culling)
 	{
-		//GameObject* root = App->scene->GetRoot();
+		ApplyFrustum(App->scene->GetRoot());
 	}
 
 	return true;
@@ -122,6 +122,38 @@ void ComponentCamera::DrawFrustum() const
 	glEnd();
 }
 
+void ComponentCamera::ApplyFrustum(GameObject * target)
+{
+	if (target == nullptr)return;
+
+	std::vector<GameObject*> childs = *target->GetChilds();
+	uint size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		ApplyFrustum(childs[k]);
+	}
+	
+	if (target != parent && !frustum.Contact(*target->GetBoundingBox()))
+	{
+		target->SetActiveState(false);
+	}
+	else target->SetActiveState(true);
+}
+
+void ComponentCamera::UnApplyFrustum(GameObject * target)
+{
+	if (target == nullptr)return;
+
+	std::vector<GameObject*> childs = *target->GetChilds();
+	uint size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		UnApplyFrustum(childs[k]);
+	}
+
+	target->SetActiveState(true);
+}
+
 void ComponentCamera::BlitComponentInspector()
 {
 	ImGui::Separator();
@@ -131,14 +163,20 @@ void ComponentCamera::BlitComponentInspector()
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Camera");
 
 	//Culling
-	ImGui::Checkbox("Frustum Culling", &frustum_culling);
+	if (ImGui::Checkbox("Frustum Culling", &frustum_culling))
+	{
+		if (!frustum_culling)
+		{
+			UnApplyFrustum(App->scene->GetRoot());
+		}
+	}
 
 	//Camera frustum variables
-	ImGui::SliderFloat("Near Plane Dist", &frustum.nearPlaneDistance, 0.01f, 50, "%.2f", 0.2f);
-	ImGui::SliderFloat("Far Plane Dist", &frustum.farPlaneDistance, 0.1f, 50, "%.2f", 0.2f);
+	ImGui::DragFloat("Near Plane Dist", &frustum.nearPlaneDistance, 0.2f, 0.01f, 50, "%.2f");
+	ImGui::DragFloat("Far Plane Dist", &frustum.farPlaneDistance, 0.2f, 0.1f, 50, "%.2f");
 
 	//Temporal for test
 	float pos[3] = { frustum.pos.x ,frustum.pos.y,frustum.pos.z };
-	ImGui::SliderFloat3("Pos TEMP", pos, -10, 10, "%.1f", 0.3f);
+	ImGui::DragFloat3("Pos TEMP", pos, 0.2f, -100, 100, "%.1f");
 	frustum.pos = { pos[0],pos[1],pos[2] };
 }

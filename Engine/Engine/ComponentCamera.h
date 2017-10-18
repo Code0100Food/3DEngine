@@ -30,6 +30,8 @@ public:
 	void SetTransform(const ComponentTransform* trans);
 	void UpdateFrustrum();
 	void DrawFrustum()const;
+	void ApplyFrustum(GameObject* target);
+	void UnApplyFrustum(GameObject* target);
 
 	void BlitComponentInspector();
 	

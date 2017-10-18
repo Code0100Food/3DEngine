@@ -50,15 +50,17 @@ public:
 	Component*	FindComponent(COMPONENT_TYPE type)const;
 	Component*	CloneComponent(const Component* target)const;
 
-	void		AddChild(const GameObject* child);
-	bool		RemoveChild(GameObject* child, bool search_in = false);
-	bool		PopChild(GameObject* child, bool search_in = false);
+	void						AddChild(const GameObject* child);
+	bool						RemoveChild(GameObject* child, bool search_in = false);
+	bool						PopChild(GameObject* child, bool search_in = false);
+	std::vector<GameObject*>*	GetChilds();
 
 	void		BlitGameObjectHierarchy();
 	void		BlitGameObjectInspector();
 
 	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);
 	void									DrawBoundingBox();
+	math::AABB*								GetBoundingBox();
 
 };
 #endif // !_GAME_OBJECT_H_
