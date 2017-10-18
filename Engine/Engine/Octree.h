@@ -15,11 +15,11 @@ struct OctItem
 public:
 
 	OctItem() {}
-	OctItem(const DATA_TYPE& data, const math::float3& location) : data(data), location(location) {}
+	OctItem(const DATA_TYPE& data, const math::AABB& location) : data(data), bounding_box(bounding_box) {}
 
 public:
 
-	math::float3 location = { 0,0,0 };
+	math::AABB bounding_box;
 	DATA_TYPE data = NULL;
 
 public:
@@ -72,11 +72,10 @@ public:
 
 public:
 
-	/*// Functionality =======================
-	void Draw(const SDL_Color& color)const
+	// Functionality =======================
+	void Draw(float color[4])const
 	{
-		App->render->DrawQuad(aabb, color.r, color.g, color.b, color.a, false);
-
+		aabb.Draw(2.5f, color);
 
 		if (!full)return;
 		for (uint k = 0; k < NODE_SUBDIVISION; k++)
@@ -85,15 +84,14 @@ public:
 		}
 	}
 
-	bool Insert(DATA_TYPE data, const iPoint* point)
+	bool Insert(DATA_TYPE data, const math::AABB bb)
 	{
 		// If new point is not in the quad-tree AABB, return
-		SDL_Point p = { point->x,point->y };
-		if (!SDL_PointInRect(&p, &aabb))
+		if (!aabb.Contains(bb) && !aabb.Intersects(bb))
 		{
 			return false;
 		}
-
+	
 		if (full)
 		{
 			for (uint i = 0; i < NODE_SUBDIVISION; i++)
@@ -106,11 +104,11 @@ public:
 			return false;
 		}
 
-		// If in this node there is space for the point, pushback it
+		// If in this node there is space for the box, push it
 		uint size = objects.size();
 		if (size < max_objects)
 		{
-			TreeItem<DATA_TYPE> item(data, *point);
+			OctItem<DATA_TYPE> item(data, bb);
 			objects.push_back(item);
 			if (size + 1 == max_objects)
 			{
@@ -125,27 +123,51 @@ public:
 
 	void Subdivide()
 	{
-		// Get subdivision size
-		iPoint qSize = { (int)floor(aabb.w * 0.5), (int)floor(aabb.h * 0.5) };
-		iPoint qCentre;
+		//Variables used to allocate the different divisions data
+		float			cube_size = aabb.HalfSize();
+		math::AABB		temp_ab;
+		math::float3	center_point = { aabb.minPoint.x + cube_size,aabb.minPoint.y + cube_size ,aabb.minPoint.z + cube_size };
 
-		//Calculate new AABB center for each child
-		qCentre = { aabb.x,aabb.y };
-		children[0] = new AABB({ qCentre.x,qCentre.y,qSize.x,qSize.y }, max_objects);
+		//Calculate new AABB for each child
+		temp_ab.minPoint = aabb.minPoint;
+		temp_ab.maxPoint = { center_point.x - cube_size,center_point.y - cube_size,center_point.z - cube_size };
+		children[0] = new OctCube(temp_ab, max_objects);
 		children[0]->root = this;
 
-
-		qCentre = { aabb.x + qSize.x,aabb.y };
-		children[1] = new AABB({ qCentre.x,qCentre.y,qSize.x,qSize.y }, max_objects);
+		temp_ab.minPoint = aabb.minPoint;
+		temp_ab.maxPoint = { center_point.x - cube_size,center_point.y - cube_size,center_point.z + cube_size };
+		children[1] = new OctCube(temp_ab, max_objects);
 		children[1]->root = this;
 
-		qCentre = { aabb.x,aabb.y + qSize.y };
-		children[2] = new AABB({ qCentre.x,qCentre.y,qSize.x,qSize.y }, max_objects);
+		temp_ab.minPoint = aabb.minPoint;
+		temp_ab.maxPoint = { center_point.x - cube_size,center_point.y + cube_size,center_point.z - cube_size };
+		children[2] = new OctCube(temp_ab, max_objects);
 		children[2]->root = this;
 
-		qCentre = { aabb.x + qSize.x,aabb.y + qSize.y };
-		children[3] = new AABB({ qCentre.x,qCentre.y,qSize.x,qSize.y }, max_objects);
+		temp_ab.minPoint = aabb.minPoint;
+		temp_ab.maxPoint = { center_point.x + cube_size,center_point.y - cube_size,center_point.z - cube_size };
+		children[3] = new OctCube(temp_ab, max_objects);
 		children[3]->root = this;
+
+		temp_ab.minPoint = center_point;
+		temp_ab.maxPoint = { center_point.x + cube_size,center_point.y + cube_size,center_point.z + cube_size };
+		children[4] = new OctCube(temp_ab, max_objects);
+		children[4]->root = this;
+
+		temp_ab.minPoint = center_point;
+		temp_ab.maxPoint = { center_point.x + cube_size,center_point.y + cube_size,center_point.z - cube_size };
+		children[5] = new OctCube(temp_ab, max_objects);
+		children[5]->root = this;
+
+		temp_ab.minPoint = center_point;
+		temp_ab.maxPoint = { center_point.x + cube_size,center_point.y - cube_size,center_point.z + cube_size };
+		children[6] = new OctCube(temp_ab, max_objects);
+		children[6]->root = this;
+
+		temp_ab.minPoint = center_point;
+		temp_ab.maxPoint = { center_point.x - cube_size,center_point.y + cube_size,center_point.z + cube_size };
+		children[7] = new OctCube(temp_ab, max_objects);
+		children[7]->root = this;
 
 		for (uint h = 0; h < max_objects; h++)
 		{
@@ -157,7 +179,7 @@ public:
 		objects.clear();
 	}
 
-	int CollectCandidates(std::vector<DATA_TYPE>& nodes, const SDL_Rect& rect)
+	/*int CollectCandidates(std::vector<DATA_TYPE>& nodes, const SDL_Rect& rect)
 	{
 		uint ret = 0;
 
@@ -286,7 +308,6 @@ private:
 
 	OctCube<DATA_TYPE>*	root = nullptr;
 	uint				max_objects = 0;
-	math::float3		color = { 255,255,255 };
 
 public:
 
@@ -303,31 +324,30 @@ public:
 		}
 	}
 
-	/*void SetMaxObjects(uint max)
+	void SetMaxObjects(uint max)
 	{
 		max_objects = max;
 		root->max_objects = max;
 	}
 
-	void SetDebugColor(const SDL_Color& new_color)
-	{
-		color = new_color;
-	}
-
-	bool Insert(DATA_TYPE data, const iPoint* newpoint)
+	
+	bool Insert(DATA_TYPE data,const math::AABB new_bb)
 	{
 		if (root != NULL)
 		{
-			return root->Insert(data, newpoint);
+			return root->Insert(data, new_bb);
 		}
 		return false;
 	}
+	
 
 	void Draw()const
 	{
+		float color[4] = { 0.4f,0.8f,0.2f,1.0f };
 		root->Draw(color);
 	}
 
+	/*
 	int	CollectCandidates(std::vector<DATA_TYPE>& nodes, const SDL_Rect& r) const
 	{
 		int tests = 0;

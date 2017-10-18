@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "InputManager.h"
 #include "ModuleWindow.h"
+#include "ModuleRenderer3D.h"
 
 // Constructors =================================
 ModuleScene::ModuleScene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -51,7 +52,10 @@ bool ModuleScene::SceneUpdate(float dt)
 	//Update the scene game objects
 	ret = root_gameobject->Update();
 
-	//Draw the octree (define a general AABB draw)
+	//Draw the octree
+	App->renderer3D->DisableGLRenderFlags();
+	octree.Draw();
+	App->renderer3D->EnableGLRenderFlags();
 
 	return ret;
 }

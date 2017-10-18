@@ -464,6 +464,8 @@ public:
 	                 float3 *outPos, float3 *outNormal, float2 *outUV,
 	                 bool ccwIsFrontFacing) const;
 
+	void Draw(float width, float color[4])const;
+
 	/// Returns the number of vertices that the Triangulate() function will output with the given subdivision parameters.
 	/** @see Triangulate(). */
 	static int NumVerticesInTriangulation(int numFacesX, int numFacesY, int numFacesZ)

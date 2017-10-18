@@ -337,37 +337,7 @@ void GameObject::DrawBoundingBox()
 {
 	App->renderer3D->DisableGLRenderFlags();
 
-	std::vector<math::float3> bb_vertex;
-	bb_vertex.reserve(8);
-	bounding_box.GetCornerPoints(bb_vertex.data());
-
-	//Draw bounding box
-	glLineWidth(3.f);
-	glColor4f(App->geometry->bounding_box_color[0], App->geometry->bounding_box_color[1], App->geometry->bounding_box_color[2], App->geometry->bounding_box_color[3]);
-
-	glBegin(GL_LINES);
-
-	for (uint k = 0; k < 4; k++)
-	{
-		glVertex3f(bb_vertex.data()[k + 4].x, bb_vertex.data()[k + 4].y, bb_vertex.data()[k + 4].z);
-		glVertex3f(bb_vertex.data()[k].x, bb_vertex.data()[k].y, bb_vertex.data()[k].z);
-	}
-
-	for (uint k = 0; k <= 4; k += 4)
-	{
-		glVertex3f(bb_vertex.data()[k].x, bb_vertex.data()[k].y, bb_vertex.data()[k].z);
-		glVertex3f(bb_vertex.data()[k + 1].x, bb_vertex.data()[k + 1].y, bb_vertex.data()[k + 1].z);
-
-		glVertex3f(bb_vertex.data()[k + 2].x, bb_vertex.data()[k + 2].y, bb_vertex.data()[k + 2].z);
-		glVertex3f(bb_vertex.data()[k + 3].x, bb_vertex.data()[k + 3].y, bb_vertex.data()[k + 3].z);
-
-		glVertex3f(bb_vertex.data()[k].x, bb_vertex.data()[k].y, bb_vertex.data()[k].z);
-		glVertex3f(bb_vertex.data()[k + 2].x, bb_vertex.data()[k + 2].y, bb_vertex.data()[k + 2].z);
-
-		glVertex3f(bb_vertex.data()[k + 1].x, bb_vertex.data()[k + 1].y, bb_vertex.data()[k + 1].z);
-		glVertex3f(bb_vertex.data()[k + 3].x, bb_vertex.data()[k + 3].y, bb_vertex.data()[k + 3].z);
-	}
-	glEnd();
+	bounding_box.Draw(4.0f, App->geometry->bounding_box_color);
 
 	App->renderer3D->EnableGLRenderFlags();
 }

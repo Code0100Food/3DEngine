@@ -17,6 +17,10 @@
 	@brief Implementation for the Axis-Aligned Bounding Box (AABB) geometry object. */
 #include "AABB.h"
 #include "../Math/MathFunc.h"
+
+#include "../../Glew/include/glew.h"
+#include "../../SDL/include/SDL_opengl.h"
+
 #ifdef MATH_ENABLE_STL_SUPPORT
 #include <iostream>
 #include <utility>
@@ -1048,6 +1052,41 @@ void AABB::Triangulate(int numFacesX, int numFacesY, int numFacesZ,
 			}
 	}
 	assert(i == NumVerticesInTriangulation(numFacesX, numFacesY, numFacesZ));
+}
+
+void AABB::Draw(float width, float color[4])const
+{
+	std::vector<math::float3> bb_vertex;
+	bb_vertex.reserve(8);
+	this->GetCornerPoints(bb_vertex.data());
+
+	//Draw bounding box
+	glLineWidth(3.f);
+	glColor4f(color[0], color[1], color[2], color[3]);
+
+	glBegin(GL_LINES);
+
+	for (unsigned int k = 0; k < 4; k++)
+	{
+		glVertex3f(bb_vertex.data()[k + 4].x, bb_vertex.data()[k + 4].y, bb_vertex.data()[k + 4].z);
+		glVertex3f(bb_vertex.data()[k].x, bb_vertex.data()[k].y, bb_vertex.data()[k].z);
+	}
+
+	for (unsigned int k = 0; k <= 4; k += 4)
+	{
+		glVertex3f(bb_vertex.data()[k].x, bb_vertex.data()[k].y, bb_vertex.data()[k].z);
+		glVertex3f(bb_vertex.data()[k + 1].x, bb_vertex.data()[k + 1].y, bb_vertex.data()[k + 1].z);
+
+		glVertex3f(bb_vertex.data()[k + 2].x, bb_vertex.data()[k + 2].y, bb_vertex.data()[k + 2].z);
+		glVertex3f(bb_vertex.data()[k + 3].x, bb_vertex.data()[k + 3].y, bb_vertex.data()[k + 3].z);
+
+		glVertex3f(bb_vertex.data()[k].x, bb_vertex.data()[k].y, bb_vertex.data()[k].z);
+		glVertex3f(bb_vertex.data()[k + 2].x, bb_vertex.data()[k + 2].y, bb_vertex.data()[k + 2].z);
+
+		glVertex3f(bb_vertex.data()[k + 1].x, bb_vertex.data()[k + 1].y, bb_vertex.data()[k + 1].z);
+		glVertex3f(bb_vertex.data()[k + 3].x, bb_vertex.data()[k + 3].y, bb_vertex.data()[k + 3].z);
+	}
+	glEnd();
 }
 
 void AABB::ToEdgeList(float3 *outPos) const

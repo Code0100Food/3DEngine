@@ -395,6 +395,8 @@ public:
 		@see Contains(), Intersects(), ClosestPoint(). */
 	float Distance(const float3 &point) const;
 
+	void Draw(float width, float color[4])const;
+
 	/// Tests whether this Frustum and the given object intersect.	
 	/** Both objects are treated as "solid", meaning that if one of the objects is fully contained inside
 		another, this function still returns true. (e.g. in case a line segment is contained inside this Frustum,

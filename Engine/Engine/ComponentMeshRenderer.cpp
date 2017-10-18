@@ -65,11 +65,11 @@ bool ComponentMeshRenderer::Update()
 	//Transform the mesh before drawing
 	if (tmp)
 	{
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
+		//glMatrixMode(GL_MODELVIEW);
+		//glPushMatrix();
 		//glLoadIdentity();
 		//glLoadMatrixf(tmp->GetTransformMatrixColumns());
-		glMultMatrixf(tmp->GetTransformMatrixColumns());
+		//glMultMatrixf(tmp->GetTransformMatrixColumns());
 		
 	}
 
