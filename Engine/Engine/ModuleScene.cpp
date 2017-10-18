@@ -29,6 +29,12 @@ bool ModuleScene::Start()
 	test->CreateComponent(COMPONENT_TYPE::COMP_CAMERA);
 	test->SetName("Main Camera");
 
+	//Set a default octree configuration
+	int bound_size = 10;
+	math::AABB boundaries = math::AABB(math::float3(-bound_size, -bound_size, -bound_size), math::float3(bound_size, bound_size, bound_size));
+	octree.SetBoundaries(boundaries);
+
+
 	return true;
 }
 
@@ -44,6 +50,8 @@ bool ModuleScene::SceneUpdate(float dt)
 	
 	//Update the scene game objects
 	ret = root_gameobject->Update();
+
+	//Draw the octree (define a general AABB draw)
 
 	return ret;
 }

@@ -31,7 +31,7 @@ private:
 public:
 
 	//Set Methods -----------
-	void	SetSelectedGameObject(const GameObject* target);
+	void		SetSelectedGameObject(const GameObject* target);
 
 	//Get Methods -----------
 	GameObject*	GetSelectedGameObject()const;

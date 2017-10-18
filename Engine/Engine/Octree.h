@@ -290,8 +290,8 @@ private:
 
 public:
 
-	/*// Functionality =======================
-	void SetBoundaries(const SDL_Rect& r)
+	// Functionality =======================
+	void SetBoundaries(const math::AABB& r)
 	{
 		if (root != NULL)
 		{
@@ -299,11 +299,11 @@ public:
 		}
 		else
 		{
-			root = new AABB<DATA_TYPE>(r, max_objects);
+			root = new OctCube<DATA_TYPE>(r, max_objects);
 		}
 	}
 
-	void SetMaxObjects(uint max)
+	/*void SetMaxObjects(uint max)
 	{
 		max_objects = max;
 		root->max_objects = max;
