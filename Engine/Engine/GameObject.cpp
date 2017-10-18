@@ -124,6 +124,11 @@ float GameObject::GetBoundingBoxDiagonalSize() const
 	return abs(vec.Length());;
 }
 
+const GameObject * GameObject::GetParent() const
+{
+	return parent;
+}
+
 // Functionality ================================
 Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 {

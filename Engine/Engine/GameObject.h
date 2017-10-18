@@ -42,6 +42,7 @@ public:
 	//Get Methods -----------
 	bool GetActive();
 	float GetBoundingBoxDiagonalSize()const;
+	const GameObject* GetParent() const;
 
 	//Functionality ---------
 	Component*	CreateComponent(COMPONENT_TYPE c_type);
