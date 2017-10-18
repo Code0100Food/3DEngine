@@ -84,7 +84,7 @@ public:
 		}
 	}
 
-	bool Insert(DATA_TYPE data, const math::AABB bb)
+	bool Insert(DATA_TYPE data, math::AABB bb)
 	{
 		// If new point is not in the quad-tree AABB, return
 		if (!aabb.Contains(bb) && !aabb.Intersects(bb))
@@ -96,7 +96,7 @@ public:
 		{
 			for (uint i = 0; i < NODE_SUBDIVISION; i++)
 			{
-				if (children[i]->Insert(data, point))
+				if (children[i]->Insert(data, bb))
 				{
 					return true;
 				}
@@ -124,7 +124,7 @@ public:
 	void Subdivide()
 	{
 		//Variables used to allocate the different divisions data
-		float			cube_size = aabb.HalfSize();
+		float			cube_size = aabb.HalfSize().x;
 		math::AABB		temp_ab;
 		math::float3	center_point = { aabb.minPoint.x + cube_size,aabb.minPoint.y + cube_size ,aabb.minPoint.z + cube_size };
 
@@ -173,7 +173,7 @@ public:
 		{
 			for (uint k = 0; k < NODE_SUBDIVISION; k++)
 			{
-				if (children[k]->Insert(objects[h].data, &objects[h].location)) break;
+				if (children[k]->Insert(objects[h].data, objects[h].bounding_box)) break;
 			}
 		}
 		objects.clear();
@@ -331,7 +331,7 @@ public:
 	}
 
 	
-	bool Insert(DATA_TYPE data,const math::AABB new_bb)
+	bool Insert(const DATA_TYPE data, math::AABB new_bb)
 	{
 		if (root != NULL)
 		{

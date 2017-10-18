@@ -130,6 +130,40 @@ update_status ModuleImgui::Update(float dt)
 		App->audio->PlayFxForInput(WINDOW_FX);
 	}
 
+	//Game Objects --------------------
+	cpy = gameobjects_open;
+	if (ImGui::BeginMenu("Game Objects"))
+	{
+		//Play fx when the menu is opened
+		gameobjects_open = true;
+		if (gameobjects_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
+
+		//Create Box
+		if (ImGui::MenuItem("Box"))
+		{
+			
+		}
+
+		//Create Cube
+		if (ImGui::MenuItem("Cube"))
+		{
+
+		}
+
+		//Create Cylinder
+		if (ImGui::MenuItem("Cylinder"))
+		{
+
+		}
+
+		ImGui::EndMenu();
+	}
+	else if (gameobjects_open)
+	{
+		gameobjects_open = false;
+		App->audio->PlayFxForInput(WINDOW_FX);
+	}
+
 	//View ----------------------------
 	cpy = view_menu_open;
 	if (ImGui::BeginMenu("View"))

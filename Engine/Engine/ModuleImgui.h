@@ -27,6 +27,7 @@ private:
 
 	//Bar menus
 	bool	file_menu_open = false;
+	bool	gameobjects_open = false;
 	bool	view_menu_open = false;
 	bool	tools_menu_open = false;
 	bool	help_menu_open = false;
