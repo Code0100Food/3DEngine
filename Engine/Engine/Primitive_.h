@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "Color.h"
 #include "MathGeoLib/MathGeoLib.h"
+#include "ComponentMesh.h"
 
 enum PRIMITIVE_TYPE
 {
@@ -35,6 +36,7 @@ struct SimpleMesh
 	uint	id_indices = 0; // id in VRAM
 	uint	num_vertices = 0;
 	float*	vertices = nullptr;
+
 };
 
 class Primitive_ : public SimpleMesh
@@ -56,6 +58,9 @@ public:
 
 protected:
 
+	std::vector<Vertex>	n_vertices;
+	std::vector<uint>	n_indices;
+
 	Color			color = { 255,255,255,255 };
 	bool			axis = false;
 	PRIMITIVE_TYPE	type = UNDEF_PRIMITIVE;
@@ -70,9 +75,11 @@ public:
 	void SetDivisions(uint def);
 
 	//Get Methods -----------
-	Color			GetColor()const;
-	bool			GetAxis()const;
-	PRIMITIVE_TYPE	GetType()const;
+	Color				GetColor()const;
+	bool				GetAxis()const;
+	PRIMITIVE_TYPE		GetType()const;
+	std::vector<uint>	GetIndices()const;
+	std::vector<Vertex> GetVertex()const;
 
 };
 

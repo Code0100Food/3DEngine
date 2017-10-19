@@ -101,6 +101,8 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 
 GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 {
+	GameObject* new_prim = nullptr;
+
 	switch (type)
 	{
 	case UNDEF_PRIMITIVE:
@@ -121,15 +123,16 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 		cube.Initialize();
 
 		//Generate the game object
-		GameObject* go = CreateGameObject();
-		go->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-		ComponentMesh* mesh = (ComponentMesh*)go->CreateComponent(COMPONENT_TYPE::COMP_MESH);
-		ComponentMeshRenderer* mesh_renderer = 	(ComponentMeshRenderer*)go->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+		new_prim = CreateGameObject();
+		new_prim->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		ComponentMesh* mesh = (ComponentMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+		ComponentMeshRenderer* mesh_renderer = 	(ComponentMeshRenderer*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 		mesh_renderer->SetTargetMesh(mesh);
 
-		//Set cube logi in mesh
-
-
+		//Set cube logic in mesh
+		mesh->SetIndices(cube.GetIndices());
+		mesh->SetVertices(cube.GetVertex());
+		mesh->SetupMesh();
 	}
 		break;
 	case PRIMITIVE_SPHERE:
@@ -148,7 +151,7 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 		break;
 	}
 
-	return nullptr;
+	return new_prim;
 }
 
 void ModuleScene::BlitHierarchy()

@@ -121,6 +121,16 @@ PRIMITIVE_TYPE Primitive_::GetType() const
 	return type;
 }
 
+std::vector<uint> Primitive_::GetIndices() const
+{
+	return n_indices;
+}
+
+std::vector<Vertex> Primitive_::GetVertex() const
+{
+	return n_vertices;
+}
+
 bool VertexToIndex(math::float3* all_vertex,uint vertex_num, std::vector<uint>* index, std::vector<math::float3>* vertex)
 {
 	if (index == nullptr || vertex == nullptr || vertex_num == 0)return false;

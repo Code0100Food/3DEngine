@@ -138,16 +138,10 @@ update_status ModuleImgui::Update(float dt)
 		gameobjects_open = true;
 		if (gameobjects_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
 
-		//Create Box
-		if (ImGui::MenuItem("Box"))
-		{
-			
-		}
-
 		//Create Cube
 		if (ImGui::MenuItem("Cube"))
 		{
-
+			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CUBE);
 		}
 
 		//Create Cylinder
