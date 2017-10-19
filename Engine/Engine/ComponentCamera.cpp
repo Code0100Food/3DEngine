@@ -101,10 +101,10 @@ void ComponentCamera::UpdateFrustumTransform()
 	const ComponentTransform* parent_transform = (ComponentTransform*)this->parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 
 	//Z axis of the transform
-	frustum.front = parent_transform->transform_matrix.Row3(2);
+	frustum.front = parent_transform->GetTransform().Col3(2);
 
 	//Y axis of the transform
-	frustum.up = parent_transform->transform_matrix.Row3(1);
+	frustum.up = parent_transform->GetTransform().Col3(1);
 
 	frustum.pos = parent_transform->GetPosition();
 }
