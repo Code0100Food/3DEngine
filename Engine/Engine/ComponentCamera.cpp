@@ -54,6 +54,7 @@ bool ComponentCamera::Start()
 
 bool ComponentCamera::Update()
 {
+	UpdateFrustumTransform();
 	DrawFrustum();
 
 	if (frustum_culling)
@@ -86,6 +87,19 @@ void ComponentCamera::UpdateFrustrum()
 
 	frustum.verticalFov = 5;
 	frustum.horizontalFov = 8;
+}
+
+void ComponentCamera::UpdateFrustumTransform()
+{
+	const ComponentTransform* parent_transform = (ComponentTransform*)this->parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+
+	//Z axis of the transform
+	frustum.front = parent_transform->transform_matrix.Row3(2);
+
+	//Y axis of the transform
+	frustum.up = parent_transform->transform_matrix.Row3(1);
+
+	frustum.pos = parent_transform->GetPosition();
 }
 
 void ComponentCamera::DrawFrustum() const
@@ -171,8 +185,4 @@ void ComponentCamera::BlitComponentInspector()
 	//Ortographic Width
 	ImGui::DragFloat("Ortographic Width", &frustum.orthographicWidth, 0.05, 0.0, 2);
 
-	//Temporal for test
-	float pos[3] = { frustum.pos.x ,frustum.pos.y,frustum.pos.z };
-	ImGui::DragFloat3("Pos TEMP", pos, 0.2f, -100, 100, "%.1f");
-	frustum.pos = { pos[0],pos[1],pos[2] };
 }
