@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "GameObject.h"
 #include "Octree.h"
+#include "Primitive_.h"
 
 class ModuleScene : public Module
 {
@@ -39,6 +40,7 @@ public:
 	//Functionality ---------
 	GameObject* CreateGameObject();
 	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
+	GameObject* CreatePrimitive(PRIMITIVE_TYPE type);
 
 	void		BlitHierarchy();
 	bool		GetHierarchyWinState()const;

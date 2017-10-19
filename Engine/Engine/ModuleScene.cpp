@@ -5,6 +5,8 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 
+#include "Cube_.h"
+
 // Constructors =================================
 ModuleScene::ModuleScene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
@@ -95,6 +97,58 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 	if (root == nullptr)root = root_gameobject;
 
 	return root->RemoveChild(target, search_in);
+}
+
+GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
+{
+	switch (type)
+	{
+	case UNDEF_PRIMITIVE:
+		break;
+	case PRIMITIVE_POINT:
+		break;
+	case PRIMITIVE_LINE:
+		break;
+	case PRIMITIVE_PLANE:
+		break;
+	case PRIMITIVE_CUBE:
+	{
+		//Generate the cube logic
+		Cube_ cube;
+		cube.SetDivisions(2);
+		cube.SetMinPoint(math::float3(-1, -1, -1));
+		cube.SetMaxPoint(math::float3(1, 1, 1));
+		cube.Initialize();
+
+		//Generate the game object
+		GameObject* go = CreateGameObject();
+		go->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		ComponentMesh* mesh = (ComponentMesh*)go->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+		ComponentMeshRenderer* mesh_renderer = 	(ComponentMeshRenderer*)go->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+		mesh_renderer->SetTargetMesh(mesh);
+
+		//Set cube logi in mesh
+
+
+	}
+		break;
+	case PRIMITIVE_SPHERE:
+		break;
+	case PRIMITIVE_CYLINDER:
+		break;
+	case PRIMITIVE_RAY:
+		break;
+	case PRIMITIVE_CAPSULE:
+		break;
+	case PRIMITIVE_FRUSTUM:
+		break;
+	case PRIMITIVE_GRID:
+		break;
+	default:
+		break;
+	}
+
+	return nullptr;
 }
 
 void ModuleScene::BlitHierarchy()
