@@ -49,6 +49,8 @@ bool ComponentCamera::Start()
 	frustum.verticalFov = 5;
 	frustum.horizontalFov = 8;
 
+	App->renderer3D->SetMainCamera(this);
+
 	return true;
 }
 
@@ -63,6 +65,11 @@ bool ComponentCamera::Update()
 	}
 
 	return true;
+}
+
+const math::Frustum ComponentCamera::GetFrustum() const
+{
+	return frustum;
 }
 
 // Functionality ================================

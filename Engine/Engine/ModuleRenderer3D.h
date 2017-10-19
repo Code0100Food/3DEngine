@@ -10,6 +10,7 @@
 #define MAX_LIGHTS 8
 
 class DockContext;
+class ComponentCamera;
 
 class FrameTexture
 {
@@ -93,14 +94,24 @@ private:
 	unsigned int	quadVAO = 0, quadVBO = 0;
 
 	DockContext*	render_dock = nullptr;
+
+	//Editor Camera texture
 	FrameTexture*	render_to_texture = nullptr;
+
+	//Game Camera Texture
+	FrameTexture*			game_to_texture = nullptr;
+	const ComponentCamera*	main_camera = nullptr;
+
 	bool			mouse_on_workspace = false;
 
+
+	
 public:
 
 	//Set Methods -----------
 	void SetMinRenderDistance(float val);
 	void SetMaxRenderDistance(float val);
+	void SetMainCamera(const ComponentCamera* new_main_cam);
 
 	//Get Methods -----------
 	bool	GetWireframe() const;

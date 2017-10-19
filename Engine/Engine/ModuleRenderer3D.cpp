@@ -334,6 +334,9 @@ bool ModuleRenderer3D::Init()
 	render_to_texture = new FrameTexture();
 	render_to_texture->Create(App->window->GetWidth(), App->window->GetHeight());
 
+	game_to_texture = new FrameTexture();
+	game_to_texture->Create(App->window->GetWidth(), App->window->GetHeight());
+
 	return ret;
 }
 
@@ -362,6 +365,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	//Info Source
 	//http://www.pascalgamedevelopment.com/showthread.php?6617-drawing-3d-geometrical-shapes-using-opengl-but-without-glu
 
+
 	
 	return update_status::UPDATE_CONTINUE;
 }
@@ -369,6 +373,7 @@ update_status ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	//EDITOR CAMERA VIEW
 	//Focus viewport texture
 	render_to_texture->Bind();
 
@@ -382,8 +387,31 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Focus render texture
 	render_to_texture->UnBind();
 
-	//Workspace window
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glLoadMatrixf(main_camera->GetFrustum().ViewProjMatrix().Transposed().ptr());
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	game_to_texture->Bind();
+
+	lights[0].SetPos(main_camera->GetFrustum().pos.x, main_camera->GetFrustum().pos.y, main_camera->GetFrustum().pos.z);
+
+	App->geometry->Draw();
+	App->scene->SceneUpdate(dt);
+	game_to_texture->UnBind();
 	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
+	glLoadMatrixf(&ProjectionMatrix);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(App->camera->GetViewMatrix());
+
+	//Workspace window
 	ImGui::SetNextWindowSize(ImVec2(render_to_texture->width - App->window->GetWidth() * 0.4f, App->window->GetHeight() * 0.6 - 23), ImGuiCond_Always);
 	ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.4f, 23), ImGuiCond_Always);
 
@@ -391,13 +419,19 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ImGui::Text("Work Space");
 	
 	render_dock->BeginWorkspace("Render Workspace");
-	render_dock->BeginDock("Scene", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
+	render_dock->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 
 	//Detect if the mouse is inside the workspace
 	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
 
 	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width * 0.55f, render_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
 	
+	render_dock->EndDock();
+
+	render_dock->BeginDock("Game##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
+
+	ImGui::Image((void*)game_to_texture->texture_id, ImVec2(game_to_texture->width * 0.55f, game_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
+
 	render_dock->EndDock();
 
 	render_dock->EndWorkspace();
@@ -733,6 +767,11 @@ void ModuleRenderer3D::SetMaxRenderDistance(float val)
 	glLoadMatrixf(&ProjectionMatrix);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::SetMainCamera(const ComponentCamera* new_main_cam)
+{
+	main_camera = new_main_cam;
 }
 
 // Get Methods ==================================

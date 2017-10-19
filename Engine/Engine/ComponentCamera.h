@@ -26,6 +26,9 @@ private:
 
 public:
 
+	//Get Methods -----------
+	const math::Frustum GetFrustum() const;
+
 	//Functionality ---------
 	void SetTransform(const ComponentTransform* trans);
 	void UpdateFrustrum();
