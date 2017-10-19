@@ -6,6 +6,7 @@
 #include "ModuleRenderer3D.h"
 
 #include "Cube_.h"
+#include "Sphere_.h"
 
 // Constructors =================================
 ModuleScene::ModuleScene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -116,22 +117,24 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 	case PRIMITIVE_CUBE:
 	{
 		//Generate the cube logic
-		Cube_ cube;
-		cube.SetDivisions(2);
-		cube.SetMinPoint(math::float3(-1, -1, -1));
-		cube.SetMaxPoint(math::float3(1, 1, 1));
-		cube.Initialize();
+		Sphere_ sphere;
+		sphere.SetRad(8);
+		sphere.SetPosition(math::float3(0, 0, 0));
+		sphere.SetDivisions(4);
+		std::pair<std::vector<uint>, std::vector<Vertex>> data = sphere.Initialize();
 
 		//Generate the game object
 		new_prim = CreateGameObject();
 		new_prim->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		
 		ComponentMesh* mesh = (ComponentMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+		
 		ComponentMeshRenderer* mesh_renderer = 	(ComponentMeshRenderer*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 		mesh_renderer->SetTargetMesh(mesh);
 
 		//Set cube logic in mesh
-		mesh->SetIndices(cube.GetIndices());
-		mesh->SetVertices(cube.GetVertex());
+		mesh->SetIndices(data.first);
+		mesh->SetVertices(data.second);
 		mesh->SetupMesh();
 	}
 		break;

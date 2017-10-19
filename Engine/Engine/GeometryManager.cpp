@@ -237,7 +237,7 @@ Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type, bool push_at_l
 		new_primitive = new Cube_();
 		break;
 	case PRIMITIVE_SPHERE:
-		new_primitive = new Sphere_();
+		//new_primitive = new Sphere_();
 		break;
 	case PRIMITIVE_CYLINDER:
 		new_primitive = new Cylinder_();

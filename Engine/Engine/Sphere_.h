@@ -1,11 +1,11 @@
 #ifndef _SPHERE_H_
 #define _SPHERE_H_
 
-#include "Primitive_.h"
+#include "Globals.h"
+#include "MathGeoLib/Geometry/Sphere.h"
+#include "ComponentMesh.h"
 
-class AABB;
-
-class Sphere_ : public Primitive_
+class Sphere_
 {
 public:
 
@@ -15,17 +15,19 @@ public:
 
 public:
 
-	void Initialize()final;
+	std::pair<std::vector<uint>, std::vector<Vertex>> Initialize();
 
 protected:
 
-	math::Sphere* geometry = nullptr;
+	math::Sphere	geometry;
+	uint			divisions = 0;
 
 public:
 
 	//Set Methods -----------
 	void SetPosition(math::float3 pos);
 	void SetRad(float rad);
+	void SetDivisions(uint div);
 
 };
 #endif
