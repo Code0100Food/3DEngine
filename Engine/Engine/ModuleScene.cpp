@@ -6,7 +6,7 @@
 #include "ModuleRenderer3D.h"
 
 #include "Cube_.h"
-#include "Sphere_.h"
+#include "SphereGenerator.h"
 
 // Constructors =================================
 ModuleScene::ModuleScene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -117,11 +117,11 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 	case PRIMITIVE_CUBE:
 	{
 		//Generate the cube logic
-		Sphere_ sphere;
+		SphereGenerator sphere;
 		sphere.SetRad(8);
 		sphere.SetPosition(math::float3(0, 0, 0));
 		sphere.SetDivisions(4);
-		std::pair<std::vector<uint>, std::vector<Vertex>> data = sphere.Initialize();
+		std::pair<std::vector<uint>, std::vector<Vertex>> data = sphere.Generate();
 
 		//Generate the game object
 		new_prim = CreateGameObject();

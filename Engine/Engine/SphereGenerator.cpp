@@ -1,4 +1,4 @@
-#include "Sphere_.h"
+#include "SphereGenerator.h"
 #include "MathGeoLib/Geometry/Sphere.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
@@ -8,24 +8,19 @@
 #include "Primitive_.h"
 
 // Constructors =================================
-Sphere_::Sphere_()
-{
-	
-}
-
-Sphere_::Sphere_(const Sphere_ & _cpy) :geometry(_cpy.geometry), divisions(_cpy.divisions)
+SphereGenerator::SphereGenerator()
 {
 	
 }
 
 // Destructors ==================================
-Sphere_::~Sphere_()
+SphereGenerator::~SphereGenerator()
 {
 
 }
 
 // Game Loop ====================================
-std::pair<std::vector<uint>, std::vector<Vertex>>  Sphere_::Initialize()
+std::pair<std::vector<uint>, std::vector<Vertex>>  SphereGenerator::Generate()
 {
 
 	//Calculate the number of vertex
@@ -40,7 +35,6 @@ std::pair<std::vector<uint>, std::vector<Vertex>>  Sphere_::Initialize()
 	//Triangulate the sphere geometry
 	geometry.Triangulate(all_vertex.data(), all_normals.data(), NULL, num_vertices, true);
 
-	
 	// Get the correct vertex and index of the triangulation
 	std::vector<Vertex> vec_t;
 	std::vector<uint> my_index;
@@ -52,17 +46,12 @@ std::pair<std::vector<uint>, std::vector<Vertex>>  Sphere_::Initialize()
 }
 
 // Set Methods ==================================
-void Sphere_::SetPosition(math::float3 pos)
+void SphereGenerator::SetPosition(math::float3 pos)
 {
 	geometry.pos = pos;
 }
 
-void Sphere_::SetRad(float rad)
+void SphereGenerator::SetRad(float rad)
 {
 	geometry.r = rad;
-}
-
-void Sphere_::SetDivisions(uint div)
-{
-	divisions = div;
 }

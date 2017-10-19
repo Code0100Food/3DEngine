@@ -5,7 +5,6 @@
 
 #include "Primitive_.h"
 #include "Cube_.h"
-#include "Sphere_.h"
 #include "Capsule_.h"
 #include "Cylinder_.h"
 #include "Frustrum_.h"
@@ -40,8 +39,6 @@ public:
 
 protected:
 
-	std::list<Primitive_*>	primitives_list;
-
 	//Ground grid
 	Grid_*	grid = nullptr; 
 
@@ -56,11 +53,6 @@ protected:
 
 	float	primitive_lines_width = 1.0f;
 	float	primitive_color[4];
-
-public:
-
-	//Geometry factory ------
-	Primitive_* CreatePrimitive(PRIMITIVE_TYPE type, bool push_at_list = true);
 
 };
 

@@ -184,16 +184,6 @@ void ComponentCamera::BlitComponentInspector()
 
 	//Camera frustum variables
 
-	//Front Vec
-	float f_vec[3] = { frustum.front.x ,frustum.front.y,frustum.front.z };
-	ImGui::DragFloat3("Front Vec", f_vec);
-	frustum.front = { f_vec[0],f_vec[1],f_vec[2] };
-
-	//Up Vec
-	float u_vec[3] = { frustum.up.x ,frustum.up.y,frustum.up.z };
-	ImGui::DragFloat3("Up Vec", u_vec);
-	frustum.up = { u_vec[0],u_vec[1],u_vec[2] };
-
 	//Near plane dist
 	ImGui::DragFloat("Near Plane Dist", &frustum.nearPlaneDistance, 0.2f, 0.01f, 50, "%.2f");
 

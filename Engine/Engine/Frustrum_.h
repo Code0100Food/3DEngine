@@ -21,7 +21,4 @@ public:
 	math::Frustum* geometry = nullptr;
 
 };
-
-
-
 #endif // !_FRUSTRUM_H_

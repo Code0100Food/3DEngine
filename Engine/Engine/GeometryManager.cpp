@@ -56,7 +56,7 @@ bool GeometryManager::Awake(const JSON_Object * data_root)
 	primitive_color[3] = json_array_get_number(_array, 3);
 
 	//Initialize grid
-	grid = (Grid_*)CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_GRID, false);
+	grid = (Grid_*)new Grid_();
 	grid->axis = json_object_get_boolean(data_root,"grid_axis");
 	grid->divisions = json_object_get_number(data_root, "grid_divisions");
 	
@@ -93,20 +93,6 @@ bool GeometryManager::Draw()
 		App->renderer3D->EnableGLRenderFlags();
 	}
 
-	//Blit debug primitives
-
-	//Set Primitives render states
-	glLineWidth(primitive_lines_width);
-	glColor4f(primitive_color[0], primitive_color[1], primitive_color[2], primitive_color[3]);
-
-	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
-	while (geom != primitives_list.end())
-	{
-		geom._Ptr->_Myval->Draw();
-
-		geom++;
-	}
-
 	//Reset the buffers focus
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -121,27 +107,6 @@ bool GeometryManager::Draw()
 bool GeometryManager::CleanUp()
 {
 	if (grid != nullptr)RELEASE(grid);
-
-	//Clean Primitives
-	std::list<Primitive_*>::const_iterator geom = primitives_list.begin();
-	while (geom != primitives_list.end())
-	{
-		RELEASE(geom._Ptr->_Myval);
-
-		geom++;
-	}
-	primitives_list.clear();
-
-	//Clean meshes
-	/*std::list<Model_*>::const_iterator mesh = models_list.begin();
-	while (mesh != models_list.end())
-	{
-		RELEASE(mesh._Ptr->_Myval);
-
-		mesh++;
-	}
-	models_list.clear();*/
-
 
 	// detach log stream
 	aiDetachAllLogStreams();
@@ -219,44 +184,4 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 2, grid->color.b);
 	json_array_replace_number(_array, 3, grid->color.a);
 
-}
-
-Primitive_* GeometryManager::CreatePrimitive(PRIMITIVE_TYPE type, bool push_at_list)
-{
-	Primitive_* new_primitive = nullptr;
-	
-	switch (type)
-	{
-	case PRIMITIVE_POINT:
-		break;
-	case PRIMITIVE_LINE:
-		break;
-	case PRIMITIVE_PLANE:
-		break;
-	case PRIMITIVE_CUBE:
-		new_primitive = new Cube_();
-		break;
-	case PRIMITIVE_SPHERE:
-		//new_primitive = new Sphere_();
-		break;
-	case PRIMITIVE_CYLINDER:
-		new_primitive = new Cylinder_();
-		break;
-	case PRIMITIVE_RAY:
-		break;
-	case PRIMITIVE_CAPSULE:
-		new_primitive = new Capsule_();
-		break;
-	case PRIMITIVE_FRUSTUM:
-		new_primitive = new Frustrum_();
-		break;
-	case PRIMITIVE_GRID:
-		new_primitive = new Grid_();
-		break;
-	}
-
-	//Add the new primitive at the geometry list
-	if (push_at_list)primitives_list.push_back(new_primitive);
-
-	return new_primitive;
 }
