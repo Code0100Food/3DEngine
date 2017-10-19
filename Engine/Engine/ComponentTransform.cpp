@@ -27,7 +27,7 @@ bool ComponentTransform::Update()
 
 	if (!(parent->GetParent()->IsRoot()))
 	{
-		inherited_transform = transform_matrix * ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION))->inherited_transform;
+		inherited_transform = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION))->inherited_transform * transform_matrix;
 	}
 
 	return true;
