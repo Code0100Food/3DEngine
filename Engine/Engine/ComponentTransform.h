@@ -25,7 +25,7 @@ public:
 	math::float4x4	inherited_transform = math::float4x4::identity;
 
 	math::float3	position = { 0,0,0 };
-	math::float3	scale = { 0,0,0 };
+	math::float3	scale = { 1,1,1 };
 
 	//Rotation for user
 	math::float3	rotation_euler_angles = { 0,0,0 };

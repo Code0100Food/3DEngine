@@ -167,7 +167,4 @@ void ComponentTransform::SetMatrixToDraw()
 void ComponentTransform::QuitMatrixToDraw()
 {
 	glPopMatrix();
-
-	if (parent)
-		glPopMatrix();
 }
