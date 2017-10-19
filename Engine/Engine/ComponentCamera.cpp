@@ -24,7 +24,7 @@ ComponentCamera::ComponentCamera(const ComponentCamera & cpy) :Component(cpy)
 // Destructors ==================================
 ComponentCamera::~ComponentCamera()
 {
-
+	App->renderer3D->RemoveGameCamera(this);
 }
 
 bool ComponentCamera::Start()
@@ -49,7 +49,7 @@ bool ComponentCamera::Start()
 	frustum.verticalFov = 5;
 	frustum.horizontalFov = 8;
 
-	App->renderer3D->SetMainCamera(this);
+	App->renderer3D->AddGameCamera(this);
 
 	return true;
 }
@@ -70,6 +70,11 @@ bool ComponentCamera::Update()
 const math::Frustum ComponentCamera::GetFrustum() const
 {
 	return frustum;
+}
+
+void ComponentCamera::SetIsMain(bool value)
+{
+	is_main = value;
 }
 
 // Functionality ================================
@@ -158,6 +163,15 @@ void ComponentCamera::BlitComponentInspector()
 	ImGui::Checkbox("##camera_comp", &actived);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Camera");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("Main Camera##camera_comp", &is_main))
+	{
+		if (is_main)
+		{
+			App->renderer3D->SetMainCamera(this);
+		}
+	}
+
 
 	//Culling
 	if (ImGui::Checkbox("Frustum Culling", &frustum_culling))

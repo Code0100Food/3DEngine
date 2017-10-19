@@ -99,19 +99,18 @@ private:
 	FrameTexture*	render_to_texture = nullptr;
 
 	//Game Camera Texture
-	FrameTexture*			game_to_texture = nullptr;
-	const ComponentCamera*	main_camera = nullptr;
+	FrameTexture*					game_to_texture = nullptr;
+	std::vector<ComponentCamera*>	game_cameras;
+	ComponentCamera*				main_camera = nullptr;
 
 	bool			mouse_on_workspace = false;
-
-
 	
 public:
 
 	//Set Methods -----------
 	void SetMinRenderDistance(float val);
 	void SetMaxRenderDistance(float val);
-	void SetMainCamera(const ComponentCamera* new_main_cam);
+	void SetMainCamera(ComponentCamera* new_main_cam);
 
 	//Get Methods -----------
 	bool	GetWireframe() const;
@@ -123,6 +122,17 @@ public:
 	void OnResize(int width, int height);
 	void DisableGLRenderFlags();
 	void EnableGLRenderFlags();
+
+	void AddGameCamera(ComponentCamera* new_game_cam);
+	void RemoveGameCamera(ComponentCamera* removed_game_cam);
+
+private:
+
+	//Functions to change the 
+	void SetGameCameraView();
+	void SetEditorCameraView();
+	void CleanCameraView();
+
 	
 };
 #endif // !_MODULE_RENDER_3D_H_

@@ -343,8 +343,7 @@ bool ModuleRenderer3D::Init()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	CleanCameraView();
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
@@ -387,29 +386,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Focus render texture
 	render_to_texture->UnBind();
 
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glLoadMatrixf(main_camera->GetFrustum().ViewProjMatrix().Transposed().ptr());
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	game_to_texture->Bind();
-
-	lights[0].SetPos(main_camera->GetFrustum().pos.x, main_camera->GetFrustum().pos.y, main_camera->GetFrustum().pos.z);
-
-	App->geometry->Draw();
-	App->scene->SceneUpdate(dt);
-	game_to_texture->UnBind();
+	if (main_camera)
+	{
+		SetGameCameraView();
+		game_to_texture->Bind();
+		App->geometry->Draw();
+		App->scene->SceneUpdate(dt);
+		game_to_texture->UnBind();
+		CleanCameraView();
+		SetEditorCameraView();
+	}
 	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
-	glLoadMatrixf(&ProjectionMatrix);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
 
 	//Workspace window
 	ImGui::SetNextWindowSize(ImVec2(render_to_texture->width - App->window->GetWidth() * 0.4f, App->window->GetHeight() * 0.6 - 23), ImGuiCond_Always);
@@ -419,19 +406,15 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ImGui::Text("Work Space");
 	
 	render_dock->BeginWorkspace("Render Workspace");
-	render_dock->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
-
-	//Detect if the mouse is inside the workspace
-	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
-
-	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width * 0.55f, render_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
-	
-	render_dock->EndDock();
 
 	render_dock->BeginDock("Game##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
-
 	ImGui::Image((void*)game_to_texture->texture_id, ImVec2(game_to_texture->width * 0.55f, game_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
+	render_dock->EndDock();
 
+	render_dock->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
+	//Detect if the mouse is inside the workspace
+	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
+	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width * 0.55f, render_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
 	render_dock->EndDock();
 
 	render_dock->EndWorkspace();
@@ -455,6 +438,8 @@ bool ModuleRenderer3D::CleanUp()
 	RELEASE(render_dock);
 	RELEASE(render_to_texture);
 	SDL_GL_DeleteContext(context);
+
+	game_cameras.clear();
 
 	return true;
 }
@@ -769,9 +754,23 @@ void ModuleRenderer3D::SetMaxRenderDistance(float val)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::SetMainCamera(const ComponentCamera* new_main_cam)
+void ModuleRenderer3D::SetMainCamera(ComponentCamera* new_main_cam)
 {
-	main_camera = new_main_cam;
+
+	for (std::vector<ComponentCamera*>::iterator item = game_cameras.begin(); item != game_cameras.end(); item++)
+	{
+		if ((*item) == new_main_cam)
+		{
+			main_camera = new_main_cam;
+			continue;
+		}
+		else
+		{
+			(*item)->SetIsMain(false);
+		}
+	}
+
+
 }
 
 // Get Methods ==================================
@@ -835,4 +834,70 @@ void ModuleRenderer3D::EnableGLRenderFlags()
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 	}
+}
+
+void ModuleRenderer3D::AddGameCamera(ComponentCamera * new_game_cam)
+{
+	//Look if vector is empty
+	if (game_cameras.empty())
+	{
+		game_cameras.push_back(new_game_cam);
+		main_camera = new_game_cam;
+		return;
+	}
+
+	//Look if camera is already into game_cameras
+	bool finded = false;
+	for (std::vector<ComponentCamera*>::iterator item = game_cameras.begin(); item != game_cameras.end(); item++)
+	{
+		if ((*item) == new_game_cam)
+		{
+			return;
+		}
+	}
+
+	if (!finded)
+	{
+		game_cameras.push_back(new_game_cam);
+	}
+
+}
+
+void ModuleRenderer3D::RemoveGameCamera(ComponentCamera * removed_game_cam)
+{
+	for (std::vector<ComponentCamera*>::iterator item = game_cameras.begin(); item != game_cameras.end(); item++)
+	{
+		if ((*item) == removed_game_cam)
+		{
+			item = game_cameras.erase(item);
+		}
+	}
+}
+
+void ModuleRenderer3D::SetGameCameraView()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glLoadMatrixf(main_camera->GetFrustum().ViewProjMatrix().Transposed().ptr());
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	lights[0].SetPos(main_camera->GetFrustum().pos.x, main_camera->GetFrustum().pos.y, main_camera->GetFrustum().pos.z);
+	lights[0].Render();
+}
+
+void ModuleRenderer3D::SetEditorCameraView()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
+	glLoadMatrixf(&ProjectionMatrix);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(App->camera->GetViewMatrix());
+}
+
+void ModuleRenderer3D::CleanCameraView()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
 }

@@ -23,11 +23,15 @@ private:
 
 	math::Frustum	frustum;
 	bool			frustum_culling = false;
+	bool			is_main = false;
 
 public:
 
 	//Get Methods -----------
 	const math::Frustum GetFrustum() const;
+
+	//Set Methods -----------
+	void SetIsMain(bool value);
 
 	//Functionality ---------
 	void SetTransform(const ComponentTransform* trans);
