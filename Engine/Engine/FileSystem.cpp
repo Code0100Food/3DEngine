@@ -82,14 +82,14 @@ void Directory::BlitDirectoryChilds()
 void Directory::BlitFilesInside() const
 {
 	//Set String to look inside Parent folder
-	string look_path = path;
-	look_path += "\\*.*";
+	char str[150];
+	sprintf(str, "%s\\*.*", path.c_str());
 
 	//Will recieve all the files list
 	WIN32_FIND_DATA files_list;
 
 	//Will handle the list when changing the looked element
-	HANDLE file_handle = FindFirstFileA(LPCSTR(look_path.c_str()), &files_list);
+	HANDLE file_handle = FindFirstFileA(LPCSTR(str), &files_list);
 
 	if (file_handle == INVALID_HANDLE_VALUE)
 	{
@@ -394,14 +394,14 @@ void FileSystem::BlitFileSystemInfo()
 void FileSystem::LoadDirs(Directory* parent)
 {
 	//Set String to look inside Parent folder
-	string look_path = parent->GetPath();
-	look_path += "\\*.*";
+	char str[150];
+	sprintf(str, "%s\\*.*", parent->GetPath());
 
 	//Will recieve all de files list
 	WIN32_FIND_DATA files_list;
 
 	//Will handle the list when changing the looked element
-	HANDLE file_handle = FindFirstFileA(LPCSTR(look_path.c_str()), &files_list);
+	HANDLE file_handle = FindFirstFileA(LPCSTR(str), &files_list);
 	
 	if (file_handle == INVALID_HANDLE_VALUE)
 	{

@@ -437,6 +437,7 @@ bool ModuleRenderer3D::CleanUp()
 
 	RELEASE(render_dock);
 	RELEASE(render_to_texture);
+	RELEASE(game_to_texture);
 	SDL_GL_DeleteContext(context);
 
 	game_cameras.clear();
