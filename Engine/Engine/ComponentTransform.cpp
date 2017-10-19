@@ -27,8 +27,16 @@ bool ComponentTransform::Update()
 
 	if (!(parent->GetParent()->IsRoot()))
 	{
-		inherited_transform = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION))->inherited_transform * transform_matrix;
+		ComponentTransform* tmp = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION));
+		inherited_transform = tmp->inherited_transform * transform_matrix;
+		inherited_position = tmp->position;
 	}
+
+	if (draw_axis && parent->IsSelectedObject())
+	{
+		DrawOrientationAxis();
+	}
+	
 
 	return true;
 }
@@ -81,6 +89,16 @@ math::float3 ComponentTransform::GetScale() const
 	return scale;
 }
 
+math::float4x4 ComponentTransform::GetTransform() const
+{
+	return transform_matrix;
+}
+
+math::float4x4 ComponentTransform::GetInheritedTransform() const
+{
+	return inherited_transform;
+}
+
 const float* ComponentTransform::GetTransformMatrixRows() const
 {
 	return transform_matrix.ptr();
@@ -100,6 +118,8 @@ void ComponentTransform::BlitComponentInspector()
 	ImGui::Checkbox("##transform_comp", &actived);
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Transform");
+	ImGui::SameLine();
+	ImGui::Checkbox("Draw Axis##transform", &draw_axis);
 
 	//Transform Position
 	ImGui::Text("Position ");
@@ -148,6 +168,7 @@ void ComponentTransform::UpdateTransform()
 	if (parent->GetParent()->IsRoot())
 	{
 		inherited_transform = transform_matrix;
+		inherited_position = position;
 	}
 
 
@@ -167,4 +188,41 @@ void ComponentTransform::SetMatrixToDraw()
 void ComponentTransform::QuitMatrixToDraw()
 {
 	glPopMatrix();
+}
+
+void ComponentTransform::DrawOrientationAxis() const
+{
+	glLineWidth(2.0f);
+
+	glBegin(GL_LINES);
+
+	//AXIS X
+	math::float3 axis = inherited_transform.Col3(0).Normalized();
+	math::float3 pos;
+
+	if (!(parent->GetParent()->IsRoot()))
+	{
+		pos = inherited_position + position;
+	}
+	else
+	{
+		pos = position;
+	}
+	
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+	glVertex3f(pos.x, pos.y, pos.z); glVertex3f(axis.x + pos.x, axis.y + pos.y, axis.z + pos.z);
+
+	//AXIS Y
+	axis = inherited_transform.Col3(1).Normalized();
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+	glVertex3f(pos.x, pos.y, pos.z); glVertex3f(axis.x + pos.x, axis.y + pos.y, axis.z + pos.z);
+
+	//AXIS Z
+	axis = inherited_transform.Col3(2).Normalized();
+	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+	glVertex3f(pos.x, pos.y, pos.z); glVertex3f(axis.x + pos.x, axis.y + pos.y, axis.z + pos.z);
+
+	glEnd();
+
+	glLineWidth(1.0f);
 }

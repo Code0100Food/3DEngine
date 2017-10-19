@@ -44,6 +44,7 @@ public:
 	float				GetBoundingBoxDiagonalSize()const;
 	const GameObject*	GetParent() const;
 	bool				IsRoot() const;
+	bool				IsSelectedObject() const;
 
 	//Functionality ---------
 	Component*	CreateComponent(COMPONENT_TYPE c_type);

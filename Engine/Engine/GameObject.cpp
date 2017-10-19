@@ -134,6 +134,11 @@ bool GameObject::IsRoot() const
 	return App->scene->IsRoot(this);
 }
 
+bool GameObject::IsSelectedObject() const
+{
+	return (this == App->scene->GetSelectedGameObject());
+}
+
 // Functionality ================================
 Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 {
