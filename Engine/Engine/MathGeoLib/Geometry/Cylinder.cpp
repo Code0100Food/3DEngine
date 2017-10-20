@@ -37,11 +37,9 @@ std::vector<math::float3> Cylinder::Triangulate(int slices) const
 
 	for (i = 2 * HAVE_M_PI; i >= 0; i -= resolution)
 	{
-		vertex_vec.push_back(math::float3(l.b.x, l.b.y, l.b.z));
-		vertex_vec.push_back(math::float3(l.b.x + r * cos(i + resolution), l.b.y, l.b.z + r * sin(i + resolution)));
-		
-		
 		vertex_vec.push_back(math::float3(l.b.x + r * cos(i), l.b.y, l.b.z + r * sin(i)));
+		vertex_vec.push_back(math::float3(l.b.x + r * cos(i + resolution), l.b.y, l.b.z + r * sin(i + resolution)));
+		vertex_vec.push_back(math::float3(l.b.x, l.b.y, l.b.z));
 	}
 
 	for (i = 0; i <= 2 * HAVE_M_PI; i += resolution)

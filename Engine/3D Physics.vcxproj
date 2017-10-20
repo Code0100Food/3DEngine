@@ -99,6 +99,7 @@
     <ClInclude Include="Engine\ComponentTransform.h" />
     <ClInclude Include="Engine\CubeGenerator.h" />
     <ClInclude Include="Engine\Cube_.h" />
+    <ClInclude Include="Engine\CylinderGenerator.h" />
     <ClInclude Include="Engine\Cylinder_.h" />
     <ClInclude Include="Engine\FileSystem.h" />
     <ClInclude Include="Engine\Frustrum_.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="Engine\ComponentTransform.cpp" />
     <ClCompile Include="Engine\CubeGenerator.cpp" />
     <ClCompile Include="Engine\Cube_.cpp" />
+    <ClCompile Include="Engine\CylinderGenerator.cpp" />
     <ClCompile Include="Engine\Cylinder_.cpp" />
     <ClCompile Include="Engine\FileSystem.cpp" />
     <ClCompile Include="Engine\Frustrum_.cpp" />

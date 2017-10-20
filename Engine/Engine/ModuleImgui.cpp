@@ -153,7 +153,7 @@ update_status ModuleImgui::Update(float dt)
 		//Create Cylinder
 		if (ImGui::MenuItem("Cylinder"))
 		{
-
+			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
 		}
 
 		ImGui::EndMenu();

@@ -408,6 +408,9 @@
     <ClInclude Include="Engine\CubeGenerator.h">
       <Filter>Sources\PrimitiveGenerators</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\CylinderGenerator.h">
+      <Filter>Sources\PrimitiveGenerators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -654,6 +657,9 @@
       <Filter>Sources\PrimitiveGenerators</Filter>
     </ClCompile>
     <ClCompile Include="Engine\CubeGenerator.cpp">
+      <Filter>Sources\PrimitiveGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\CylinderGenerator.cpp">
       <Filter>Sources\PrimitiveGenerators</Filter>
     </ClCompile>
   </ItemGroup>

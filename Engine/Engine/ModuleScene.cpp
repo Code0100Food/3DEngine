@@ -7,6 +7,7 @@
 
 #include "SphereGenerator.h"
 #include "CubeGenerator.h"
+#include "CylinderGenerator.h"
 
 // Constructors =================================
 ModuleScene::ModuleScene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -103,6 +104,7 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 {
 	GameObject* new_prim = nullptr;
+	std::pair<std::vector<uint>, std::vector<Vertex>> data;
 
 	switch (type)
 	{
@@ -121,49 +123,31 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 		cube.SetMinPoint(math::float3(0, 0, 0));
 		cube.SetMaxPoint(math::float3(1, 1, 1));
 		cube.SetDivisions(2);
-		std::pair<std::vector<uint>, std::vector<Vertex>> data = cube.Generate();
-
-		//Generate the game object
-		new_prim = CreateGameObject();
-		new_prim->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-		
-		ComponentMesh* mesh = (ComponentMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH);
-		
-		ComponentMeshRenderer* mesh_renderer = 	(ComponentMeshRenderer*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
-		mesh_renderer->SetTargetMesh(mesh);
-
-		//Set cube logic in mesh
-		mesh->SetIndices(data.first);
-		mesh->SetVertices(data.second);
-		mesh->SetupMesh();
+		data = cube.Generate();
 	}
 		break;
 	case PRIMITIVE_SPHERE:
 	{
 		//Generate the cube logic
 		SphereGenerator sphere;
-		sphere.SetRad(8);
+		sphere.SetRad(1);
 		sphere.SetPosition(math::float3(0, 0, 0));
-		sphere.SetDivisions(4);
-		std::pair<std::vector<uint>, std::vector<Vertex>> data = sphere.Generate();
-
-		//Generate the game object
-		new_prim = CreateGameObject();
-		new_prim->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-
-		ComponentMesh* mesh = (ComponentMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH);
-
-		ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
-		mesh_renderer->SetTargetMesh(mesh);
-
-		//Set cube logic in mesh
-		mesh->SetIndices(data.first);
-		mesh->SetVertices(data.second);
-		mesh->SetupMesh();
+		sphere.SetDivisions(3);
+		data = sphere.Generate();
 	}
-		break;
+	break;
 	case PRIMITIVE_CYLINDER:
-		break;
+	{
+		//Generate the cube logic
+		CylinderGenerator cylinder;
+		cylinder.SetRad(1);
+		cylinder.SetTop(math::float3(0, 0, 0));
+		cylinder.SetBottom(math::float3(0, 1, 0));
+		cylinder.SetRad(1);
+		cylinder.SetDivisions(6);
+		data = cylinder.Generate();
+	}
+	break;
 	case PRIMITIVE_RAY:
 		break;
 	case PRIMITIVE_CAPSULE:
@@ -174,6 +158,25 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 		break;
 	default:
 		break;
+	}
+
+	if (data.first.size() > 0)
+	{
+		//Generate the game object
+		new_prim = CreateGameObject();
+		new_prim->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+
+		//Primitive mesh
+		ComponentMesh* mesh = (ComponentMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+
+		//Primitive mesh renderer
+		ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+		mesh_renderer->SetTargetMesh(mesh);
+
+		//Set cube logic in mesh
+		mesh->SetIndices(data.first);
+		mesh->SetVertices(data.second);
+		mesh->SetupMesh();
 	}
 
 	return new_prim;
