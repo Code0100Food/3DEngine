@@ -135,15 +135,13 @@ void ComponentTransform::BlitComponentInspector()
 	bool has_rotate = false;
 	ImGui::Text("Rotation ");
 	ImGui::SameLine();
-	ImGui::PushItemWidth(50);
 	if (ImGui::DragFloat("X##rotation", &rotation_euler_angles.x, 0.5f, 0.0f, 0.0f, "%.2f")) has_been_modified = true;
 	ImGui::SameLine();
 	if (ImGui::DragFloat("Y##rotation", &rotation_euler_angles.y, 0.5f, 0.0f, 0.0f, "%.2f")) has_been_modified = true;
 	ImGui::SameLine();
 	if (ImGui::DragFloat("Z##rotation", &rotation_euler_angles.z, 0.5f, 0.0f, 0.0f, "%.2f")) has_been_modified = true;
 
-	//Transform rotation
-	bool has_scale = false;
+	//Transform scale
 	ImGui::Text("Scale    ");
 	ImGui::SameLine();
 	if (ImGui::DragFloat("X##scale", &scale.x, 0.5f, 0.0f, 0.0f, "%.2f")) has_been_modified = true;
@@ -153,6 +151,13 @@ void ComponentTransform::BlitComponentInspector()
 	if (ImGui::DragFloat("Z##scale", &scale.z, 0.5f, 0.0f, 0.0f, "%.2f")) has_been_modified = true;
 	ImGui::PopItemWidth();
 
+	ImGui::Text("Normalized Scale");
+	float norm = (scale.x + scale.y + scale.z) / 3.0f;
+	if (ImGui::DragFloat("Normalized Scale", &norm, 0.2f))
+	{
+		scale.SetFromScalar(norm);
+		has_been_modified = true;
+	}
 }
 
 void ComponentTransform::UpdateTransform()

@@ -145,15 +145,27 @@ update_status ModuleImgui::Update(float dt)
 		}
 
 		//Create Sphere
-		if (ImGui::MenuItem("Sphere"))
+		if (ImGui::MenuItem("Sphere (LowPoly)"))
 		{
-			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
+			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE,3);
+		}
+
+		//Create Sphere
+		if (ImGui::MenuItem("Sphere (HiPoly)"))
+		{
+			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE, 5);
 		}
 
 		//Create Cylinder
-		if (ImGui::MenuItem("Cylinder"))
+		if (ImGui::MenuItem("Cylinder (LowPoly)"))
 		{
-			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
+			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER, 6);
+		}
+
+		//Create Cylinder
+		if (ImGui::MenuItem("Cylinder (HiPoly)"))
+		{
+			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER, 24);
 		}
 
 		ImGui::EndMenu();

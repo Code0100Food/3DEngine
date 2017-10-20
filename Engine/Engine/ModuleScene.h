@@ -40,7 +40,7 @@ public:
 	//Functionality ---------
 	GameObject* CreateGameObject();
 	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
-	GameObject* CreatePrimitive(PRIMITIVE_TYPE type);
+	GameObject* CreatePrimitive(PRIMITIVE_TYPE type, uint divisions = 2);
 
 	void		BlitHierarchy();
 	bool		GetHierarchyWinState()const;

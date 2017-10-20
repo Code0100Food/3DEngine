@@ -101,7 +101,7 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 	return root->RemoveChild(target, search_in);
 }
 
-GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
+GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 {
 	GameObject* new_prim = nullptr;
 	std::pair<std::vector<uint>, std::vector<Vertex>> data;
@@ -122,18 +122,24 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 		CubeGenerator cube;
 		cube.SetMinPoint(math::float3(0, 0, 0));
 		cube.SetMaxPoint(math::float3(1, 1, 1));
-		cube.SetDivisions(2);
+		cube.SetDivisions(divisions);
 		data = cube.Generate();
+
+		new_prim = CreateGameObject();
+		new_prim->SetName("Cube");
 	}
-		break;
+	break;
 	case PRIMITIVE_SPHERE:
 	{
 		//Generate the cube logic
 		SphereGenerator sphere;
 		sphere.SetRad(1);
 		sphere.SetPosition(math::float3(0, 0, 0));
-		sphere.SetDivisions(3);
+		sphere.SetDivisions(divisions);
 		data = sphere.Generate();
+
+		new_prim = CreateGameObject();
+		new_prim->SetName("Sphere");
 	}
 	break;
 	case PRIMITIVE_CYLINDER:
@@ -144,8 +150,11 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 		cylinder.SetTop(math::float3(0, 0, 0));
 		cylinder.SetBottom(math::float3(0, 1, 0));
 		cylinder.SetRad(1);
-		cylinder.SetDivisions(6);
+		cylinder.SetDivisions(divisions);
 		data = cylinder.Generate();
+
+		new_prim = CreateGameObject();
+		new_prim->SetName("Cylinder");
 	}
 	break;
 	case PRIMITIVE_RAY:
@@ -160,10 +169,9 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 		break;
 	}
 
-	if (data.first.size() > 0)
+	if (new_prim != nullptr)
 	{
 		//Generate the game object
-		new_prim = CreateGameObject();
 		new_prim->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 
 		//Primitive mesh
@@ -177,6 +185,7 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 		mesh->SetIndices(data.first);
 		mesh->SetVertices(data.second);
 		mesh->SetupMesh();
+		new_prim->AdjustBoundingBox();
 	}
 
 	return new_prim;
