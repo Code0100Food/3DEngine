@@ -31,16 +31,18 @@ std::pair<std::vector<uint>, std::vector<Vertex>>  SphereGenerator::Generate()
 	all_vertex.reserve(num_vertices);
 	std::vector<math::float3> all_normals;
 	all_normals.reserve(num_vertices);
+	std::vector<math::float2> all_uvs;
+	all_uvs.reserve(num_vertices);
 
 	//Triangulate the sphere geometry
-	geometry.Triangulate(all_vertex.data(), all_normals.data(), NULL, num_vertices, true);
+	geometry.Triangulate(all_vertex.data(), all_normals.data(), all_uvs.data(), num_vertices, false);
+	std::vector<Vertex> vec_all;
+	for (uint k = 0; k < num_vertices; k++)vec_all.push_back(Vertex(all_vertex.data()[k], all_normals.data()[k], all_uvs.data()[k]));
 
 	// Get the correct vertex and index of the triangulation
 	std::vector<Vertex> vec_t;
 	std::vector<uint> my_index;
-	std::vector<math::float3> my_vertex;
-	VertexToIndex(all_vertex.data(), num_vertices, &my_index, &my_vertex);
-	for (uint k = 0; k < my_vertex.size(); k++)vec_t.push_back(Vertex(my_vertex.data()[k], math::float3(0, 0, 0), math::float2(0, 0)));
+	VertexToIndex(vec_all.data(), num_vertices, &my_index, &vec_t);
 
 	return{ my_index,vec_t };
 }

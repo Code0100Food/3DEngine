@@ -15,7 +15,7 @@ public:
 
 	std::pair<std::vector<uint>, std::vector<Vertex>> Generate()final;
 
-protected:
+private:
 
 	math::Sphere	geometry;
 

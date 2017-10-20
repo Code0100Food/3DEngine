@@ -1015,6 +1015,7 @@ void AABB::Triangulate(int numFacesX, int numFacesY, int numFacesZ,
 			numFacesU = numFacesX;
 			numFacesV = numFacesY;
 		}
+		
 		for(int x = 0; x < numFacesU; ++x)
 			for(int y = 0; y < numFacesV; ++y)
 			{
@@ -1047,7 +1048,7 @@ void AABB::Triangulate(int numFacesX, int numFacesY, int numFacesZ,
 				if (outNormal)
 					for(int j = 0; j < 6; ++j)
 						outNormal[i+j] = FaceNormal(face);
-
+						
 				i += 6;
 			}
 	}

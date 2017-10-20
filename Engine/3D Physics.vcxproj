@@ -97,6 +97,7 @@
     <ClInclude Include="Engine\ComponentMesh.h" />
     <ClInclude Include="Engine\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\ComponentTransform.h" />
+    <ClInclude Include="Engine\CubeGenerator.h" />
     <ClInclude Include="Engine\Cube_.h" />
     <ClInclude Include="Engine\Cylinder_.h" />
     <ClInclude Include="Engine\FileSystem.h" />
@@ -192,10 +193,11 @@
     <ClInclude Include="Engine\p2Point.h" />
     <ClInclude Include="Engine\Parson\parson.h" />
     <ClInclude Include="Engine\PerfTimer.h" />
+    <ClInclude Include="Engine\PrimitiveGenerator.h" />
     <ClInclude Include="Engine\Profiler.h" />
     <ClInclude Include="Engine\Quadtree.h" />
     <ClInclude Include="Engine\ModuleScene.h" />
-    <ClInclude Include="Engine\Sphere_.h" />
+    <ClInclude Include="Engine\SphereGenerator.h" />
     <ClInclude Include="Engine\stb\stb.h" />
     <ClInclude Include="Engine\stb\stb_image.h" />
     <ClInclude Include="Engine\Timer.h" />
@@ -212,6 +214,7 @@
     <ClCompile Include="Engine\ComponentMesh.cpp" />
     <ClCompile Include="Engine\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\ComponentTransform.cpp" />
+    <ClCompile Include="Engine\CubeGenerator.cpp" />
     <ClCompile Include="Engine\Cube_.cpp" />
     <ClCompile Include="Engine\Cylinder_.cpp" />
     <ClCompile Include="Engine\FileSystem.cpp" />
@@ -277,9 +280,10 @@
     <ClCompile Include="Engine\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Parson\parson.c" />
     <ClCompile Include="Engine\PerfTimer.cpp" />
+    <ClCompile Include="Engine\PrimitiveGenerator.cpp" />
     <ClCompile Include="Engine\Profiler.cpp" />
     <ClCompile Include="Engine\ModuleScene.cpp" />
-    <ClCompile Include="Engine\Sphere_.cpp" />
+    <ClCompile Include="Engine\SphereGenerator.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\Primitive_.cpp" />
   </ItemGroup>

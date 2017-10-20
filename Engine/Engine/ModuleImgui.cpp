@@ -144,6 +144,12 @@ update_status ModuleImgui::Update(float dt)
 			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CUBE);
 		}
 
+		//Create Sphere
+		if (ImGui::MenuItem("Sphere"))
+		{
+			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
+		}
+
 		//Create Cylinder
 		if (ImGui::MenuItem("Cylinder"))
 		{

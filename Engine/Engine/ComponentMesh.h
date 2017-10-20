@@ -39,6 +39,11 @@ struct Vertex
 	math::float3 position = { 0,0,0 };
 	math::float3 normals = { 0,0,0 };
 	math::float2 tex_coords = { 0,0 };
+
+	bool operator == (const Vertex& target)
+	{
+		return position == target.position && normals == target.normals && tex_coords == target.tex_coords;
+	}
 };
 // ----------------------------------------------
 

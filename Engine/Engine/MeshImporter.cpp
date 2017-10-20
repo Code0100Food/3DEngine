@@ -63,8 +63,7 @@ bool MeshImporter::Import(const char* name, std::vector<uint> indices, std::vect
 	App->fs->SaveFile(file_name.c_str(), (char*)data, size, LIBRARY_MESH_FOLDER);
 
 	file_name.clear();
-
-
+	
 	return true;
 }
 

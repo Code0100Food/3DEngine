@@ -5,8 +5,8 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 
-#include "Cube_.h"
 #include "SphereGenerator.h"
+#include "CubeGenerator.h"
 
 // Constructors =================================
 ModuleScene::ModuleScene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -117,11 +117,11 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 	case PRIMITIVE_CUBE:
 	{
 		//Generate the cube logic
-		SphereGenerator sphere;
-		sphere.SetRad(8);
-		sphere.SetPosition(math::float3(0, 0, 0));
-		sphere.SetDivisions(4);
-		std::pair<std::vector<uint>, std::vector<Vertex>> data = sphere.Generate();
+		CubeGenerator cube;
+		cube.SetMinPoint(math::float3(0, 0, 0));
+		cube.SetMaxPoint(math::float3(1, 1, 1));
+		cube.SetDivisions(2);
+		std::pair<std::vector<uint>, std::vector<Vertex>> data = cube.Generate();
 
 		//Generate the game object
 		new_prim = CreateGameObject();
@@ -139,6 +139,28 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 	}
 		break;
 	case PRIMITIVE_SPHERE:
+	{
+		//Generate the cube logic
+		SphereGenerator sphere;
+		sphere.SetRad(8);
+		sphere.SetPosition(math::float3(0, 0, 0));
+		sphere.SetDivisions(4);
+		std::pair<std::vector<uint>, std::vector<Vertex>> data = sphere.Generate();
+
+		//Generate the game object
+		new_prim = CreateGameObject();
+		new_prim->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+
+		ComponentMesh* mesh = (ComponentMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+
+		ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+		mesh_renderer->SetTargetMesh(mesh);
+
+		//Set cube logic in mesh
+		mesh->SetIndices(data.first);
+		mesh->SetVertices(data.second);
+		mesh->SetupMesh();
+	}
 		break;
 	case PRIMITIVE_CYLINDER:
 		break;

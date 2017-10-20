@@ -22,6 +22,11 @@ public:
 
 	//Functionality ---------
 	virtual std::pair<std::vector<uint>, std::vector<Vertex>> Generate() = 0;
+	
+protected:
+
+	bool VertexToIndex(Vertex* all_vertex, uint vertex_num, std::vector<uint>* index, std::vector<Vertex>* vertex);
+	bool VertexToIndex(math::float3* all_vertex, uint vertex_num, std::vector<uint>* index, std::vector<math::float3>* vertex);
 
 };
 #endif // !_PRIMITIVE_GENERATOR_H_
