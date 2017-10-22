@@ -811,6 +811,14 @@ void ModuleRenderer3D::OnResize(int width, int height)
 		render_to_texture->Create(width,height);
 	}
 
+	if (game_to_texture)
+	{
+		game_to_texture->Destroy();
+		game_to_texture->Create(width, height);
+	}
+
+	App->window->SetAspectRatio(width, height);
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
