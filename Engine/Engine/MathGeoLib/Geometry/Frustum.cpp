@@ -347,30 +347,37 @@ bool Frustum::Contains(const Polyhedron &polyhedron) const
 	return true;
 }
 
-bool Frustum::Contact(const AABB & aabb) const
+bool Frustum::VertexOutside(const AABB & aabb) const
 {
 	math::float3 corners[8];
 	aabb.GetCornerPoints(corners);
 
-	for (int p = 0; p < 6; ++p)
-	{
-		unsigned int in = 0;
-		for (int i = 0; i < 8; ++i) 
-		{
-			// test this point against the planes
-			if (BottomPlane().IsOnPositiveSide(corners[i]))in++;
-			if (TopPlane().IsOnPositiveSide(corners[i]))in++;
-			if (!LeftPlane().IsOnPositiveSide(corners[i]))in++;
-			if (!RightPlane().IsOnPositiveSide(corners[i]))in++;
-			if (!NearPlane().IsOnPositiveSide(corners[i]))in++;
-			if (!FarPlane().IsOnPositiveSide(corners[i]))in++;
+	bool all_cornmers_out = false;
 
-			if (in == 6)return true;
-			in = 0;
-		}	
+	//6 is the number of frustum planes
+	for (int i = 0; i < 6; ++i)
+	{
+		int	 corners_out = 0;
+
+		//Check if all corners are out of the plane[i]
+		for (int corner_n = 0; corner_n < 8; ++corner_n)
+		{
+			if ((GetPlane(i).IsOnPositiveSide(corners[corner_n])) == true)
+			{
+				corners_out++;
+			}
+		}
+
+		//If all corners are out we are done
+		if (corners_out == 8)
+		{
+			all_cornmers_out = true;
+			break;
+		}
+
 	}
-	
-	return false;
+
+	return all_cornmers_out;
 }
 
 float3 Frustum::ClosestPoint(const float3 &point) const
