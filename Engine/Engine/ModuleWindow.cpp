@@ -31,6 +31,8 @@ bool ModuleWindow::Awake(const JSON_Object * data_root)
 	borderless = json_object_get_boolean(data_root, "borderless");
 	full_desktop = json_object_get_boolean(data_root, "full_desktop");
 
+	aspect_ratio = width / height;
+
 	//Load window sizes
 	const JSON_Object* win = json_object_get_object(data_root, "win0");
 
@@ -271,6 +273,11 @@ void ModuleWindow::SetTitle(const char* title)
 	SDL_SetWindowTitle(window, title);
 }
 
+void ModuleWindow::SetAspectRatio(int width, int height)
+{
+	aspect_ratio = width / height;
+}
+
 // Get Methods ==================================
 float ModuleWindow::GetBrightness() const
 {
@@ -285,4 +292,9 @@ int ModuleWindow::GetWidth() const
 int ModuleWindow::GetHeight() const
 {
 	return height;
+}
+
+float ModuleWindow::GetAspectRatio() const
+{
+	return aspect_ratio;
 }

@@ -45,6 +45,8 @@ private:
 	std::vector<WindowSize*>	pre_defined_windows;
 	std::vector<string>			windows_names;
 
+	float	aspect_ratio = 0;
+
 public:
 
 	//The window we'll be rendering to
@@ -57,11 +59,13 @@ public:
 	
 	//Set Methods =====================
 	void SetTitle(const char* title);
+	void SetAspectRatio(int width, int height);
 
 	//Get Methods =====================
 	float	 GetBrightness()const;
 	int		 GetWidth() const;
 	int		 GetHeight() const;
+	float	 GetAspectRatio() const;
 
 };
 
