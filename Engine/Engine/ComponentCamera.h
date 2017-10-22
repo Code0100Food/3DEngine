@@ -35,7 +35,6 @@ public:
 
 	//Functionality ---------
 	void SetTransform(const ComponentTransform* trans);
-	void UpdateFrustrum();
 	void UpdateFrustumTransform();
 	void DrawFrustum()const;
 	void ApplyFrustum(GameObject* target);

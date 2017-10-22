@@ -9,6 +9,8 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleWindow.h"
+#include <queue>
 
 // Constructors =================================
 ComponentCamera::ComponentCamera()
@@ -29,25 +31,20 @@ ComponentCamera::~ComponentCamera()
 
 bool ComponentCamera::Start()
 {
+	frustum.type = math::PerspectiveFrustum;
+
 	frustum.nearPlaneDistance = 1;
 	frustum.farPlaneDistance = 15;
-
-	UpdateFrustrum();
 	
 	//Set frustum looking to GameObject Z axis
 	const ComponentTransform* parent_transform = (ComponentTransform*)this->parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 
-	frustum.type = math::PerspectiveFrustum;
-
 	frustum.pos = parent_transform->GetPosition();
-	frustum.front = math::float3(0, 0, 1);
-	frustum.up = math::float3(0, 1, 0);
+	frustum.front = parent_transform->GetTransform().Col3(2);
+	frustum.up = parent_transform->GetTransform().Col3(1);
 
-	frustum.orthographicHeight = 5;
-	frustum.orthographicWidth = 2;
-
-	frustum.verticalFov = 5;
-	frustum.horizontalFov = 8;
+	frustum.verticalFov = 90 * DEGTORAD;
+	frustum.horizontalFov = (2 * math::Atan(math::Tan(frustum.verticalFov / 2) * App->window->GetAspectRatio()));
 
 	App->renderer3D->AddGameCamera(this);
 
@@ -83,23 +80,6 @@ void ComponentCamera::SetTransform(const ComponentTransform * trans)
 
 }
 
-void ComponentCamera::UpdateFrustrum()
-{
-	//Set frustum looking to GameObject Z axis
-	const ComponentTransform* parent_transform = (ComponentTransform*)this->parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-	
-	frustum.type = math::PerspectiveFrustum;
-
-	frustum.pos = math::float3(0, 0, 0);
-	frustum.front = math::float3(0, 0, 1);
-	frustum.up = math::float3(0, 1, 0);
-
-	frustum.orthographicHeight = 5;
-	frustum.orthographicWidth = 2;
-
-	frustum.verticalFov = 5;
-	frustum.horizontalFov = 8;
-}
 
 void ComponentCamera::UpdateFrustumTransform()
 {
@@ -128,18 +108,33 @@ void ComponentCamera::ApplyFrustum(GameObject * target)
 {
 	if (target == nullptr)return;
 
-	std::vector<GameObject*> childs = *target->GetChilds();
-	uint size = childs.size();
-	for (uint k = 0; k < size; k++)
+	//Add Parent to the queue
+	std::queue<GameObject*> remaining_childs;
+	remaining_childs.push(target);
+
+	while (!remaining_childs.empty())
 	{
-		ApplyFrustum(childs[k]);
+		//Look if the front element is root node or camera parent or element is out the frustrum
+		if (remaining_childs.front() != parent && remaining_childs.front()->GetParent() != nullptr && frustum.VertexOutside(*remaining_childs.front()->GetBoundingBox()))
+		{
+			//if it is we will ignore its childs and set him to false
+			remaining_childs.front()->SetActiveState(false);
+			remaining_childs.pop();
+		}
+		else
+		{
+			//else we will print it and check his childs
+			remaining_childs.front()->SetActiveState(true);
+
+			for (std::vector<GameObject*>::iterator item = remaining_childs.front()->GetChilds()->begin(); item != remaining_childs.front()->GetChilds()->end(); item++)
+			{
+				remaining_childs.push((*item));
+			}
+
+			remaining_childs.pop();
+
+		}
 	}
-	
-	if (target != parent && !frustum.Contact(*target->GetBoundingBox()))
-	{
-		target->SetActiveState(false);
-	}
-	else target->SetActiveState(true);
 }
 
 void ComponentCamera::UnApplyFrustum(GameObject * target)
@@ -190,10 +185,11 @@ void ComponentCamera::BlitComponentInspector()
 	//Far plane dist
 	ImGui::DragFloat("Far Plane Dist", &frustum.farPlaneDistance, 0.2f, 0.1f, 50, "%.2f");
 
-	//Ortographic Height
-	ImGui::DragFloat("Ortographic Height", &frustum.orthographicHeight, 0.05, 0.0, 2);
-
-	//Ortographic Width
-	ImGui::DragFloat("Ortographic Width", &frustum.orthographicWidth, 0.05, 0.0, 2);
-
+	//FOV
+	float new_fov = frustum.verticalFov * RADTODEG;
+	if (ImGui::DragFloat("Vertical FOV", &new_fov, 1.0, 1.0, 179))
+	{
+		frustum.verticalFov = new_fov * DEGTORAD;
+		frustum.horizontalFov = (2 * math::Atan(math::Tan(frustum.verticalFov / 2) * App->window->GetAspectRatio()));
+	}
 }
