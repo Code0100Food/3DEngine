@@ -2,6 +2,7 @@
 #define _COMPONENT_CAMERA_H_
 
 #include "Component.h"
+#include <queue>
 #include "MathGeoLib/Geometry/Frustum.h"
 
 class ComponentTransform;
@@ -24,6 +25,9 @@ private:
 	math::Frustum	frustum;
 	bool			frustum_culling = false;
 	bool			is_main = false;
+
+	//Queue to apply frustrum to all childs of te Applyfrustrum function
+	std::queue<GameObject*> remaining_childs;
 
 public:
 

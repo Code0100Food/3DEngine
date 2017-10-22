@@ -109,7 +109,6 @@ void ComponentCamera::ApplyFrustum(GameObject * target)
 	if (target == nullptr)return;
 
 	//Add Parent to the queue
-	std::queue<GameObject*> remaining_childs;
 	remaining_childs.push(target);
 
 	while (!remaining_childs.empty())
@@ -141,14 +140,20 @@ void ComponentCamera::UnApplyFrustum(GameObject * target)
 {
 	if (target == nullptr)return;
 
-	std::vector<GameObject*> childs = *target->GetChilds();
-	uint size = childs.size();
-	for (uint k = 0; k < size; k++)
+	remaining_childs.push(target);
+
+	while (!remaining_childs.empty())
 	{
-		UnApplyFrustum(childs[k]);
+		remaining_childs.front()->SetActiveState(true);
+		for (std::vector<GameObject*>::iterator item = remaining_childs.front()->GetChilds()->begin(); item != remaining_childs.front()->GetChilds()->end(); item++)
+		{
+			remaining_childs.push((*item));
+		}
+
+		remaining_childs.pop();
 	}
 
-	target->SetActiveState(true);
+	
 }
 
 void ComponentCamera::BlitComponentInspector()
