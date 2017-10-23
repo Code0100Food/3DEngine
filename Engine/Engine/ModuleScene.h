@@ -42,6 +42,7 @@ public:
 	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
 	GameObject* CreatePrimitive(PRIMITIVE_TYPE type, uint divisions = 2);
 	
+	void		BlitConfigInfo();
 	void		BlitHierarchy();
 	bool		GetHierarchyWinState()const;
 	void		SwapHierarchyWinState();

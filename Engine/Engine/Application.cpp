@@ -80,7 +80,7 @@ Application::Application()
 	profiler->CallProfBlock(M_GEOMETRY, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	scene = new ModuleScene("Scene", M_SCENE, false);
+	scene = new ModuleScene("Scene", M_SCENE, true);
 	profiler->CallProfBlock(M_SCENE, BUILD_STEP, prof_timer.ReadTicks());
 
 	// The order of calls is very important!

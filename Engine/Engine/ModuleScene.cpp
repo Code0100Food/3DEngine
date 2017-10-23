@@ -36,7 +36,7 @@ bool ModuleScene::Start()
 	test->SetName("Main Camera");
 
 	//Set a default octree configuration
-	int bound_size = 10;
+	int bound_size = 20;
 	math::AABB boundaries = math::AABB(math::float3(-bound_size, -bound_size, -bound_size), math::float3(bound_size, bound_size, bound_size));
 	octree.SetBoundaries(boundaries);
 	octree.SetMaxObjects(2);
@@ -199,6 +199,21 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 	return new_prim;
 }
 
+void ModuleScene::BlitConfigInfo()
+{
+	ImGui::Text("Octree Configuration");
+	if (ImGui::Button("Recalculate Octree", ImVec2(100, 40)))
+	{
+		CleanOctree();
+		ReFillOctree();
+	}
+	if (ImGui::Button("Clean Octree", ImVec2(100, 40)))
+	{
+		CleanOctree();
+	}
+
+}
+
 void ModuleScene::BlitHierarchy()
 {
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.15f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Always);
@@ -272,7 +287,7 @@ void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
 		uint size = childs.size();
 		for (uint k = 0; k < size; k++)
 		{
-			PushGameObjectInOctree(childs[k], _childs);
+			if(childs[k]->GetStatic())PushGameObjectInOctree(childs[k], _childs);
 		}
 	}
 }

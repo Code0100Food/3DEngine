@@ -25,6 +25,7 @@ public:
 private:
 
 	bool						actived = true;
+	bool						static_ = false;
 	std::string					name = "Unnamed";
 	GameObject*					parent = nullptr;
 	std::vector<Component*>		components;
@@ -36,11 +37,13 @@ public:
 
 	//Set Methods -----------
 	void SetActiveState(bool act);
+	void SetStatic(bool st);
 	void SetName(const char* str);
 	void SetParent(GameObject* target);
 
 	//Get Methods -----------
-	bool				GetActive();
+	bool				GetActive()const;
+	bool				GetStatic()const;
 	float				GetBoundingBoxDiagonalSize()const;
 	const GameObject*	GetParent() const;
 	bool				IsRoot() const;

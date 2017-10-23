@@ -92,6 +92,11 @@ void GameObject::SetActiveState(bool act)
 	actived = act;
 }
 
+void GameObject::SetStatic(bool st)
+{
+	static_ = st;
+}
+
 void GameObject::SetName(const char * str)
 {
 	name = str;
@@ -113,9 +118,14 @@ void GameObject::SetParent(GameObject * target)
 }
 
 // Get Methods ==================================
-bool GameObject::GetActive()
+bool GameObject::GetActive() const
 {
 	return actived;
+}
+
+bool GameObject::GetStatic() const
+{
+	return static_;
 }
 
 float GameObject::GetBoundingBoxDiagonalSize() const
@@ -334,6 +344,9 @@ void GameObject::BlitGameObjectInspector()
 		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 	}
 	
+	//Static Object
+	ImGui::Checkbox("Static##object_static", &static_);
+
 	//Bounding box
 	ImGui::Checkbox("Bounding Box", &draw_bounding_box);
 	
