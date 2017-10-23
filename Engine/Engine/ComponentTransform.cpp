@@ -153,8 +153,9 @@ void ComponentTransform::BlitComponentInspector()
 
 	ImGui::Text("Normalized Scale");
 	float norm = (scale.x + scale.y + scale.z) / 3.0f;
-	if (ImGui::DragFloat("Normalized Scale", &norm, 0.2f))
+	if (ImGui::DragFloat("Normalized Scale", &norm, 0.2f, 0.1f))
 	{
+		if (norm < 0.01f)norm = 0.01f;
 		scale.SetFromScalar(norm);
 		has_been_modified = true;
 	}
@@ -174,6 +175,7 @@ void ComponentTransform::UpdateTransform()
 	{
 		inherited_transform = transform_matrix;
 		inherited_position = position;
+		parent->GetBoundingBox()->Scale(parent->GetBoundingBox()->CenterPoint(),scale);
 	}
 
 

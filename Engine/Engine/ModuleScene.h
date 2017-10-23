@@ -56,5 +56,6 @@ public:
 
 	void		PushGameObjectInOctree(GameObject* target, bool childs = true);
 	void		ReFillOctree();
+	void		CleanOctree();
 };
 #endif

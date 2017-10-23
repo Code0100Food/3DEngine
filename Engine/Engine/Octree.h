@@ -150,7 +150,7 @@ public:
 		children[3]->root = this;
 
 		temp_ab.minPoint = center_point;
-		temp_ab.maxPoint = { center_point.x + cube_size,center_point.y + cube_size,center_point.z + cube_size };
+		temp_ab.maxPoint = { center_point.x - cube_size,center_point.y + cube_size,center_point.z + cube_size };
 		children[4] = new OctCube(temp_ab, max_objects);
 		children[4]->root = this;
 
@@ -165,7 +165,7 @@ public:
 		children[6]->root = this;
 
 		temp_ab.minPoint = center_point;
-		temp_ab.maxPoint = { center_point.x - cube_size,center_point.y + cube_size,center_point.z + cube_size };
+		temp_ab.maxPoint = { center_point.x + cube_size,center_point.y + cube_size,center_point.z + cube_size };
 		children[7] = new OctCube(temp_ab, max_objects);
 		children[7]->root = this;
 
@@ -344,7 +344,7 @@ public:
 	void Draw()const
 	{
 		float color[4] = { 0.4f,0.8f,0.2f,1.0f };
-		root->Draw(color);
+		if(root!= NULL)root->Draw(color);
 	}
 
 	/*
@@ -355,18 +355,26 @@ public:
 		if (root != NULL && SDL_HasIntersection(&r, &root->aabb))
 			tests = root->CollectCandidates(nodes, r);
 		return tests;
-	}
+	}*/
 
 	void Clear()
 	{
 		if (root != NULL)
 		{
-			delete root;
-			root = NULL;
+			RELEASE(root);
 		}
 	}
 
-	int	CollectCandidates(std::vector<DATA_TYPE>& nodes, const Circle& circle) const
+	void Reset()
+	{
+		if (root != NULL && root->children[0] != nullptr)
+		{
+			for (uint k = 0; k < 8; k++)RELEASE(root->children[k]);
+			root->full = false;
+		}
+	}
+
+	/*int	CollectCandidates(std::vector<DATA_TYPE>& nodes, const Circle& circle) const
 	{
 		int tests = 0;
 

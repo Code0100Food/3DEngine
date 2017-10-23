@@ -65,6 +65,7 @@ bool ModuleScene::SceneUpdate(float dt)
 	//Temporal for Testing Octree
 	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
 	{
+		CleanOctree();
 		ReFillOctree();
 	}
 
@@ -264,7 +265,7 @@ GameObject * ModuleScene::GetRoot() const
 
 void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
 {
-	octree.Insert(target, *target->GetBoundingBox());
+	octree.Insert(target, target->GetTranslatedBoundingBox());
 	if (_childs)
 	{
 		std::vector<GameObject*> childs = *target->GetChilds();
@@ -279,4 +280,9 @@ void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
 void ModuleScene::ReFillOctree()
 {
 	PushGameObjectInOctree(root_gameobject, true);
+}
+
+void ModuleScene::CleanOctree()
+{
+	octree.Reset();
 }
