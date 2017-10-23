@@ -141,31 +141,31 @@ update_status ModuleImgui::Update(float dt)
 		//Create Cube
 		if (ImGui::MenuItem("Cube"))
 		{
-			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CUBE);
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CUBE));
 		}
 
 		//Create Sphere
 		if (ImGui::MenuItem("Sphere (LowPoly)"))
 		{
-			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE,3);
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE, 3));
 		}
 
 		//Create Sphere
 		if (ImGui::MenuItem("Sphere (HiPoly)"))
 		{
-			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE, 5);
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE, 5));
 		}
 
 		//Create Cylinder
 		if (ImGui::MenuItem("Cylinder (LowPoly)"))
 		{
-			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER, 6);
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER, 6));
 		}
 
 		//Create Cylinder
 		if (ImGui::MenuItem("Cylinder (HiPoly)"))
 		{
-			App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER, 24);
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER, 24));
 		}
 
 		ImGui::EndMenu();

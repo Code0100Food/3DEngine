@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "InputManager.h"
+#include "ModuleInput.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 
@@ -38,7 +39,7 @@ bool ModuleScene::Start()
 	int bound_size = 10;
 	math::AABB boundaries = math::AABB(math::float3(-bound_size, -bound_size, -bound_size), math::float3(bound_size, bound_size, bound_size));
 	octree.SetBoundaries(boundaries);
-
+	octree.SetMaxObjects(2);
 
 	return true;
 }
@@ -60,6 +61,12 @@ bool ModuleScene::SceneUpdate(float dt)
 	App->renderer3D->DisableGLRenderFlags();
 	octree.Draw();
 	App->renderer3D->EnableGLRenderFlags();
+
+	//Temporal for Testing Octree
+	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+	{
+		ReFillOctree();
+	}
 
 	return ret;
 }
@@ -253,4 +260,23 @@ bool ModuleScene::IsRoot(const GameObject * target) const
 GameObject * ModuleScene::GetRoot() const
 {
 	return root_gameobject;
+}
+
+void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
+{
+	octree.Insert(target, *target->GetBoundingBox());
+	if (_childs)
+	{
+		std::vector<GameObject*> childs = *root_gameobject->GetChilds();
+		uint size = childs.size();
+		for (uint k = 0; k < size; k++)
+		{
+			PushGameObjectInOctree(childs[k], _childs);
+		}
+	}
+}
+
+void ModuleScene::ReFillOctree()
+{
+	PushGameObjectInOctree(root_gameobject, true);
 }

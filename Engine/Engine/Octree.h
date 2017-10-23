@@ -19,8 +19,8 @@ public:
 
 public:
 
-	math::AABB bounding_box;
-	DATA_TYPE data = NULL;
+	math::AABB	bounding_box;
+	DATA_TYPE	data = NULL;
 
 public:
 

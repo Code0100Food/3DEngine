@@ -41,7 +41,7 @@ public:
 	GameObject* CreateGameObject();
 	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
 	GameObject* CreatePrimitive(PRIMITIVE_TYPE type, uint divisions = 2);
-
+	
 	void		BlitHierarchy();
 	bool		GetHierarchyWinState()const;
 	void		SwapHierarchyWinState();
@@ -54,5 +54,7 @@ public:
 	bool		IsRoot(const GameObject* target)const;
 	GameObject* GetRoot()const;
 
+	void		PushGameObjectInOctree(GameObject* target, bool childs = true);
+	void		ReFillOctree();
 };
 #endif
