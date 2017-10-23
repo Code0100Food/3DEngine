@@ -352,7 +352,7 @@ void GameObject::DrawBoundingBox()
 {
 	App->renderer3D->DisableGLRenderFlags();
 
-	bounding_box.Draw(4.0f, App->geometry->bounding_box_color);
+	this->GetTranslatedBoundingBox().Draw(4.0f, App->geometry->bounding_box_color);
 
 	App->renderer3D->EnableGLRenderFlags();
 }
@@ -360,6 +360,14 @@ void GameObject::DrawBoundingBox()
 math::AABB * GameObject::GetBoundingBox()
 {
 	return &bounding_box;
+}
+
+math::AABB GameObject::GetTranslatedBoundingBox()
+{
+	math::AABB tmp = bounding_box;
+	ComponentTransform* trans = (ComponentTransform*)FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	if(trans != nullptr)tmp.Translate(trans->GetInheritedTransform().TranslatePart());
+	return tmp;
 }
 
 std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_childs)

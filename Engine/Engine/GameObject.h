@@ -64,6 +64,7 @@ public:
 	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);
 	void									DrawBoundingBox();
 	math::AABB*								GetBoundingBox();
+	math::AABB								GetTranslatedBoundingBox();
 
 };
 #endif // !_GAME_OBJECT_H_

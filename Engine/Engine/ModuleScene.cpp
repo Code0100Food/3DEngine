@@ -267,7 +267,7 @@ void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
 	octree.Insert(target, *target->GetBoundingBox());
 	if (_childs)
 	{
-		std::vector<GameObject*> childs = *root_gameobject->GetChilds();
+		std::vector<GameObject*> childs = *target->GetChilds();
 		uint size = childs.size();
 		for (uint k = 0; k < size; k++)
 		{
