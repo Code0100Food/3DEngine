@@ -55,11 +55,11 @@
     <Filter Include="Sources\Containers\Primitives">
       <UniqueIdentifier>{4406f9e8-a687-4c4a-b604-15079471fd54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Importers">
-      <UniqueIdentifier>{71703e85-0e1f-4715-87f7-cc6cec5a046d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\PrimitiveGenerators">
       <UniqueIdentifier>{4bae6818-0a38-4cf0-af11-c90b1c050232}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Importers &amp; Serializer">
+      <UniqueIdentifier>{71703e85-0e1f-4715-87f7-cc6cec5a046d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -376,22 +376,22 @@
       <Filter>Sources\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModelImporter.h">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Importer.h">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ComponentMeshRenderer.h">
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClInclude>
     <ClInclude Include="Engine\MaterialImporter.h">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\MeshImporter.h">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ImporterManager.h">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ComponentCamera.h">
       <Filter>Sources\GameObject &amp; Components</Filter>
@@ -410,6 +410,9 @@
     </ClInclude>
     <ClInclude Include="Engine\CylinderGenerator.h">
       <Filter>Sources\PrimitiveGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Serializer.h">
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -630,22 +633,22 @@
       <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ModelImporter.cpp">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Importer.cpp">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ComponentMeshRenderer.cpp">
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClCompile>
     <ClCompile Include="Engine\MaterialImporter.cpp">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\MeshImporter.cpp">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ImporterManager.cpp">
-      <Filter>Sources\Importers</Filter>
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ComponentCamera.cpp">
       <Filter>Sources\GameObject &amp; Components</Filter>

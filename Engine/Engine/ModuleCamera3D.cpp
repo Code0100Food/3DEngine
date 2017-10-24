@@ -173,7 +173,8 @@ update_status ModuleCamera3D::Update(float dt)
 		//Focus current object
 		else if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 		{
-				GameObject* target = App->scene->GetSelectedGameObject();
+			GameObject* target = App->scene->GetSelectedGameObject();
+
 			if (target != nullptr)
 			{
 				LookAtGameObject(target);
@@ -278,7 +279,7 @@ void ModuleCamera3D::LookAt( const vec3 &Spot)
 void ModuleCamera3D::LookAtGameObject(GameObject * obj)
 {
 	ComponentTransform* trans_cmp = (ComponentTransform*)obj->FindComponent(COMP_TRANSFORMATION);
-	if (trans_cmp == nullptr)return;
+	if (trans_cmp == nullptr || obj->GetBoundingBoxDiagonalSize() <= 0)return;
 
 	view_vector = trans_cmp->GetPosition();
 	camera_dist = obj->GetBoundingBoxDiagonalSize() * CAMERA_DIST_ON_FOCUS;

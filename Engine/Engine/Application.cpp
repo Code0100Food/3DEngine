@@ -133,7 +133,9 @@ bool Application::Awake()
 	bool ret = true;
 
 	//Load config json file
-	const JSON_Value *config_data = json_parse_file("config.json");
+	char str[50];
+	sprintf(str, "%sconfig.json", SETTINGS_FOLDER);
+	const JSON_Value *config_data = json_parse_file(str);
 	assert(config_data != NULL);
 	const JSON_Object *root_object = json_value_get_object(config_data);
 	
@@ -290,7 +292,9 @@ bool Application::CleanUp()
 
 	//Config autosave ---------------------------
 	//Save config json file
-	const JSON_Value *config_data = App->fs->LoadJSONFile("config.json");
+	char str[50];
+	sprintf(str, "%sconfig.json", SETTINGS_FOLDER);
+	const JSON_Value *config_data = App->fs->LoadJSONFile(str);
 	assert(config_data != NULL);
 
 	//Save the new variable
@@ -309,8 +313,8 @@ bool Application::CleanUp()
 
 	//Save profiler configuration
 	profiler->SaveConfiguration(json_object_dotget_object(root_object, "Profiler"));
-
-	ret = fs->SaveJSONFile(config_data, "config.json");
+	sprintf(str, "%sconfig.json", SETTINGS_FOLDER);
+	ret = fs->SaveJSONFile(config_data, str);
 	json_value_free((JSON_Value *)config_data);
 
 

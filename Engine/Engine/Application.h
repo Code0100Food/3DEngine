@@ -7,6 +7,7 @@
 #include "PerfTimer.h"
 
 #define GRAPH_ARRAY_SIZE 30
+#define SETTINGS_FOLDER "Settings/"
 
 using namespace std;
 

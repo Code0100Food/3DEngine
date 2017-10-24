@@ -198,6 +198,7 @@
     <ClInclude Include="Engine\Profiler.h" />
     <ClInclude Include="Engine\Quadtree.h" />
     <ClInclude Include="Engine\ModuleScene.h" />
+    <ClInclude Include="Engine\Serializer.h" />
     <ClInclude Include="Engine\SphereGenerator.h" />
     <ClInclude Include="Engine\stb\stb.h" />
     <ClInclude Include="Engine\stb\stb_image.h" />
