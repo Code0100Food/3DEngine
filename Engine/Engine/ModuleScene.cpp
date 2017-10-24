@@ -202,12 +202,13 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 void ModuleScene::BlitConfigInfo()
 {
 	ImGui::Text("Octree Configuration");
-	if (ImGui::Button("Recalculate Octree", ImVec2(100, 40)))
+	if (ImGui::Button("Recalculate", ImVec2(90, 25)))
 	{
 		CleanOctree();
 		ReFillOctree();
 	}
-	if (ImGui::Button("Clean Octree", ImVec2(100, 40)))
+	ImGui::SameLine();
+	if (ImGui::Button("Clean", ImVec2(80, 25)))
 	{
 		CleanOctree();
 	}
@@ -280,13 +281,19 @@ GameObject * ModuleScene::GetRoot() const
 
 void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
 {
-	octree.Insert(target, target->GetTranslatedBoundingBox());
+	//Insert the game object if is static
+	if (target->GetStatic())
+	{
+		octree.Insert(target, target->GetTranslatedBoundingBox());
+	}
+
 	if (_childs)
 	{
 		std::vector<GameObject*> childs = *target->GetChilds();
 		uint size = childs.size();
 		for (uint k = 0; k < size; k++)
 		{
+			//Insert the childs if are static
 			if(childs[k]->GetStatic())PushGameObjectInOctree(childs[k], _childs);
 		}
 	}
