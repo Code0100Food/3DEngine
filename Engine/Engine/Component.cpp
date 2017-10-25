@@ -61,3 +61,13 @@ void Component::BlitComponentInspector()
 	ImGui::Text("Undef Component");
 	ImGui::Checkbox("Active", &actived);
 }
+
+bool Component::Save(JSON_Object * root) const
+{
+	return true;
+}
+
+bool Component::Load(const JSON_Object * root)
+{
+	return true;
+}

@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
+#include "Serializer.h"
 
 #include "SphereGenerator.h"
 #include "CubeGenerator.h"
@@ -54,6 +55,12 @@ bool ModuleScene::SceneUpdate(float dt)
 		App->SetQuit();
 	}
 	
+	//Serialize the scene
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+	{
+		App->serializer->SerializeScene(root_gameobject);
+	}
+
 	//Update the scene game objects
 	ret = root_gameobject->Update();
 
@@ -61,13 +68,6 @@ bool ModuleScene::SceneUpdate(float dt)
 	App->renderer3D->DisableGLRenderFlags();
 	octree.Draw();
 	App->renderer3D->EnableGLRenderFlags();
-
-	//Temporal for Testing Octree
-	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
-	{
-		CleanOctree();
-		ReFillOctree();
-	}
 
 	return ret;
 }

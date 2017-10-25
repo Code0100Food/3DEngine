@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include "imgui/imgui.h"
+#include "Parson/parson.h"
 
 class GameObject;
 
@@ -50,7 +51,12 @@ public:
 	bool			GetActive()const;
 
 	//Functionality ---------
+	//UI Methods
 	virtual void BlitComponentInspector();
+	
+	//Save/Load Methods
+	bool Save(JSON_Object* root)const;
+	bool Load(const JSON_Object* root);
 
 };
 #endif // !_COMPONENT_H_

@@ -428,3 +428,39 @@ std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_chi
 
 	return pair;
 }
+
+bool GameObject::Save(JSON_Object * root)const
+{
+	bool ret = false;
+	uint size = components.size();
+	for (uint k = 0; k < size; k++)
+	{
+		//ret = components[k]->Save();
+	}
+
+	size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		//ret = childs[k]->Save();
+	}
+
+	return ret;
+}
+
+bool GameObject::Load(const JSON_Object * root)
+{
+	bool ret = false;
+	uint size = components.size();
+	for (uint k = 0; k < size; k++)
+	{
+		//ret = components[k]->Load();
+	}
+
+	size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		//ret = childs[k]->Load();
+	}
+
+	return ret;
+}

@@ -50,24 +50,32 @@ public:
 	bool				IsSelectedObject() const;
 
 	//Functionality ---------
+	//Components Methods 
 	Component*	CreateComponent(COMPONENT_TYPE c_type);
 	bool		RemoveComponent(Component* cmp);
 	bool		FindComponent(Component* cmp)const;
 	Component*	FindComponent(COMPONENT_TYPE type)const;
 	Component*	CloneComponent(const Component* target)const;
 
+	//Childs Methods 
 	void						AddChild(const GameObject* child);
 	bool						RemoveChild(GameObject* child, bool search_in = false);
 	bool						PopChild(GameObject* child, bool search_in = false);
 	std::vector<GameObject*>*	GetChilds();
 
+	//UI Methods
 	void		BlitGameObjectHierarchy(uint index);
 	void		BlitGameObjectInspector();
 
+	//Bounding Box Methods
 	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);
 	void									DrawBoundingBox();
 	math::AABB*								GetBoundingBox();
 	math::AABB								GetTranslatedBoundingBox();
+
+	//Save/Load Methods
+	bool Save(JSON_Object* root)const;
+	bool Load(const JSON_Object* root);
 
 };
 #endif // !_GAME_OBJECT_H_

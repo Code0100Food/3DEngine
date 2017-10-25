@@ -15,6 +15,7 @@
 #include "ModuleScene.h"
 #include "FileSystem.h"
 #include "Profiler.h"
+#include "Serializer.h"
 #include "ImporterManager.h"
 #include "Parson/parson.h"
 #include "imgui/imgui_impl_sdl.h"
@@ -31,6 +32,8 @@ Application::Application()
 
 	profiler = new Profiler();
 	
+	serializer = new Serializer();
+
 	START(m_prof_timer);
 	window = new ModuleWindow("Window", M_WINDOW, true);
 	profiler->CallProfBlock(M_WINDOW, BUILD_STEP, prof_timer.ReadTicks());
@@ -330,6 +333,10 @@ bool Application::CleanUp()
 	//Delete the importer
 	RELEASE(importer);
 
+	//Delete the serializer
+	RELEASE(serializer);
+
+	//Release the config dock
 	RELEASE(config_dock);
 
 	PEEK(ms_timer);

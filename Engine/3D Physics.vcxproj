@@ -286,6 +286,7 @@
     <ClCompile Include="Engine\PrimitiveGenerator.cpp" />
     <ClCompile Include="Engine\Profiler.cpp" />
     <ClCompile Include="Engine\ModuleScene.cpp" />
+    <ClCompile Include="Engine\Serializer.cpp" />
     <ClCompile Include="Engine\SphereGenerator.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\Primitive_.cpp" />

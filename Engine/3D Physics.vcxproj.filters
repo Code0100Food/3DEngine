@@ -665,6 +665,9 @@
     <ClCompile Include="Engine\CylinderGenerator.cpp">
       <Filter>Sources\PrimitiveGenerators</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Serializer.cpp">
+      <Filter>Sources\Importers &amp; Serializer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

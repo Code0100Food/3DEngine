@@ -7,7 +7,6 @@
 #include "PerfTimer.h"
 
 #define GRAPH_ARRAY_SIZE 30
-#define SETTINGS_FOLDER "Settings/"
 
 using namespace std;
 
@@ -26,6 +25,7 @@ class ModuleTextures;
 class GeometryManager;
 class Profiler;
 class Importer;
+class Serializer;
 class ModuleScene;
 class DockContext;
 class ImporterManager;
@@ -77,6 +77,7 @@ public:
 	//Tools 
 	Profiler*			profiler = nullptr;
 	ImporterManager*	importer = nullptr;
+	Serializer*			serializer = nullptr;
 
 	APP_CONTEXT			app_context = UNKNOWN_CONTEXT;
 
