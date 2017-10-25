@@ -365,7 +365,7 @@ void GameObject::DrawBoundingBox()
 {
 	App->renderer3D->DisableGLRenderFlags();
 
-	this->GetTranslatedBoundingBox().Draw(4.0f, App->geometry->bounding_box_color);
+	this->GetTransformedBoundingBox().Draw(4.0f, App->geometry->bounding_box_color);
 
 	App->renderer3D->EnableGLRenderFlags();
 }
@@ -375,11 +375,11 @@ math::AABB * GameObject::GetBoundingBox()
 	return &bounding_box;
 }
 
-math::AABB GameObject::GetTranslatedBoundingBox()
+math::AABB GameObject::GetTransformedBoundingBox()
 {
 	math::AABB tmp = bounding_box;
 	ComponentTransform* trans = (ComponentTransform*)FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-	if(trans != nullptr)tmp.Translate(trans->GetInheritedTransform().TranslatePart());
+	if(trans != nullptr)tmp.TransformAsAABB(trans->GetInheritedTransform());
 	return tmp;
 }
 
@@ -418,7 +418,7 @@ std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_chi
 
 		//Build bounding box
 		bounding_box.Enclose(v_pos.data(), v_pos.size());
-
+		bounding_box = GetTransformedBoundingBox();
 	}
 
 	//Build the pair of this game object bounding box

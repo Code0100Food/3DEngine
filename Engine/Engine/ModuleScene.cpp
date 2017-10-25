@@ -284,7 +284,7 @@ void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
 	//Insert the game object if is static
 	if (target->GetStatic())
 	{
-		octree.Insert(target, target->GetTranslatedBoundingBox());
+		octree.Insert(target, *target->GetBoundingBox());
 	}
 
 	if (_childs)

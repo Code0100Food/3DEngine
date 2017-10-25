@@ -71,7 +71,7 @@ public:
 	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);
 	void									DrawBoundingBox();
 	math::AABB*								GetBoundingBox();
-	math::AABB								GetTranslatedBoundingBox();
+	math::AABB								GetTransformedBoundingBox();
 
 	//Save/Load Methods
 	bool Save(JSON_Object* root)const;

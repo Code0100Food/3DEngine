@@ -58,6 +58,18 @@ void ComponentTransform::SetTransformation(aiMatrix4x4 trans)
 	//Set the variables that will be shown in the UI
 	transform_matrix.Decompose(position, rotation_quaternion, scale);
 	rotation_euler_angles = (rotation_quaternion.ToEulerXYZ() * RADTODEG);
+
+	//Set the inherited transform
+	if (!(parent->GetParent()->IsRoot()))
+	{
+		ComponentTransform* tmp = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION));
+		inherited_transform = tmp->inherited_transform * transform_matrix;
+		inherited_position = tmp->position;
+	}
+	else
+	{
+		inherited_transform = transform_matrix;
+	}
 }
 
 void ComponentTransform::SetTransformation(math::float4x4 trans)
@@ -66,6 +78,19 @@ void ComponentTransform::SetTransformation(math::float4x4 trans)
 
 	transform_matrix.Decompose(position, rotation_quaternion, scale);
 	rotation_euler_angles = rotation_quaternion.ToEulerXYZ();
+
+
+	//Set the inherited transform
+	if (!(parent->GetParent()->IsRoot()))
+	{
+		ComponentTransform* tmp = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION));
+		inherited_transform = tmp->inherited_transform * transform_matrix;
+		inherited_position = tmp->position;
+	}
+	else
+	{
+		inherited_transform = trans;
+	}
 }
 
 // Get Methods ==================================
