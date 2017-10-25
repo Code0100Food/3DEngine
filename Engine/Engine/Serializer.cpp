@@ -23,20 +23,45 @@ bool Serializer::SerializeScene(const GameObject * root) const
 	//Save config json file
 	char str[50];
 	sprintf(str, "%sscene.json", SETTINGS_FOLDER);
-	const JSON_Value *data_file = nullptr;
-	ret = App->fs->SaveJSONFile(data_file, str);
-	if (!ret)
+	JSON_Value* data_file = App->fs->CreateJSONFile(str);
+	if (data_file == NULL)
 	{
 		LOG("[error] Error Generating Scene JSON file!");
 		return false;
 	}
 	else LOG("Scene JSON file generated!");
 
+	//Generate the file root
+	
 
 	return ret;// = root->Save();
 }
 
 // Shortcuts ====================================
+JSON_Object * Serializer::AccessObject(const JSON_Value * config_data, uint str_num, ...)
+{
+	//Open the file root
+	const JSON_Object *root_object = json_value_get_object(config_data);
+
+	va_list str_list;
+	va_start(str_list, str_num);
+
+	const char* str = va_arg(str_list, char*);
+
+	JSON_Object* app_object = nullptr;
+	for (uint k = 0; k < str_num; k++)
+	{
+		app_object = json_object_dotget_object(root_object, str);
+		str = va_arg(str_list, char*);
+	}
+
+	//delete str;
+
+	va_end(str_list);
+
+	return app_object;
+}
+
 void Serializer::LoadFloatArray(const JSON_Object * root, const char * var_name, float * values, uint size) const
 {
 

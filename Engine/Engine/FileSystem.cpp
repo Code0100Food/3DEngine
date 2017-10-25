@@ -171,28 +171,25 @@ bool FileSystem::SaveJSONFile(const JSON_Value * data, const char * name)
 	return json_serialize_to_file(data, name);
 }
 
-JSON_Object* FileSystem::AccessObject(const JSON_Value * config_data, uint str_num, ...)
+JSON_Value * FileSystem::CreateJSONFile(const char * name)
 {
-	//Open the file root
-	const JSON_Object *root_object = json_value_get_object(config_data);
+	//Generate a new file
+	FILE* fp = fopen(name, "w+");
 
-	va_list str_list;
-	va_start(str_list, str_num);
-
-	const char* str = va_arg(str_list, char*);
-	
-	JSON_Object* app_object = nullptr;
-	for(uint k = 0; k < str_num; k++)
+	//If error close it and return null
+	if (fp == NULL)
 	{
-		app_object = json_object_dotget_object(root_object, str);
-		str = va_arg(str_list, char*);
-	}
-	
-	//delete str;
+		LOG("[error] Error Generating JSON file!");
 
-	va_end(str_list);
-	
-	return app_object;
+		fclose(fp);
+		return nullptr;
+	}
+	fclose(fp);
+
+	//Link json with the new generated file
+	JSON_Value* new_file = json_parse_file(name);
+
+	return new_file;
 }
 
 Directory* FileSystem::CreateDir(const char* name, bool hidden, Directory* parent)

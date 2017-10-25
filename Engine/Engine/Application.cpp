@@ -301,7 +301,7 @@ bool Application::CleanUp()
 	assert(config_data != NULL);
 
 	//Save the new variable
-	JSON_Object * app_value = fs->AccessObject(config_data, 1, "Application");
+	JSON_Object * app_value = serializer->AccessObject(config_data, 1, "Application");
 	json_object_set_string(app_value, "name", app_name.c_str());
 	json_object_set_string(app_value, "organization", organization.c_str());
 	json_object_set_number(app_value, "max_fps", max_fps);

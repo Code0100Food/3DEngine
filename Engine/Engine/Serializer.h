@@ -18,8 +18,10 @@ public:
 	bool SerializeScene(const GameObject* root)const;
 
 	//Shortcuts -------------
-	void	LoadFloatArray(const JSON_Object* root, const char* var_name, float * values, uint size)const;
-	void	SaveFloatArray(JSON_Object* root, const char* var_name, float* values, uint size);
+	JSON_Object*	AccessObject(const JSON_Value* config_data, uint str_num, ...);
+
+	void			LoadFloatArray(const JSON_Object* root, const char* var_name, float * values, uint size)const;
+	void			SaveFloatArray(JSON_Object* root, const char* var_name, float* values, uint size);
 };
 
 #endif // !_SERIALIZER_H_

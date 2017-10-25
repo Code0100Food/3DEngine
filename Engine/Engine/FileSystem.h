@@ -67,7 +67,7 @@ public:
 
 	const JSON_Value*	LoadJSONFile(const char* str);
 	bool				SaveJSONFile(const JSON_Value* data, const char* name);
-	JSON_Object*		AccessObject(const JSON_Value* config_data, uint str_num, ...);
+	JSON_Value*			CreateJSONFile(const char* name);
 
 	Directory*			CreateDir(const char* name, bool hidden, Directory* parent = nullptr);
 	int					LoadFile(const char* path, char** buffer_to_fill);
