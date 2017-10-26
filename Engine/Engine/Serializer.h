@@ -12,6 +12,10 @@ public:
 	Serializer();
 	~Serializer();
 
+private:
+
+
+
 public:
 
 	//Functionality ---------
