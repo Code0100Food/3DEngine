@@ -324,7 +324,7 @@ int main(int argc, char ** argv)
 		curl_easy_setopt(curl, CURLOPT_URL, json_url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &write_data);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-
+		
 		/* get it! */
 		res = curl_easy_perform(curl);
 		fclose(fp);

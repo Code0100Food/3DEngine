@@ -20,16 +20,47 @@ bool Serializer::SerializeScene(const GameObject * root) const
 {
 	bool ret = false;
 
-	//Save config json file
+	//Generatethe json file
 	char str[50];
 	sprintf(str, "%sscene.json", SETTINGS_FOLDER);
-	JSON_Value* data_file = App->fs->CreateJSONFile(str);
-	if (data_file == NULL)
+	
+	//JSON_Value *schema = json_parse_string("{\"name\":\"\"}");
+	//JSON_Value *data_file = json_parse_file("user_data.json");
+	//JSON_Value* data_file = json_parse_file(str);
+
+	/*if (data_file == NULL)
 	{
 		LOG("[error] Error Generating Scene JSON file!");
 		return false;
 	}
-	else LOG("Scene JSON file generated!");
+	else LOG("Scene JSON file generated!");*/
+
+	JSON_Value *schema = json_parse_string("{\"GameObjects\":\"\"}");
+	JSON_Value *user_data = json_parse_file(str);
+	
+	user_data = json_value_init_object();
+	JSON_Object *root_object = json_value_get_object(user_data);
+	char *serialized_string = NULL;
+	json_object_set_string(root_object, "name", "John Smith");
+	json_object_set_number(root_object, "age", 25);
+	json_object_dotset_string(root_object, "address.city", "Cupertino");
+	json_object_dotset_value(root_object, "contact.emails", json_parse_string("[\"email@example.com\",\"email2@example.com\"]"));
+	serialized_string = json_serialize_to_string_pretty(user_data);
+	puts(serialized_string);
+
+
+	//user_data = json_value_init_object();
+	
+	json_object_set_string(json_object(user_data), "name", serialized_string);
+	json_serialize_to_file(user_data, str);
+	
+	json_free_serialized_string(serialized_string);
+	json_value_free(user_data);
+
+	//name = json_object_get_string(json_object(user_data), "name");
+	//printf("Hello, %s.", name);
+	json_value_free(schema);
+	json_value_free(user_data);
 
 	//Generate the file root
 	

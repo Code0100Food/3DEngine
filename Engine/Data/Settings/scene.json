@@ -1,0 +1,1 @@
+{"name":"{\n    \"name\": \"John Smith\",\n    \"age\": 25,\n    \"address\": {\n        \"city\": \"Cupertino\"\n    },\n    \"contact\": {\n        \"emails\": [\n            \"email@example.com\",\n            \"email2@example.com\"\n        ]\n    }\n}","age":25,"address":{"city":"Cupertino"},"contact":{"emails":["email@example.com","email2@example.com"]}}
