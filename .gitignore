@@ -198,6 +198,8 @@ ClientBin/
 *.dbproj.schemaview
 *.jfm
 *.pfx
+*.dds
+*.fiesta
 *.publishsettings
 orleans.codegen.cs
 
