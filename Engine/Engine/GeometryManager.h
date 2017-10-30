@@ -4,9 +4,7 @@
 #include "Module.h"
 
 #include "Primitive_.h"
-#include "Cube_.h"
 #include "Capsule_.h"
-#include "Cylinder_.h"
 #include "Frustrum_.h"
 #include "Grid_.h"
 

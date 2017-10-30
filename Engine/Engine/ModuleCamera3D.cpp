@@ -179,6 +179,7 @@ update_status ModuleCamera3D::Update(float dt)
 			{
 				LookAtGameObject(target);
 			}
+			else LookAt({ 0,0,0 });
 		}
 	}
 
@@ -267,13 +268,9 @@ void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool Rota
 
 void ModuleCamera3D::LookAt( const vec3 &Spot)
 {
-	reference = Spot;
+	view_vector = Spot;
 
-	Z = normalize(position - reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-
-	CalculateViewMatrix();
+	camera_location = view_vector + camera_dist * Z;
 }
 
 void ModuleCamera3D::LookAtGameObject(GameObject * obj)

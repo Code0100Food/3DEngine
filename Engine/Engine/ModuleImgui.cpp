@@ -168,6 +168,13 @@ update_status ModuleImgui::Update(float dt)
 			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER, 24));
 		}
 
+		//Create Frustum
+		if (ImGui::MenuItem("Frustum (InProcess)"))
+		{
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_FRUSTUM));
+		}
+
+
 		ImGui::EndMenu();
 	}
 	else if (gameobjects_open)

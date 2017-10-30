@@ -318,9 +318,6 @@
     <ClInclude Include="Engine\MathGeoLib\MathGeoLibFwd.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Cube_.h">
-      <Filter>Sources\Containers\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Primitive_.h">
       <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
@@ -334,9 +331,6 @@
       <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Frustrum_.h">
-      <Filter>Sources\Containers\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Cylinder_.h">
       <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Engine\MathGeoLib\Geometry\Cylinder.h">
@@ -413,6 +407,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Serializer.h">
       <Filter>Sources\Importers &amp; Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\FrustumGenerator.h">
+      <Filter>Sources\PrimitiveGenerators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -584,9 +581,6 @@
     <ClCompile Include="Engine\Primitive_.cpp">
       <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Cube_.cpp">
-      <Filter>Sources\Containers\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\GeometryManager.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
@@ -597,9 +591,6 @@
       <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Capsule_.cpp">
-      <Filter>Sources\Containers\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Cylinder_.cpp">
       <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Engine\MathGeoLib\Geometry\Cylinder.cpp">
@@ -667,6 +658,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Serializer.cpp">
       <Filter>Sources\Importers &amp; Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\FrustumGenerator.cpp">
+      <Filter>Sources\PrimitiveGenerators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
