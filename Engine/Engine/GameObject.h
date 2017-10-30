@@ -72,6 +72,8 @@ public:
 	void									DrawBoundingBox();
 	math::AABB*								GetBoundingBox();
 	math::AABB								GetTransformedBoundingBox();
+	void									UpdateBoundingBox();
+	std::vector<math::float3>				childs_aabb_points;
 
 	//Save/Load Methods
 	bool Save(JSON_Object* root)const;

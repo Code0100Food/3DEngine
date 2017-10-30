@@ -64,6 +64,7 @@ bool GameObject::Update()
 
 	/* This update*/
 	if (draw_bounding_box)DrawBoundingBox();
+	UpdateBoundingBox();
 
 	uint size = components.size();
 	for (uint k = 0; k < size; k++)
@@ -365,7 +366,7 @@ void GameObject::DrawBoundingBox()
 {
 	App->renderer3D->DisableGLRenderFlags();
 
-	this->GetTransformedBoundingBox().Draw(4.0f, App->geometry->bounding_box_color);
+	GetTransformedBoundingBox().Draw(4.0f, App->geometry->bounding_box_color);
 
 	App->renderer3D->EnableGLRenderFlags();
 }
@@ -381,6 +382,32 @@ math::AABB GameObject::GetTransformedBoundingBox()
 	ComponentTransform* trans = (ComponentTransform*)FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 	if(trans != nullptr)tmp.TransformAsAABB(trans->GetInheritedTransform());
 	return tmp;
+}
+
+void GameObject::UpdateBoundingBox()
+{
+	if (App->scene->IsRoot(this))
+	{
+		return;
+	}
+
+	if (!childs.empty())
+	{
+		math::AABB child_AABB;
+
+		for (std::vector<GameObject*>::iterator child = childs.begin(); child != childs.end(); child++)
+		{
+			math::float3 aabb_points[8];
+			(*child)->GetTransformedBoundingBox().GetCornerPoints(aabb_points);
+			
+			for (int i = 0; i < 8; i++)
+				childs_aabb_points.push_back(aabb_points[i]);		
+		}
+
+		bounding_box = math::AABB::MinimalEnclosingAABB(childs_aabb_points.data(), childs_aabb_points.size());
+		childs_aabb_points.clear();
+	}
+	
 }
 
 std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_childs)
@@ -418,7 +445,6 @@ std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_chi
 
 		//Build bounding box
 		bounding_box.Enclose(v_pos.data(), v_pos.size());
-		bounding_box = GetTransformedBoundingBox();
 	}
 
 	//Build the pair of this game object bounding box
