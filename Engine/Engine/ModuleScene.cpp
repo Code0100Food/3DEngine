@@ -6,6 +6,7 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 #include "Serializer.h"
+#include "FileSystem.h"
 
 #include "SphereGenerator.h"
 #include "CubeGenerator.h"
@@ -55,12 +56,6 @@ bool ModuleScene::SceneUpdate(float dt)
 		App->SetQuit();
 	}
 	
-	//Serialize the scene
-	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
-	{
-		App->serializer->SerializeScene(root_gameobject);
-	}
-
 	//Update the scene game objects
 	ret = root_gameobject->Update();
 
@@ -307,4 +302,27 @@ void ModuleScene::ReFillOctree()
 void ModuleScene::CleanOctree()
 {
 	octree.Reset();
+}
+
+void ModuleScene::SerializeScene() const
+{
+	//Create the serialized file root
+	Serializer serialized_file;
+
+	//Insert GameObjects node
+	Serializer game_objects_child(serialized_file.InsertChild("GameObjects"));
+
+	//Here we iterate all the game objects and save all the necessary data
+
+	//Save the built json file
+	char* buffer = nullptr;
+	uint size = serialized_file.Save(&buffer);
+	App->fs->SaveFile("scene.json", buffer, size - 1,LIBRARY_FOLDER);
+
+	RELEASE_ARRAY(buffer);
+}
+
+bool ModuleScene::LoadSerializedScene()
+{
+	return true;
 }

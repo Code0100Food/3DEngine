@@ -117,6 +117,12 @@ update_status ModuleImgui::Update(float dt)
 		if (file_menu_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
 
 		//Exit button
+		if (ImGui::MenuItem("Save"))
+		{
+			App->scene->SerializeScene();
+		}
+
+		//Exit button
 		if (ImGui::MenuItem("Exit"))
 		{
 			show_exit_window = true;

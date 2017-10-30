@@ -58,5 +58,9 @@ public:
 	void		PushGameObjectInOctree(GameObject* target, bool childs = true);
 	void		ReFillOctree();
 	void		CleanOctree();
+
+	void		SerializeScene()const;
+	bool		LoadSerializedScene();
+
 };
 #endif

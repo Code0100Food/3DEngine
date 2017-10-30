@@ -3,23 +3,31 @@
 #include "Parson/parson.h"
 #include "Globals.h"
 
-class GameObject;
-
 class Serializer
 {
 public:
 
-	Serializer();
+	Serializer(const char* name = nullptr);
+	Serializer(const JSON_Object* child);
 	~Serializer();
 
 private:
 
-
+	JSON_Value*		root = nullptr;
+	JSON_Object*	current_node = nullptr;
 
 public:
 
-	//Functionality ---------
-	bool SerializeScene(const GameObject* root)const;
+	//Functionality -------------------
+	
+	//Insert Methods --------
+	Serializer InsertChild(const char* name);
+
+	//Get Methods -----------
+	Serializer GetChild(const char* name)const;
+
+	//Save/Load Methods -----
+	uint Save(char** buffer);
 
 	//Shortcuts -------------
 	JSON_Object*	AccessObject(const JSON_Value* config_data, uint str_num, ...);
