@@ -310,16 +310,31 @@ void ModuleScene::SerializeScene() const
 	Serializer serialized_file;
 
 	//Insert GameObjects node
-	Serializer game_objects_child(serialized_file.InsertChild("GameObjects"));
+	Serializer game_objects_array(serialized_file.InsertArray("GameObjects"));
 
 	//Here we iterate all the game objects and save all the necessary data
+	bool correct = true;
+	std::vector<GameObject*> objs = *root_gameobject->GetChilds();
+	uint size = objs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		correct = objs[k]->Save(game_objects_array);
+		if (!correct)
+		{
+			LOG("[error] Error Serializing Scene!");
+			break;
+		}
+	}
 
-	//Save the built json file
-	char* buffer = nullptr;
-	uint size = serialized_file.Save(&buffer);
-	App->fs->SaveFile("scene.json", buffer, size - 1,LIBRARY_FOLDER);
+	if (correct)
+	{
+		//Save the built json file
+		char* buffer = nullptr;
+		uint size = serialized_file.Save(&buffer);
+		App->fs->SaveFile("scene.json", buffer, size - 1, LIBRARY_FOLDER);
 
-	RELEASE_ARRAY(buffer);
+		RELEASE_ARRAY(buffer);
+	}
 }
 
 bool ModuleScene::LoadSerializedScene()

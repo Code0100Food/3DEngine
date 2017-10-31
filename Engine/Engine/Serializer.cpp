@@ -39,6 +39,32 @@ Serializer Serializer::InsertChild(const char * name)
 	return Serializer(json_object_get_object(current_node, name));
 }
 
+Serializer Serializer::InsertArray(const char * name)
+{
+	JSON_Value* va = json_value_init_array();
+	current_array = json_value_get_array(va);
+
+	if (json_object_set_value(current_node, name, va) == JSONSuccess)
+	{
+		Serializer ret(current_node);
+		ret.current_array = this->current_array;
+		return ret;
+	}
+	else return Serializer();
+}
+
+bool Serializer::InsertArrayElement(const Serializer & data)
+{
+	if (current_array == nullptr)return false;
+
+	return json_array_append_value(current_array, json_value_deep_copy(data.root)) == JSONSuccess;	
+}
+
+bool Serializer::InsertString(const char * var_name, const char * value)
+{
+	return json_object_set_string(current_node, var_name, value) == JSONSuccess;
+}
+
 Serializer Serializer::GetChild(const char * name) const
 {
 	return Serializer(json_object_get_object(current_node, name));
@@ -75,25 +101,4 @@ JSON_Object * Serializer::AccessObject(const JSON_Value * config_data, uint str_
 	va_end(str_list);
 
 	return app_object;
-}
-
-void Serializer::LoadFloatArray(const JSON_Object * root, const char * var_name, float * values, uint size) const
-{
-
-	JSON_Array* _array = json_object_get_array(root, var_name);
-	for (uint k = 0; k < size; k++)
-	{
-		values[0] = json_array_get_number(_array, k);
-	}
-
-}
-
-void Serializer::SaveFloatArray(JSON_Object * root, const char * var_name, float * values, uint size)
-{
-	json_array_t* _array = json_object_get_array(root, var_name);
-
-	for (uint k = 0; k < size; k++)
-	{
-		json_array_replace_number(_array, k, values[k]);
-	}
 }

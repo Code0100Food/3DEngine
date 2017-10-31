@@ -15,13 +15,17 @@ private:
 
 	JSON_Value*		root = nullptr;
 	JSON_Object*	current_node = nullptr;
+	JSON_Array*		current_array = nullptr;
 
 public:
 
 	//Functionality -------------------
 	
 	//Insert Methods --------
-	Serializer InsertChild(const char* name);
+	Serializer	InsertChild(const char* name);
+	Serializer	InsertArray(const char* name);
+	bool		InsertArrayElement(const Serializer& data);
+	bool		InsertString(const char* var_name, const char* value);
 
 	//Get Methods -----------
 	Serializer GetChild(const char* name)const;
@@ -31,9 +35,6 @@ public:
 
 	//Shortcuts -------------
 	JSON_Object*	AccessObject(const JSON_Value* config_data, uint str_num, ...);
-
-	void			LoadFloatArray(const JSON_Object* root, const char* var_name, float * values, uint size)const;
-	void			SaveFloatArray(JSON_Object* root, const char* var_name, float* values, uint size);
 };
 
 #endif // !_SERIALIZER_H_

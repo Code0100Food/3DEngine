@@ -10,6 +10,8 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
+class Serializer;
+
 class GameObject
 {
 public:
@@ -76,7 +78,7 @@ public:
 	std::vector<math::float3>				childs_aabb_points;
 
 	//Save/Load Methods
-	bool Save(JSON_Object* root)const;
+	bool Save(Serializer& array_root)const;
 	bool Load(const JSON_Object* root);
 
 };

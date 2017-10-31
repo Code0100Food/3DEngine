@@ -10,6 +10,8 @@
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 
+#include "Serializer.h"
+
 // Constructors =================================
 GameObject::GameObject()
 {
@@ -455,19 +457,25 @@ std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_chi
 	return pair;
 }
 
-bool GameObject::Save(JSON_Object * root)const
+bool GameObject::Save(Serializer& array_root) const
 {
 	bool ret = false;
-	uint size = components.size();
-	for (uint k = 0; k < size; k++)
-	{
-		//ret = components[k]->Save();
-	}
 
-	size = childs.size();
-	for (uint k = 0; k < size; k++)
+	//Serializer where all the data of the game object is built
+	Serializer obj_data;
+
+	//Insert object name
+	ret = obj_data.InsertString("name", name.c_str());
+
+	//Save the built data in the game objects array
+	ret = array_root.InsertArrayElement(obj_data);
+
+	//Save the childs
+	uint size = childs.size();
+	for(uint k = 0; k < size; k++)
 	{
-		//ret = childs[k]->Save();
+		ret = childs[k]->Save(array_root);
+		if (!ret)break;
 	}
 
 	return ret;
