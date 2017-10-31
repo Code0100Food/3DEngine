@@ -13,12 +13,12 @@
 #include <queue>
 
 // Constructors =================================
-ComponentCamera::ComponentCamera()
+ComponentCamera::ComponentCamera() : Component(COMP_CAMERA)
 {
 	
 }
 
-ComponentCamera::ComponentCamera(const ComponentCamera & cpy) :Component(cpy)
+ComponentCamera::ComponentCamera(const ComponentCamera & cpy) : Component(cpy)
 {
 
 }

@@ -34,6 +34,7 @@ private:
 	std::vector<GameObject*>	childs;
 	bool						draw_bounding_box = false;
 	math::AABB					bounding_box;
+	uint						id = 0;
 
 public:
 
@@ -47,10 +48,11 @@ public:
 	bool				GetActive()const;
 	bool				GetStatic()const;
 	float				GetBoundingBoxDiagonalSize()const;
+	uint				GetID()const;
 	const GameObject*	GetParent() const;
 	bool				IsRoot() const;
 	bool				IsSelectedObject() const;
-
+	
 	//Functionality ---------
 	//Components Methods 
 	Component*	CreateComponent(COMPONENT_TYPE c_type);

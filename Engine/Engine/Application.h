@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "Timer.h"
 #include "PerfTimer.h"
+#include "MathGeoLib/Algorithm/Random/LCG.h"
 
 #define GRAPH_ARRAY_SIZE 30
 
@@ -78,6 +79,7 @@ public:
 	Profiler*			profiler = nullptr;
 	ImporterManager*	importer = nullptr;
 	Serializer*			serializer = nullptr;
+	math::LCG*			randomizer = nullptr;
 
 	APP_CONTEXT			app_context = UNKNOWN_CONTEXT;
 

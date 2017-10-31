@@ -34,6 +34,8 @@ Application::Application()
 	
 	serializer = new Serializer();
 
+	randomizer = new math::LCG();
+
 	START(m_prof_timer);
 	window = new ModuleWindow("Window", M_WINDOW, true);
 	profiler->CallProfBlock(M_WINDOW, BUILD_STEP, prof_timer.ReadTicks());
@@ -335,6 +337,9 @@ bool Application::CleanUp()
 
 	//Delete the serializer
 	RELEASE(serializer);
+
+	//Delete the randomizer
+	RELEASE(randomizer);
 
 	//Release the config dock
 	RELEASE(config_dock);

@@ -15,11 +15,15 @@
 // Constructors =================================
 GameObject::GameObject()
 {
-
+	//Generate id
+	id = App->randomizer->Int();
 }
 
 GameObject::GameObject(const GameObject & cpy) :actived(cpy.actived), name(cpy.name), parent(cpy.parent), bounding_box(cpy.bounding_box), draw_bounding_box(cpy.draw_bounding_box)
 {
+	//Generate id
+	id = App->randomizer->Int();
+
 	//Clone all the components
 	uint size = cpy.components.size();
 	for (uint k = 0; k < size; k++)
@@ -33,7 +37,6 @@ GameObject::GameObject(const GameObject & cpy) :actived(cpy.actived), name(cpy.n
 	{
 		childs.push_back(new GameObject(*cpy.childs[k]));
 	}
-
 }
 
 // Destructors ==================================
@@ -135,6 +138,11 @@ float GameObject::GetBoundingBoxDiagonalSize() const
 {
 	math::float3 vec = bounding_box.maxPoint - bounding_box.minPoint;
 	return abs(vec.Length());;
+}
+
+uint GameObject::GetID() const
+{
+	return id;
 }
 
 const GameObject * GameObject::GetParent() const
@@ -464,14 +472,34 @@ bool GameObject::Save(Serializer& array_root) const
 	//Serializer where all the data of the game object is built
 	Serializer obj_data;
 
+	//Insert active
+	obj_data.InsertBool("actived", actived);
 	//Insert object name
 	ret = obj_data.InsertString("name", name.c_str());
+	//Insert object id
+	ret = obj_data.InsertInt("id", id);
+	//Insert parent id
+	if(parent!= nullptr && !parent->IsRoot())ret = obj_data.InsertInt("parent_id", parent->GetID());
+	//Insert static
+	ret = obj_data.InsertBool("static", static_);
+
+	//Save all the game object components
+
+	//Insert GameObjects array
+	Serializer components_array(obj_data.InsertArray("Components"));
+
+	uint size = components.size();
+	for (uint k = 0; k < size; k++)
+	{
+		ret = components[k]->Save(components_array);
+		if (!ret)break;
+	}
 
 	//Save the built data in the game objects array
 	ret = array_root.InsertArrayElement(obj_data);
 
 	//Save the childs
-	uint size = childs.size();
+	size = childs.size();
 	for(uint k = 0; k < size; k++)
 	{
 		ret = childs[k]->Save(array_root);

@@ -309,7 +309,7 @@ void ModuleScene::SerializeScene() const
 	//Create the serialized file root
 	Serializer serialized_file;
 
-	//Insert GameObjects node
+	//Insert GameObjects array
 	Serializer game_objects_array(serialized_file.InsertArray("GameObjects"));
 
 	//Here we iterate all the game objects and save all the necessary data

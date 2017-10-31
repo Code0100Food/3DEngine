@@ -65,6 +65,16 @@ bool Serializer::InsertString(const char * var_name, const char * value)
 	return json_object_set_string(current_node, var_name, value) == JSONSuccess;
 }
 
+bool Serializer::InsertInt(const char * var_name, int value)
+{
+	return json_object_set_number(current_node, var_name, value);
+}
+
+bool Serializer::InsertBool(const char * var_name, bool value)
+{
+	return json_object_set_boolean(current_node, var_name, value);
+}
+
 Serializer Serializer::GetChild(const char * name) const
 {
 	return Serializer(json_object_get_object(current_node, name));

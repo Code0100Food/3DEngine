@@ -26,6 +26,8 @@ public:
 	Serializer	InsertArray(const char* name);
 	bool		InsertArrayElement(const Serializer& data);
 	bool		InsertString(const char* var_name, const char* value);
+	bool		InsertInt(const char* var_name, int value);
+	bool		InsertBool(const char* var_name, bool value);
 
 	//Get Methods -----------
 	Serializer GetChild(const char* name)const;

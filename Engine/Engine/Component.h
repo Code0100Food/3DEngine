@@ -6,6 +6,7 @@
 #include "Parson/parson.h"
 
 class GameObject;
+class Serializer;
 
 enum COMPONENT_TYPE
 {
@@ -54,9 +55,13 @@ public:
 	//UI Methods
 	virtual void BlitComponentInspector();
 	
-	//Save/Load Methods
-	bool Save(JSON_Object* root)const;
+	//Save/Load Methods -----
+	bool Save(Serializer& array_root)const;
 	bool Load(const JSON_Object* root);
 
+	//Enums Methods ---------
+	COMPONENT_TYPE	StrToComponentType(const char* str)const;
+	const char*		ComponentTypeToStr(COMPONENT_TYPE type)const;
+	
 };
 #endif // !_COMPONENT_H_
