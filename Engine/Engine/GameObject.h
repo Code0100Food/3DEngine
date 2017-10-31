@@ -34,6 +34,7 @@ private:
 	std::vector<GameObject*>	childs;
 	bool						draw_bounding_box = false;
 	math::AABB					bounding_box;
+	math::AABB					original_bounding_box;
 	uint						id = 0;
 
 public:
@@ -76,6 +77,7 @@ public:
 	void									DrawBoundingBox();
 	math::AABB*								GetBoundingBox();
 	math::AABB								GetTransformedBoundingBox();
+	math::AABB								GetInheritTransformedBoundingBox();
 	void									UpdateBoundingBox();
 	std::vector<math::float3>				childs_aabb_points;
 

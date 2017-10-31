@@ -89,6 +89,8 @@ bool GameObject::Update()
 		}
 	}
 
+	UpdateBoundingBox();
+
 	return ret;
 }
 
@@ -376,7 +378,7 @@ void GameObject::DrawBoundingBox()
 {
 	App->renderer3D->DisableGLRenderFlags();
 
-	GetTransformedBoundingBox().Draw(4.0f, App->geometry->bounding_box_color);
+	bounding_box.Draw(4.0f, App->geometry->bounding_box_color);
 
 	App->renderer3D->EnableGLRenderFlags();
 }
@@ -386,11 +388,19 @@ math::AABB * GameObject::GetBoundingBox()
 	return &bounding_box;
 }
 
+math::AABB GameObject::GetInheritTransformedBoundingBox()
+{
+	math::AABB tmp = original_bounding_box;
+	ComponentTransform* trans = (ComponentTransform*)FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	if (trans != nullptr)tmp.TransformAsAABB(trans->GetInheritedTransform());
+	return tmp;
+}
+
 math::AABB GameObject::GetTransformedBoundingBox()
 {
-	math::AABB tmp = bounding_box;
+	math::AABB tmp = original_bounding_box;
 	ComponentTransform* trans = (ComponentTransform*)FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-	if(trans != nullptr)tmp.TransformAsAABB(trans->GetInheritedTransform());
+	if (trans != nullptr)tmp.TransformAsAABB(trans->GetTransform());
 	return tmp;
 }
 
@@ -403,21 +413,32 @@ void GameObject::UpdateBoundingBox()
 
 	if (!childs.empty())
 	{
-		math::AABB child_AABB;
-
 		for (std::vector<GameObject*>::iterator child = childs.begin(); child != childs.end(); child++)
 		{
 			math::float3 aabb_points[8];
-			(*child)->GetTransformedBoundingBox().GetCornerPoints(aabb_points);
-			
+			(*child)->bounding_box.GetCornerPoints(aabb_points);
+
 			for (int i = 0; i < 8; i++)
-				childs_aabb_points.push_back(aabb_points[i]);		
+				childs_aabb_points.push_back(aabb_points[i]);
+		}
+
+		if (FindComponent(COMPONENT_TYPE::COMP_MESH))
+		{
+			math::float3 my_points[8];
+			GetInheritTransformedBoundingBox().GetCornerPoints(my_points);
+
+			for (int i = 0; i < 8; i++)
+				childs_aabb_points.push_back(my_points[i]);
 		}
 
 		bounding_box = math::AABB::MinimalEnclosingAABB(childs_aabb_points.data(), childs_aabb_points.size());
+
 		childs_aabb_points.clear();
 	}
-	
+	else
+	{
+		bounding_box = GetInheritTransformedBoundingBox();
+	}
 }
 
 std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_childs)
@@ -461,6 +482,8 @@ std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_chi
 	std::pair<math::float3, math::float3> pair;
 	pair.first = bounding_box.minPoint;
 	pair.second = bounding_box.maxPoint;
+
+	original_bounding_box = bounding_box;
 
 	return pair;
 }

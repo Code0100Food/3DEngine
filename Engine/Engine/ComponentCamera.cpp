@@ -114,7 +114,7 @@ void ComponentCamera::ApplyFrustum(GameObject * target)
 	while (!remaining_childs.empty())
 	{
 		//Look if the front element is root node or camera parent or element is out the frustrum
-		if (remaining_childs.front() != parent && remaining_childs.front()->GetParent() != nullptr && frustum.VertexOutside(remaining_childs.front()->GetTransformedBoundingBox()))
+		if (remaining_childs.front() != parent && remaining_childs.front()->GetParent() != nullptr && frustum.VertexOutside(*remaining_childs.front()->GetBoundingBox()))
 		{
 			//if it is we will ignore its childs and set him to false
 			remaining_childs.front()->SetActiveState(false);
