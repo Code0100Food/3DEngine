@@ -275,7 +275,7 @@ void ModuleWindow::SetTitle(const char* title)
 
 void ModuleWindow::SetAspectRatio(int width, int height)
 {
-	aspect_ratio = width / height;
+	aspect_ratio = (float)width / height;
 }
 
 // Get Methods ==================================

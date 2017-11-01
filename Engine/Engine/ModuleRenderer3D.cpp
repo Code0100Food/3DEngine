@@ -346,10 +346,12 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	CleanCameraView();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadIdentity();
+	
+
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
+	lights[0].SetPos(App->camera->GetPosition().x, App->camera->GetPosition().y, App->camera->GetPosition().z);
 
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 	{
@@ -738,7 +740,7 @@ void ModuleRenderer3D::SetMinRenderDistance(float val)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
-	glLoadMatrixf(&ProjectionMatrix);
+	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -750,7 +752,7 @@ void ModuleRenderer3D::SetMaxRenderDistance(float val)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
-	glLoadMatrixf(&ProjectionMatrix);
+	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -803,7 +805,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, min_render_distance, max_render_distance);
-	glLoadMatrixf(&ProjectionMatrix);
+	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
 
 	if (render_to_texture)
 	{
@@ -899,10 +901,9 @@ void ModuleRenderer3D::SetEditorCameraView()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
-	glLoadMatrixf(&ProjectionMatrix);
+	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadMatrixf(App->camera->GetViewMatrixTransposed());
 }
 
 void ModuleRenderer3D::CleanCameraView()
