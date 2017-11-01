@@ -3,6 +3,8 @@
 #include "SDL/include/SDL_opengl.h"
 #include "ComponentMaterial.h"
 #include "Serializer.h"
+#include "Application.h"
+#include "ImporterManager.h"
 
 // Vertex ---------------------------------------
 Vertex::Vertex()
@@ -176,4 +178,28 @@ bool ComponentMesh::Save(Serializer & array_root) const
 	ret = array_root.InsertArrayElement(comp_data);
 
 	return ret;
+}
+
+bool ComponentMesh::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
+{
+	bool ret = false;
+
+	//Get component id
+	id = data.GetInt("id");
+	//Get actived
+	actived = data.GetBool("actived");
+
+	//Insert mesh file path
+	App->importer->mesh_importer.Load(data.GetString("path"), this);
+		
+	//Insert draw material id
+	uint material_id = data.GetInt("draw_material_id");
+	if(material_id != 0)links.push_back(std::pair<Component*, uint>(this, material_id));
+
+	return ret;
+}
+
+void ComponentMesh::LinkComponent(const Component * target)
+{
+	draw_material = (ComponentMaterial*)target;
 }

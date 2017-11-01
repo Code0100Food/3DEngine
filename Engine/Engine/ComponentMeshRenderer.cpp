@@ -30,6 +30,8 @@ ComponentMeshRenderer::~ComponentMeshRenderer()
 // Game Loop ====================================
 bool ComponentMeshRenderer::Update()
 {
+	if (target_mesh == nullptr)return false;
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
@@ -212,4 +214,47 @@ bool ComponentMeshRenderer::Save(Serializer & array_root) const
 	ret = array_root.InsertArrayElement(comp_data);
 
 	return ret;
+}
+
+bool ComponentMeshRenderer::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
+{
+	bool ret = true;
+
+	//Get component id
+	id = data.GetInt("id");
+
+	//Get actived
+	actived = data.GetBool("actived");
+
+	//Get target mesh component id
+	uint target_mesh_id = data.GetInt("target_mesh_id");
+	if (target_mesh_id != 0)links.push_back(std::pair<Component*, uint>(this, target_mesh_id));
+	else ret = false;
+
+	//Get render flags
+	bool rend_bool = data.GetBool("render_face_normals");
+	if (rend_bool)
+	{
+		render_flags |= REND_FACE_NORMALS;
+	}
+	else
+	{
+		render_flags &= ~REND_FACE_NORMALS;
+	}
+	rend_bool = data.GetBool("render_vertex_normals");
+	if (rend_bool)
+	{
+		render_flags |= REND_VERTEX_NORMALS;
+	}
+	else
+	{
+		render_flags &= ~REND_VERTEX_NORMALS;
+	}
+
+	return ret;
+}
+
+void ComponentMeshRenderer::LinkComponent(const Component * target)
+{
+	target_mesh = (ComponentMesh*)target;
 }

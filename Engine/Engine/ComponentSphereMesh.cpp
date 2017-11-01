@@ -2,6 +2,7 @@
 
 #include "ComponentMaterial.h"
 #include "Serializer.h"
+#include "SphereGenerator.h"
 
 // Constructors =================================
 ComponentSphereMesh::ComponentSphereMesh()
@@ -64,6 +65,41 @@ bool ComponentSphereMesh::Save(Serializer & array_root) const
 
 	//Save the built data in the components array
 	ret = array_root.InsertArrayElement(comp_data);
+
+	return ret;
+}
+
+bool ComponentSphereMesh::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
+{
+	bool ret = true;
+
+	//Get component id
+	id = data.GetInt("id");
+	//Get actived
+	actived = data.GetBool("actived");
+
+	//Insert draw material id
+	uint material_id = data.GetInt("draw_material_id");
+	if (material_id != 0)links.push_back(std::pair<Component*, uint>(this, material_id));
+
+
+	//Get geometry data
+	//Set position
+	geometry.pos = math::float3(0, 0, 0);
+	//Get radius
+	geometry.r = data.GetFloat("radius");
+	//Get divisions
+	divisions = data.GetInt("divisions");
+	
+	//Build the mesh with the loaded values
+	std::pair<std::vector<uint>, std::vector<Vertex>> mesh_data;
+	SphereGenerator sphere;
+	sphere.SetGeometry(geometry);
+	sphere.SetDivisions(divisions);
+	mesh_data = sphere.Generate();
+	SetIndices(mesh_data.first);
+	SetVertices(mesh_data.second);
+	SetupMesh();
 
 	return ret;
 }

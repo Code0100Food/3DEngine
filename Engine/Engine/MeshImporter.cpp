@@ -148,3 +148,77 @@ bool MeshImporter::Load(const char * path)
 	RELEASE_ARRAY(buffer);
 	return true;
 }
+
+bool MeshImporter::Load(const char * path, ComponentMesh* target)
+{
+	//Load the buffer from the file
+	char* buffer;
+	App->fs->LoadFile(path, &buffer);
+
+	if (buffer)
+	{
+		//Focus the cursor
+		char* cursor = buffer;
+
+		//Load  amount of indices and vertices
+		uint ranges[2];
+		uint bytes = sizeof(ranges);
+		memcpy(ranges, cursor, bytes);
+		uint num_indices = ranges[0];
+		uint num_vertices = ranges[1];
+
+		// Load indices
+		cursor += bytes;
+		bytes = sizeof(uint) * num_indices;
+		uint* indices_i = new uint[num_indices];
+		memcpy(indices_i, cursor, bytes);
+
+		std::vector<uint> indices;
+		for (uint k = 0; k < num_indices; k++)indices.push_back(indices_i[k]);
+		target->SetIndices(indices);
+		RELEASE_ARRAY(indices_i);
+
+		//Load vertices
+		cursor += bytes;
+		bytes = sizeof(math::float3) * num_vertices;
+		math::float3* vertices_i = new math::float3[num_vertices];
+		memcpy(vertices_i, cursor, bytes);
+
+		//Load normals
+		cursor += bytes;
+		bytes = sizeof(math::float3) * num_vertices;
+		math::float3* normals_i = new math::float3[num_vertices];
+		memcpy(normals_i, cursor, bytes);
+
+		//Load texture coords
+		cursor += bytes;
+		bytes = sizeof(math::float2) * num_vertices;
+		math::float2* tex_coords_i = new math::float2[num_vertices];
+		memcpy(tex_coords_i, cursor, bytes);
+
+		//Built vertex with the loaded data
+		std::vector<Vertex> vertices;
+		for (uint k = 0; k < num_vertices; k++)vertices.push_back(Vertex(vertices_i[k], normals_i[k], tex_coords_i[k]));
+		target->SetVertices(vertices);
+
+		//Release all the arrays
+		RELEASE_ARRAY(vertices_i);
+		RELEASE_ARRAY(normals_i);
+		RELEASE_ARRAY(tex_coords_i);
+
+		//Set mesh file path
+		std::string name;
+		App->fs->GetFileNameFromPath(path, &name);
+		target->SetPath(name.c_str());
+
+		//Built the mesh buffers
+		target->SetupMesh();
+	}
+	else
+	{
+		LOG("[error] Error loading mesh!");
+		return false;
+	}
+	RELEASE_ARRAY(buffer);
+	return true;
+}

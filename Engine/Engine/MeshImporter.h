@@ -15,6 +15,7 @@ public:
 
 	bool Import(const char* name, std::vector<uint> indices, std::vector<Vertex> vertices, std::vector<Texture> textures);
 	bool Load(const char* path);
+	bool Load(const char* path, ComponentMesh* target);
 
 };
 #endif
