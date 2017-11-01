@@ -116,10 +116,19 @@ update_status ModuleImgui::Update(float dt)
 		file_menu_open = true;
 		if (file_menu_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
 
-		//Exit button
+		//Save button
 		if (ImGui::MenuItem("Save"))
 		{
 			App->scene->SerializeScene();
+		}
+
+		//Load button
+		if (ImGui::MenuItem("Load"))
+		{
+			App->scene->CleanScene();
+			char str[50];
+			sprintf(str, "%sscene.json", LIBRARY_FOLDER);
+			App->scene->LoadSerializedScene(str);
 		}
 
 		//Exit button

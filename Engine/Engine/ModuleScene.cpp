@@ -361,7 +361,41 @@ void ModuleScene::SerializeScene() const
 	}
 }
 
-bool ModuleScene::LoadSerializedScene()
+void ModuleScene::CleanScene()
 {
-	return true;
+	RELEASE(root_gameobject);
+	root_gameobject = CreateGameObject();
+	root_gameobject->SetName("Scene");
+}
+
+bool ModuleScene::LoadSerializedScene(const char * path)
+{
+	bool ret = true;
+
+	const JSON_Value* scene_data = json_parse_file(path);
+	if (scene_data == nullptr)
+	{
+		LOG("[error] Invalid scene, file not found!");
+		return false;
+	}
+
+	LOG("Loading Scene...");
+	//Serializer whit all the new scene data
+	Serializer scene(scene_data);
+
+	//Game objects array
+	Serializer objects = scene.GetArray("GameObjects");
+	std::vector<std::pair<GameObject*, uint>> objects_links;
+
+	//Iterate all the elements
+	uint size = objects.GetArraySize();
+	for(uint k = 0; k < size;k++)
+	{
+		GameObject* new_obj = CreateGameObject();
+		new_obj->Load(objects.GetArrayElement(k), objects_links);
+	}
+
+	if (ret)LOG("Scene Correctly Loaded!");
+
+	return ret;
 }

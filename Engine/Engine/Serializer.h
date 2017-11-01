@@ -8,7 +8,9 @@ class Serializer
 public:
 
 	Serializer(const char* name = nullptr);
+	Serializer(const JSON_Value* root);
 	Serializer(const JSON_Object* child);
+	Serializer(const JSON_Array* _array);
 	~Serializer();
 
 private:
@@ -33,7 +35,16 @@ public:
 	bool		InsertBool(const char* var_name, bool value);
 
 	//Get Methods -----------
-	Serializer GetChild(const char* name)const;
+	Serializer	GetChild(const char* name)const;
+	Serializer	GetArray(const char* name)const;
+	uint		GetArraySize()const;
+	Serializer	GetArrayElement(uint index)const;
+	int			GetArrayInt(uint index)const;
+	float		GetArrayFloat(uint index)const;
+	const char* GetString(const char* name)const;
+	int			GetInt(const char* name)const;
+	float		GetFloat(const char* name)const;
+	bool		GetBool(const char* name)const;
 
 	//Save/Load Methods -----
 	uint Save(char** buffer);

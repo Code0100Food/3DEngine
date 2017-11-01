@@ -60,7 +60,8 @@ public:
 	void		CleanOctree();
 
 	void		SerializeScene()const;
-	bool		LoadSerializedScene();
+	void		CleanScene();
+	bool		LoadSerializedScene(const char* path);
 
 };
 #endif

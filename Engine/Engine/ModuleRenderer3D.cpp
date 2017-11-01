@@ -881,6 +881,7 @@ void ModuleRenderer3D::RemoveGameCamera(ComponentCamera * removed_game_cam)
 		if ((*item) == removed_game_cam)
 		{
 			item = game_cameras.erase(item);
+			break;
 		}
 	}
 }
