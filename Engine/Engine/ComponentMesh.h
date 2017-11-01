@@ -75,7 +75,7 @@ public:
 	ComponentMesh(const ComponentMesh& cpy);
 	~ComponentMesh();
 
-private:
+protected:
 
 	std::vector<Vertex>			vertices;
 	std::vector<uint>			indices;
@@ -87,7 +87,7 @@ private:
 
 	ComponentMaterial*			draw_material = nullptr;
 
-private:
+protected:
 
 	uint VertexArrayObject = 0, VertexBufferObject = 0, ElementBufferObject = 0;
 	
@@ -98,8 +98,8 @@ private:
 public:
 
 	//Get Methods -----------
-	ComponentMaterial* GetDrawMaterial()const;
-	std::vector<math::float3> GetVertexPositions()const;
+	ComponentMaterial*			GetDrawMaterial()const;
+	std::vector<math::float3>	GetVertexPositions()const;
 
 	//Set Methods -----------
 	void	SetVertices(std::vector<Vertex> v);

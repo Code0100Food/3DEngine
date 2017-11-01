@@ -107,6 +107,7 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 {
 	GameObject* new_prim = nullptr;
+	ComponentMesh* mesh = nullptr;
 	std::pair<std::vector<uint>, std::vector<Vertex>> data;
 
 	switch (type)
@@ -122,14 +123,23 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 	case PRIMITIVE_CUBE:
 	{
 		//Generate the cube logic
+		math::AABB cube_logic;
+		cube_logic.minPoint = math::float3(0, 0, 0);
+		cube_logic.maxPoint = math::float3(1, 1, 1);
 		CubeGenerator cube;
-		cube.SetMinPoint(math::float3(0, 0, 0));
-		cube.SetMaxPoint(math::float3(1, 1, 1));
+		cube.SetGeometry(cube_logic);
 		cube.SetDivisions(divisions);
 		data = cube.Generate();
 
+		//Create the game object
 		new_prim = CreateGameObject();
 		new_prim->SetName("Cube");
+
+		//Create the cube mesh
+		ComponentCubeMesh* cube_mesh = (ComponentCubeMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_CUBE_MESH);
+		cube_mesh->SetGeometry(cube_logic);
+		cube_mesh->SetDivisions(divisions);
+		mesh = cube_mesh;
 	}
 	break;
 	case PRIMITIVE_SPHERE:
@@ -176,9 +186,6 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 	{
 		//Generate the game object
 		new_prim->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-
-		//Primitive mesh
-		ComponentMesh* mesh = (ComponentMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH);
 
 		//Primitive mesh renderer
 		ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);

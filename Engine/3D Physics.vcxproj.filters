@@ -411,6 +411,12 @@
     <ClInclude Include="Engine\FrustumGenerator.h">
       <Filter>Sources\PrimitiveGenerators</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ComponentCubeMesh.h">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ComponentPrimitiveMesh.h">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -662,6 +668,10 @@
     <ClCompile Include="Engine\FrustumGenerator.cpp">
       <Filter>Sources\PrimitiveGenerators</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ComponentCubeMesh.cpp">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ComponentPrimitiveMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

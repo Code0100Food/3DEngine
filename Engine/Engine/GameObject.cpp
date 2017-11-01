@@ -3,7 +3,6 @@
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
 
-#include "Component.h"
 #include "Application.h"
 #include "ModuleScene.h"
 #include "GeometryManager.h"
@@ -169,11 +168,13 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 
 	switch (c_type)
 	{
-	case COMP_TRANSFORMATION:	comp = new ComponentTransform();	break;
-	case COMP_MESH:				comp = new ComponentMesh();			break;
-	case COMP_MATERIAL:			comp = new ComponentMaterial();		break;
-	case COMP_MESH_RENDERER:	comp = new ComponentMeshRenderer();	break;
-	case COMP_CAMERA:			comp = new ComponentCamera();		break;
+	case COMP_TRANSFORMATION:	comp = new ComponentTransform();		break;
+	case COMP_MESH:				comp = new ComponentMesh();				break;
+	case COMP_PRIMITIVE_MESH:	comp = new ComponentPrimitiveMesh();	break;
+	case COMP_CUBE_MESH:		comp = new ComponentCubeMesh();			break;
+	case COMP_MATERIAL:			comp = new ComponentMaterial();			break;
+	case COMP_MESH_RENDERER:	comp = new ComponentMeshRenderer();		break;
+	case COMP_CAMERA:			comp = new ComponentCamera();			break;
 	}
 
 	if (comp != nullptr)
@@ -230,6 +231,26 @@ Component * GameObject::FindComponent(COMPONENT_TYPE type) const
 		if (components[k]->GetType() == type)
 		{
 			cmp = components[k];
+			break;
+		}
+	}
+
+	return cmp;
+}
+
+ComponentMesh * GameObject::FindMeshComponent() const
+{
+	ComponentMesh* cmp = nullptr;
+	uint size = components.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (	components[k]->GetType() == COMP_MESH ||
+				components[k]->GetType() == COMP_CUBE_MESH ||
+				components[k]->GetType() == COMP_SPHERE_MESH ||
+				components[k]->GetType() == COMP_CYLINDER_MESH ||
+				components[k]->GetType() == COMP_FRUSTUM_MESH)
+		{
+			cmp = (ComponentMesh*)components[k];
 			break;
 		}
 	}
@@ -466,7 +487,7 @@ std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_chi
 			v_pos.push_back(childs_bb_vertex[k].second);
 		}
 
-		ComponentMesh* mesh = (ComponentMesh*)FindComponent(COMPONENT_TYPE::COMP_MESH);
+		ComponentMesh* mesh = FindMeshComponent();
 		
 		if (mesh != nullptr)
 		{

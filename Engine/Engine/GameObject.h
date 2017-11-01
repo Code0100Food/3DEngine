@@ -6,6 +6,8 @@
 
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
+#include "ComponentPrimitiveMesh.h"
+#include "ComponentCubeMesh.h"
 #include "ComponentMeshRenderer.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
@@ -56,11 +58,12 @@ public:
 	
 	//Functionality ---------
 	//Components Methods 
-	Component*	CreateComponent(COMPONENT_TYPE c_type);
-	bool		RemoveComponent(Component* cmp);
-	bool		FindComponent(Component* cmp)const;
-	Component*	FindComponent(COMPONENT_TYPE type)const;
-	Component*	CloneComponent(const Component* target)const;
+	Component*		CreateComponent(COMPONENT_TYPE c_type);
+	bool			RemoveComponent(Component* cmp);
+	bool			FindComponent(Component* cmp)const;
+	Component*		FindComponent(COMPONENT_TYPE type)const;
+	ComponentMesh*	FindMeshComponent()const;
+	Component*		CloneComponent(const Component* target)const;
 
 	//Childs Methods 
 	void						AddChild(const GameObject* child);

@@ -34,6 +34,11 @@ std::pair<std::vector<uint>, std::vector<Vertex>> CubeGenerator::Generate()
 }
 
 // Set Methods ==================================
+void CubeGenerator::SetGeometry(const math::AABB & geom)
+{
+	geometry = geom;
+}
+
 void CubeGenerator::SetMinPoint(math::float3 minp)
 {
 	geometry.minPoint = minp;

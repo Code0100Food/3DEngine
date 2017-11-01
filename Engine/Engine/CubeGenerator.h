@@ -22,6 +22,7 @@ private:
 public:
 
 	//Set Methods -----------
+	void SetGeometry(const math::AABB& geom);
 	void SetMinPoint(math::float3 minp);
 	void SetMaxPoint(math::float3 maxp);
 
