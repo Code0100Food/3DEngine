@@ -185,6 +185,9 @@ void ModelImporter::ProcessMesh(const char* name, aiMesh * mesh, const aiScene *
 		LOG("- Material with index %i loaded!", mesh->mMaterialIndex);
 	}
 
+	//Set mesh file name
+	comp_mesh->SetPath(name);
+
 	//Initialize the mesh buffers
 	comp_mesh->SetupMesh();
 
@@ -215,7 +218,7 @@ std::vector<Texture> ModelImporter::LoadMaterialTextures(aiMaterial *mat, aiText
 		{
 			// if texture hasn't been loaded already, load it
 			Texture texture;
-			texture.id = App->textures->LoadTexture(str.C_Str(), "Assets/");
+			texture.id = App->textures->LoadTexture(str.C_Str(),cur_path.c_str());
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			

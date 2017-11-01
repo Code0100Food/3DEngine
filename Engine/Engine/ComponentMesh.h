@@ -83,6 +83,8 @@ private:
 	uint						num_tris = 0;
 	uint						num_vertex = 0;
 
+	std::string					path;
+
 	ComponentMaterial*			draw_material = nullptr;
 
 private:
@@ -102,6 +104,7 @@ public:
 	//Set Methods -----------
 	void	SetVertices(std::vector<Vertex> v);
 	void	SetIndices(std::vector<uint> i);
+	void	SetPath(const char* str);
 	void	SetDrawMaterial(ComponentMaterial* mat);
 
 	//Functionality ---------
@@ -110,6 +113,6 @@ public:
 	void	BlitComponentInspector();
 
 	//Save/Load Methods -----
-	bool Save(Serializer& array_root)const;
+	bool	Save(Serializer& array_root)const;
 };
 #endif // !_COMPONENT_MESH_H_

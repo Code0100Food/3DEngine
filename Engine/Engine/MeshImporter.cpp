@@ -129,8 +129,14 @@ bool MeshImporter::Load(const char * path)
 		RELEASE_ARRAY(normals_i);
 		RELEASE_ARRAY(tex_coords_i);
 
+		//Set mesh file path
+		std::string name;
+		App->fs->GetFileNameFromPath(path, &name);
+		mesh_comp->SetPath(name.c_str());
+
 		//Built the mesh buffers
 		mesh_comp->SetupMesh();
+		
 		//Active mesh renderer
 		mesh_rend_comp->SetTargetMesh(mesh_comp);
 	}

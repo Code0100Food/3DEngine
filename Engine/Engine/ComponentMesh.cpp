@@ -73,6 +73,11 @@ void ComponentMesh::SetIndices(std::vector<uint> i)
 	if (indices.size() % 3 == 0)num_tris = indices.size() / 3;
 }
 
+void ComponentMesh::SetPath(const char * str)
+{
+	path = str;
+}
+
 void ComponentMesh::SetDrawMaterial(ComponentMaterial * mat)
 {
 	draw_material = mat;
@@ -161,6 +166,9 @@ bool ComponentMesh::Save(Serializer & array_root) const
 	//Insert actived
 	ret = comp_data.InsertBool("actived", actived);
 	
+	//Insert mesh file path
+	comp_data.InsertString("path", path.c_str());
+
 	//Insert draw material id
 	if (draw_material != nullptr)ret = comp_data.InsertInt("draw_material_id", draw_material->GetID());
 
