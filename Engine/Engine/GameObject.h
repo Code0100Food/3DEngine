@@ -64,6 +64,7 @@ public:
 	bool			RemoveComponent(Component* cmp);
 	bool			FindComponent(Component* cmp)const;
 	Component*		FindComponent(COMPONENT_TYPE type)const;
+	Component*		FindComponent(uint id)const;
 	ComponentMesh*	FindMeshComponent()const;
 	Component*		CloneComponent(const Component* target)const;
 
@@ -88,7 +89,7 @@ public:
 
 	//Save/Load Methods
 	bool Save(Serializer& array_root)const;
-	bool Load(const JSON_Object* root);
+	bool Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links);
 
 };
 #endif // !_GAME_OBJECT_H_

@@ -92,12 +92,24 @@ bool Component::Save(Serializer & array_root) const
 	return ret;
 }
 
-bool Component::Load(const JSON_Object * root)
+bool Component::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
 {
-	return true;
+	bool ret = true;
+
+	//Get component id
+	id = data.GetInt("id");
+	//Get actived
+	actived = data.GetBool("actived");
+
+	return ret;
 }
 
-COMPONENT_TYPE Component::StrToComponentType(const char * str) const
+void Component::LinkComponent(const Component * target)
+{
+
+}
+
+COMPONENT_TYPE StrToComponentType(const char * str)
 {
 	if (strcmp(str, "transformation") == 0)	return COMP_TRANSFORMATION;
 	if (strcmp(str, "mesh") == 0)			return COMP_MESH;
@@ -112,7 +124,7 @@ COMPONENT_TYPE Component::StrToComponentType(const char * str) const
 	return COMP_NONE;
 }
 
-const char * Component::ComponentTypeToStr(COMPONENT_TYPE type) const
+const char * ComponentTypeToStr(COMPONENT_TYPE type)
 {
 	switch (type)
 	{

@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "imgui/imgui.h"
 #include "Parson/parson.h"
+#include <vector>
 
 class GameObject;
 class Serializer;
@@ -63,12 +64,13 @@ public:
 	virtual void BlitComponentInspector();
 	
 	//Save/Load Methods -----
-	virtual bool	Save(Serializer& array_root)const;
-	bool			Load(const JSON_Object* root);
-
-	//Enums Methods ---------
-	COMPONENT_TYPE	StrToComponentType(const char* str)const;
-	const char*		ComponentTypeToStr(COMPONENT_TYPE type)const;
-	
+	virtual bool Save(Serializer& array_root)const;
+	virtual bool Load(Serializer& data, std::vector<std::pair<Component*, uint>>& links);
+	virtual void LinkComponent(const Component* target);
 };
+
+//Enums Methods ---------
+COMPONENT_TYPE	StrToComponentType(const char* str);
+const char*		ComponentTypeToStr(COMPONENT_TYPE type);
+
 #endif // !_COMPONENT_H_

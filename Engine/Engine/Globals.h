@@ -37,6 +37,7 @@ void log(const char file[], int line, const char* format, ...);
 #define LIBRARY_MESH_FOLDER "Library\\Meshes\\"
 #define LIBRARY_FOLDER "Library\\"
 #define SETTINGS_FOLDER "Settings\\"
+#define ASSETS_FOLDER "Assets\\"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 

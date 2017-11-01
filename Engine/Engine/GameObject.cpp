@@ -240,6 +240,22 @@ Component * GameObject::FindComponent(COMPONENT_TYPE type) const
 	return cmp;
 }
 
+Component * GameObject::FindComponent(uint id) const
+{
+	Component* cmp = nullptr;
+	uint size = components.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (components[k]->GetID() == id)
+		{
+			cmp = components[k];
+			break;
+		}
+	}
+
+	return cmp;
+}
+
 ComponentMesh * GameObject::FindMeshComponent() const
 {
 	ComponentMesh* cmp = nullptr;
@@ -555,20 +571,47 @@ bool GameObject::Save(Serializer& array_root) const
 	return ret;
 }
 
-bool GameObject::Load(const JSON_Object * root)
+bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links)
 {
-	bool ret = false;
-	uint size = components.size();
+	bool ret = true;
+
+	//Generate parent link
+
+
+	//Get active
+	actived = data.GetBool("actived");
+	//Get object name
+	name = data.GetString("name");
+	//Get object id
+	ret = data.GetInt("id");
+	//Get parent id
+	uint parent_id = data.GetInt("parent_id");
+	if (parent_id != 0)links.push_back(std::pair<GameObject*, uint>(this, parent_id));
+	//Insert static
+	static_ = data.GetBool("static");
+
+	//Load all the components
+	Serializer components_data = data.GetArray("Components");
+	uint size = components_data.GetArraySize();
+	std::vector<std::pair<Component*, uint>> components_links;
+
 	for (uint k = 0; k < size; k++)
 	{
-		//ret = components[k]->Load();
+		Serializer comp_data = components_data.GetArrayElement(k);
+		Component* component = CreateComponent(StrToComponentType(comp_data.GetString("type")));
+		ret = component->Load(comp_data, components_links);
+		if (!ret)break;
 	}
 
-	size = childs.size();
+	//Link all the loaded components
+	size = components_links.size();
 	for (uint k = 0; k < size; k++)
 	{
-		//ret = childs[k]->Load();
+		components_links[k].first->LinkComponent(FindComponent(components_links[k].second));
 	}
+
+	//Adjust the bounding box
+	AdjustBoundingBox();
 
 	return ret;
 }
