@@ -9,6 +9,7 @@
 #include "ComponentPrimitiveMesh.h"
 #include "ComponentCubeMesh.h"
 #include "ComponentSphereMesh.h"
+#include "ComponentCylinderMesh.h"
 #include "ComponentMeshRenderer.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"

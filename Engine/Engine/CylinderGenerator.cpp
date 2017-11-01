@@ -30,6 +30,12 @@ std::pair<std::vector<uint>, std::vector<Vertex>> CylinderGenerator::Generate()
 	return { my_index,vec_t };
 }
 
+// Set Methods ==================================
+void CylinderGenerator::SetGeometry(const math::Cylinder & geom)
+{
+	geometry = geom;
+}
+
 void CylinderGenerator::SetTop(math::float3 top)
 {
 	geometry.l.b = top;

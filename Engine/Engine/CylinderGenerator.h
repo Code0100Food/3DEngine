@@ -22,6 +22,7 @@ private:
 public:
 
 	//Set Methods -----------
+	void SetGeometry(const math::Cylinder& geom);
 	void SetTop(math::float3 top);
 	void SetBottom(math::float3 bottom);
 	void SetRad(uint rad);

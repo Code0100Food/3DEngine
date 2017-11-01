@@ -167,16 +167,24 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 	case PRIMITIVE_CYLINDER:
 	{
 		//Generate the cube logic
+		math::Cylinder cylinder_logic;
+		cylinder_logic.r = 1;
+		cylinder_logic.l.b = math::float3(0, 0, 0);
+		cylinder_logic.l.a = math::float3(0, 1, 0);
 		CylinderGenerator cylinder;
-		cylinder.SetRad(1);
-		cylinder.SetTop(math::float3(0, 0, 0));
-		cylinder.SetBottom(math::float3(0, 1, 0));
-		cylinder.SetRad(1);
+		cylinder.SetGeometry(cylinder_logic);
 		cylinder.SetDivisions(divisions);
 		data = cylinder.Generate();
 
+		//Create the game object
 		new_prim = CreateGameObject();
 		new_prim->SetName("Cylinder");
+
+		//Create the cylinder mesh
+		ComponentCylinderMesh* cylinder_mesh = (ComponentCylinderMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_CYLINDER_MESH);
+		cylinder_mesh->SetGeometry(cylinder_logic);
+		cylinder_mesh->SetDivisions(divisions);
+		mesh = cylinder_mesh;
 	}
 	break;
 	case PRIMITIVE_RAY:

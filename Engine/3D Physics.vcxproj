@@ -94,6 +94,7 @@
     <ClInclude Include="Engine\Component.h" />
     <ClInclude Include="Engine\ComponentCamera.h" />
     <ClInclude Include="Engine\ComponentCubeMesh.h" />
+    <ClInclude Include="Engine\ComponentCylinderMesh.h" />
     <ClInclude Include="Engine\ComponentMaterial.h" />
     <ClInclude Include="Engine\ComponentMesh.h" />
     <ClInclude Include="Engine\ComponentMeshRenderer.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="Engine\Component.cpp" />
     <ClCompile Include="Engine\ComponentCamera.cpp" />
     <ClCompile Include="Engine\ComponentCubeMesh.cpp" />
+    <ClCompile Include="Engine\ComponentCylinderMesh.cpp" />
     <ClCompile Include="Engine\ComponentMaterial.cpp" />
     <ClCompile Include="Engine\ComponentMesh.cpp" />
     <ClCompile Include="Engine\ComponentMeshRenderer.cpp" />
