@@ -2,7 +2,7 @@
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
 #include "ComponentMaterial.h"
-
+#include "Serializer.h"
 
 // Vertex ---------------------------------------
 Vertex::Vertex()
@@ -145,4 +145,27 @@ void ComponentMesh::BlitComponentInspector()
 	ImGui::Text("Tris: %i", num_tris);
 	ImGui::SameLine();
 	ImGui::Text("Vertex: %i", num_vertex);
+}
+
+bool ComponentMesh::Save(Serializer & array_root) const
+{
+	bool ret = false;
+
+	//Serializer where all the data of the component is built
+	Serializer comp_data;
+
+	//Insert Component Type
+	ret = comp_data.InsertString("type", ComponentTypeToStr(type));
+	//Insert component id
+	ret = comp_data.InsertInt("id", id);
+	//Insert actived
+	ret = comp_data.InsertBool("actived", actived);
+	
+	//Insert draw material id
+	if (draw_material != nullptr)ret = comp_data.InsertInt("draw_material_id", draw_material->GetID());
+
+	//Save the built data in the components array
+	ret = array_root.InsertArrayElement(comp_data);
+
+	return ret;
 }

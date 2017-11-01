@@ -1,4 +1,5 @@
 #include "ComponentMaterial.h"
+#include "Serializer.h"
 
 // Constructors =================================
 ComponentMaterial::ComponentMaterial() :Component(COMPONENT_TYPE::COMP_MATERIAL)
@@ -37,4 +38,38 @@ void ComponentMaterial::BlitComponentInspector()
 	{
 		textures[k].BlitUI();
 	}
+}
+
+bool ComponentMaterial::Save(Serializer & array_root) const
+{
+	bool ret = false;
+
+	//Serializer where all the data of the component is built
+	Serializer comp_data;
+
+	//Insert Component Type
+	ret = comp_data.InsertString("type", ComponentTypeToStr(type));
+	//Insert component id
+	ret = comp_data.InsertInt("id", id);
+	//Insert actived
+	ret = comp_data.InsertBool("actived", actived);
+
+	//Insert all the textures data
+	Serializer textures_array = comp_data.InsertArray("textures");
+	uint size = textures.size();
+	for (uint k = 0; k < size; k++)
+	{
+		Serializer texture_data;
+		
+		//Texture path
+		texture_data.InsertString("path", textures[k].path.c_str());
+		texture_data.InsertString("type", textures[k].type.c_str());
+
+		textures_array.InsertArrayElement(texture_data);
+	}
+
+	//Save the built data in the components array
+	ret = array_root.InsertArrayElement(comp_data);
+
+	return ret;
 }

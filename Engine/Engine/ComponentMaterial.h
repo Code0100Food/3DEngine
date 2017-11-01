@@ -27,5 +27,8 @@ public:
 	//Functionality ---------
 	void BlitComponentInspector();
 
+	//Save/Load Methods -----
+	bool Save(Serializer& array_root)const;
+
 };
 #endif // !_COMPONENT_MATERIAL_H_

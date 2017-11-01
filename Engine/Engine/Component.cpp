@@ -1,16 +1,19 @@
 #include "Component.h"
 
+#include "Application.h"
 #include "Serializer.h"
 
 // Constructors =================================
 Component::Component(COMPONENT_TYPE _type) :type(_type)
 {
-
+	//Generate id
+	id = App->randomizer->Int();
 }
 
 Component::Component(const Component & cpy) : type(cpy.type), parent(cpy.parent), actived(cpy.actived)
 {
-
+	//Generate id
+	id = App->randomizer->Int();
 }
 
 // Destructors ==================================
@@ -57,6 +60,11 @@ bool Component::GetActive() const
 	return actived;
 }
 
+uint Component::GetID() const
+{
+	return id;
+}
+
 // Functionality ================================
 void Component::BlitComponentInspector()
 {
@@ -73,6 +81,8 @@ bool Component::Save(Serializer & array_root) const
 
 	//Insert Component Type
 	ret = comp_data.InsertString("type", ComponentTypeToStr(type));
+	//Insert component id
+	ret = comp_data.InsertInt("id", id);
 	//Insert actived
 	ret = comp_data.InsertBool("actived", actived);
 

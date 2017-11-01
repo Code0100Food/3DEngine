@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
+#include "Serializer.h"
 
 // Constructors =================================
 ComponentTransform::ComponentTransform() : Component(COMP_TRANSFORMATION)
@@ -257,4 +258,43 @@ void ComponentTransform::DrawOrientationAxis() const
 	glEnd();
 
 	glLineWidth(1.0f);
+}
+
+bool ComponentTransform::Save(Serializer & array_root) const
+{
+	bool ret = false;
+
+	//Serializer where all the data of the component is built
+	Serializer comp_data;
+
+	//Insert Component Type
+	ret = comp_data.InsertString("type", ComponentTypeToStr(type));
+	//Insert component id
+	ret = comp_data.InsertInt("id", id);
+	//Insert actived
+	ret = comp_data.InsertBool("actived", actived);
+
+	//Insert transform matrix
+	Serializer trans_matrix_array = comp_data.InsertArray("transform_matrix");
+	for (uint k = 0; k < 16; k++)trans_matrix_array.InsertArrayFloat(transform_matrix.ptr()[k]);
+	//Insert position
+	Serializer position_array = comp_data.InsertArray("position");
+	for (uint k = 0; k < 3; k++)position_array.InsertArrayFloat(position.ptr()[k]);
+	//Insert inherited transform matrix
+	Serializer inherited_trans_array = comp_data.InsertArray("inherited_transform");
+	for (uint k = 0; k < 16; k++)inherited_trans_array.InsertArrayFloat(inherited_transform.ptr()[k]);
+	//Insert inherited position
+	Serializer inherited_position_array = comp_data.InsertArray("inherited_position");
+	for (uint k = 0; k < 3; k++)inherited_position_array.InsertArrayFloat(inherited_position.ptr()[k]);
+	//Insert scale
+	Serializer scale_array = comp_data.InsertArray("scale");
+	for (uint k = 0; k < 3; k++)scale_array.InsertArrayFloat(scale.ptr()[k]);
+	//Insert rotation quaternion
+	Serializer rot_quaternion_array = comp_data.InsertArray("rotation_quaternion");
+	for (uint k = 0; k < 4; k++)rot_quaternion_array.InsertArrayFloat(rotation_quaternion.ptr()[k]);
+
+	//Save the built data in the components array
+	ret = array_root.InsertArrayElement(comp_data);
+
+	return ret;
 }

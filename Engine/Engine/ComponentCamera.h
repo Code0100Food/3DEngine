@@ -39,6 +39,8 @@ public:
 
 	//Functionality ---------
 	void SetTransform(const ComponentTransform* trans);
+	
+	//Frustum Methods -------
 	void UpdateFrustumTransform();
 	void DrawFrustum()const;
 	void ApplyFrustum(GameObject* target);
@@ -46,5 +48,7 @@ public:
 
 	void BlitComponentInspector();
 	
+	//Save/Load Methods -----
+	bool Save(Serializer& array_root)const;
 };
 #endif // !_COMPONENT_CAMERA_H_

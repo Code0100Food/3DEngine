@@ -40,6 +40,7 @@ protected:
 	bool			actived = true;
 	COMPONENT_TYPE	type = COMP_NONE;
 	GameObject*		parent = nullptr;
+	uint			id = 0;
 
 public:
 
@@ -50,14 +51,15 @@ public:
 	//Get Methods -----------
 	COMPONENT_TYPE	GetType()const;
 	bool			GetActive()const;
+	uint			GetID()const;
 
 	//Functionality ---------
 	//UI Methods
 	virtual void BlitComponentInspector();
 	
 	//Save/Load Methods -----
-	bool Save(Serializer& array_root)const;
-	bool Load(const JSON_Object* root);
+	virtual bool	Save(Serializer& array_root)const;
+	bool			Load(const JSON_Object* root);
 
 	//Enums Methods ---------
 	COMPONENT_TYPE	StrToComponentType(const char* str)const;

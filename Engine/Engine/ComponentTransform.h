@@ -36,6 +36,10 @@ private:
 
 public:
 
+	bool has_been_modified = false;
+
+public:
+
 	bool Update();
 
 	//Set Methods -----------
@@ -56,12 +60,14 @@ public:
 	//Functionality ---------
 	void BlitComponentInspector();
 
-	bool has_been_modified = false;
 	void UpdateTransform();
 
 	void SetMatrixToDraw();
 	void QuitMatrixToDraw();
 
 	void DrawOrientationAxis() const;
+
+	//Save/Load Methods -----
+	bool Save(Serializer& array_root)const;
 };
 #endif // !_COMPONENT_TRANSFORM_H_

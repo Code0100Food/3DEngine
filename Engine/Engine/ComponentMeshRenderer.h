@@ -33,5 +33,7 @@ public:
 	//Functionality ---------
 	void BlitComponentInspector();
 
+	//Save/Load Methods -----
+	bool	Save(Serializer& array_root)const;
 };
 #endif // !_COMP_MESH_RENDERER_H_

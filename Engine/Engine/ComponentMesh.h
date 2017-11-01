@@ -108,5 +108,8 @@ public:
 	void	SetupMesh();
 	void	DeleteBuffers();
 	void	BlitComponentInspector();
+
+	//Save/Load Methods -----
+	bool Save(Serializer& array_root)const;
 };
 #endif // !_COMPONENT_MESH_H_

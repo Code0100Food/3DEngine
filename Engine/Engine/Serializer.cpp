@@ -60,12 +60,31 @@ bool Serializer::InsertArrayElement(const Serializer & data)
 	return json_array_append_value(current_array, json_value_deep_copy(data.root)) == JSONSuccess;	
 }
 
+bool Serializer::InsertArrayInt(int value)
+{
+	if (current_array == nullptr)return false;
+
+	return json_array_append_number(current_array, value) == JSONSuccess;
+}
+
+bool Serializer::InsertArrayFloat(float value)
+{
+	if (current_array == nullptr)return false;
+
+	return json_array_append_number(current_array, value) == JSONSuccess;
+}
+
 bool Serializer::InsertString(const char * var_name, const char * value)
 {
 	return json_object_set_string(current_node, var_name, value) == JSONSuccess;
 }
 
 bool Serializer::InsertInt(const char * var_name, int value)
+{
+	return json_object_set_number(current_node, var_name, value);
+}
+
+bool Serializer::InsertFloat(const char * var_name, float value)
 {
 	return json_object_set_number(current_node, var_name, value);
 }

@@ -8,6 +8,7 @@
 #include "GeometryManager.h"
 #include "GameObject.h"
 #include "ModuleRenderer3D.h"
+#include "Serializer.h"
 
 // Constructors =================================
 ComponentMeshRenderer::ComponentMeshRenderer():Component(COMP_MESH_RENDERER)
@@ -184,4 +185,31 @@ void ComponentMeshRenderer::BlitComponentInspector()
 		}
 
 	}
+}
+
+bool ComponentMeshRenderer::Save(Serializer & array_root) const
+{
+	bool ret = false;
+
+	//Serializer where all the data of the component is built
+	Serializer comp_data;
+
+	//Insert Component Type
+	ret = comp_data.InsertString("type", ComponentTypeToStr(type));
+	//Insert component id
+	ret = comp_data.InsertInt("id", id);
+	//Insert actived
+	ret = comp_data.InsertBool("actived", actived);
+
+	//Insert target mesh component id
+	if (target_mesh != nullptr)ret = comp_data.InsertInt("target_mesh_id", target_mesh->GetID());
+
+	//Insert render flags
+	ret = comp_data.InsertBool("render_face_normals", (render_flags & REND_FACE_NORMALS));
+	ret = comp_data.InsertBool("render_vertex_normals", (render_flags & REND_VERTEX_NORMALS));
+
+	//Save the built data in the components array
+	ret = array_root.InsertArrayElement(comp_data);
+
+	return ret;
 }
