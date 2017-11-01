@@ -172,6 +172,7 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 	case COMP_MESH:				comp = new ComponentMesh();				break;
 	case COMP_PRIMITIVE_MESH:	comp = new ComponentPrimitiveMesh();	break;
 	case COMP_CUBE_MESH:		comp = new ComponentCubeMesh();			break;
+	case COMP_SPHERE_MESH:		comp = new ComponentSphereMesh();		break;
 	case COMP_MATERIAL:			comp = new ComponentMaterial();			break;
 	case COMP_MESH_RENDERER:	comp = new ComponentMeshRenderer();		break;
 	case COMP_CAMERA:			comp = new ComponentCamera();			break;

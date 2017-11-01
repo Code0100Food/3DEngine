@@ -417,6 +417,9 @@
     <ClInclude Include="Engine\ComponentPrimitiveMesh.h">
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ComponentSphereMesh.h">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -672,6 +675,7 @@
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ComponentPrimitiveMesh.cpp" />
+    <ClCompile Include="Engine\ComponentSphereMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

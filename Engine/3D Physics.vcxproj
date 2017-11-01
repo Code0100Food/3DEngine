@@ -98,6 +98,7 @@
     <ClInclude Include="Engine\ComponentMesh.h" />
     <ClInclude Include="Engine\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\ComponentPrimitiveMesh.h" />
+    <ClInclude Include="Engine\ComponentSphereMesh.h" />
     <ClInclude Include="Engine\ComponentTransform.h" />
     <ClInclude Include="Engine\CubeGenerator.h" />
     <ClInclude Include="Engine\CylinderGenerator.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Engine\ComponentMesh.cpp" />
     <ClCompile Include="Engine\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\ComponentPrimitiveMesh.cpp" />
+    <ClCompile Include="Engine\ComponentSphereMesh.cpp" />
     <ClCompile Include="Engine\ComponentTransform.cpp" />
     <ClCompile Include="Engine\CubeGenerator.cpp" />
     <ClCompile Include="Engine\CylinderGenerator.cpp" />

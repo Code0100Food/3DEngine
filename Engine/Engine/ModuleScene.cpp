@@ -144,15 +144,24 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 	break;
 	case PRIMITIVE_SPHERE:
 	{
-		//Generate the cube logic
+		//Generate the sphere logic
+		math::Sphere sphere_logic;
+		sphere_logic.r = 1;
+		sphere_logic.pos = math::float3(0, 0, 0);
 		SphereGenerator sphere;
-		sphere.SetRad(1);
-		sphere.SetPosition(math::float3(0, 0, 0));
+		sphere.SetGeometry(sphere_logic);
 		sphere.SetDivisions(divisions);
 		data = sphere.Generate();
-
+		
+		//Create the game object
 		new_prim = CreateGameObject();
 		new_prim->SetName("Sphere");
+
+		//Create the sphere mesh
+		ComponentSphereMesh* sphere_mesh = (ComponentSphereMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_SPHERE_MESH);
+		sphere_mesh->SetGeometry(sphere_logic);
+		sphere_mesh->SetDivisions(divisions);
+		mesh = sphere_mesh;
 	}
 	break;
 	case PRIMITIVE_CYLINDER:
@@ -182,7 +191,7 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 		break;
 	}
 
-	if (new_prim != nullptr)
+	if (new_prim != nullptr && mesh != nullptr)
 	{
 		//Generate the game object
 		new_prim->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);

@@ -48,6 +48,11 @@ std::pair<std::vector<uint>, std::vector<Vertex>>  SphereGenerator::Generate()
 }
 
 // Set Methods ==================================
+void SphereGenerator::SetGeometry(const math::Sphere & geom)
+{
+	geometry = geom;
+}
+
 void SphereGenerator::SetPosition(math::float3 pos)
 {
 	geometry.pos = pos;

@@ -101,6 +101,11 @@ COMPONENT_TYPE Component::StrToComponentType(const char * str) const
 {
 	if (strcmp(str, "transformation") == 0)	return COMP_TRANSFORMATION;
 	if (strcmp(str, "mesh") == 0)			return COMP_MESH;
+	if (strcmp(str, "primitive_mesh") == 0)	return COMP_PRIMITIVE_MESH;
+	if (strcmp(str, "cube_mesh") == 0)		return COMP_CUBE_MESH;
+	if (strcmp(str, "sphere_mesh") == 0)	return COMP_SPHERE_MESH;
+	if (strcmp(str, "cylinder_mesh") == 0)	return COMP_CYLINDER_MESH;
+	if (strcmp(str, "frustum_mesh") == 0)	return COMP_FRUSTUM_MESH;
 	if (strcmp(str, "mesh_renderer") == 0)	return COMP_MESH_RENDERER;
 	if (strcmp(str, "material") == 0)		return COMP_MATERIAL;
 	if (strcmp(str, "camera") == 0)			return COMP_CAMERA;
@@ -113,6 +118,11 @@ const char * Component::ComponentTypeToStr(COMPONENT_TYPE type) const
 	{
 	case COMP_TRANSFORMATION:	return "transformation";
 	case COMP_MESH:				return "mesh";
+	case COMP_PRIMITIVE_MESH:	return "primitive_mesh";
+	case COMP_CUBE_MESH:		return "cube_mesh";
+	case COMP_SPHERE_MESH:		return "sphere_mesh";
+	case COMP_CYLINDER_MESH:	return "cylinder_mesh";
+	case COMP_FRUSTUM_MESH:		return "frustum_mesh";
 	case COMP_MESH_RENDERER:	return "mesh_renderer";
 	case COMP_MATERIAL:			return "material";
 	case COMP_CAMERA:			return "camera";
