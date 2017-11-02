@@ -104,6 +104,11 @@ bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * paren
 	return root->RemoveChild(target, search_in);
 }
 
+GameObject * ModuleScene::FindGameObject(uint id) const
+{
+	return root_gameobject->FindChild(id);
+}
+
 GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 {
 	GameObject* new_prim = nullptr;
@@ -366,6 +371,7 @@ void ModuleScene::CleanScene()
 	RELEASE(root_gameobject);
 	root_gameobject = CreateGameObject();
 	root_gameobject->SetName("Scene");
+	selected_gameobject = nullptr;
 }
 
 bool ModuleScene::LoadSerializedScene(const char * path)
@@ -395,6 +401,14 @@ bool ModuleScene::LoadSerializedScene(const char * path)
 		new_obj->Load(objects.GetArrayElement(k), objects_links);
 	}
 
+	//Link all the loaded objects
+	size = objects_links.size();
+	for(uint k = 0; k < size; k++)
+	{
+		GameObject* parent = FindGameObject(objects_links[k].second);
+		if (parent != nullptr)objects_links[k].first->SetParent(parent);
+	}
+	
 	if (ret)LOG("Scene Correctly Loaded!");
 
 	return ret;

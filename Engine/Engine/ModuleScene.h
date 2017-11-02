@@ -40,6 +40,7 @@ public:
 	//Functionality ---------
 	GameObject* CreateGameObject();
 	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
+	GameObject* FindGameObject(uint id)const;
 	GameObject* CreatePrimitive(PRIMITIVE_TYPE type, uint divisions = 2);
 	
 	void		BlitConfigInfo();

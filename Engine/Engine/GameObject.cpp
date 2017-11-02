@@ -336,7 +336,7 @@ bool GameObject::PopChild(GameObject * child, bool search_in)
 		{
 			for (uint h = k; h < size - 1; h++)
 			{
-				childs[h] == childs[h + 1];
+				childs[h] = childs[h + 1];
 			}
 
 			childs.pop_back();
@@ -352,6 +352,18 @@ bool GameObject::PopChild(GameObject * child, bool search_in)
 	}
 
 	return ret;
+}
+
+GameObject * GameObject::FindChild(uint id) const
+{
+	uint size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (childs[k]->id == id)return childs[k];
+		else childs[k]->FindChild(id);
+	}
+
+	return nullptr;
 }
 
 std::vector<GameObject*>* GameObject::GetChilds()
@@ -583,7 +595,7 @@ bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>
 	//Get object name
 	name = data.GetString("name");
 	//Get object id
-	ret = data.GetInt("id");
+	id = data.GetInt("id");
 	//Get parent id
 	uint parent_id = data.GetInt("parent_id");
 	if (parent_id != 0)links.push_back(std::pair<GameObject*, uint>(this, parent_id));

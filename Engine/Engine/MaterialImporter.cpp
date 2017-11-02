@@ -114,7 +114,7 @@ bool MaterialImporter::Load(const char * path, ComponentMaterial * target)
 	result.path = path;
 
 	//Add the resulting texture to the component
-	target->AddTexture(result);
+	if (textureID != 0)target->AddTexture(result);
 
 	return (textureID != 0);
 }

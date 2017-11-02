@@ -190,7 +190,7 @@ bool ComponentMesh::Load(Serializer & data, std::vector<std::pair<Component*, ui
 	actived = data.GetBool("actived");
 
 	//Get mesh file path
-	char str[50];
+	char str[80];
 	sprintf(str, "%s%s.fiesta",LIBRARY_MESH_FOLDER, data.GetString("path"));
 	App->importer->mesh_importer.Load(str, this);
 		

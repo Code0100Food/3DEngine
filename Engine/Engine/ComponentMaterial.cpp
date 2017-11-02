@@ -102,8 +102,14 @@ bool ComponentMaterial::Load(Serializer & data, std::vector<std::pair<Component*
 	{
 		Serializer texture_data = textures_array.GetArrayElement(k);
 		
-		ret = App->importer->material_importer.Load(texture_data.GetString("path"), this);
-		textures.back().type = texture_data.GetString("type");
+		char str[80];
+		sprintf(str, "%s%s.dds", LIBRARY_TEXTURES_FOLDER, texture_data.GetString("path"));
+		ret = App->importer->material_importer.Load(str, this);
+		if (ret)
+		{
+			textures.back().type = texture_data.GetString("type");
+			textures.back().path = texture_data.GetString("path");
+		}
 		if (!ret)break;
 	}
 

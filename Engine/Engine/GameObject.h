@@ -72,6 +72,7 @@ public:
 	void						AddChild(const GameObject* child);
 	bool						RemoveChild(GameObject* child, bool search_in = false);
 	bool						PopChild(GameObject* child, bool search_in = false);
+	GameObject*					FindChild(uint id)const;
 	std::vector<GameObject*>*	GetChilds();
 
 	//UI Methods
