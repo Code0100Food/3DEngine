@@ -2,6 +2,7 @@
 
 #include "ComponentMaterial.h"
 #include "Serializer.h"
+#include "CylinderGenerator.h"
 
 // Constructors =================================
 ComponentCylinderMesh::ComponentCylinderMesh()
@@ -70,6 +71,44 @@ bool ComponentCylinderMesh::Save(Serializer & array_root) const
 
 	//Save the built data in the components array
 	ret = array_root.InsertArrayElement(comp_data);
+
+	return ret;
+}
+
+bool ComponentCylinderMesh::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
+{
+	bool ret = true;
+
+	//Get component id
+	id = data.GetInt("id");
+	//Get actived
+	actived = data.GetBool("actived");
+
+	//Get draw material id
+	uint material_id = data.GetInt("draw_material_id");
+	if (material_id != 0)links.push_back(std::pair<Component*, uint>(this, material_id));
+
+	//Get geometry data
+	//Get top
+	Serializer top_array = data.GetArray("top");
+	for (uint k = 0; k < 3; k++)geometry.l.b.ptr()[k] = top_array.GetArrayFloat(k);
+	//Get bottom
+	Serializer bottom_array = data.GetArray("bottom");
+	for (uint k = 0; k < 3; k++)geometry.l.a.ptr()[k] = bottom_array.GetArrayFloat(k);
+	//Get radius
+	geometry.r = data.GetFloat("radius");
+	//Get divisions
+	divisions = data.GetInt("divisions");
+
+	//Build the mesh with the loaded values
+	std::pair<std::vector<uint>, std::vector<Vertex>> mesh_data;
+	CylinderGenerator cylinder;
+	cylinder.SetGeometry(geometry);
+	cylinder.SetDivisions(divisions);
+	mesh_data = cylinder.Generate();
+	SetIndices(mesh_data.first);
+	SetVertices(mesh_data.second);
+	SetupMesh();
 
 	return ret;
 }

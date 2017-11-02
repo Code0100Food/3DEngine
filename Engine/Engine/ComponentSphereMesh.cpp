@@ -78,7 +78,7 @@ bool ComponentSphereMesh::Load(Serializer & data, std::vector<std::pair<Componen
 	//Get actived
 	actived = data.GetBool("actived");
 
-	//Insert draw material id
+	//Get draw material id
 	uint material_id = data.GetInt("draw_material_id");
 	if (material_id != 0)links.push_back(std::pair<Component*, uint>(this, material_id));
 
