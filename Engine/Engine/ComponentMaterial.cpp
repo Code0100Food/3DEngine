@@ -2,6 +2,7 @@
 #include "Serializer.h"
 #include "Application.h"
 #include "FileSystem.h"
+#include "ImporterManager.h"
 
 // Constructors =================================
 ComponentMaterial::ComponentMaterial() :Component(COMPONENT_TYPE::COMP_MATERIAL)
@@ -42,6 +43,11 @@ void ComponentMaterial::BlitComponentInspector()
 	}
 }
 
+void ComponentMaterial::AddTexture(const Texture & tex)
+{
+	textures.push_back(tex);
+}
+
 bool ComponentMaterial::Save(Serializer & array_root) const
 {
 	bool ret = false;
@@ -76,6 +82,30 @@ bool ComponentMaterial::Save(Serializer & array_root) const
 
 	//Save the built data in the components array
 	ret = array_root.InsertArrayElement(comp_data);
+
+	return ret;
+}
+
+bool ComponentMaterial::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
+{
+	bool ret = false;
+
+	//Get component id
+	id = data.GetInt("id");
+	//Get actived
+	actived = data.GetBool("actived");
+
+	//Insert all the textures data
+	Serializer textures_array = data.GetArray("textures");
+	uint size = textures_array.GetArraySize();
+	for (uint k = 0; k < size; k++)
+	{
+		Serializer texture_data = textures_array.GetArrayElement(k);
+		
+		ret = App->importer->material_importer.Load(texture_data.GetString("path"), this);
+		textures.back().type = texture_data.GetString("type");
+		if (!ret)break;
+	}
 
 	return ret;
 }

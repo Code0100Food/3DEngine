@@ -3,6 +3,8 @@
 
 #include "Importer.h"
 
+class ComponentMaterial;
+
 class MaterialImporter : public Importer
 {
 public:
@@ -11,7 +13,7 @@ public:
 
 public:
 
-	bool Load(const char* path);
+	bool Load(const char* path, ComponentMaterial* target);
 	bool Import(const char* path);
 
 };

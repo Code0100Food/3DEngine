@@ -152,7 +152,7 @@ bool MeshImporter::Load(const char * path)
 bool MeshImporter::Load(const char * path, ComponentMesh* target)
 {
 	//Load the buffer from the file
-	char* buffer;
+	char* buffer = nullptr;
 	App->fs->LoadFile(path, &buffer);
 
 	if (buffer)
@@ -209,6 +209,7 @@ bool MeshImporter::Load(const char * path, ComponentMesh* target)
 		//Set mesh file path
 		std::string name;
 		App->fs->GetFileNameFromPath(path, &name);
+		name = name.substr(0, name.length() - (name.length() - name.find_last_of(".")));
 		target->SetPath(name.c_str());
 
 		//Built the mesh buffers

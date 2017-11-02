@@ -182,17 +182,19 @@ bool ComponentMesh::Save(Serializer & array_root) const
 
 bool ComponentMesh::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
 {
-	bool ret = false;
+	bool ret = true;
 
 	//Get component id
 	id = data.GetInt("id");
 	//Get actived
 	actived = data.GetBool("actived");
 
-	//Insert mesh file path
-	App->importer->mesh_importer.Load(data.GetString("path"), this);
+	//Get mesh file path
+	char str[50];
+	sprintf(str, "%s%s.fiesta",LIBRARY_MESH_FOLDER, data.GetString("path"));
+	App->importer->mesh_importer.Load(str, this);
 		
-	//Insert draw material id
+	//Get draw material id
 	uint material_id = data.GetInt("draw_material_id");
 	if(material_id != 0)links.push_back(std::pair<Component*, uint>(this, material_id));
 
