@@ -298,3 +298,34 @@ bool ComponentTransform::Save(Serializer & array_root) const
 
 	return ret;
 }
+
+bool ComponentTransform::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
+{
+	bool ret = true;
+
+	//Get component id
+	id = data.GetInt("id");
+	//Get actived
+	actived = data.GetBool("actived");
+
+	//Get transform matrix
+	Serializer trans_matrix_array = data.GetArray("transform_matrix");
+	for (uint k = 0; k < 16; k++)transform_matrix.ptr()[k] = trans_matrix_array.GetArrayFloat(k);
+	//Get position
+	Serializer position_array = data.GetArray("position");
+	for (uint k = 0; k < 3; k++)position.ptr()[k] = position_array.GetArrayFloat(k);
+	//Get inherited transform matrix
+	Serializer inherited_trans_array = data.GetArray("inherited_transform");
+	for (uint k = 0; k < 16; k++)inherited_transform.ptr()[k] = inherited_trans_array.GetArrayFloat(k);
+	//Get inherited position
+	Serializer inherited_position_array = data.GetArray("inherited_position");
+	for (uint k = 0; k < 3; k++)inherited_position.ptr()[k] = inherited_position_array.GetArrayFloat(k);
+	//Get scale
+	Serializer scale_array = data.GetArray("scale");
+	for (uint k = 0; k < 3; k++)scale.ptr()[k] = scale_array.GetArrayFloat(k);
+	//Get rotation quaternion
+	Serializer rot_quaternion_array = data.GetArray("rotation_quaternion");
+	for (uint k = 0; k < 4; k++)rotation_quaternion.ptr()[k] = rot_quaternion_array.GetArrayFloat(k);
+
+	return ret;
+}

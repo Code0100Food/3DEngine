@@ -236,3 +236,35 @@ bool ComponentCamera::Save(Serializer & array_root) const
 
 	return ret;
 }
+
+bool ComponentCamera::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
+{
+	bool ret = true;
+
+	//Get component id
+	id = data.GetInt("id");
+	//Get actived
+	actived = data.GetBool("actived");
+
+	//Get frustum data
+	//Get far plane dist
+	frustum.farPlaneDistance = data.GetFloat("far_plane_dist");
+	//Get near plane dist
+	frustum.nearPlaneDistance = data.GetFloat("near_plane_dist");
+	//Get up vector
+	Serializer up_vec_array = data.GetArray("up_vec");
+	for (uint k = 0; k < 3; k++)frustum.up.ptr()[k] = up_vec_array.GetArrayFloat(k);
+	//Get front vector
+	Serializer front_vec_array = data.GetArray("front");
+	for (uint k = 0; k < 3; k++)frustum.front.ptr()[k] = front_vec_array.GetArrayFloat(k);
+	//Get vertical fov
+	frustum.verticalFov = data.GetFloat("vertical_fov");
+	//Get position
+	Serializer pos_array = data.GetArray("position");
+	for (uint k = 0; k < 3; k++)frustum.pos.ptr()[k] = pos_array.GetArrayFloat(k);
+
+	//Frustum default type
+	frustum.type = math::FrustumType::PerspectiveFrustum;
+
+	return ret;
+}

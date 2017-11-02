@@ -50,5 +50,6 @@ public:
 	
 	//Save/Load Methods -----
 	bool Save(Serializer& array_root)const;
+	bool Load(Serializer& data, std::vector<std::pair<Component*, uint>>& links);
 };
 #endif // !_COMPONENT_CAMERA_H_
