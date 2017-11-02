@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
 #include "Light.h"
 #include "MathGeoLib/MathGeoLib.h"
 
@@ -88,8 +87,8 @@ private:
 
 	Light			lights[MAX_LIGHTS];
 	SDL_GLContext	context;
-	mat3x3			NormalMatrix;
-	mat4x4			ModelMatrix, ViewMatrix, ProjectionMatrix;
+	math::float3x3	NormalMatrix;
+	math::float4x4	ModelMatrix, ViewMatrix, ProjectionMatrix;
 
 	unsigned int	quadVAO = 0, quadVBO = 0;
 
@@ -105,6 +104,8 @@ private:
 
 	bool			mouse_on_workspace = false;
 	
+	void CalculatePrespective(math::float4x4& target, float fovy, float aspect, float n, float f);
+
 public:
 
 	//Set Methods -----------

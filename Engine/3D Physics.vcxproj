@@ -108,7 +108,6 @@
     <ClInclude Include="Engine\FrustumGenerator.h" />
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\GeometryManager.h" />
-    <ClInclude Include="Engine\glmath.h" />
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\Grid_.h" />
     <ClInclude Include="Engine\imgui\imgui.h" />
@@ -205,6 +204,7 @@
     <ClInclude Include="Engine\SphereGenerator.h" />
     <ClInclude Include="Engine\stb\stb.h" />
     <ClInclude Include="Engine\stb\stb_image.h" />
+    <ClInclude Include="Engine\TimeManager.h" />
     <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\Primitive_.h" />
   </ItemGroup>
@@ -230,7 +230,6 @@
     <ClCompile Include="Engine\FrustumGenerator.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\GeometryManager.cpp" />
-    <ClCompile Include="Engine\glmath.cpp" />
     <ClCompile Include="Engine\Grid_.cpp" />
     <ClCompile Include="Engine\imgui\imgui.cpp" />
     <ClCompile Include="Engine\imgui\imgui_demo.cpp" />
@@ -294,6 +293,7 @@
     <ClCompile Include="Engine\ModuleScene.cpp" />
     <ClCompile Include="Engine\Serializer.cpp" />
     <ClCompile Include="Engine\SphereGenerator.cpp" />
+    <ClCompile Include="Engine\TimeManager.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\Primitive_.cpp" />
   </ItemGroup>

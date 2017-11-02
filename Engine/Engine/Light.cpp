@@ -35,9 +35,13 @@ void Light::Active(bool active)
 	{
 		on = !on;
 
-		if(on)
+		if (on)
+		{
 			glEnable(ref);
+		}
 		else
+		{
 			glDisable(ref);
+		}
 	}
 }

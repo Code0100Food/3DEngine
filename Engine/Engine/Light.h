@@ -2,7 +2,7 @@
 #define _LIGHT_H_
 
 #include "Color.h"
-#include "glmath.h"
+#include "MathGeoLib/Math/float3.h"
 
 struct Light
 {
@@ -13,9 +13,9 @@ struct Light
 	void Active(bool active);
 	void Render();
 
-	Color ambient;
-	Color diffuse;
-	vec3 position;
+	Color			ambient;
+	Color			diffuse;
+	math::float3	position;
 
 	int ref = 0;
 	bool on = false;

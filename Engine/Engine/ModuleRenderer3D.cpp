@@ -732,6 +732,18 @@ void ModuleRenderer3D::SaveConfigInfo(JSON_Object * data_root)
 	json_object_set_number(data_root, "max_render_distance", max_render_distance);
 }
 
+void ModuleRenderer3D::CalculatePrespective(math::float4x4& target, float fovy, float aspect, float n, float f)
+{
+	float coty = 1.0f / tan(fovy * (float)HAVE_M_PI / 360.0f);
+
+	target.ptr()[0] = coty / aspect;
+	target.ptr()[5] = coty;
+	target.ptr()[10] = (n + f) / (n - f);
+	target.ptr()[11] = -1.0f;
+	target.ptr()[14] = 2.0f * n * f / (n - f);
+	target.ptr()[15] = 0.0f;
+}
+
 // Set Methods ==================================
 void ModuleRenderer3D::SetMinRenderDistance(float val)
 {
@@ -739,7 +751,7 @@ void ModuleRenderer3D::SetMinRenderDistance(float val)
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
+	CalculatePrespective(ProjectionMatrix, 60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
 	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -751,7 +763,7 @@ void ModuleRenderer3D::SetMaxRenderDistance(float val)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
+	CalculatePrespective(ProjectionMatrix, 60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
 	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -804,7 +816,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, min_render_distance, max_render_distance);
+	CalculatePrespective(ProjectionMatrix, 60.0f, (float)width / (float)height, min_render_distance, max_render_distance);
 	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
 
 	if (render_to_texture)
