@@ -417,6 +417,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Detect if the mouse is inside the workspace
 	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
 	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width * 0.55f, render_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
+	image_window_pos = ImGui::GetItemRectMin();
 	render_dock->EndDock();
 
 	render_dock->EndWorkspace();
@@ -807,6 +808,11 @@ bool ModuleRenderer3D::GetMouseOnWorkspace()const
 float ModuleRenderer3D::GetMaxRenderDistance() const
 {
 	return max_render_distance;
+}
+
+ImVec2 ModuleRenderer3D::GetSceneImagePos() const
+{
+	return image_window_pos;
 }
 
 // Functionality ================================

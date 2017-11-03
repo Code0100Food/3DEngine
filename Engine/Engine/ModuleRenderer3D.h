@@ -93,6 +93,7 @@ private:
 	unsigned int	quadVAO = 0, quadVBO = 0;
 
 	DockContext*	render_dock = nullptr;
+	ImVec2			image_window_pos;
 
 	//Editor Camera texture
 	FrameTexture*	render_to_texture = nullptr;
@@ -118,6 +119,7 @@ public:
 	bool	GetWireframeFront() const;
 	bool	GetMouseOnWorkspace()const;
 	float	GetMaxRenderDistance()const;
+	ImVec2	GetSceneImagePos()const;
 
 	//Functionality ---------
 	void OnResize(int width, int height);

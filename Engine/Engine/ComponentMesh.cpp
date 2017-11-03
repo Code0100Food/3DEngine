@@ -62,6 +62,28 @@ std::vector<math::float3> ComponentMesh::GetVertexPositions() const
 	return vec_pos;
 }
 
+uint ComponentMesh::GetIndexSize() const
+{
+	return indices.size();
+}
+
+int ComponentMesh::GetIndexAt(int position) const
+{
+	if (position < indices.size())
+	{
+		return indices[position];
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+math::float3 ComponentMesh::GetVertexPosAt(int position) const
+{
+	return vertices[position].position;
+}
+
 // Set Methods ==================================
 void ComponentMesh::SetVertices(std::vector<Vertex> v)
 {

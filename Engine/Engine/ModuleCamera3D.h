@@ -3,10 +3,16 @@
 
 #include "Module.h"
 #include "Globals.h"
+#include <map>
+#include <queue>
 
 #include "MathGeoLib/Geometry/Frustum.h"
+#include "MathGeoLib/Geometry/LineSegment.h"
+#include "MathGeoLib/Geometry/Triangle.h"
 #include "MathGeoLib/Math/float4x4.h"
 #include "MathGeoLib/Math/Quat.h"
+#include "imgui/imgui_dock.h"
+
 
 #define CAMERA_DIST_ON_FOCUS 0.6
 
@@ -36,6 +42,19 @@ private:
 	float			strafe_vel = 0.0f;
 	float			wasd_vel = 0.0f;
 
+	DockContext::Dock*				scene_window = nullptr;
+	float							mouse_x_normalized = 0.0f;
+	float							mouse_y_normalized = 0.0f;
+
+	std::queue<GameObject*>			check_objects;
+	std::map<float, GameObject*>	objects_to_pick;
+
+public:
+
+	math::Triangle					triangle_to_test;
+	math::LineSegment				mouse_picking;
+	math::LineSegment				mouse_picking_local_space;
+
 	math::Frustum	editor_camera_frustrum;
 	math::float3	focus_point;
 
@@ -56,6 +75,11 @@ public:
 	float			GetFrustrumNearPlaneDistance() const;
 	float			GetFrustrumFarPlaneDistance() const;
 	math::float3	GetPosition() const;
+
+private:
+
+	void		CheckAllAABB();
+	GameObject*	CheckTriangles();
 
 };
 

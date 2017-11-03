@@ -68,7 +68,6 @@ bool GameObject::Update()
 
 	/* This update*/
 	if (draw_bounding_box)DrawBoundingBox();
-	UpdateBoundingBox();
 
 	uint size = components.size();
 	for (uint k = 0; k < size; k++)

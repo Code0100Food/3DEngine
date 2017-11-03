@@ -100,7 +100,10 @@ public:
 	//Get Methods -----------
 	ComponentMaterial*			GetDrawMaterial()const;
 	std::vector<math::float3>	GetVertexPositions()const;
-
+	uint						GetIndexSize()const;
+	int							GetIndexAt(int position) const;
+	math::float3				GetVertexPosAt(int position) const;
+	
 	//Set Methods -----------
 	void	SetVertices(std::vector<Vertex> v);
 	void	SetIndices(std::vector<uint> i);

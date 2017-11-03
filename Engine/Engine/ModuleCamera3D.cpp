@@ -67,6 +67,8 @@ bool ModuleCamera3D::Start()
 	editor_camera_frustrum.verticalFov = 60 * DEGTORAD;
 	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * App->window->GetAspectRatio()));
 
+
+
 	return ret;
 }
 
@@ -127,6 +129,28 @@ update_status ModuleCamera3D::Update(float dt)
 					editor_camera_frustrum.pos = focus_point - (editor_camera_frustrum.front * camera_dist);
 				}
 			}
+		}
+
+		//Mouse picking
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
+		{
+			//Get the coords normalized and in screen percent
+			mouse_x_normalized = (float)(App->input->GetMouseX() - App->renderer3D->GetSceneImagePos().x) / (App->window->GetWidth());
+			mouse_y_normalized = (float)(App->input->GetMouseY() - App->renderer3D->GetSceneImagePos().y) / (App->window->GetHeight());
+
+			mouse_picking = editor_camera_frustrum.UnProjectLineSegment(mouse_x_normalized, mouse_y_normalized);
+			
+			//Check the line segment against all aabb's
+			CheckAllAABB();
+			
+			//Check the line segment against triangles of the aabb's objects
+			if (!objects_to_pick.empty())
+			{
+				App->scene->SetSelectedGameObject(CheckTriangles());		
+			}
+				
+
+
 		}
 
 		//Camera stafe 
@@ -239,6 +263,8 @@ void ModuleCamera3D::BlitConfigInfo()
 	ImGui::SliderFloat("Angle to Rotate around Sensibility", &angle_to_rotate, 0.1f, 360, "%.1f");
 	ImGui::SliderFloat("Stafe Sensibility", &strafe_vel, 0.1f, 10.0f, "%.1f");
 	ImGui::SliderFloat("WASD Sensibility", &wasd_vel, 0.1f, 10.0f, "%.1f");
+
+	ImGui::Text("%f, %f", mouse_x_normalized, mouse_y_normalized);
 }
 
 void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
@@ -321,4 +347,90 @@ float ModuleCamera3D::GetFrustrumFarPlaneDistance() const
 math::float3 ModuleCamera3D::GetPosition() const
 {
 	return editor_camera_frustrum.pos;
+}
+
+void ModuleCamera3D::CheckAllAABB() 
+{
+	GameObject* scene_root = App->scene->GetRoot();
+
+	if (scene_root)
+	{
+		for (std::vector<GameObject*>::iterator item = scene_root->GetChilds()->begin(); item != scene_root->GetChilds()->end(); item++)
+		{
+			check_objects.push((*item));
+		}
+	}
+
+	//Iterate all game objects and find if collides with the linesegment
+	while (!check_objects.empty())
+	{
+		float collision_distance;
+		float out_collision_distance;
+
+		//If intersects we will add its children to the queue and add the distance to the map
+		if (mouse_picking.Intersects(*check_objects.front()->GetBoundingBox(), collision_distance, out_collision_distance))
+		{
+			//Add the gameobject to the next checking
+			std::pair<float, GameObject*> object_to_triangle_check;
+
+			object_to_triangle_check.first = collision_distance;
+			object_to_triangle_check.second = check_objects.front();
+
+			objects_to_pick.insert(object_to_triangle_check);
+
+			for (std::vector<GameObject*>::iterator item = check_objects.front()->GetChilds()->begin(); item != check_objects.front()->GetChilds()->end(); item++)
+			{
+				check_objects.push((*item));
+			}
+		}
+
+		//Quit object
+		check_objects.pop();
+	}
+
+}
+
+GameObject* ModuleCamera3D::CheckTriangles()
+{
+	//Gameobject candidate to be the selected one
+	GameObject* new_selected_gameobject = nullptr;
+
+	float triangle_distance = 100.0f;
+	float closest_triangle_distance = triangle_distance;
+
+	for (std::map<float, GameObject*>::iterator item = objects_to_pick.begin(); item != objects_to_pick.end(); item++)
+	{
+		//Get the transform of the gameobject
+		ComponentTransform* tmp_trans = (ComponentTransform*)(*item).second->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+
+		//Transform the linesegment to local coordinates
+		mouse_picking_local_space = mouse_picking;
+		mouse_picking_local_space.Transform(tmp_trans->GetInheritedTransform().Inverted());
+
+		//Get the triangles of the mesh
+		ComponentMesh* tmp_mesh = (ComponentMesh*)(*item).second->FindComponent(COMPONENT_TYPE::COMP_MESH);
+		
+		if (tmp_mesh != nullptr)
+		{
+			for (int i = 0; i < (tmp_mesh->GetIndexSize() - 2); i += 3)
+			{
+				triangle_to_test.a = tmp_mesh->GetVertexPosAt(tmp_mesh->GetIndexAt(i));
+				triangle_to_test.b = tmp_mesh->GetVertexPosAt(tmp_mesh->GetIndexAt(i + 1));
+				triangle_to_test.c = tmp_mesh->GetVertexPosAt(tmp_mesh->GetIndexAt(i + 2));
+
+				//If we find the triangle we select the gameobject and we consider is the object to select
+				if (mouse_picking_local_space.Intersects(triangle_to_test, &triangle_distance, nullptr))
+				{
+					if (triangle_distance < closest_triangle_distance)
+					{
+						closest_triangle_distance = triangle_distance;
+						new_selected_gameobject = (*item).second;
+					}
+				}
+			}
+		}
+		
+	}
+	objects_to_pick.clear();
+	return new_selected_gameobject;
 }
