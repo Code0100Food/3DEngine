@@ -1,9 +1,11 @@
 
 #include "imgui.h"
+#include "../Globals.h"
 #define IMGUI_DEFINE_PLACEMENT_NEW
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_dock.h"
 #include "imgui_internal.h"
+#include "../Serializer.h"
 
 using namespace ImGui;
 
@@ -149,6 +151,32 @@ void DockContext::Dock::setPosSize(const ImVec2& _pos, const ImVec2& _size)
 
 	if (!isContainer()) return;
 	setChildrenPosSize(_pos, _size);
+}
+
+void DockContext::Dock::Save(JSON_Object* dock_object, const DockContext& workspace) const
+{
+	json_object_dotset_string(dock_object, "label", label);
+	json_object_dotset_number(dock_object, "id", id);
+	json_object_dotset_boolean(dock_object, "active", active);
+	json_object_dotset_number(dock_object, "position x", pos.x);
+	json_object_dotset_number(dock_object, "position y", pos.y);
+	json_object_dotset_number(dock_object, "size x", size.x);
+	json_object_dotset_number(dock_object, "size y", size.y);
+	json_object_dotset_number(dock_object, "status", status);
+	json_object_dotset_string(dock_object, "location", location);
+	json_object_dotset_boolean(dock_object, "opended", opened);
+	json_object_dotset_boolean(dock_object, "first", first);
+
+	//Save next / prev tab
+	json_object_dotset_number(dock_object, "next tab", workspace.GetDockPos(next_tab));
+	json_object_dotset_number(dock_object, "prev tab", workspace.GetDockPos(prev_tab));
+
+	//Childs
+	json_object_dotset_number(dock_object, "first child", workspace.GetDockPos(children[0]));
+	json_object_dotset_number(dock_object, "second child", workspace.GetDockPos(children[1]));
+
+	//Parent
+	json_object_dotset_number(dock_object, "parent", workspace.GetDockPos(parent));
 }
 
 DockContext::DockContext()
@@ -1003,6 +1031,7 @@ int DockContext::getDockIndex(Dock* dock)
 }
 
 
+
 DockContext g_dock;
 
 void DockContext::ShutdownDock()
@@ -1045,6 +1074,52 @@ bool DockContext::BeginDock(const char* label, bool* opened, ImGuiWindowFlags ex
 void DockContext::EndDock()
 {
 	end();
+}
+
+void DockContext::SaveDocks() const
+{
+	char str[50];
+	sprintf(str, "%sdock_settings.json", SETTINGS_FOLDER);
+
+	const JSON_Value* dock_settings = json_parse_file(str);
+	const JSON_Object* root_object = json_value_get_object(dock_settings);
+
+	JSON_Object* docking_start = json_object_dotget_object(root_object, "Docking Config");
+
+	//json_object_set_value(docking_start, "Dock2", json_value_init_object());
+	json_object_dotset_string((JSON_Object*)root_object, "label", "jajasalu2");
+	Serializer lol;
+
+	for (int i = 0; i < m_docks.size(); i++)
+	{
+		char name[20];
+		sprintf(name, "dock_%i", i);
+
+		json_object_set_value(docking_start, name, json_value_init_object());
+
+		JSON_Object* dock_object = json_object_dotget_object(docking_start, name);
+		m_docks[i]->Save(dock_object, *this);
+	}
+	json_serialize_to_file(dock_settings, str);
+	json_value_free((JSON_Value *)dock_settings);
+
+}
+
+int DockContext::GetDockPos(const Dock* dock_to_search) const
+{
+	if (dock_to_search == nullptr)
+	{
+		return -1;
+	}
+
+	for (int i = 0; i < m_docks.size(); i++)
+	{
+		if (m_docks[i] == dock_to_search)
+		{
+			return i;
+		}
+	}
+	return -1;
 }
 
 DockContext* getDockContext()

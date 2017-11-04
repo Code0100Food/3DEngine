@@ -3,6 +3,7 @@
 
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "../Parson/parson.h"
 
 using namespace ImGui;
 
@@ -65,6 +66,8 @@ struct DockContext
 		bool isContainer() const;
 		void setChildrenPosSize(const ImVec2& _pos, const ImVec2& _size);
 		void setPosSize(const ImVec2& _pos, const ImVec2& _size);
+
+		void Save(JSON_Object*, const DockContext&) const;
 
 		char* label;
 		ImU32 id;
@@ -156,6 +159,10 @@ struct DockContext
 	void SetDockActive();
 	bool BeginDock(const char* label, bool* opened, ImGuiWindowFlags extra_flags);
 	void EndDock();
+
+	void LoadDock();
+	void SaveDocks() const;
+	int GetDockPos(const Dock* dock_to_search) const;
 
 };
 
