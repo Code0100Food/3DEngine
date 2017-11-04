@@ -411,17 +411,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ImGui::SameLine();
 	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)));
 	{
-
+		App->scene->PlayGame();
 	}
 	ImGui::SameLine();
 	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)));
 	{
-
+		App->scene->PauseGame();
 	}
 	ImGui::SameLine();
 	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)));
 	{
-
+		App->scene->NextGameFrame();
 	}
 
 	render_dock->BeginWorkspace("Render Workspace");

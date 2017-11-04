@@ -414,3 +414,28 @@ bool ModuleScene::LoadSerializedScene(const char * path)
 
 	return ret;
 }
+
+void ModuleScene::PlayGame()
+{
+	if (scene_update_state == PLAY_SCENE_STATE)
+	{
+		scene_update_state = EDIT_SCENE_STATE;
+		App->scene->CleanScene();
+		char str[50];
+		sprintf(str, "%sscene.json", LIBRARY_FOLDER);
+		App->scene->LoadSerializedScene(str);
+	}
+	else
+	{
+		scene_update_state = PLAY_SCENE_STATE;
+		App->scene->SerializeScene();
+	}
+}
+
+void ModuleScene::PauseGame()
+{
+}
+
+void ModuleScene::NextGameFrame()
+{
+}

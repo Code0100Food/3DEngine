@@ -76,5 +76,9 @@ public:
 	void		CleanScene();
 	bool		LoadSerializedScene(const char* path);
 
+	void		PlayGame();
+	void		PauseGame();
+	void		NextGameFrame();
+
 };
 #endif
