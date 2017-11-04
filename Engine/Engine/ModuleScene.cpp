@@ -368,14 +368,6 @@ void ModuleScene::SerializeScene() const
 	}
 }
 
-void ModuleScene::CleanScene()
-{
-	RELEASE(root_gameobject);
-	root_gameobject = CreateGameObject();
-	root_gameobject->SetName("Scene");
-	selected_gameobject = nullptr;
-}
-
 bool ModuleScene::LoadSerializedScene(const char * path)
 {
 	bool ret = true;
@@ -417,6 +409,19 @@ bool ModuleScene::LoadSerializedScene(const char * path)
 	return ret;
 }
 
+bool ModuleScene::InitializeScene()
+{
+	return root_gameobject->Start();
+}
+
+void ModuleScene::CleanScene()
+{
+	RELEASE(root_gameobject);
+	root_gameobject = CreateGameObject();
+	root_gameobject->SetName("Scene");
+	selected_gameobject = nullptr;
+}
+
 void ModuleScene::PlayGame()
 {
 	if (scene_update_state == PLAY_SCENE_STATE)
@@ -431,13 +436,23 @@ void ModuleScene::PlayGame()
 	{
 		scene_update_state = PLAY_SCENE_STATE;
 		App->scene->SerializeScene();
+		App->scene->InitializeScene();
 	}
 }
 
 void ModuleScene::PauseGame()
 {
+	if (scene_update_state == PAUSE_SCENE_STATE)
+	{
+		scene_update_state = PLAY_SCENE_STATE;
+	}
+	else
+	{
+		scene_update_state = PAUSE_SCENE_STATE;
+	}
 }
 
 void ModuleScene::NextGameFrame()
 {
+	scene_update_state = NEXT_SCENE_STATE;
 }

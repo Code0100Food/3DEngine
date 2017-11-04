@@ -414,7 +414,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		App->scene->PlayGame();
 	}
 	ImGui::SameLine();
-	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
+	if (ImGui::ImageButton((ImTextureID)App->textures->custom_check_image, ImVec2(20, 20)))
 	{
 		App->scene->PauseGame();
 	}

@@ -217,11 +217,15 @@ update_status ModuleCamera3D::Update(float dt)
 		{
 			GameObject* target = App->scene->GetSelectedGameObject();
 
-			if (target != nullptr)
-			{
-				LookAtGameObject(target);
-			}
-			else LookAt({ 0,0,0 });
+if (target != nullptr)
+{
+	LookAtGameObject(target);
+}
+else
+{
+	LOG("[error] Invalid focus Target!");
+	LookAt({ 0,0,0 });
+}
 		}
 	}
 
@@ -256,7 +260,7 @@ void ModuleCamera3D::BlitConfigInfo()
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Changes The frustrum far plane distance");
 
 	ImGui::Separator();
-	
+
 	//Camera Velocities ui
 	ImGui::Text("Sensibilities");
 	ImGui::SliderFloat("Zoom Sensibility", &camera_z_mov_vel, 0.1f, 10.0f, "%.1f");
@@ -297,16 +301,26 @@ void ModuleCamera3D::Look(const math::float3& look_here, bool RotateAroundLookin
 	editor_camera_frustrum.up = math::Cross(editor_camera_frustrum.front, tmp);
 }
 
-void ModuleCamera3D::LookAt( const math::float3 &Spot)
+void ModuleCamera3D::LookAt(const math::float3 &Spot)
 {
 	focus_point = Spot;
-	editor_camera_frustrum.pos = Spot -  (5 * editor_camera_frustrum.front);
+	editor_camera_frustrum.pos = Spot - (5 * editor_camera_frustrum.front);
 }
 
 void ModuleCamera3D::LookAtGameObject(GameObject * obj)
 {
 	ComponentTransform* trans_cmp = (ComponentTransform*)obj->FindComponent(COMP_TRANSFORMATION);
-	if (trans_cmp == nullptr || obj->GetBoundingBoxDiagonalSize() <= 0)return;
+	if (trans_cmp == nullptr)
+	{
+		LOG("[error] Invalid focus Target!");
+		return;
+	}
+	else if (obj->GetBoundingBoxDiagonalSize() <= 0)
+	{
+		focus_point = trans_cmp->GetPosition();
+		Look(focus_point, true);
+		return;
+	}
 
 	focus_point = trans_cmp->GetPosition();
 	Look(focus_point, true);

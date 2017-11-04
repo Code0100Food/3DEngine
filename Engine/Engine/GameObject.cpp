@@ -65,7 +65,18 @@ GameObject::~GameObject()
 // Game Loop ====================================
 bool GameObject::Start()
 {
-	return true;
+	bool ret = true;
+
+	bounding_box.SetNegativeInfinity();
+
+	uint size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		ret = childs[k]->Start();
+		if (!ret)break;
+	}
+		
+	return ret;
 }
 
 bool GameObject::Update(float dt)
@@ -143,7 +154,9 @@ bool GameObject::GetStatic() const
 float GameObject::GetBoundingBoxDiagonalSize() const
 {
 	math::float3 vec = bounding_box.maxPoint - bounding_box.minPoint;
-	return abs(vec.Length());;
+	bool ret = (!isnan(vec.x) && !isnan(vec.y) && !isnan(vec.z));
+	if (!ret)return -1;
+	else return abs(vec.Length());
 }
 
 uint GameObject::GetID() const

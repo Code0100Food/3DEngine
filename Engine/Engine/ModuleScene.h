@@ -77,8 +77,9 @@ public:
 	void		CleanOctree();
 
 	void		SerializeScene()const;
-	void		CleanScene();
 	bool		LoadSerializedScene(const char* path);
+	bool		InitializeScene();
+	void		CleanScene();
 
 	void		PlayGame();
 	void		PauseGame();

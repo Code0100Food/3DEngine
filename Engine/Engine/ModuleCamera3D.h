@@ -14,7 +14,7 @@
 #include "imgui/imgui_dock.h"
 
 
-#define CAMERA_DIST_ON_FOCUS 0.6
+#define CAMERA_DIST_ON_FOCUS 1
 
 struct PhysVehicle3D;
 class GameObject;
