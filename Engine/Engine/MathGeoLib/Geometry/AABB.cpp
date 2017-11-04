@@ -526,9 +526,9 @@ float AABB::Distance(const Sphere &sphere) const
 
 bool AABB::Contains(const float3 &point) const
 {
-	return minPoint.x <= point.x && point.x <= maxPoint.x &&
-		   minPoint.y <= point.y && point.y <= maxPoint.y &&
-		   minPoint.z <= point.z && point.z <= maxPoint.z;
+	return ((minPoint.x <= point.x && point.x <= maxPoint.x) || (minPoint.x >= point.x && point.x >= maxPoint.x)) &&
+		   ((minPoint.y <= point.y && point.y <= maxPoint.y) || (minPoint.y >= point.y && point.y >= maxPoint.y)) &&
+		   ((minPoint.z <= point.z && point.z <= maxPoint.z) || (minPoint.z >= point.z && point.z >= maxPoint.z));
 }
 
 bool AABB::Contains(const LineSegment &lineSegment) const

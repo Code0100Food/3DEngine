@@ -15,7 +15,7 @@ struct OctItem
 public:
 
 	OctItem() {}
-	OctItem(const DATA_TYPE& data, const math::AABB& location) : data(data), bounding_box(bounding_box) {}
+	OctItem(const DATA_TYPE& data, const math::AABB& bounding_box) : data(data), bounding_box(bounding_box) {}
 
 public:
 
@@ -149,43 +149,43 @@ public:
 		math::AABB		temp_ab;
 		
 		//Calculate new AABB for each child
-		temp_ab.minPoint = aabb.CenterPoint();
-		temp_ab.maxPoint = { -cube_size, -cube_size,-cube_size };
+		temp_ab.maxPoint = aabb.CenterPoint();
+		temp_ab.minPoint = { temp_ab.maxPoint.x  -cube_size, temp_ab.maxPoint.y  -cube_size,temp_ab.maxPoint.z  -cube_size };
 		children[0] = new OctCube(temp_ab, max_objects);
 		children[0]->root = this;
 
-		temp_ab.minPoint = aabb.CenterPoint();
-		temp_ab.maxPoint = { + cube_size,- cube_size,- cube_size };
+		temp_ab.maxPoint = aabb.CenterPoint();
+		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size,temp_ab.maxPoint.y - cube_size,temp_ab.maxPoint.z - cube_size };
 		children[1] = new OctCube(temp_ab, max_objects);
 		children[1]->root = this;
 
-		temp_ab.minPoint = aabb.CenterPoint();
-		temp_ab.maxPoint = { - cube_size,+ cube_size,- cube_size };
+		temp_ab.maxPoint = aabb.CenterPoint();
+		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size,temp_ab.maxPoint.y + cube_size,temp_ab.maxPoint.z - cube_size };
 		children[2] = new OctCube(temp_ab, max_objects);
 		children[2]->root = this;
 
-		temp_ab.minPoint = aabb.CenterPoint();
-		temp_ab.maxPoint = { - cube_size, - cube_size,+ cube_size };
+		temp_ab.maxPoint = aabb.CenterPoint();
+		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size, temp_ab.maxPoint.y - cube_size,temp_ab.maxPoint.z + cube_size };
 		children[3] = new OctCube(temp_ab, max_objects);
 		children[3]->root = this;
 
-		temp_ab.minPoint = aabb.CenterPoint();
-		temp_ab.maxPoint = { + cube_size,+ cube_size, + cube_size };
+		temp_ab.maxPoint = aabb.CenterPoint();
+		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size,temp_ab.maxPoint.y + cube_size,temp_ab.maxPoint.z + cube_size };
 		children[4] = new OctCube(temp_ab, max_objects);
 		children[4]->root = this;
 
-		temp_ab.minPoint = aabb.CenterPoint();
-		temp_ab.maxPoint = {  + cube_size,+ cube_size, - cube_size };
+		temp_ab.maxPoint = aabb.CenterPoint();
+		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size,temp_ab.maxPoint.y + cube_size,temp_ab.maxPoint.z - cube_size };
 		children[5] = new OctCube(temp_ab, max_objects);
 		children[5]->root = this;
 
-		temp_ab.minPoint = aabb.CenterPoint();;
-		temp_ab.maxPoint = { + cube_size,- cube_size,+ cube_size };
+		temp_ab.maxPoint = aabb.CenterPoint();
+		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size,temp_ab.maxPoint.y - cube_size,temp_ab.maxPoint.z + cube_size };
 		children[6] = new OctCube(temp_ab, max_objects);
 		children[6]->root = this;
 
-		temp_ab.minPoint = aabb.CenterPoint();
-		temp_ab.maxPoint = { - cube_size, + cube_size, + cube_size };
+		temp_ab.maxPoint = aabb.CenterPoint();
+		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size,temp_ab.maxPoint.y + cube_size,temp_ab.maxPoint.z + cube_size };
 		children[7] = new OctCube(temp_ab, max_objects);
 		children[7]->root = this;
 

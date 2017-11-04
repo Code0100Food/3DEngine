@@ -32,24 +32,23 @@ bool ModuleScene::Start()
 	root_gameobject = CreateGameObject();
 	root_gameobject->SetName("Scene");
 
-	//Generate a default main camera
-	GameObject* test = CreateGameObject();
-	test->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-	test->CreateComponent(COMPONENT_TYPE::COMP_CAMERA);
-	test->SetName("Main Camera");
-
 	//Set a default octree configuration
-	int bound_size = 20;
+	int bound_size = 10;
 	math::AABB boundaries = math::AABB(math::float3(-bound_size, -bound_size, -bound_size), math::float3(bound_size, bound_size, bound_size));
 	octree.SetBoundaries(boundaries);
-	octree.SetMaxObjects(2);
-
+	octree.SetMaxObjects(1);
+	
 	//Load a scene if theres a saved one
 	char str[50];
 	sprintf(str, "%sscene.json", LIBRARY_FOLDER);
 	if (!App->scene->LoadSerializedScene(str))
 	{
 		LOG("No default saved scene!");
+		//Generate a default main camera
+		GameObject* main_camera = CreateGameObject();
+		main_camera->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		main_camera->CreateComponent(COMPONENT_TYPE::COMP_CAMERA);
+		main_camera->SetName("Main Camera");
 	}
 	else LOG("Scene loaded correctly!");
 
