@@ -28,7 +28,7 @@ ComponentMeshRenderer::~ComponentMeshRenderer()
 }
 
 // Game Loop ====================================
-bool ComponentMeshRenderer::Update()
+bool ComponentMeshRenderer::Update(float dt)
 {
 	if (target_mesh == nullptr)return false;
 

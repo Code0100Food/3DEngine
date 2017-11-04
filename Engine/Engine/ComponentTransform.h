@@ -13,6 +13,10 @@ public:
 	ComponentTransform(const ComponentTransform& cpy);
 	~ComponentTransform();
 
+public:
+
+	bool Update(float dt);
+
 private:
 
 	//Local transform
@@ -39,8 +43,6 @@ public:
 	bool has_been_modified = false;
 
 public:
-
-	bool Update();
 
 	//Set Methods -----------
 	void SetTransformation(aiMatrix4x4 trans);

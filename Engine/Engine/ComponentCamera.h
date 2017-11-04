@@ -18,7 +18,7 @@ public:
 public:
 
 	bool Start();
-	bool Update();
+	bool Update(float dt);
 
 private:
 

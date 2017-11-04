@@ -19,7 +19,8 @@ ComponentTransform::~ComponentTransform()
 
 }
 
-bool ComponentTransform::Update()
+// Game Loop ====================================
+bool ComponentTransform::Update(float dt)
 {
 	if (has_been_modified)
 	{
@@ -37,7 +38,7 @@ bool ComponentTransform::Update()
 	{
 		DrawOrientationAxis();
 	}
-	
+
 
 	return true;
 }

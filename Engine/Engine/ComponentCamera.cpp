@@ -30,6 +30,7 @@ ComponentCamera::~ComponentCamera()
 	App->renderer3D->RemoveGameCamera(this);
 }
 
+// Game Loop ====================================
 bool ComponentCamera::Start()
 {
 	frustum.type = math::PerspectiveFrustum;
@@ -52,7 +53,7 @@ bool ComponentCamera::Start()
 	return true;
 }
 
-bool ComponentCamera::Update()
+bool ComponentCamera::Update(float dt)
 {
 	UpdateFrustumTransform();
 	DrawFrustum();

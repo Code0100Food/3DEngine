@@ -58,7 +58,8 @@ bool ModuleScene::SceneUpdate(float dt)
 	}
 	
 	//Update the scene game objects
-	ret = root_gameobject->Update();
+	if (scene_update_state == SCENE_UPDATE_STATE::PAUSE_SCENE_STATE)dt = 0;
+	ret = root_gameobject->Update(dt);
 
 	//Draw the octree
 	App->renderer3D->DisableGLRenderFlags();
@@ -392,14 +393,13 @@ bool ModuleScene::LoadSerializedScene(const char * path)
 
 	//Game objects array
 	Serializer objects = scene.GetArray("GameObjects");
-	std::vector<std::pair<GameObject*, uint>> objects_links;
 
 	//Iterate all the elements
 	uint size = objects.GetArraySize();
 	for(uint k = 0; k < size;k++)
 	{
 		GameObject* new_obj = CreateGameObject();
-		new_obj->Load(objects.GetArrayElement(k), objects_links);
+		new_obj->Load(objects.GetArrayElement(k), objects_links, components_links);
 	}
 
 	//Link all the loaded objects
@@ -410,6 +410,8 @@ bool ModuleScene::LoadSerializedScene(const char * path)
 		if (parent != nullptr)objects_links[k].first->SetParent(parent);
 	}
 	
+	objects_links.clear();
+
 	if (ret)LOG("Scene Correctly Loaded!");
 
 	return ret;

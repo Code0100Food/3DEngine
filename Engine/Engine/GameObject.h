@@ -26,20 +26,23 @@ public:
 
 public:
 
-	bool	Update();
+	bool	Start();
+	bool	Update(float dt);
 
 private:
 
+	uint						id = 0;
 	bool						actived = true;
 	bool						static_ = false;
 	std::string					name = "Unnamed";
 	GameObject*					parent = nullptr;
 	std::vector<Component*>		components;
 	std::vector<GameObject*>	childs;
+	
 	bool						draw_bounding_box = false;
 	math::AABB					bounding_box;
 	math::AABB					original_bounding_box;
-	uint						id = 0;
+	std::vector<math::float3>	childs_aabb_points;
 
 public:
 
@@ -86,11 +89,10 @@ public:
 	math::AABB								GetTransformedBoundingBox();
 	math::AABB								GetInheritTransformedBoundingBox();
 	void									UpdateBoundingBox();
-	std::vector<math::float3>				childs_aabb_points;
 
 	//Save/Load Methods
 	bool Save(Serializer& array_root)const;
-	bool Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links);
+	bool Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links, std::vector<std::pair<Component*, uint>>& components_links);
 
 };
 #endif // !_GAME_OBJECT_H_

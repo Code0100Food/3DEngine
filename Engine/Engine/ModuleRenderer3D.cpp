@@ -409,17 +409,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//Play / Pause / Next buttons
 	ImGui::SameLine();
-	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)));
+	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
 	{
 		App->scene->PlayGame();
 	}
 	ImGui::SameLine();
-	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)));
+	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
 	{
 		App->scene->PauseGame();
 	}
 	ImGui::SameLine();
-	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)));
+	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
 	{
 		App->scene->NextGameFrame();
 	}

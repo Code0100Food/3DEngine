@@ -39,7 +39,7 @@ public:
 public:
 
 	virtual bool Start();
-	virtual bool Update();
+	virtual bool Update(float dt);
 
 protected:
 

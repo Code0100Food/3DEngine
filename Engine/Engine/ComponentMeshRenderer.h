@@ -13,7 +13,7 @@ public:
 
 public:
 
-	bool Update();
+	bool Update(float dt);
 
 private:
 

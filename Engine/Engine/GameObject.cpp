@@ -8,6 +8,7 @@
 #include "GeometryManager.h"
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
+#include "TimeManager.h"
 
 #include "Serializer.h"
 
@@ -62,7 +63,12 @@ GameObject::~GameObject()
 }
 
 // Game Loop ====================================
-bool GameObject::Update()
+bool GameObject::Start()
+{
+	return true;
+}
+
+bool GameObject::Update(float dt)
 {
 	bool ret = true;
 
@@ -74,7 +80,7 @@ bool GameObject::Update()
 	{
 		if (components[k]->GetActive())
 		{
-			ret = components[k]->Update();
+			ret = components[k]->Update(dt);
 		}
 	}
 
@@ -83,7 +89,7 @@ bool GameObject::Update()
 	{
 		if (childs[k]->GetActive())
 		{
-			ret = childs[k]->Update();
+			ret = childs[k]->Update(dt);
 		}
 	}
 
@@ -582,12 +588,9 @@ bool GameObject::Save(Serializer& array_root) const
 	return ret;
 }
 
-bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links)
+bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links, std::vector<std::pair<Component*, uint>>& components_links)
 {
 	bool ret = true;
-
-	//Generate parent link
-
 
 	//Get active
 	actived = data.GetBool("actived");
@@ -604,7 +607,6 @@ bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>
 	//Load all the components
 	Serializer components_data = data.GetArray("Components");
 	uint size = components_data.GetArraySize();
-	std::vector<std::pair<Component*, uint>> components_links;
 
 	for (uint k = 0; k < size; k++)
 	{
@@ -620,6 +622,9 @@ bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>
 	{
 		components_links[k].first->LinkComponent(FindComponent(components_links[k].second));
 	}
+
+	//Clear the components links vector
+	components_links.clear();
 
 	//Adjust the bounding box
 	AdjustBoundingBox();

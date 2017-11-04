@@ -41,6 +41,10 @@ private:
 
 	Octree<GameObject*>		octree;
 
+	//Vectors used during serialization
+	std::vector<std::pair<GameObject*, uint>>	objects_links;
+	std::vector<std::pair<Component*, uint>>	components_links;
+
 public:
 
 	//Set Methods -----------
