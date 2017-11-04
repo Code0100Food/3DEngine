@@ -131,6 +131,12 @@ update_status ModuleImgui::Update(float dt)
 			App->scene->LoadSerializedScene(str);
 		}
 
+		//Clean Button
+		if (ImGui::MenuItem("Clean"))
+		{
+			App->scene->CleanScene();
+		}
+		
 		//Exit button
 		if (ImGui::MenuItem("Exit"))
 		{

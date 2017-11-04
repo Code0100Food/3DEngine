@@ -44,6 +44,15 @@ bool ModuleScene::Start()
 	octree.SetBoundaries(boundaries);
 	octree.SetMaxObjects(2);
 
+	//Load a scene if theres a saved one
+	char str[50];
+	sprintf(str, "%sscene.json", LIBRARY_FOLDER);
+	if (!App->scene->LoadSerializedScene(str))
+	{
+		LOG("No default saved scene!");
+	}
+	else LOG("Scene loaded correctly!");
+
 	return true;
 }
 
