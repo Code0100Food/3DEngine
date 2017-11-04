@@ -421,7 +421,7 @@
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClInclude>
     <ClInclude Include="Engine\TimeManager.h">
-      <Filter>Sources\Modules</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -683,7 +683,9 @@
     <ClCompile Include="Engine\ComponentCylinderMesh.cpp">
       <Filter>Sources\GameObject &amp; Components</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\TimeManager.cpp" />
+    <ClCompile Include="Engine\TimeManager.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

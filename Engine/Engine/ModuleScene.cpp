@@ -7,6 +7,7 @@
 #include "ModuleRenderer3D.h"
 #include "Serializer.h"
 #include "FileSystem.h"
+#include "ModuleTextures.h"
 
 #include "SphereGenerator.h"
 #include "CubeGenerator.h"

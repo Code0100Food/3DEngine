@@ -6,6 +6,15 @@
 #include "Octree.h"
 #include "Primitive_.h"
 
+enum SCENE_UPDATE_STATE
+{
+	UNDEF_SCENE_STATE = 0,
+	EDIT_SCENE_STATE,
+	PLAY_SCENE_STATE,
+	PAUSE_SCENE_STATE,
+	NEXT_SCENE_STATE
+};
+
 class ModuleScene : public Module
 {
 public:
@@ -21,9 +30,12 @@ public:
 
 private:
 
+	SCENE_UPDATE_STATE		scene_update_state = EDIT_SCENE_STATE;
+
 	GameObject*				root_gameobject = nullptr;
 	GameObject*				selected_gameobject = nullptr;
 
+	uint					play_tex_id = 0, stop_tex_id = 0, next_tex_id = 0;
 	bool					hierarchy_win_state = true;
 	bool					inspector_state = true;
 

@@ -406,7 +406,24 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	ImGui::Begin("Render Workspace##window", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
 	ImGui::Text("Work Space");
-	
+
+	//Play / Pause / Next buttons
+	ImGui::SameLine();
+	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)));
+	{
+
+	}
+	ImGui::SameLine();
+	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)));
+	{
+
+	}
+	ImGui::SameLine();
+	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)));
+	{
+
+	}
+
 	render_dock->BeginWorkspace("Render Workspace");
 
 	render_dock->BeginDock("Game##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);

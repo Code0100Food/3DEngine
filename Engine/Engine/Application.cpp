@@ -17,6 +17,7 @@
 #include "Profiler.h"
 #include "Serializer.h"
 #include "ImporterManager.h"
+#include "TimeManager.h"
 #include "Parson/parson.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "mmgr/mmgr.h"
@@ -25,7 +26,6 @@
 // Constructors =================================
 Application::Application()
 {
-	START(ms_timer);
 	START(prof_timer);
 
 	importer = new ImporterManager();
@@ -35,6 +35,8 @@ Application::Application()
 	serializer = new Serializer();
 
 	randomizer = new math::LCG();
+
+	time_manager = new TimeManager();
 
 	START(m_prof_timer);
 	window = new ModuleWindow("Window", M_WINDOW, true);
@@ -112,7 +114,6 @@ Application::Application()
 	// Renderer last!
 	AddModule(renderer3D);
 
-	PEEK(ms_timer);
 	profiler->CallProfBlock(APPLICATION, BUILD_STEP, prof_timer.ReadTicks());
 
 	//Dock Window
@@ -132,7 +133,7 @@ Application::~Application()
 // Game Loop ====================================
 bool Application::Awake()
 {
-	START(ms_timer);
+	START(App->time_manager->ms_timer);
 	START(prof_timer);
 
 	bool ret = true;
@@ -148,8 +149,8 @@ bool Application::Awake()
 	const JSON_Object* app_object = json_object_dotget_object(root_object, "Application");
 	app_name = json_object_get_string(app_object, "name");
 	organization = json_object_get_string(app_object, "organization");
-	max_fps = json_object_get_number(app_object, "max_fps");
-	capped_ms = 1000 / (float)max_fps;
+	App->time_manager->max_fps = json_object_get_number(app_object, "max_fps");
+	App->time_manager->capped_ms = 1000 / (float)App->time_manager->max_fps;
 
 	// Call Awake() in all modules
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end(); item++)
@@ -167,7 +168,7 @@ bool Application::Awake()
 	//Free config data
 	json_value_free((JSON_Value *)config_data);
 
-	PEEK(ms_timer);
+	PEEK(App->time_manager->ms_timer);
 	profiler->CallProfBlock(APPLICATION, AWAKE_STEP, prof_timer.ReadTicks());
 
 	return ret;
@@ -175,7 +176,7 @@ bool Application::Awake()
 
 bool Application::Init()
 {
-	START(ms_timer);
+	START(App->time_manager->ms_timer);
 	START(prof_timer);
 
 	bool ret = true;
@@ -200,7 +201,7 @@ bool Application::Init()
 	//Initialize values
 	memset(fps_array, 0, 30);
 	app_context = APP_CONTEXT::PAUSE_CONTEXT;
-	PEEK(ms_timer);
+	PEEK(App->time_manager->ms_timer);
 	profiler->CallProfBlock(APPLICATION, START_STEP, prof_timer.ReadTicks());
 
 	return ret;
@@ -208,12 +209,12 @@ bool Application::Init()
 
 void Application::PrepareUpdate()
 {
-	frame_count++;
-	last_sec_frame_count++;
+	App->time_manager->frame_count++;
+	App->time_manager->last_sec_frame_count++;
 
-	dt = (float)ms_timer.ReadSec();
-	ms_timer.Start();
-	frame_time.Start();
+	App->time_manager->real_time_dt = (float)App->time_manager->ms_timer.ReadSec();
+	App->time_manager->ms_timer.Start();
+	App->time_manager->frame_time.Start();
 
 	//Generate the imgui frame
 	ImGui_ImplSdl_NewFrame(App->window->window);
@@ -221,21 +222,20 @@ void Application::PrepareUpdate()
 
 void Application::FinishUpdate()
 {
-	if (last_sec_frame_time.Read() > 1000)
+	if (App->time_manager->last_sec_frame_time.Read() > 1000)
 	{
-		last_sec_frame_time.Start();
-		prev_last_sec_frame_count = last_sec_frame_count;
-		last_sec_frame_count = 0;
+		App->time_manager->last_sec_frame_time.Start();
+		App->time_manager->prev_last_sec_frame_count = App->time_manager->last_sec_frame_count;
+		App->time_manager->last_sec_frame_count = 0;
 	}
 
-	float avg_fps = float(frame_count) / startup_time.ReadSec();
-	float seconds_since_startup = startup_time.ReadSec();
-	uint32 last_frame_ms = frame_time.Read();
-	uint32 frames_on_last_update = prev_last_sec_frame_count;
-
-	if (capped_ms > 0 && last_frame_ms < capped_ms)
+	float avg_fps = float(App->time_manager->frame_count) / App->time_manager->real_startup_time.ReadSec();
+	float seconds_since_startup = App->time_manager->real_startup_time.ReadSec();
+	uint32 last_frame_ms = App->time_manager->frame_time.Read();
+	
+	if (App->time_manager->capped_ms > 0 && last_frame_ms < App->time_manager->capped_ms)
 	{
-		SDL_Delay(capped_ms - last_frame_ms);
+		SDL_Delay(App->time_manager->capped_ms - last_frame_ms);
 	}
 }
 
@@ -254,7 +254,7 @@ update_status Application::Update()
 		if (!(*item)->enabled)continue;
 
 		START(m_prof_timer);
-		ret = (*item)->PreUpdate(dt);
+		ret = (*item)->PreUpdate(App->time_manager->real_time_dt);
 		profiler->CallProfBlock((*item)->id, PRE_UPDATE_STEP, m_prof_timer.ReadTicks());
 	}
 	profiler->CallProfBlock(APPLICATION, PRE_UPDATE_STEP, prof_timer.ReadTicks());
@@ -265,7 +265,7 @@ update_status Application::Update()
 		if (!(*item)->enabled)continue;
 
 		START(m_prof_timer);
-		ret = (*item)->Update(dt);
+		ret = (*item)->Update(App->time_manager->real_time_dt);
 		profiler->CallProfBlock((*item)->id, UPDATE_STEP, m_prof_timer.ReadTicks());
 	}
 	profiler->CallProfBlock(APPLICATION, UPDATE_STEP, prof_timer.ReadTicks());
@@ -276,7 +276,7 @@ update_status Application::Update()
 		if (!(*item)->enabled)continue;
 
 		START(m_prof_timer);
-		ret = (*item)->PostUpdate(dt);
+		ret = (*item)->PostUpdate(App->time_manager->real_time_dt);
 		profiler->CallProfBlock((*item)->id, POST_UPDATE_STEP, m_prof_timer.ReadTicks());
 	}
 	profiler->CallProfBlock(APPLICATION, POST_UPDATE_STEP, prof_timer.ReadTicks());
@@ -291,7 +291,7 @@ update_status Application::Update()
 
 bool Application::CleanUp()
 {
-	START(ms_timer);
+	START(App->time_manager->ms_timer);
 
 	bool ret = true;
 
@@ -306,7 +306,7 @@ bool Application::CleanUp()
 	JSON_Object * app_value = serializer->AccessObject(config_data, 1, "Application");
 	json_object_set_string(app_value, "name", app_name.c_str());
 	json_object_set_string(app_value, "organization", organization.c_str());
-	json_object_set_number(app_value, "max_fps", max_fps);
+	json_object_set_number(app_value, "max_fps", App->time_manager->max_fps);
 
 	// Save all modules configuration
 	const JSON_Object *root_object = json_value_get_object(config_data);
@@ -344,7 +344,10 @@ bool Application::CleanUp()
 	//Release the config dock
 	RELEASE(config_dock);
 
-	PEEK(ms_timer);
+	PEEK(App->time_manager->ms_timer);
+
+	//Delete the time manager
+	RELEASE(time_manager);
 
 	return ret;
 }
@@ -431,9 +434,9 @@ void Application::BlitConfigWindow()
 		ImGui::InputText("Organization", (char*)organization.c_str(), 20);
 		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Change application organization.");
 
-		if (ImGui::SliderInt("Max FPS", &max_fps, 0, 120))
+		if (ImGui::SliderInt("Max FPS", &App->time_manager->max_fps, 0, 120))
 		{
-			capped_ms = 1000 / (float)max_fps;
+			App->time_manager->capped_ms = 1000 / (float)App->time_manager->max_fps;
 			App->audio->PlayFxForInput(SLICE_TICK_FX);
 		}
 		ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Limit max FPS.");
@@ -457,7 +460,7 @@ void Application::BlitConfigWindow()
 		{
 			miliseconds_array[k] = miliseconds_array[k + 1];
 		}
-		miliseconds_array[GRAPH_ARRAY_SIZE - 1] = dt * 1000;
+		miliseconds_array[GRAPH_ARRAY_SIZE - 1] = App->time_manager->real_time_dt * 1000;
 
 		//Blit milliseconds graphic
 		char mili_title[25];
