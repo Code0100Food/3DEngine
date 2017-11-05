@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "MathGeoLib/Math/float3.h"
 #include "MathGeoLib/Geometry/AABB.h"
+#include "MathGeoLib/Geometry/Frustum.h"
 
 #define NODE_SUBDIVISION 8
 
@@ -27,6 +28,11 @@ public:
 	bool operator == (const OctItem& target)
 	{
 		return (location == location && data == data);
+	}
+
+	bool CheckContact(math::Frustum frus)const
+	{
+		return bool(bounding_box.Contains(frus) || bounding_box.Intersects(frus));
 	}
 };
 /// ---------------------------------------------
@@ -91,7 +97,7 @@ public:
 		{
 			return false;
 		}
-	
+
 		if (full)
 		{
 			int contacts = 0;
@@ -108,7 +114,7 @@ public:
 			{
 				children[index]->Insert(data, bb);
 			}
-			else if(contacts > 1)
+			else if (contacts > 1)
 			{
 				OctItem<DATA_TYPE> item(data, bb);
 				objects.push_back(item);
@@ -141,16 +147,20 @@ public:
 		return bool(aabb.Contains(bb) || aabb.Intersects(bb));
 	}
 
+	bool CheckContact(math::Frustum frus)const
+	{
+		return bool(aabb.Contains(frus) || aabb.Intersects(frus));
+	}
 
 	void Subdivide()
 	{
 		//Variables used to allocate the different divisions data
 		float			cube_size = aabb.HalfSize().x;
 		math::AABB		temp_ab;
-		
+
 		//Calculate new AABB for each child
 		temp_ab.maxPoint = aabb.CenterPoint();
-		temp_ab.minPoint = { temp_ab.maxPoint.x  -cube_size, temp_ab.maxPoint.y  -cube_size,temp_ab.maxPoint.z  -cube_size };
+		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size, temp_ab.maxPoint.y - cube_size,temp_ab.maxPoint.z - cube_size };
 		children[0] = new OctCube(temp_ab, max_objects);
 		children[0]->root = this;
 
@@ -222,6 +232,26 @@ public:
 		objects_cpy.clear();
 	}
 
+	void CollectCandidates(math::Frustum& frustum, std::queue<DATA_TYPE>* queue)
+	{
+		if (!CheckContact(frustum))return;
+
+		if (full)
+		{
+			for (uint k = 0; k < NODE_SUBDIVISION; k++)children[k]->CollectCandidates(frustum, queue);
+		}
+
+		uint size = objects.size();
+		for (uint k = 0; k < size; k++)
+		{
+			if(objects[k].CheckContact(frustum))
+			{
+				queue->push(objects[k].data);
+			}
+		}
+		
+	}
+
 	/*int CollectCandidates(std::vector<DATA_TYPE>& nodes, const SDL_Rect& rect)
 	{
 		uint ret = 0;
@@ -249,76 +279,6 @@ public:
 					nodes.push_back(objects[k].data);
 					ret++;
 				}
-			}
-		}
-
-		return ret;
-	}
-
-	int CollectCandidates(std::vector<DATA_TYPE>& nodes, const Circle& circle)
-	{
-		uint ret = 0;
-
-		// If range is not in the quad-tree, return
-		if (!circle.Intersects(&aabb))return 0;
-
-		// See if the points of this node are in range and pushback them to the vector
-		if (full)
-		{
-			// Otherwise, add the points from the children
-			ret += children[0]->CollectCandidates(nodes, circle);
-			ret += children[1]->CollectCandidates(nodes, circle);
-			ret += children[2]->CollectCandidates(nodes, circle);
-			ret += children[3]->CollectCandidates(nodes, circle);
-		}
-		else
-		{
-			uint size = objects.size();
-			for (uint k = 0; k < size; k++)
-			{
-				fPoint loc(objects[k].location.x, objects[k].location.y);
-
-				if (circle.IsIn(&loc))
-				{
-					nodes.push_back(objects[k].data);
-					ret++;
-				}
-
-			}
-		}
-
-		return ret;
-	}
-
-	int CollectCandidates(std::list<DATA_TYPE>& nodes, const Circle& circle)
-	{
-		uint ret = 0;
-
-		// If range is not in the quad-tree, return
-		if (!circle.Intersects(&aabb))return 0;
-
-		// See if the points of this node are in range and pushback them to the vector
-		if (full)
-		{
-			// Otherwise, add the points from the children
-			ret += children[0]->CollectCandidates(nodes, circle);
-			ret += children[1]->CollectCandidates(nodes, circle);
-			ret += children[2]->CollectCandidates(nodes, circle);
-			ret += children[3]->CollectCandidates(nodes, circle);
-		}
-		else
-		{
-			uint size = objects.size();
-			for (uint k = 0; k < size; k++)
-			{
-				fPoint loc(objects[k].location.x, objects[k].location.y);
-
-				if (circle.IsIn(&loc))
-				{
-					nodes.push_back(objects[k].data);
-					ret++;
-				}
-
 			}
 		}
 
@@ -373,7 +333,7 @@ public:
 		root->max_objects = max;
 	}
 
-	
+
 	bool Insert(const DATA_TYPE data, math::AABB new_bb)
 	{
 		if (root != NULL)
@@ -382,16 +342,23 @@ public:
 		}
 		return false;
 	}
-	
+
 
 	void Draw()const
 	{
 		float color[4] = { 0.4f,0.8f,0.2f,1.0f };
-		if(root!= NULL)root->Draw(color);
+		if (root != NULL)root->Draw(color);
 	}
 
-	/*
-	int	CollectCandidates(std::vector<DATA_TYPE>& nodes, const SDL_Rect& r) const
+	void CollectCandidates(math::Frustum& frustum, std::queue<DATA_TYPE>* queue)
+	{
+		if (root != NULL && (frustum.Contains(root->aabb) || (frustum.Intersects(root->aabb))))
+		{
+			root->CollectCandidates(frustum, queue);
+		}
+	}
+
+	/*int	CollectCandidates(std::vector<DATA_TYPE>& nodes, const SDL_Rect& r) const
 	{
 		int tests = 0;
 
@@ -412,30 +379,10 @@ public:
 	{
 		if (root != NULL && root->children[0] != nullptr)
 		{
-			for (uint k = 0; k < 8; k++)RELEASE(root->children[k]);
+			for (uint k = 0; k < NODE_SUBDIVISION; k++)RELEASE(root->children[k]);
 			root->full = false;
 		}
 	}
-
-	/*int	CollectCandidates(std::vector<DATA_TYPE>& nodes, const Circle& circle) const
-	{
-		int tests = 0;
-
-		if (root != NULL && circle.Intersects(&root->aabb))
-			tests = root->CollectCandidates(nodes, circle);
-
-		return tests;
-	}
-
-	int	CollectCandidates(std::list<DATA_TYPE>& nodes, const Circle& circle) const
-	{
-		int tests = 0;
-
-		if (root != NULL && circle.Intersects(&root->aabb))
-			tests = root->CollectCandidates(nodes, circle);
-
-		return tests;
-	}*/
 };
 /// ---------------------------------------------
 #endif

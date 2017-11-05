@@ -39,7 +39,8 @@ private:
 	bool					hierarchy_win_state = true;
 	bool					inspector_state = true;
 
-	Octree<GameObject*>		octree;
+	Octree<GameObject*>			octree;
+	std::vector<GameObject*>	static_objects;
 
 	//Vectors used during serialization
 	std::vector<std::pair<GameObject*, uint>>	objects_links;
@@ -74,7 +75,12 @@ public:
 
 	void		PushGameObjectInOctree(GameObject* target, bool childs = true);
 	void		ReFillOctree();
+	void		CollectOctreeCandidates(math::Frustum& frustum, std::queue<GameObject*>* queue);
 	void		CleanOctree();
+
+	void		InsertStaticObject(const GameObject* target);
+	void		RemoveStaticObject(const GameObject* target);
+	void		HideStaticObjects();
 
 	void		SerializeScene()const;
 	bool		LoadSerializedScene(const char* path);

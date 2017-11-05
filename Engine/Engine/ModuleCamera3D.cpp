@@ -67,7 +67,7 @@ bool ModuleCamera3D::Start()
 	editor_camera_frustrum.verticalFov = 60 * DEGTORAD;
 	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * App->window->GetAspectRatio()));
 
-
+	editor_camera_frustrum.pos = { 0,0,0 };
 
 	return ret;
 }
@@ -217,15 +217,15 @@ update_status ModuleCamera3D::Update(float dt)
 		{
 			GameObject* target = App->scene->GetSelectedGameObject();
 
-if (target != nullptr)
-{
-	LookAtGameObject(target);
-}
-else
-{
-	LOG("[error] Invalid focus Target!");
-	LookAt({ 0,0,0 });
-}
+			if (target != nullptr)
+			{
+				LookAtGameObject(target);
+			}
+			else
+			{
+				LOG("[error] Invalid focus Target!");
+				LookAt({ 0,0,0 });
+			}
 		}
 	}
 

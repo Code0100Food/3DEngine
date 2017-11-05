@@ -326,7 +326,7 @@ bool GameObject::RemoveChild(GameObject * child, bool search_in)
 
 			for (uint h = k; h < size - 1; h++)
 			{
-				childs[h] == childs[h + 1];
+				childs[h] = childs[h + 1];
 			}
 
 			childs.pop_back();
@@ -427,7 +427,14 @@ void GameObject::BlitGameObjectInspector()
 	}
 	
 	//Static Object
-	ImGui::Checkbox("Static##object_static", &static_);
+	if (ImGui::Checkbox("Static##object_static", &static_))
+	{
+		if (static_)
+		{
+			App->scene->InsertStaticObject(this);
+		}
+		else App->scene->RemoveStaticObject(this);
+	}
 
 	//Bounding box
 	ImGui::Checkbox("Bounding Box", &draw_bounding_box);
@@ -641,6 +648,12 @@ bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>
 
 	//Adjust the bounding box
 	AdjustBoundingBox();
+
+	//Insert the object in the octree if is a static one
+	if (static_)
+	{
+		App->scene->InsertStaticObject(this);
+	}
 
 	return ret;
 }

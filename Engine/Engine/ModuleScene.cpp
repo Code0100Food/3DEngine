@@ -319,12 +319,49 @@ void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
 
 void ModuleScene::ReFillOctree()
 {
-	PushGameObjectInOctree(root_gameobject, true);
+	uint size = static_objects.size();
+	for (uint k = 0; k < size; k++)
+	{
+		octree.Insert(static_objects[k], *static_objects[k]->GetBoundingBox());
+	}
+}
+
+void ModuleScene::CollectOctreeCandidates(math::Frustum & frustum, std::queue<GameObject*>* queue)
+{
+	octree.CollectCandidates(frustum, queue);
 }
 
 void ModuleScene::CleanOctree()
 {
 	octree.Reset();
+}
+
+void ModuleScene::InsertStaticObject(const GameObject * target)
+{
+	static_objects.push_back((GameObject*)target);
+}
+
+void ModuleScene::RemoveStaticObject(const GameObject * target)
+{
+	uint size = static_objects.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (static_objects[k] == target)
+		{
+			for (uint h = k; h < size - 1; h++)
+			{
+				static_objects[h] = static_objects[h + 1];
+			}
+
+			static_objects.pop_back();
+
+			break;
+		}
+	}
+}
+
+void ModuleScene::HideStaticObjects()
+{
 }
 
 void ModuleScene::SerializeScene() const

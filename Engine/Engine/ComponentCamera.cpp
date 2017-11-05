@@ -60,7 +60,8 @@ bool ComponentCamera::Update(float dt)
 
 	if (frustum_culling)
 	{
-		ApplyFrustum(App->scene->GetRoot());
+		ApplyDinamicFrustum();
+		ApplyStaticFrustum();
 	}
 
 	return true;
@@ -106,12 +107,14 @@ void ComponentCamera::DrawFrustum() const
 	App->renderer3D->EnableGLRenderFlags();
 }
 
-void ComponentCamera::ApplyFrustum(GameObject * target)
+void ComponentCamera::ApplyDinamicFrustum()
 {
+	GameObject * target = App->scene->GetRoot();
+
 	if (target == nullptr)return;
 
 	//Add Parent to the queue
-	remaining_childs.push(target);
+	if(!target->GetStatic())remaining_childs.push(target);
 
 	while (!remaining_childs.empty())
 	{
@@ -129,13 +132,26 @@ void ComponentCamera::ApplyFrustum(GameObject * target)
 
 			for (std::vector<GameObject*>::iterator item = remaining_childs.front()->GetChilds()->begin(); item != remaining_childs.front()->GetChilds()->end(); item++)
 			{
-				remaining_childs.push((*item));
+				if(!((GameObject*)*item)->GetStatic())remaining_childs.push((*item));
 			}
 
 			remaining_childs.pop();
 
 		}
 	}
+}
+
+void ComponentCamera::ApplyStaticFrustum()
+{
+	App->scene->CollectOctreeCandidates(frustum, &remaining_childs);
+	App->scene->HideStaticObjects();
+	
+	while (!remaining_childs.empty())
+	{
+		remaining_childs.front()->SetActiveState(true);
+		remaining_childs.pop();
+	}
+	
 }
 
 void ComponentCamera::UnApplyFrustum(GameObject * target)

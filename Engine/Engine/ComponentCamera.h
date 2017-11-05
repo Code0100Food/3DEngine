@@ -43,7 +43,8 @@ public:
 	//Frustum Methods -------
 	void UpdateFrustumTransform();
 	void DrawFrustum()const;
-	void ApplyFrustum(GameObject* target);
+	void ApplyDinamicFrustum();
+	void ApplyStaticFrustum();
 	void UnApplyFrustum(GameObject* target);
 
 	void BlitComponentInspector();
