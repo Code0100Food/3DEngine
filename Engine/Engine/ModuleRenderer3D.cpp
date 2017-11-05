@@ -962,7 +962,7 @@ void ModuleRenderer3D::SetEditorCameraView()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
+	glLoadMatrixf(App->camera->editor_camera_frustrum.ViewProjMatrix().Transposed().ptr());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrixTransposed());
 }
