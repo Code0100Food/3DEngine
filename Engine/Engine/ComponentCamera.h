@@ -36,6 +36,7 @@ public:
 
 	//Set Methods -----------
 	void SetIsMain(bool value);
+	void SetVerticalFov(float angle_in_deg);
 
 	//Functionality ---------
 	void SetTransform(const ComponentTransform* trans);

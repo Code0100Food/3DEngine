@@ -68,6 +68,8 @@ public:
 	void	LookAtGameObject(GameObject* obj);
 	void	Look(const math::float3& look_here, bool RotateAroundLookingPoint);
 
+	void	SetVerticalFov(float angle_in_deg);
+
 	float*			GetViewMatrix() const;
 	float*			GetViewMatrixTransposed() const;
 	float*			GetProjectionMatrix() const;

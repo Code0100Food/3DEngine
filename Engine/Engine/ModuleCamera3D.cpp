@@ -269,6 +269,12 @@ void ModuleCamera3D::BlitConfigInfo()
 	ImGui::SliderFloat("WASD Sensibility", &wasd_vel, 0.1f, 10.0f, "%.1f");
 
 	ImGui::Text("%f, %f", mouse_x_normalized, mouse_y_normalized);
+
+	float new_fov = editor_camera_frustrum.verticalFov * RADTODEG;
+	if (ImGui::DragFloat("Vertical FOV", &new_fov, 1.0, 1.0, 179))
+	{
+		SetVerticalFov(new_fov);
+	}
 }
 
 void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
@@ -299,6 +305,12 @@ void ModuleCamera3D::Look(const math::float3& look_here, bool RotateAroundLookin
 	editor_camera_frustrum.front = (look_here - editor_camera_frustrum.pos).Normalized();
 	math::float3 tmp = math::Cross({ 0,1,0 }, editor_camera_frustrum.front).Normalized();
 	editor_camera_frustrum.up = math::Cross(editor_camera_frustrum.front, tmp);
+}
+
+void ModuleCamera3D::SetVerticalFov(float angle_in_deg)
+{
+	editor_camera_frustrum.verticalFov = angle_in_deg * DEGTORAD;
+	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * App->window->GetAspectRatio()));
 }
 
 void ModuleCamera3D::LookAt(const math::float3 &Spot)

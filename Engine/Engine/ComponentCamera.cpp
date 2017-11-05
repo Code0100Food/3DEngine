@@ -77,6 +77,12 @@ void ComponentCamera::SetIsMain(bool value)
 	is_main = value;
 }
 
+void ComponentCamera::SetVerticalFov(float angle_in_deg)
+{
+	frustum.verticalFov = angle_in_deg * DEGTORAD;
+	frustum.horizontalFov = (2 * math::Atan(math::Tan(frustum.verticalFov / 2) * App->window->GetAspectRatio()));
+}
+
 // Functionality ================================
 void ComponentCamera::SetTransform(const ComponentTransform * trans)
 {
