@@ -94,6 +94,7 @@ private:
 
 	DockContext*	render_dock = nullptr;
 	ImVec2			image_window_pos;
+	ImVec2			image_window_size;
 
 	//Editor Camera texture
 	FrameTexture*	render_to_texture = nullptr;
@@ -115,11 +116,14 @@ public:
 	void SetMainCamera(ComponentCamera* new_main_cam);
 
 	//Get Methods -----------
-	bool	GetWireframe() const;
-	bool	GetWireframeFront() const;
-	bool	GetMouseOnWorkspace()const;
-	float	GetMaxRenderDistance()const;
-	ImVec2	GetSceneImagePos()const;
+	bool				GetWireframe() const;
+	bool				GetWireframeFront() const;
+	bool				GetMouseOnWorkspace()const;
+	float				GetMaxRenderDistance()const;
+	ImVec2				GetSceneImagePos()const;
+	ImVec2				GetSceneImageSize()const;
+	const FrameTexture* GetFrameTextureRender() const;
+	const FrameTexture* GetFrameTextureGame() const;
 
 	//Functionality ---------
 	void OnResize(int width, int height);

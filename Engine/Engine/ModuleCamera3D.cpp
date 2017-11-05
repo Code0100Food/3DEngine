@@ -133,10 +133,10 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
 		{
 			//Get the coords normalized and in screen percent
-			mouse_x_normalized = (float)(App->input->GetMouseX() - App->renderer3D->GetSceneImagePos().x) / (App->window->GetWidth());
-			mouse_y_normalized = (float)(App->input->GetMouseY() - App->renderer3D->GetSceneImagePos().y) / (App->window->GetHeight());
+			mouse_x_normalized = (float)(App->input->GetMouseX() - App->renderer3D->GetSceneImagePos().x) / (App->renderer3D->GetSceneImageSize().x);
+			mouse_y_normalized = (float)(App->input->GetMouseY() - App->renderer3D->GetSceneImagePos().y) / (App->renderer3D->GetSceneImageSize().y);
 
-			mouse_picking = editor_camera_frustrum.UnProjectLineSegment(mouse_x_normalized, mouse_y_normalized);
+			mouse_picking = editor_camera_frustrum.UnProjectLineSegment(-((mouse_x_normalized * 2) - 1), -((mouse_y_normalized * 2) - 1));
 			
 			//Check the line segment against all aabb's
 			CheckAllAABB();

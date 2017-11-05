@@ -45,8 +45,8 @@ private:
 	float							mouse_x_normalized = 0.0f;
 	float							mouse_y_normalized = 0.0f;
 
-	std::queue<GameObject*>			check_objects;
-	std::map<float, GameObject*>	objects_to_pick;
+	std::queue<GameObject*>				check_objects;
+	std::multimap<float, GameObject*>	objects_to_pick;
 
 public:
 

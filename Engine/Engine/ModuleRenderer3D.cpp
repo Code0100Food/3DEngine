@@ -85,7 +85,18 @@ void FrameTexture::Create(int width, int height)
 
 void FrameTexture::Bind()
 {
-	ImVec2 window_size = App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->size;
+	ImVec2 window_size;
+	
+	if (this == App->renderer3D->GetFrameTextureRender())
+	{
+		window_size = App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->size;
+	}
+
+	if (this == App->renderer3D->GetFrameTextureGame())
+	{
+		window_size = App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->size;
+	}
+
 
 	if (window_size.x != width || window_size.y != height)
 	{
@@ -386,7 +397,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	//Draw / update scene objects
 	App->scene->SceneUpdate(dt);
-	
+
+	glBegin(GL_LINES);
+
+	glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
+
+	glEnd();
+
 	//Focus render texture
 	render_to_texture->UnBind();
 
@@ -396,6 +413,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		game_to_texture->Bind();
 		App->geometry->Draw();
 		App->scene->SceneUpdate(dt);
+		float color[4] = { 1.0f, 1.0f, 0.0f, 1.0f };
+		App->camera->editor_camera_frustrum.Draw(1.0f, color);
+		glBegin(GL_LINES);
+
+		glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
+
+		glEnd();
 		game_to_texture->UnBind();
 		CleanCameraView();
 		SetEditorCameraView();
@@ -415,7 +439,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	ImGui::Image((void*)render_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(1, 1), ImVec2(0, 0));
 	image_window_pos = ImGui::GetItemRectMin();
-
+	image_window_size = ImGui::GetItemRectSize();
 	App->imgui->GetWorkspace()->EndDock();
 	
 
@@ -809,6 +833,21 @@ float ModuleRenderer3D::GetMaxRenderDistance() const
 ImVec2 ModuleRenderer3D::GetSceneImagePos() const
 {
 	return image_window_pos;
+}
+
+ImVec2 ModuleRenderer3D::GetSceneImageSize() const
+{
+	return image_window_size;
+}
+
+const FrameTexture * ModuleRenderer3D::GetFrameTextureRender() const
+{
+	return render_to_texture;
+}
+
+const FrameTexture * ModuleRenderer3D::GetFrameTextureGame() const
+{
+	return game_to_texture;
 }
 
 // Functionality ================================
