@@ -99,11 +99,9 @@ bool ModuleImgui::Start()
 
 update_status ModuleImgui::PreUpdate(float dt)
 {
-	float lolx = App->window->GetWidth();
-	float loly = App->window->GetHeight();
 	ImGui::SetNextWindowPos({ 0, 20 }, ImGuiCond_Always);
-	ImGui::SetNextWindowSize({ lolx, loly - 20 }, ImGuiCond_Always);
-	ImGui::Begin("", 0, ImGuiWindowFlags_NoTitleBar);
+	ImGui::SetNextWindowSize({ (float)App->window->GetWidth(), (float)App->window->GetHeight() - 20 }, ImGuiCond_Always);
+	ImGui::Begin("", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
 	father_dock->BeginWorkspace("##father_workspace");
 

@@ -76,7 +76,7 @@
     "dock_4": {
       "label": "Game##texture",
       "id": 58518722,
-      "active": true,
+      "active": false,
       "position x": 180,
       "position y": 35,
       "size x": 273,
@@ -94,7 +94,7 @@
     "dock_5": {
       "label": "Scene##texture",
       "id": 1878671836,
-      "active": false,
+      "active": true,
       "position x": 180,
       "position y": 35,
       "size x": 273,
