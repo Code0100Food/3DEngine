@@ -67,6 +67,8 @@ struct DockContext
 		void setChildrenPosSize(const ImVec2& _pos, const ImVec2& _size);
 		void setPosSize(const ImVec2& _pos, const ImVec2& _size);
 
+		void LoadSettings(JSON_Object*);
+		void LoadHierarchy(JSON_Object*, const DockContext& );
 		void Save(JSON_Object*, const DockContext&) const;
 
 		char* label;
@@ -160,9 +162,11 @@ struct DockContext
 	bool BeginDock(const char* label, bool* opened, ImGuiWindowFlags extra_flags);
 	void EndDock();
 
-	void LoadDock();
+	void LoadDock(const JSON_Value*);
 	void SaveDocks() const;
+
 	int GetDockPos(const Dock* dock_to_search) const;
+	Dock* GetDockbyPos(int pos) const;
 
 };
 

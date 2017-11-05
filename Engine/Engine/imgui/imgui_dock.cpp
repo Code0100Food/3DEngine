@@ -153,6 +153,34 @@ void DockContext::Dock::setPosSize(const ImVec2& _pos, const ImVec2& _size)
 	setChildrenPosSize(_pos, _size);
 }
 
+void DockContext::Dock::LoadSettings(JSON_Object* node)
+{
+	id = json_object_get_number(node, "id");
+	active = json_object_get_boolean(node, "active");
+	pos.x = json_object_get_number(node, "position x");
+	pos.y = json_object_get_number(node, "position y");
+	size.x = json_object_get_number(node, "size x");
+	size.y = json_object_get_number(node, "size y");
+	status = (DockContext::Status_)(int)json_object_get_number(node, "status");
+	sprintf(location, json_object_get_string(node, "location"));
+	opened = json_object_get_boolean(node, "opened");;
+	first = json_object_get_boolean(node, "first");;
+}
+
+void DockContext::Dock::LoadHierarchy(JSON_Object* node, const DockContext& parent_context)
+{
+	//Set Next and Prev dock
+	next_tab = parent_context.GetDockbyPos(json_object_get_number(node, "next tab"));
+	prev_tab = parent_context.GetDockbyPos(json_object_get_number(node, "prev tab"));
+
+	//Set Childs
+	children[0] = parent_context.GetDockbyPos(json_object_get_number(node, "first child"));
+	children[1] = parent_context.GetDockbyPos(json_object_get_number(node, "second child"));
+
+	//Set Parent
+	parent = parent_context.GetDockbyPos(json_object_get_number(node, "parent"));
+}
+
 void DockContext::Dock::Save(JSON_Object* dock_object, const DockContext& workspace) const
 {
 	json_object_dotset_string(dock_object, "label", label);
@@ -1076,6 +1104,40 @@ void DockContext::EndDock()
 	end();
 }
 
+void DockContext::LoadDock(const JSON_Value* node)
+{
+	const JSON_Object* root_start = json_value_get_object(node);
+	JSON_Object* docking_start = json_object_dotget_object(root_start, "Docking Config");
+
+	//Load Docks Settings like pos, size, state...
+	int num_dock = 0;
+	JSON_Object* dock_info = nullptr;
+	do
+	{
+		char name[20];
+		sprintf(name, "dock_%i", num_dock);
+		dock_info = json_object_dotget_object(docking_start, name);
+
+		if (dock_info != nullptr)
+		{
+			new_dock->LoadSettings(dock_info);
+			m_docks.push_back(new_dock);
+			num_dock++;
+		}	
+	}
+	while (dock_info != nullptr);
+
+	//Set parents and other stuff
+	for (int i = 0; i < m_docks.size(); i++)
+	{
+		char name[20];
+		sprintf(name, "dock_%i", i);
+
+		dock_info = json_object_dotget_object(docking_start, name);
+		m_docks[i]->LoadHierarchy(dock_info, *this);
+	}
+}
+
 void DockContext::SaveDocks() const
 {
 	char str[50];
@@ -1085,10 +1147,6 @@ void DockContext::SaveDocks() const
 	const JSON_Object* root_object = json_value_get_object(dock_settings);
 
 	JSON_Object* docking_start = json_object_dotget_object(root_object, "Docking Config");
-
-	//json_object_set_value(docking_start, "Dock2", json_value_init_object());
-	json_object_dotset_string((JSON_Object*)root_object, "label", "jajasalu2");
-	Serializer lol;
 
 	for (int i = 0; i < m_docks.size(); i++)
 	{
@@ -1120,6 +1178,15 @@ int DockContext::GetDockPos(const Dock* dock_to_search) const
 		}
 	}
 	return -1;
+}
+
+DockContext::Dock* DockContext::GetDockbyPos(int pos) const
+{
+	{
+		return m_docks[pos];
+	}
+
+	return nullptr;
 }
 
 DockContext* getDockContext()
