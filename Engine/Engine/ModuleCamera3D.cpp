@@ -101,10 +101,7 @@ update_status ModuleCamera3D::Update(float dt)
 					dx = 1;
 				if(dx < -1)
 					dx = -1;
-
-				float DeltaX = (float)dx * rot_around_vel;
-
-				
+								
 				rotate_quaternion.SetFromAxisAngle({ 0,1,0 }, angle_to_rotate * dx * DEGTORAD);
 				editor_camera_frustrum.Transform(rotate_quaternion);
 
@@ -304,7 +301,10 @@ void ModuleCamera3D::Look(const math::float3& look_here, bool RotateAroundLookin
 {
 	editor_camera_frustrum.front = (look_here - editor_camera_frustrum.pos).Normalized();
 	math::float3 tmp = math::Cross({ 0,1,0 }, editor_camera_frustrum.front).Normalized();
-	editor_camera_frustrum.up = math::Cross(editor_camera_frustrum.front, tmp);
+
+	math::float3 res = math::Cross(editor_camera_frustrum.front, tmp);
+	if (abs(editor_camera_frustrum.up.x) - abs(res.x) + abs(editor_camera_frustrum.up.y) - abs(res.y) + abs(editor_camera_frustrum.up.z) - abs(res.z) < 0.005f)return;
+	else editor_camera_frustrum.up = res;
 }
 
 void ModuleCamera3D::SetVerticalFov(float angle_in_deg)
