@@ -85,19 +85,21 @@ void FrameTexture::Create(int width, int height)
 
 void FrameTexture::Bind()
 {
-	glViewport(0, 0, width, height);
+	ImVec2 window_size = App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->size;
+
+	if (window_size.x != width || window_size.y != height)
+	{
+		App->renderer3D->OnResize(window_size.x, window_size.y);
+	}
+
+	//glViewport(0, 0, width, height);
 	glBindFramebuffer(GL_FRAMEBUFFER, frame_id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	/*glTranslatef(0.5, 0.5, 0.0);
-	glRotatef(180, 0.0, 0.0, 1.0);
-	glTranslatef(-0.5, -0.5, 0.0);*/
-
 }
 
 void FrameTexture::UnBind()
 {
-	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+	//glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -816,7 +818,6 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	CalculatePrespective(ProjectionMatrix, 60.0f, (float)width / (float)height, min_render_distance, max_render_distance);
 	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
 
 	if (render_to_texture)
@@ -832,6 +833,14 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	}
 
 	App->window->SetAspectRatio(width, height);
+	App->camera->SetVerticalFov(90);
+
+	for (std::vector<ComponentCamera*>::iterator item = game_cameras.begin(); item != game_cameras.end(); item++)
+	{
+		(*item)->SetVerticalFov((*item)->GetFrustum().verticalFov * RADTODEG);
+	}
+
+	for(int i = 0; i < game_cameras.size(); i++)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

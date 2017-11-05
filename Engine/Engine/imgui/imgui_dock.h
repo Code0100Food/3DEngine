@@ -167,6 +167,7 @@ struct DockContext
 
 	int GetDockPos(const Dock* dock_to_search) const;
 	Dock* GetDockbyPos(int pos) const;
+	Dock* GetDockbyLabel(const char* name) const;
 
 };
 

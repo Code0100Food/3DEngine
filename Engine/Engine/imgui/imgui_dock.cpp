@@ -1192,6 +1192,19 @@ DockContext::Dock* DockContext::GetDockbyPos(int pos) const
 	return nullptr;
 }
 
+DockContext::Dock* DockContext::GetDockbyLabel(const char* name) const
+{
+	for (int i = 0; i < m_docks.size(); i++)
+	{
+		if (strcmp(name, m_docks[i]->label) == 0)
+		{
+			return m_docks[i];
+		}
+	}
+
+	return nullptr;
+}
+
 DockContext* getDockContext()
 {
 	return &g_dock;
