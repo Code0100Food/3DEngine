@@ -251,15 +251,7 @@ void ModuleScene::BlitConfigInfo()
 
 void ModuleScene::BlitHierarchy()
 {
-	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.15f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(0, (App->window->GetHeight() * 0.5f)), ImGuiCond_Always);
-
-	ImGui::Begin("Hierarchy", &hierarchy_win_state, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
-	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Hierarchy");
-
 	root_gameobject->BlitGameObjectHierarchy(0);
-	
-	ImGui::End();
 }
 
 bool ModuleScene::GetHierarchyWinState() const
@@ -274,18 +266,10 @@ void ModuleScene::SwapHierarchyWinState()
 
 void ModuleScene::BlitInspector()
 {
-	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.25f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.15f, (App->window->GetHeight() * 0.5f)), ImGuiCond_Always);
-
-	ImGui::Begin("Inspector", &inspector_state, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
-	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Inspector");
-
 	if (selected_gameobject != nullptr)
 	{
 		selected_gameobject->BlitGameObjectInspector();
 	}
-
-	ImGui::End();
 }
 
 bool ModuleScene::GetInspectorState() const

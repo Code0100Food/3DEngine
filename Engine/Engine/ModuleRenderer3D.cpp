@@ -401,8 +401,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 
 	//Workspace window
-	ImGui::SetNextWindowSize(ImVec2(render_to_texture->width - App->window->GetWidth() * 0.4f, App->window->GetHeight() * 0.6 - 23), ImGuiCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.4f, 23), ImGuiCond_Always);
+	//ImGui::SetNextWindowSize(ImVec2(render_to_texture->width - App->window->GetWidth() * 0.4f, App->window->GetHeight() * 0.6 - 23), ImGuiCond_Always);
+	//ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.4f, 23), ImGuiCond_Always);
 
 	ImGui::Begin("Render Workspace##window", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
 	ImGui::Text("Work Space");
@@ -423,22 +423,23 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	{
 		App->scene->NextGameFrame();
 	}
+	ImGui::End();
 
-	render_dock->BeginWorkspace("Render Workspace");
+	//render_dock->BeginWorkspace("Render Workspace");
 
-	render_dock->BeginDock("Game##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
+	App->imgui->GetWorkspace()->BeginDock("Game##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 	ImGui::Image((void*)game_to_texture->texture_id, ImVec2(game_to_texture->width * 0.55f, game_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
-	render_dock->EndDock();
+	App->imgui->GetWorkspace()->EndDock();
 
-	render_dock->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
+	App->imgui->GetWorkspace()->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 	//Detect if the mouse is inside the workspace
 	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
 	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width * 0.55f, render_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
 	image_window_pos = ImGui::GetItemRectMin();
-	render_dock->EndDock();
+	App->imgui->GetWorkspace()->EndDock();
 
-	render_dock->EndWorkspace();
-	ImGui::End();
+	//render_dock->EndWorkspace();
+	
 
 	DisableGLRenderFlags();	
 

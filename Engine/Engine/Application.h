@@ -96,7 +96,7 @@ private:
 	float			fps_array[GRAPH_ARRAY_SIZE];
 	float			miliseconds_array[GRAPH_ARRAY_SIZE];
 	bool			config_opened = false;
-	bool			show_config_window = true;
+	bool			show_config_window = false;
 
 	DockContext*	config_dock = nullptr;
 

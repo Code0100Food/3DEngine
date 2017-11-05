@@ -64,5 +64,7 @@ public:
 	void RenderUI();
 	void CallExitWindow();
 
+	DockContext* GetWorkspace() const;
+
 };
 #endif // _ModuleImgui_H_

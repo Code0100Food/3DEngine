@@ -3,6 +3,7 @@
 #include "imgui/imgui_dock.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleImgui.h"
 #include <fstream>
 #include <iostream>
 
@@ -365,26 +366,15 @@ void FileSystem::ChangeFileFormat(const char * path, const char* new_format, std
 
 void FileSystem::BlitFileSystemInfo()
 {
-	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.6f, App->window->GetHeight()*0.4f), ImGuiCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.4f, App->window->GetHeight()*0.6f), ImGuiCond_Always);
-
-	ImGui::Begin("fs_data", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
-
-	file_system_dock->BeginWorkspace("File system info");
-	
 	//Blit directories
-	file_system_dock->BeginDock("Directories", 0, 0);
+	App->imgui->GetWorkspace()->BeginDock("Directories", 0, 0);
 	user_root_dir->BlitDirectoryChilds();
-	file_system_dock->EndDock();
+	App->imgui->GetWorkspace()->EndDock();
 
 	//Blit data inside the selected directory
-	file_system_dock->BeginDock("Files", 0, 0);
+	App->imgui->GetWorkspace()->BeginDock("Files", 0, 0);
 	focus_dir->BlitFilesInside();
-	file_system_dock->EndDock();
-
-	file_system_dock->EndWorkspace();
-
-	ImGui::End();
+	App->imgui->GetWorkspace()->EndDock();
 }
 
 void FileSystem::LoadDirs(Directory* parent)

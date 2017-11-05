@@ -155,6 +155,7 @@ void DockContext::Dock::setPosSize(const ImVec2& _pos, const ImVec2& _size)
 
 void DockContext::Dock::LoadSettings(JSON_Object* node)
 {
+	label = ImStrdup(json_object_get_string(node, "label"));
 	id = json_object_get_number(node, "id");
 	active = json_object_get_boolean(node, "active");
 	pos.x = json_object_get_number(node, "position x");
@@ -1120,6 +1121,7 @@ void DockContext::LoadDock(const JSON_Value* node)
 
 		if (dock_info != nullptr)
 		{
+			Dock* new_dock = (Dock *)MemAlloc(sizeof(Dock));
 			new_dock->LoadSettings(dock_info);
 			m_docks.push_back(new_dock);
 			num_dock++;
@@ -1182,6 +1184,7 @@ int DockContext::GetDockPos(const Dock* dock_to_search) const
 
 DockContext::Dock* DockContext::GetDockbyPos(int pos) const
 {
+	if (pos < m_docks.size() && pos >= 0)
 	{
 		return m_docks[pos];
 	}

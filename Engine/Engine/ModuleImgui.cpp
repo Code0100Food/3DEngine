@@ -86,11 +86,26 @@ bool ModuleImgui::Start()
 	//father dock
 	father_dock = new DockContext();
 
+	char str[50];
+	sprintf(str, "%sdock_settings.json", SETTINGS_FOLDER);
+	JSON_Value* dock_settings = json_parse_file(str);
+
+	father_dock->LoadDock(dock_settings);
+
+	json_value_free(dock_settings);
+
 	return true;
 }
 
 update_status ModuleImgui::PreUpdate(float dt)
 {
+	float lolx = App->window->GetWidth();
+	float loly = App->window->GetHeight();
+	ImGui::SetNextWindowPos({ 0, 20 }, ImGuiCond_Always);
+	ImGui::SetNextWindowSize({ lolx, loly - 20 }, ImGuiCond_Always);
+	ImGui::Begin("", 0, ImGuiWindowFlags_NoTitleBar);
+
+	father_dock->BeginWorkspace("##father_workspace");
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -333,13 +348,17 @@ update_status ModuleImgui::Update(float dt)
 	//Hierarchy Window
 	if (App->scene->GetHierarchyWinState())
 	{
+		father_dock->BeginDock("Hierarchy##Dock", 0, 0);
 		App->scene->BlitHierarchy();
+		father_dock->EndDock();
 	}
 
 	//Inspector Window
 	if (App->scene->GetInspectorState())
 	{
+		father_dock->BeginDock("Inspector##Dock", 0, 0);
 		App->scene->BlitInspector();
+		father_dock->EndDock();
 	}
 
 	//Directories Window
@@ -359,6 +378,7 @@ update_status ModuleImgui::PostUpdate(float dt)
 
 bool ModuleImgui::CleanUp()
 {
+	//father_dock->SaveDocks();
 	RELEASE(father_dock);
 	ImGui::Shutdown();
 
@@ -622,7 +642,7 @@ void ModuleImgui::SetDarkTheme()
 	style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
 	style->Colors[ImGuiCol_PopupBg] = ImVec4(0.05f, 0.05f, 0.05f, 1.00f);
 	style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
-	style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
+	style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.40f);
 	style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
 	style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
 	style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
@@ -729,12 +749,18 @@ void ModuleImgui::SetCustomTheme()
 
 void ModuleImgui::RenderUI()
 {
-
+	father_dock->EndWorkspace();
+	ImGui::End();
 	ImGui::Render();
 }
 
 void ModuleImgui::CallExitWindow()
 {
 	show_exit_window = !show_exit_window;
+}
+
+DockContext* ModuleImgui::GetWorkspace() const
+{
+	return father_dock;
 }
 
