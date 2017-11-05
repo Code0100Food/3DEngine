@@ -135,6 +135,7 @@ private:
 	void SetGameCameraView();
 	void SetEditorCameraView();
 	void CleanCameraView();
+	void PrintPlayPauseButton() const;
 
 	
 };

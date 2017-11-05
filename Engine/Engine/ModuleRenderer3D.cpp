@@ -398,47 +398,23 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		CleanCameraView();
 		SetEditorCameraView();
 	}
-	
 
-	//Workspace window
-	//ImGui::SetNextWindowSize(ImVec2(render_to_texture->width - App->window->GetWidth() * 0.4f, App->window->GetHeight() * 0.6 - 23), ImGuiCond_Always);
-	//ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.4f, 23), ImGuiCond_Always);
-
-	ImGui::Begin("Render Workspace##window", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus);
-	ImGui::Text("Work Space");
-
-	//Play / Pause / Next buttons
-	ImGui::SameLine();
-	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
-	{
-		App->scene->PlayGame();
-	}
-	ImGui::SameLine();
-	if (ImGui::ImageButton((ImTextureID)App->textures->custom_check_image, ImVec2(20, 20)))
-	{
-		App->scene->PauseGame();
-	}
-	ImGui::SameLine();
-	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
-	{
-		App->scene->NextGameFrame();
-	}
-	ImGui::End();
-
-	//render_dock->BeginWorkspace("Render Workspace");
-
+	//Scene and Game Dock
 	App->imgui->GetWorkspace()->BeginDock("Game##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
-	ImGui::Image((void*)game_to_texture->texture_id, ImVec2(game_to_texture->width * 0.55f, game_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
+	PrintPlayPauseButton();
+	ImGui::Image((void*)game_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(1, 1), ImVec2(0, 0));
 	App->imgui->GetWorkspace()->EndDock();
 
-	App->imgui->GetWorkspace()->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
+	App->imgui->GetWorkspace()->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
 	//Detect if the mouse is inside the workspace
 	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
-	ImGui::Image((void*)render_to_texture->texture_id, ImVec2(render_to_texture->width * 0.55f, render_to_texture->height * 0.55f), ImVec2(1, 1), ImVec2(0, 0));
-	image_window_pos = ImGui::GetItemRectMin();
-	App->imgui->GetWorkspace()->EndDock();
 
-	//render_dock->EndWorkspace();
+	PrintPlayPauseButton();
+
+	ImGui::Image((void*)render_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(1, 1), ImVec2(0, 0));
+	image_window_pos = ImGui::GetItemRectMin();
+
+	App->imgui->GetWorkspace()->EndDock();
 	
 
 	DisableGLRenderFlags();	
@@ -947,4 +923,25 @@ void ModuleRenderer3D::CleanCameraView()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::PrintPlayPauseButton() const
+{
+	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() / 2);
+	if (ImGui::ImageButton((ImTextureID)App->textures->custom_check_image, ImVec2(20, 20)))
+	{
+		App->scene->PauseGame();
+	}
+
+	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 35);
+	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
+	{
+		App->scene->PlayGame();
+	}
+	
+	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) + 35);
+	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
+	{
+		App->scene->NextGameFrame();
+	}
 }
