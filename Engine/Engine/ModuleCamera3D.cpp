@@ -32,11 +32,21 @@ bool ModuleCamera3D::Awake(const JSON_Object * data_root)
 	editor_camera_frustrum.pos.x = json_array_get_number(_array, 0);
 	editor_camera_frustrum.pos.y = json_array_get_number(_array, 1);
 	editor_camera_frustrum.pos.z = json_array_get_number(_array, 2);
-	//Load view vector
+	//Load focus point
 	_array = json_object_get_array(data_root, "focus_point");
 	focus_point.x = json_array_get_number(_array, 0);
 	focus_point.y = json_array_get_number(_array, 1);
 	focus_point.z = json_array_get_number(_array, 2);
+	//Load up vector
+	_array = json_object_get_array(data_root, "up_vec");
+	editor_camera_frustrum.up.x = json_array_get_number(_array, 0);
+	editor_camera_frustrum.up.y = json_array_get_number(_array, 1);
+	editor_camera_frustrum.up.z = json_array_get_number(_array, 2);
+	//Load front vector
+	_array = json_object_get_array(data_root, "front_vec");
+	editor_camera_frustrum.front.x = json_array_get_number(_array, 0);
+	editor_camera_frustrum.front.y = json_array_get_number(_array, 1);
+	editor_camera_frustrum.front.z = json_array_get_number(_array, 2);
 	//Load camera distance
 	editor_camera_frustrum.farPlaneDistance = json_object_get_number(data_root, "far_plane_dist");
 	//Load camera velocities
@@ -61,13 +71,8 @@ bool ModuleCamera3D::Start()
 
 	editor_camera_frustrum.nearPlaneDistance = 1;
 
-	editor_camera_frustrum.up = { 0,1,0 };
-	editor_camera_frustrum.front = { 0,0,1 };
-
 	editor_camera_frustrum.verticalFov = 60 * DEGTORAD;
 	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * App->window->GetAspectRatio()));
-
-	editor_camera_frustrum.pos = { 0,0,0 };
 
 	return ret;
 }
@@ -75,12 +80,12 @@ bool ModuleCamera3D::Start()
 update_status ModuleCamera3D::Update(float dt)
 {
 	camera_dist = (focus_point - editor_camera_frustrum.pos).Length();
-
+	
 	//Camera only accept input if the mouse is over the viewport
 	if (App->renderer3D->GetMouseOnWorkspace())
 	{
 		//Camera zoom in/out
-		if (App->input->GetMouseZ() == 1)
+		if (App->input->GetMouseZ() == 1 && (focus_point - editor_camera_frustrum.pos).Length() > 0.1f)
 		{
 			editor_camera_frustrum.pos += editor_camera_frustrum.front * camera_z_mov_vel;
 		}
@@ -97,10 +102,8 @@ update_status ModuleCamera3D::Update(float dt)
 
 			if (dx != 0)
 			{
-				if (dx > 1)
-					dx = 1;
-				if(dx < -1)
-					dx = -1;
+				if (dx > 1)dx = 1;
+				if(dx < -1)dx = -1;
 								
 				rotate_quaternion.SetFromAxisAngle({ 0,1,0 }, angle_to_rotate * dx * DEGTORAD);
 				editor_camera_frustrum.Transform(rotate_quaternion);
@@ -114,10 +117,8 @@ update_status ModuleCamera3D::Update(float dt)
 
 			if (dy != 0)
 			{
-				if (dy > 1)
-					dy = 1;
-				if (dy < -1)
-					dy = -1;
+				if (dy > 1)dy = 1;
+				if (dy < -1)dy = -1;
 
 				rotate_quaternion.SetFromAxisAngle(math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up), angle_to_rotate * dy * DEGTORAD);
 				editor_camera_frustrum.Transform(rotate_quaternion);
@@ -145,9 +146,6 @@ update_status ModuleCamera3D::Update(float dt)
 			{
 				App->scene->SetSelectedGameObject(CheckTriangles());		
 			}
-				
-
-
 		}
 
 		//Camera stafe 
@@ -226,10 +224,6 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 
-	//Look the vehicle body with the CameraLocation & the ViewVector & the Z_DIST defined
-	App->camera->Look(focus_point, true);
-
-
 	return UPDATE_CONTINUE;
 }
 
@@ -286,6 +280,16 @@ void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 0, focus_point.x);
 	json_array_replace_number(_array, 1, focus_point.y);
 	json_array_replace_number(_array, 2, focus_point.z);
+	//Save up vector
+	_array = json_object_get_array(data_root, "up_vec");
+	json_array_replace_number(_array, 0, editor_camera_frustrum.up.x);
+	json_array_replace_number(_array, 1, editor_camera_frustrum.up.y);
+	json_array_replace_number(_array, 2, editor_camera_frustrum.up.z);
+	//Save front vector
+	_array = json_object_get_array(data_root, "front_vec");
+	json_array_replace_number(_array, 0, editor_camera_frustrum.front.x);
+	json_array_replace_number(_array, 1, editor_camera_frustrum.front.y);
+	json_array_replace_number(_array, 2, editor_camera_frustrum.front.z);
 	//Save far plane distance
 	json_object_set_number(data_root, "far_plane_dist", editor_camera_frustrum.farPlaneDistance);
 	//Save camera velocities
@@ -302,7 +306,7 @@ void ModuleCamera3D::Look(const math::float3& look_here, bool RotateAroundLookin
 	editor_camera_frustrum.front = (look_here - editor_camera_frustrum.pos).Normalized();
 	math::float3 tmp = math::Cross({ 0,1,0 }, editor_camera_frustrum.front).Normalized();
 
-	math::float3 res = math::Cross(editor_camera_frustrum.front, tmp);
+	math::float3 res = math::Cross(editor_camera_frustrum.front, tmp).Normalized();
 	if (abs(editor_camera_frustrum.up.x) - abs(res.x) + abs(editor_camera_frustrum.up.y) - abs(res.y) + abs(editor_camera_frustrum.up.z) - abs(res.z) < 0.005f)return;
 	else editor_camera_frustrum.up = res;
 }
