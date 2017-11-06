@@ -255,17 +255,20 @@ void ModuleCamera3D::BlitConfigInfo()
 	//Camera Velocities ui
 	ImGui::Text("Sensibilities");
 	ImGui::SliderFloat("Zoom Sensibility", &camera_z_mov_vel, 0.1f, 10.0f, "%.1f");
-	ImGui::SliderFloat("Angle to Rotate around Sensibility", &angle_to_rotate, 0.1f, 360, "%.1f");
+	ImGui::SliderFloat("Rotate Around Sensibility", &angle_to_rotate, 0.1f, 360, "%.1f");
 	ImGui::SliderFloat("Stafe Sensibility", &strafe_vel, 0.1f, 10.0f, "%.1f");
 	ImGui::SliderFloat("WASD Sensibility", &wasd_vel, 0.1f, 10.0f, "%.1f");
-
-	ImGui::Text("%f, %f", mouse_x_normalized, mouse_y_normalized);
 
 	float new_fov = editor_camera_frustrum.verticalFov * RADTODEG;
 	if (ImGui::DragFloat("Vertical FOV", &new_fov, 1.0, 1.0, 179))
 	{
 		SetVerticalFov(new_fov);
 	}
+
+	ImGui::Separator();
+	ImGui::Text("Mouse Pick Normal Location:");
+	ImGui::SameLine();
+	ImGui::Text("%.4f, %.4f", mouse_x_normalized, mouse_y_normalized);
 }
 
 void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)

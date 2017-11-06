@@ -60,6 +60,8 @@ public:
 	//Set Methods =====================
 	void SetTitle(const char* title);
 	void SetAspectRatio(int width, int height);
+	void SetWidth(int width);
+	void SetHeight(int height);
 
 	//Get Methods =====================
 	float	 GetBrightness()const;

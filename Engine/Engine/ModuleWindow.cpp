@@ -6,6 +6,7 @@
 #include "SDL/include/SDL_opengl.h"
 #include "FileSystem.h"
 #include "ModuleAudio.h"
+#include "ModuleImgui.h"
 
 // Constructors =================================
 ModuleWindow::ModuleWindow(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -210,6 +211,7 @@ void ModuleWindow::BlitConfigInfo()
 		height = pre_defined_windows[current_window_index]->height;
 		SDL_SetWindowSize(window, width, height);
 		App->renderer3D->OnResize(width, height);
+		App->imgui->SetCondFlag(ImGuiCond_::ImGuiCond_Always);
 	}
 
 	//Framerate 
@@ -276,6 +278,16 @@ void ModuleWindow::SetTitle(const char* title)
 void ModuleWindow::SetAspectRatio(int width, int height)
 {
 	aspect_ratio = (float)width / height;
+}
+
+void ModuleWindow::SetWidth(int width)
+{
+	this->width = width;
+}
+
+void ModuleWindow::SetHeight(int height)
+{
+	this->height = height;
 }
 
 // Get Methods ==================================

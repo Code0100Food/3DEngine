@@ -413,14 +413,14 @@ bool Application::GetConfigWindowState() const
 void Application::BlitConfigWindow()
 {
 
-	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.4f, (App->window->GetHeight() - 23) * 0.5f), ImGuiCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(0, 23), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.5f, (App->window->GetHeight() - 23) * 0.5f), App->imgui->GetUICondFlag());
+	ImGui::SetNextWindowPos(ImVec2(0, 23), App->imgui->GetUICondFlag());
 
-	ImGui::Begin("Config Workspace##window", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	ImGui::Begin("Config Workspace##window", &show_config_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Configuration");
 	config_dock->BeginWorkspace("Config Workspace");
 
-	//Begin aplication dock
+	//Begin application dock
 	bool ApplicationDock = true;
 	config_dock->BeginDock("Application", &ApplicationDock, 0);
 	{
@@ -529,6 +529,7 @@ void Application::BlitConfigWindow()
 		bool cpy = true;
 
 		config_dock->BeginDock((*item)->name.c_str(), &cpy, 0);
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), (*item)->name.c_str());
 		(*item)->BlitConfigInfo();
 		config_dock->EndDock();
 

@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "SDL\include\SDL_version.h"
+#include "Timer.h"
 
 class DockContext;
 
@@ -19,8 +20,8 @@ public:
 	bool			Start() final;
 	update_status	PreUpdate(float dt) final;
 	update_status	Update(float dt) final;
-	update_status	PostUpdate(float dt) final;
 	bool			CleanUp();
+
 	void			SaveConfigInfo(JSON_Object* data_root)final;
 
 private:
@@ -45,6 +46,11 @@ private:
 	bool		custom_theme = false;
 	ImGuiStyle	custom_style;
 	
+	//UI Update data
+	Timer		cond_flag_timer;
+	uint		cond_flag_time = 0;
+	ImGuiCond_	cond_flag = ImGuiCond_::ImGuiCond_Once;
+
 	void	BlitUIConfigWindow();
 	void	BlitAboutWindow();
 	void	BlitExitWindow();
@@ -57,14 +63,21 @@ private:
 	SDL_version sdl_version;
 
 	//Father Dock
-	DockContext*	father_dock = nullptr;
+	DockContext* father_dock = nullptr;
 
 public:
 
+	//Get Methods -----------
+	DockContext*	GetWorkspace() const;
+	ImGuiCond_		GetUICondFlag()const;
+
+	//Set Methods -----------
+	void SetCondFlag(ImGuiCond_ cond);
+
+	//Functionality ---------
 	void RenderUI();
 	void CallExitWindow();
 
-	DockContext* GetWorkspace() const;
-
+	
 };
 #endif // _ModuleImgui_H_

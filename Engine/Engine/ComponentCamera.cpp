@@ -35,7 +35,7 @@ bool ComponentCamera::Start()
 {
 	frustum.type = math::PerspectiveFrustum;
 
-	frustum.nearPlaneDistance = 1;
+	frustum.nearPlaneDistance = 0.01;
 	frustum.farPlaneDistance = 15;
 	
 	//Set frustum looking to GameObject Z axis

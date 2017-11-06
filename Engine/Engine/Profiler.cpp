@@ -1,4 +1,7 @@
 #include "Profiler.h"
+#include "Application.h"
+#include "ModuleWindow.h"
+#include "ModuleImgui.h"
 
 // Constructors =================================
 Profiler::Profiler()
@@ -16,9 +19,9 @@ Profiler::~Profiler()
 void Profiler::BlitInfo(bool* flag)
 {
 	//Build configuration base window
-	ImGui::SetNextWindowPos(ImVec2(0, 95));
-	ImGui::SetNextWindowSize(ImVec2(280, 400));
-	ImGui::Begin("Profiler", flag, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.4f, (App->window->GetHeight() - 23) * 0.5f), App->imgui->GetUICondFlag());
+	ImGui::SetNextWindowPos(ImVec2(0, (App->window->GetHeight() - 23) * 0.5f + 23), App->imgui->GetUICondFlag());
+	ImGui::Begin("Profiler", flag, ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
 	ImGui::TextColored(ImVec4(0.4, 0.8, 0.8, 1.0), "Profiler");
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Shows how long each module's step takes");
 

@@ -200,7 +200,10 @@ update_status ModuleInput::PreUpdate(float dt)
 		{
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 			{
+				App->window->SetWidth(event.window.data1);
+				App->window->SetHeight(event.window.data2);
 				App->renderer3D->OnResize(event.window.data1, event.window.data2);
+				App->imgui->SetCondFlag(ImGuiCond_::ImGuiCond_Always);
 			}
 		}
 		break;

@@ -301,6 +301,9 @@ bool ModuleRenderer3D::Init()
 			glEnable(GL_DITHER);
 		}
 
+		//Enable lines antialiasing
+		glEnable(GL_LINE_SMOOTH);
+
 		//Initialize lighting states
 		if (lighting)
 		{

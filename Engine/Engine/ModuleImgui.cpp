@@ -60,6 +60,8 @@ bool ModuleImgui::Start()
 {
 	show_test_window = false;
 	
+	cond_flag_time = 500;
+
 	ImGui::GetStyle().Alpha = 1.0;
 	ImGui::GetStyle().WindowTitleAlign = ImVec2(0.5, 0.5);
 
@@ -99,9 +101,9 @@ bool ModuleImgui::Start()
 
 update_status ModuleImgui::PreUpdate(float dt)
 {
-	ImGui::SetNextWindowPos({ 0, 20 }, ImGuiCond_Always);
-	ImGui::SetNextWindowSize({ (float)App->window->GetWidth(), (float)App->window->GetHeight() - 20 }, ImGuiCond_Always);
-	ImGui::Begin("", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+	ImGui::SetNextWindowPos({ 0, 20 }, cond_flag);
+	ImGui::SetNextWindowSize({ (float)App->window->GetWidth(), (float)App->window->GetHeight() - 20 }, cond_flag);
+	ImGui::Begin("", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
 	father_dock->BeginWorkspace("##father_workspace");
 
@@ -364,12 +366,11 @@ update_status ModuleImgui::Update(float dt)
 
 	App->renderer3D->EnableGLRenderFlags();
 
-	return update_status::UPDATE_CONTINUE;
-}
-
-update_status ModuleImgui::PostUpdate(float dt)
-{
-	
+	//Update cond_flag 
+	if (cond_flag != ImGuiCond_::ImGuiCond_Once && cond_flag_timer.Read() > cond_flag_time)
+	{
+		cond_flag = ImGuiCond_::ImGuiCond_Once;
+	}
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -413,9 +414,9 @@ void ModuleImgui::SaveConfigInfo(JSON_Object * data_root)
 
 void ModuleImgui::BlitUIConfigWindow()
 {
-	ImGui::SetNextWindowPos(ImVec2(250, 50));
-	ImGui::SetNextWindowSize(ImVec2(750, 600));
-	ImGui::Begin("UI Config", &show_ui_conf_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.5f, (App->window->GetHeight() - 23)), cond_flag);
+	ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.5f, 23), cond_flag);
+	ImGui::Begin("UI Config", &show_ui_conf_window, ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
 	
 	if (ImGui::Checkbox("Dark Theme", &dark_theme))
 	{
@@ -593,21 +594,22 @@ void ModuleImgui::BlitAboutWindow()
 
 void ModuleImgui::BlitExitWindow()
 {
-	ImGui::SetNextWindowPos(ImVec2(360, 250));
-	ImGui::SetNextWindowSize(ImVec2(520, 150));
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth() * 0.5f, (App->window->GetHeight()) * 0.25f), cond_flag);
+	ImGui::SetNextWindowPos(ImVec2(App->window->GetWidth() * 0.25f, App->window->GetHeight() * 0.15f), cond_flag);
+	
 	ImGui::Begin("Exit Window",&show_exit_window,ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);
-
+	
 	ImGui::TextColored(ImVec4(0.5f, 0.4f, 0.2f, 1.0f), "-- Exit Window --");
 	
 	ImGui::Separator();
 	ImGui::Separator();
 	
-	if (ImGui::Button("Exit", ImVec2(238, 50)))
+	if (ImGui::Button("Exit", ImVec2(App->window->GetWidth() * 0.23f, App->window->GetHeight() * 0.05f)))
 	{
 		App->SetQuit();
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Cancel", ImVec2(238, 50)))
+	if (ImGui::Button("Cancel", ImVec2(App->window->GetWidth() * 0.23f, App->window->GetHeight() * 0.05f)))
 	{
 		show_exit_window = false;
 	}
@@ -745,6 +747,25 @@ void ModuleImgui::SetCustomTheme()
 	ImGui::GetStyle() = custom_style;
 }
 
+// Get Methods ==================================
+DockContext* ModuleImgui::GetWorkspace() const
+{
+	return father_dock;
+}
+
+ImGuiCond_ ModuleImgui::GetUICondFlag() const
+{
+	return cond_flag;
+}
+
+// Set Methods ==================================
+void ModuleImgui::SetCondFlag(ImGuiCond_ cond)
+{
+	cond_flag = cond;
+	cond_flag_timer.Start();
+}
+
+// Functionality ================================
 void ModuleImgui::RenderUI()
 {
 	father_dock->EndWorkspace();
@@ -755,10 +776,5 @@ void ModuleImgui::RenderUI()
 void ModuleImgui::CallExitWindow()
 {
 	show_exit_window = !show_exit_window;
-}
-
-DockContext* ModuleImgui::GetWorkspace() const
-{
-	return father_dock;
 }
 
