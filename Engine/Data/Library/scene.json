@@ -1,0 +1,102 @@
+{
+  "GameObjects": [
+    {
+      "actived": true,
+      "name": "Main Camera",
+      "id": 875032136,
+      "static": false,
+      "Components": [
+        {
+          "type": "transformation",
+          "id": 796242360,
+          "actived": true,
+          "transform_matrix": [ 0.52829790115356445, 0.25766807794570923, 0.80901706218719482, -3.5, -0.52757072448730469, -0.64695477485656738, 0.55056214332580566, -1.5, 0.6652597188949585, -0.71767449378967285, -0.20584678649902344, 0, 0, 0, 0, 1 ],
+          "position": [ -3.5, -1.5, 0 ],
+          "inherited_transform": [ 0.52829790115356445, 0.25766807794570923, 0.80901706218719482, -3.5, -0.52757072448730469, -0.64695477485656738, 0.55056214332580566, -1.5, 0.6652597188949585, -0.71767449378967285, -0.20584678649902344, 0, 0, 0, 0, 1 ],
+          "inherited_position": [ -3.5, -1.5, 0 ],
+          "scale": [ 1, 1, 1 ],
+          "rotation_quaternion": [ -0.77154058218002319, 0.08745574951171875, -0.47770550847053528, 0.41094294190406799 ]
+        },
+        {
+          "type": "camera",
+          "id": 46481902,
+          "actived": true,
+          "far_plane_dist": 50,
+          "near_plane_dist": 1,
+          "up_vec": [ 0.25766807794570923, -0.64695477485656738, -0.71767449378967285 ],
+          "front": [ 0.80901706218719482, 0.55056214332580566, -0.20584678649902344 ],
+          "vertical_fov": 1.5707963705062866,
+          "position": [ -3.5, -1.5, 0 ]
+        }
+      ]
+    },
+    {
+      "actived": true,
+      "name": "Sphere",
+      "id": 2126765135,
+      "static": true,
+      "Components": [
+        {
+          "type": "sphere_mesh",
+          "id": 665486832,
+          "actived": true,
+          "radius": 1,
+          "divisions": 3
+        },
+        {
+          "type": "transformation",
+          "id": 2046530294,
+          "actived": true,
+          "transform_matrix": [ 1, 0, 0, 6, 0, 1, 0, 6.5, 0, 0, 1, -4, 0, 0, 0, 1 ],
+          "position": [ 6, 6.5, -4 ],
+          "inherited_transform": [ 1, 0, 0, 6, 0, 1, 0, 6.5, 0, 0, 1, -4, 0, 0, 0, 1 ],
+          "inherited_position": [ 6, 6.5, -4 ],
+          "scale": [ 1, 1, 1 ],
+          "rotation_quaternion": [ 0, 0, 0, 1 ]
+        },
+        {
+          "type": "mesh_renderer",
+          "id": 240587418,
+          "actived": true,
+          "target_mesh_id": 665486832,
+          "render_face_normals": false,
+          "render_vertex_normals": false
+        }
+      ]
+    },
+    {
+      "actived": true,
+      "name": "Sphere",
+      "id": 1820517230,
+      "static": true,
+      "Components": [
+        {
+          "type": "sphere_mesh",
+          "id": 1745223890,
+          "actived": true,
+          "radius": 1,
+          "divisions": 3
+        },
+        {
+          "type": "transformation",
+          "id": 1755182077,
+          "actived": true,
+          "transform_matrix": [ 1, 0, 0, 5.5, 0, 1, 0, 4.5, 0, 0, 1, -3, 0, 0, 0, 1 ],
+          "position": [ 5.5, 4.5, -3 ],
+          "inherited_transform": [ 1, 0, 0, 5.5, 0, 1, 0, 4.5, 0, 0, 1, -3, 0, 0, 0, 1 ],
+          "inherited_position": [ 5.5, 4.5, -3 ],
+          "scale": [ 1, 1, 1 ],
+          "rotation_quaternion": [ 0, 0, 0, 1 ]
+        },
+        {
+          "type": "mesh_renderer",
+          "id": 1416901223,
+          "actived": true,
+          "target_mesh_id": 1745223890,
+          "render_face_normals": false,
+          "render_vertex_normals": false
+        }
+      ]
+    }
+  ]
+}

@@ -38,9 +38,15 @@ private:
 public:
 
 	//Get Methods -----------
-
+	float GetGameTimeSinceStartup()const;
+	float GetGameDT();
 
 	//Set Methods -----------
+	void SetGameTimeSinceStartup(float val);
+	void SetGameTimeScale(float val);
+	
+	//Functionality ---------
+	void AddGameTimeSinceStartup(float val);
 
 };
 #endif // !_TIME_MANAGER_

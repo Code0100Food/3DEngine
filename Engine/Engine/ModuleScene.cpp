@@ -8,6 +8,7 @@
 #include "Serializer.h"
 #include "FileSystem.h"
 #include "ModuleTextures.h"
+#include "TimeManager.h"
 
 #include "SphereGenerator.h"
 #include "CubeGenerator.h"
@@ -38,6 +39,9 @@ bool ModuleScene::Start()
 	octree.SetBoundaries(boundaries);
 	octree.SetMaxObjects(1);
 	
+	//Set a default game timing configuration
+	App->time_manager->SetGameTimeScale(1.0f);
+
 	//Load a scene if theres a saved one
 	char str[50];
 	sprintf(str, "%sscene.json", LIBRARY_FOLDER);
@@ -66,8 +70,10 @@ bool ModuleScene::SceneUpdate(float dt)
 	}
 	
 	//Update the scene game objects
-	if (scene_update_state == SCENE_UPDATE_STATE::PAUSE_SCENE_STATE)dt = 0;
-	ret = root_gameobject->Update(dt);
+	float game_dt = App->time_manager->GetGameDT();
+	if (scene_update_state == SCENE_UPDATE_STATE::PAUSE_SCENE_STATE)game_dt = 0;
+	else if(scene_update_state != EDIT_SCENE_STATE)App->time_manager->AddGameTimeSinceStartup(game_dt);
+	ret = root_gameobject->Update(game_dt);
 
 	//Draw the octree
 	App->renderer3D->DisableGLRenderFlags();
@@ -460,24 +466,31 @@ void ModuleScene::PlayGame()
 		char str[50];
 		sprintf(str, "%sscene.json", LIBRARY_FOLDER);
 		App->scene->LoadSerializedScene(str);
+		LOG("Game Ended!");
+		App->time_manager->SetGameTimeSinceStartup(0.0f);
 	}
 	else
 	{
 		scene_update_state = PLAY_SCENE_STATE;
 		App->scene->SerializeScene();
 		App->scene->InitializeScene();
+		LOG("Game Started!");
 	}
 }
 
 void ModuleScene::PauseGame()
 {
+	if (scene_update_state != PLAY_SCENE_STATE && scene_update_state != PAUSE_SCENE_STATE)return;
+
 	if (scene_update_state == PAUSE_SCENE_STATE)
 	{
 		scene_update_state = PLAY_SCENE_STATE;
+		LOG("Game Unpaused!");
 	}
 	else
 	{
 		scene_update_state = PAUSE_SCENE_STATE;
+		LOG("Game Paused!");
 	}
 }
 

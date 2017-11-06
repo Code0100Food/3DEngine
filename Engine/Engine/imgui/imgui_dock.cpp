@@ -1073,11 +1073,13 @@ void DockContext::ShutdownDock()
 	m_docks.clear();
 }
 
-void DockContext::SetNextDock(Slot_ slot) {
+void DockContext::SetNextDock(Slot_ slot) 
+{
 	m_next_dock_slot = slot;
 }
 
-void DockContext::BeginWorkspace(const char* name) {
+void DockContext::BeginWorkspace(const char* name) 
+{
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
 	BeginChild(name, ImVec2(0, 0), false, flags);
 	m_workspace_pos = GetWindowPos();
