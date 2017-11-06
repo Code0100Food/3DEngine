@@ -423,6 +423,9 @@
     <ClInclude Include="Engine\TimeManager.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\imgui\ImGuizmo.h">
+      <Filter>Sources\Tools\Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -685,6 +688,9 @@
     </ClCompile>
     <ClCompile Include="Engine\TimeManager.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\imgui\ImGuizmo.cpp">
+      <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

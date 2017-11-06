@@ -111,6 +111,7 @@
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\Grid_.h" />
     <ClInclude Include="Engine\imgui\imgui.h" />
+    <ClInclude Include="Engine\imgui\ImGuizmo.h" />
     <ClInclude Include="Engine\imgui\imgui_dock.h" />
     <ClInclude Include="Engine\imgui\imgui_impl_sdl.h" />
     <ClInclude Include="Engine\imgui\imgui_internal.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="Engine\GeometryManager.cpp" />
     <ClCompile Include="Engine\Grid_.cpp" />
     <ClCompile Include="Engine\imgui\imgui.cpp" />
+    <ClCompile Include="Engine\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\imgui\imgui_demo.cpp" />
     <ClCompile Include="Engine\imgui\imgui_dock.cpp" />
     <ClCompile Include="Engine\imgui\imgui_draw.cpp" />

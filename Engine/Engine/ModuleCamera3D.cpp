@@ -441,7 +441,7 @@ GameObject* ModuleCamera3D::CheckTriangles()
 		mouse_picking_local_space.Transform(tmp_trans->GetInheritedTransform().Inverted());
 
 		//Get the triangles of the mesh
-		ComponentMesh* tmp_mesh = (ComponentMesh*)(*item).second->FindComponent(COMPONENT_TYPE::COMP_MESH);
+		ComponentMesh* tmp_mesh = (ComponentMesh*)(*item).second->FindMeshComponent();
 		
 		if (tmp_mesh != nullptr)
 		{
