@@ -149,7 +149,7 @@ void ComponentCamera::ApplyDinamicFrustum()
 
 void ComponentCamera::ApplyStaticFrustum()
 {
-	App->scene->CollectOctreeCandidates(frustum, &remaining_childs);
+	App->scene->CollectOctreeCandidates(frustum, remaining_childs);
 	App->scene->HideStaticObjects();
 	
 	while (!remaining_childs.empty())
@@ -157,7 +157,6 @@ void ComponentCamera::ApplyStaticFrustum()
 		remaining_childs.front()->SetActiveState(true);
 		remaining_childs.pop();
 	}
-	
 }
 
 void ComponentCamera::UnApplyFrustum(GameObject * target)

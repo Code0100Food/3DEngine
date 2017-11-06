@@ -541,6 +541,11 @@ bool AABB::Contains(const AABB &aabb) const
 	return Contains(aabb.minPoint) && Contains(aabb.maxPoint);
 }
 
+bool AABB::Contact(const AABB &aabb) const
+{
+	return Contains(aabb.minPoint) || Contains(aabb.maxPoint) || Intersects(aabb);
+}
+
 bool AABB::Contains(const OBB &obb) const
 {
 	return Contains(obb.MinimalEnclosingAABB());

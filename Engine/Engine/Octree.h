@@ -32,7 +32,7 @@ public:
 
 	bool CheckContact(math::Frustum frus)const
 	{
-		return bool(bounding_box.Contains(frus) || bounding_box.Intersects(frus));
+		return !frus.VertexOutside(bounding_box);
 	}
 };
 /// ---------------------------------------------
@@ -90,7 +90,7 @@ public:
 		}
 	}
 
-	bool Insert(DATA_TYPE data, math::AABB bb)
+	bool Insert(DATA_TYPE data,const math::AABB& bb)
 	{
 		// If new point is not in the quad-tree AABB, return
 		if (!CheckInsert(bb) || !bb.IsFinite())
@@ -142,14 +142,14 @@ public:
 		return false;
 	}
 
-	bool CheckInsert(math::AABB bb)const
+	bool CheckInsert(const math::AABB& bb)const
 	{
-		return bool(aabb.Contains(bb) || aabb.Intersects(bb));
+		return aabb.Contact(bb);
 	}
 
-	bool CheckContact(math::Frustum frus)const
+	bool CheckContact(const math::Frustum& frus)const
 	{
-		return bool(aabb.Contains(frus) || aabb.Intersects(frus));
+		return !frus.VertexOutside(aabb);
 	}
 
 	void Subdivide()
@@ -232,7 +232,7 @@ public:
 		objects_cpy.clear();
 	}
 
-	void CollectCandidates(math::Frustum& frustum, std::queue<DATA_TYPE>* queue)
+	void CollectCandidates(math::Frustum& frustum, std::queue<DATA_TYPE>& queue)
 	{
 		if (!CheckContact(frustum))return;
 
@@ -241,49 +241,15 @@ public:
 			for (uint k = 0; k < NODE_SUBDIVISION; k++)children[k]->CollectCandidates(frustum, queue);
 		}
 
-		uint size = objects.size();
-		for (uint k = 0; k < size; k++)
+		for (uint k = 0; k < objects.size(); k++)
 		{
 			if(objects[k].CheckContact(frustum))
 			{
-				queue->push(objects[k].data);
+				queue.push(objects[k].data);
 			}
 		}
 		
 	}
-
-	/*int CollectCandidates(std::vector<DATA_TYPE>& nodes, const SDL_Rect& rect)
-	{
-		uint ret = 0;
-
-		// If range is not in the quad-tree, return
-		if (!SDL_HasIntersection(&rect, &aabb)) return 0;
-
-		// See if the points of this node are in range and pushback them to the vector
-		if (full)
-		{
-			// Otherwise, add the points from the children
-			ret += children[0]->CollectCandidates(nodes, rect);
-			ret += children[1]->CollectCandidates(nodes, rect);
-			ret += children[2]->CollectCandidates(nodes, rect);
-			ret += children[3]->CollectCandidates(nodes, rect);
-		}
-		else
-		{
-			uint size = objects.size();
-			for (uint k = 0; k < size; k++)
-			{
-				SDL_Point pos = { objects[k].location.x,objects[k].location.y };
-				if (SDL_PointInRect(&pos, &rect))
-				{
-					nodes.push_back(objects[k].data);
-					ret++;
-				}
-			}
-		}
-
-		return ret;
-	}*/
 };
 /// ---------------------------------------------
 
@@ -334,7 +300,7 @@ public:
 	}
 
 
-	bool Insert(const DATA_TYPE data, math::AABB new_bb)
+	bool Insert(const DATA_TYPE data, const math::AABB& new_bb)
 	{
 		if (root != NULL)
 		{
@@ -350,22 +316,13 @@ public:
 		if (root != NULL)root->Draw(color);
 	}
 
-	void CollectCandidates(math::Frustum& frustum, std::queue<DATA_TYPE>* queue)
+	void CollectCandidates(math::Frustum& frustum, std::queue<DATA_TYPE>& queue)
 	{
-		if (root != NULL && (frustum.Contains(root->aabb) || (frustum.Intersects(root->aabb))))
+		if (root != NULL && !frustum.VertexOutside(root->aabb))
 		{
 			root->CollectCandidates(frustum, queue);
 		}
 	}
-
-	/*int	CollectCandidates(std::vector<DATA_TYPE>& nodes, const SDL_Rect& r) const
-	{
-		int tests = 0;
-
-		if (root != NULL && SDL_HasIntersection(&r, &root->aabb))
-			tests = root->CollectCandidates(nodes, r);
-		return tests;
-	}*/
 
 	void Clear()
 	{

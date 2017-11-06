@@ -332,7 +332,7 @@ void ModuleScene::ReFillOctree()
 	}
 }
 
-void ModuleScene::CollectOctreeCandidates(math::Frustum & frustum, std::queue<GameObject*>* queue)
+void ModuleScene::CollectOctreeCandidates(math::Frustum & frustum, std::queue<GameObject*>& queue)
 {
 	octree.CollectCandidates(frustum, queue);
 }
@@ -368,6 +368,11 @@ void ModuleScene::RemoveStaticObject(const GameObject * target)
 
 void ModuleScene::HideStaticObjects()
 {
+	uint size = static_objects.size();
+	for (uint k = 0; k < size; k++)
+	{
+		static_objects[k]->SetActiveState(false);
+	}
 }
 
 void ModuleScene::SerializeScene() const

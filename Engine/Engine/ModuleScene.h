@@ -75,7 +75,7 @@ public:
 
 	void		PushGameObjectInOctree(GameObject* target, bool childs = true);
 	void		ReFillOctree();
-	void		CollectOctreeCandidates(math::Frustum& frustum, std::queue<GameObject*>* queue);
+	void		CollectOctreeCandidates(math::Frustum& frustum, std::queue<GameObject*>& queue);
 	void		CleanOctree();
 
 	void		InsertStaticObject(const GameObject* target);

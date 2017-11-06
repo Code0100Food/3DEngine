@@ -26,8 +26,8 @@ private:
 	bool			frustum_culling = false;
 	bool			is_main = false;
 
-	//Queue to apply frustrum to all childs of te Applyfrustrum function
-	std::queue<GameObject*> remaining_childs;
+	//Queue to apply frustum culling to all childs
+	std::queue<GameObject*>	remaining_childs;
 
 public:
 

@@ -382,6 +382,7 @@ public:
 	bool Contains(const float3 &point) const;
 	bool Contains(const LineSegment &lineSegment) const;
 	bool Contains(const AABB &aabb) const;
+	bool Contact(const AABB &aabb) const;
 	bool Contains(const OBB &obb) const;
 	bool Contains(const Sphere &sphere) const;
 	bool Contains(const Triangle &triangle) const;
