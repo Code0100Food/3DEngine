@@ -69,7 +69,7 @@ bool ModuleCamera3D::Start()
 
 	editor_camera_frustrum.type = math::FrustumType::PerspectiveFrustum;
 
-	editor_camera_frustrum.nearPlaneDistance = 1;
+	editor_camera_frustrum.nearPlaneDistance = 1.0f;
 
 	editor_camera_frustrum.verticalFov = 60 * DEGTORAD;
 	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * App->window->GetAspectRatio()));
@@ -129,6 +129,8 @@ update_status ModuleCamera3D::Update(float dt)
 			}
 		}
 
+		
+
 		//Mouse picking
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
 		{
@@ -136,8 +138,12 @@ update_status ModuleCamera3D::Update(float dt)
 			mouse_x_normalized = (float)(App->input->GetMouseX() - App->renderer3D->GetSceneImagePos().x) / (App->renderer3D->GetSceneImageSize().x);
 			mouse_y_normalized = (float)(App->input->GetMouseY() - App->renderer3D->GetSceneImagePos().y) / (App->renderer3D->GetSceneImageSize().y);
 
-			mouse_picking = editor_camera_frustrum.UnProjectLineSegment(-((mouse_x_normalized * 2) - 1), -((mouse_y_normalized * 2) - 1));
-			
+			//Tansform position from range [0,1] to range [-1,1]
+			mouse_x_normalized = -((mouse_x_normalized * 2) - 1);
+			mouse_y_normalized = -((mouse_y_normalized * 2) - 1);
+
+			mouse_picking = editor_camera_frustrum.UnProjectFromNearPlane(mouse_x_normalized, mouse_y_normalized).ToLineSegment(editor_camera_frustrum.farPlaneDistance);
+
 			//Check the line segment against all aabb's
 			CheckAllAABB();
 			
@@ -249,6 +255,12 @@ void ModuleCamera3D::BlitConfigInfo()
 		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
 	}
 	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Changes The frustrum far plane distance");
+
+	if (ImGui::DragFloat("Near Plane Distance", &editor_camera_frustrum.nearPlaneDistance, 0.01f, NULL, NULL, "%.1f"))
+	{
+		App->audio->PlayFxForInput(FX_ID::SLICE_TICK_FX);
+	}
+	ImGui::SameLine(); ImGui::MyShowHelpMarker("(?)", "Changes The frustrum near plane distance");
 
 	ImGui::Separator();
 
