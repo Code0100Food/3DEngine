@@ -68,6 +68,22 @@ Console shows information of the engine operations and can handle some basic inp
 To see all the console commands you can open the console header in the configuration window or enter “help” in the console
 
 # Changelog
+	 -Release 0.2.5:
+		Octree multiple subdivision works
+		Octree store static objects
+		Scene Serialization(Load)
+		Play/Pause/Next Buttons 
+		Customizable Docking Improved
+		Docking Save/Load methods
+		Mouse picking
+		Edit camera frustum
+		Lines antialiasing
+		UI always adapts at window size
+
+	 -Release 0.2.3:
+		Octree subdivision polish
+		Scene Serialization (Save)
+		Bounding Boxes Transformation improved
 
 	 -Release 0.2.1:
 		GameObjects added
