@@ -10,6 +10,8 @@
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 #include "TimeManager.h"
+#include "ModuleTextures.h"
+#include "ModuleInput.h"
 
 #include "Serializer.h"
 
@@ -423,14 +425,28 @@ std::vector<GameObject*>* GameObject::GetChilds()
 
 void GameObject::BlitGameObjectHierarchy(uint index)
 {
+	//Check the tree node flags
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	if (childs.empty())flags += ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Leaf;
+	if (this == App->scene->GetSelectedGameObject())flags += ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Selected;
+	
+	//Generate the node
 	char name_str[40];
 	sprintf_s(name_str, 40, "%s##%i", name.c_str(), index);
-	bool op = ImGui::TreeNodeEx(name_str, ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_OpenOnDoubleClick);
+	bool op = ImGui::TreeNodeEx(name_str, flags);
 
+	//Tree node input
 	if (ImGui::IsItemClicked() && ImGui::IsItemHovered())
 	{
-		App->scene->EnableInspector();
-		App->scene->SetSelectedGameObject(this);
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT))
+		{
+			App->scene->EnableInspector();
+			App->scene->SetSelectedGameObject(this);
+		}
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT))
+		{
+
+		}
 	}
 
 	if(op)
@@ -457,7 +473,18 @@ void GameObject::BlitGameObjectInspector()
 	{
 		App->audio->PlayFxForInput(FX_ID::APPLY_FX);
 	}
+
+	ImGui::SameLine();
 	
+	//Release button
+	if (ImGui::ImageButton((ImTextureID)App->textures->check_image,ImVec2(20,20)))
+	{
+		App->scene->SendGameObjectToRemoveVec(this);
+		App->scene->SetSelectedGameObject(nullptr);
+		App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+		return;
+	}
+
 	//Static Object
 	if (ImGui::Checkbox("Static##object_static", &static_))
 	{
@@ -484,6 +511,7 @@ void GameObject::BlitGameObjectInspector()
 			sprintf(str, "Delete Component##%i", k);
 			if (ImGui::Button(str))
 			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 				RemoveComponent(components[k]);
 				break;
 			}
@@ -496,6 +524,7 @@ void GameObject::BlitGameObjectInspector()
 	if (ImGui::Button("Add Component", ImVec2(App->window->GetWidth() * 0.24f, 25)))
 	{
 		App->scene->SetComponentsWindowState(!App->scene->GetComponentsWinState());
+		App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 	}
 
 	if (App->scene->GetComponentsWinState())

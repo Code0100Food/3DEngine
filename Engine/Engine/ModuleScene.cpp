@@ -9,6 +9,7 @@
 #include "FileSystem.h"
 #include "ModuleTextures.h"
 #include "TimeManager.h"
+#include "ModuleAudio.h"
 
 #include "SphereGenerator.h"
 #include "CubeGenerator.h"
@@ -69,6 +70,14 @@ bool ModuleScene::SceneUpdate(float dt)
 		App->SetQuit();
 	}
 	
+	//Release the game objects ready to be deleted
+	uint size = objects_to_delete.size();
+	for (uint k = 0; k < size; k++)
+	{
+		ReleaseGameObject(objects_to_delete[k], objects_to_delete[k]->GetParent());
+	}
+	objects_to_delete.clear();
+
 	//Update the scene game objects
 	float game_dt = App->time_manager->GetGameDT();
 	if (scene_update_state == SCENE_UPDATE_STATE::PAUSE_SCENE_STATE)game_dt = 0;
@@ -112,12 +121,17 @@ GameObject * ModuleScene::CreateGameObject()
 	return obj;
 }
 
-bool ModuleScene::RemoveGameObject(GameObject * target, const GameObject * parent, bool search_in)
+bool ModuleScene::ReleaseGameObject(GameObject * target, const GameObject * parent, bool search_in)
 {
 	GameObject* root = (GameObject*)parent;
 	if (root == nullptr)root = root_gameobject;
 
 	return root->RemoveChild(target, search_in);
+}
+
+void ModuleScene::SendGameObjectToRemoveVec(const GameObject * target)
+{
+	objects_to_delete.push_back((GameObject*)target);
 }
 
 GameObject * ModuleScene::FindGameObject(uint id) const
@@ -303,6 +317,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 		{
 			if (ImGui::Button("Mesh"))
 			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
 				target->CreateComponent(COMPONENT_TYPE::COMP_MESH);
 
 				/*In Process*/
@@ -311,6 +327,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 			}
 			if (ImGui::Button("Cube Mesh"))
 			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
 				//Generate the cube logic
 				math::AABB cube_logic;
 				cube_logic.minPoint = math::float3(0, 0, 0);
@@ -339,6 +357,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 			}
 			if (ImGui::Button("Sphere Mesh"))
 			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
 				//Generate the sphere logic
 				math::Sphere sphere_logic;
 				sphere_logic.r = 1;
@@ -367,6 +387,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 			}
 			if (ImGui::Button("Cylinder Mesh"))
 			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
 				//Generate the cube logic
 				math::Cylinder cylinder_logic;
 				cylinder_logic.r = 1;
@@ -399,6 +421,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 		{
 			if (ImGui::Button("Mesh Renderer"))
 			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
 				//Generate a mesh renderer
 				ComponentMeshRenderer* mesh_rend = (ComponentMeshRenderer*)target->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 				//Find the mesh to render
@@ -413,6 +437,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 		{
 			if (ImGui::Button("Material"))
 			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
 				target->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
 
 				/*In Process*/
@@ -425,6 +451,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 		{
 			if (ImGui::Button("Camera"))
 			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
 				//Generate a component camera
 				target->CreateComponent(COMPONENT_TYPE::COMP_CAMERA);
 				show_components_window = false;

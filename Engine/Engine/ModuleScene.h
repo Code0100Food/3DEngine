@@ -32,8 +32,9 @@ private:
 
 	SCENE_UPDATE_STATE		scene_update_state = EDIT_SCENE_STATE;
 
-	GameObject*				root_gameobject = nullptr;
-	GameObject*				selected_gameobject = nullptr;
+	GameObject*					root_gameobject = nullptr;
+	GameObject*					selected_gameobject = nullptr;
+	std::vector<GameObject*>	objects_to_delete;
 
 	uint					play_tex_id = 0, stop_tex_id = 0, next_tex_id = 0;
 	bool					hierarchy_win_state = true;
@@ -61,7 +62,8 @@ public:
 	//Functionality ---------
 	//GameObject methods
 	GameObject* CreateGameObject();
-	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
+	bool		ReleaseGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
+	void		SendGameObjectToRemoveVec(const GameObject* target);
 	GameObject* FindGameObject(uint id)const;
 	GameObject* CreatePrimitive(PRIMITIVE_TYPE type, uint divisions = 2);
 	
