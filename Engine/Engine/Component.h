@@ -56,6 +56,7 @@ public:
 
 	//Get Methods -----------
 	COMPONENT_TYPE	GetType()const;
+	bool			IsMeshType()const;
 	bool			GetActive()const;
 	uint			GetID()const;
 

@@ -200,9 +200,22 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 
 	if (comp != nullptr)
 	{
+		if (c_type == COMP_TRANSFORMATION)
+		{
+			components.push_back(comp);
+			uint size = components.size() - 1;
+			for (uint k = 0; k < size; k++)
+			{
+				components[k + 1] = components[k];
+			}
+			components[0] = comp;
+		}
+		else
+		{
+			components.push_back(comp);
+		}
 		comp->SetParent(this);
 		comp->Start();
-		components.push_back(comp);
 	}
 
 	return comp;
@@ -215,16 +228,33 @@ bool GameObject::RemoveComponent(Component * cmp)
 	{
 		if (components[k] == cmp)
 		{
+			//First reset the related data
+			bool mesh_type = components[k]->IsMeshType();
 			components[k]->UnLinkComponent();
-
+			
+			//Release the component
 			RELEASE(components[k]);
 
+			//Update the components vector
 			for (uint h = k; h < size - 1; h++)
 			{
-				components[h] == components[h + 1];
+				components[h] = components[h + 1];
 			}
-
 			components.pop_back();
+
+			//Recalculate the bounding box of the correct parent
+			if (mesh_type)
+			{
+				GameObject* root_target_parent = parent;
+				GameObject*	target_parent = this;
+
+				while (!root_target_parent->IsRoot())
+				{
+					target_parent = root_target_parent;
+					root_target_parent = target_parent->parent;
+				}
+				target_parent->AdjustBoundingBox();
+			}
 
 			return true;
 		}
@@ -239,7 +269,6 @@ bool GameObject::FindComponent(Component * cmp) const
 	for (uint k = 0; k < size; k++)
 	{
 		if (components[k] == cmp)return true;
-
 	}
 
 	return false;
@@ -446,13 +475,18 @@ void GameObject::BlitGameObjectInspector()
 	uint size = components.size();
 	for (uint k = 0; k < size; k++)
 	{
+		//Show component inspector data
 		components[k]->BlitComponentInspector();
-		char str[60];
-		sprintf(str, "Delete Component##%i", k);
-		if (ImGui::Button(str))
+
+		if (components[k]->GetType() != COMPONENT_TYPE::COMP_TRANSFORMATION)
 		{
-			this->RemoveComponent(components[k]);
-			break;
+			char str[40];
+			sprintf(str, "Delete Component##%i", k);
+			if (ImGui::Button(str))
+			{
+				RemoveComponent(components[k]);
+				break;
+			}
 		}
 	}
 
@@ -572,6 +606,7 @@ std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_chi
 			//Collect all the vertex and bb corners
 			v_pos = mesh->GetVertexPositions();
 		}
+		else if(v_pos.empty())bounding_box.SetNegativeInfinity();
 
 		//Build bounding box
 		bounding_box.Enclose(v_pos.data(), v_pos.size());

@@ -55,6 +55,16 @@ COMPONENT_TYPE Component::GetType() const
 	return type;
 }
 
+bool Component::IsMeshType() const
+{
+	return bool(type == COMP_MESH 
+			||  type == COMP_PRIMITIVE_MESH 
+			||	type == COMP_CUBE_MESH
+			||	type == COMP_SPHERE_MESH
+			||	type == COMP_CYLINDER_MESH
+			||	type == COMP_FRUSTUM_MESH);
+}
+
 bool Component::GetActive() const
 {
 	return actived;
