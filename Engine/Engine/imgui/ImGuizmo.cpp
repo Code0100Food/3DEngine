@@ -660,7 +660,7 @@ namespace ImGuizmo
 
    void SetDrawlist()
    {
-      gContext.mDrawList = ImGui::GetWindowDrawList();
+      gContext.mDrawList = ImGui::GetWindowGuizmoList();
    }
 
    void BeginFrame()
@@ -669,7 +669,7 @@ namespace ImGuizmo
 
       ImGui::Begin("gizmo", NULL, io.DisplaySize, 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
-      gContext.mDrawList = ImGui::GetWindowDrawList();
+      gContext.mDrawList = ImGui::GetWindowGuizmoList();
 
       ImGui::End();
    }

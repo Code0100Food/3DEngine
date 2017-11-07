@@ -612,6 +612,7 @@ static void             Scrollbar(ImGuiWindow* window, bool horizontal);
 
 static void             AddDrawListToRenderList(ImVector<ImDrawList*>& out_render_list, ImDrawList* draw_list);
 static void             AddWindowToRenderList(ImVector<ImDrawList*>& out_render_list, ImGuiWindow* window);
+static void				AddWindowToGuizmoRenderList(ImVector<ImDrawList*>& out_render_list, ImGuiWindow* window);
 static void             AddWindowToSortedBuffer(ImVector<ImGuiWindow*>& out_sorted_windows, ImGuiWindow* window);
 
 static ImGuiIniData*    FindWindowSettings(const char* name);
@@ -1789,8 +1790,14 @@ ImGuiWindow::ImGuiWindow(const char* name)
     FontWindowScale = 1.0f;
 
     DrawList = (ImDrawList*)ImGui::MemAlloc(sizeof(ImDrawList));
+	GizmoDrawList = (ImDrawList*)ImGui::MemAlloc(sizeof(ImDrawList));
+
     IM_PLACEMENT_NEW(DrawList) ImDrawList();
     DrawList->_OwnerName = Name;
+
+	/*IM_PLACEMENT_NEW(GuizmoDrawList) ImDrawList();
+	GuizmoDrawList->_OwnerName = Name;*/
+
     RootWindow = NULL;
     RootNonPopupWindow = NULL;
     ParentWindow = NULL;
@@ -1805,6 +1812,12 @@ ImGuiWindow::~ImGuiWindow()
     DrawList->~ImDrawList();
     ImGui::MemFree(DrawList);
     DrawList = NULL;
+
+	/*GizmoDrawList->~ImDrawList();
+	ImGui::MemFree(GuizmoDrawList);
+	GizmoDrawList = NULL;
+*/
+
     ImGui::MemFree(Name);
     Name = NULL;
 }
@@ -2631,6 +2644,20 @@ static void AddWindowToRenderList(ImVector<ImDrawList*>& out_render_list, ImGuiW
     }
 }
 
+void AddWindowToGuizmoRenderList(ImVector<ImDrawList*>& out_render_list, ImGuiWindow * window)
+{
+	AddDrawListToRenderList(out_render_list, window->GizmoDrawList);
+	for (int i = 0; i < window->DC.ChildWindows.Size; i++)
+	{
+		ImGuiWindow* child = window->DC.ChildWindows[i];
+		if (!child->Active) // clipped children may have been marked not active
+			continue;
+		if ((child->Flags & ImGuiWindowFlags_Popup) && child->HiddenFrames > 0)
+			continue;
+		AddWindowToRenderList(out_render_list, child);
+	}
+}
+
 // When using this function it is sane to ensure that float are perfectly rounded to integer values, to that e.g. (int)(max.x-min.x) in user's render produce correct result.
 void ImGui::PushClipRect(const ImVec2& clip_rect_min, const ImVec2& clip_rect_max, bool intersect_with_current_clip_rect)
 {
@@ -2787,6 +2814,66 @@ void ImGui::Render()
         if (g.RenderDrawData.CmdListsCount > 0 && g.IO.RenderDrawListsFn != NULL)
             g.IO.RenderDrawListsFn(&g.RenderDrawData);
     }
+}
+
+IMGUI_API void ImGui::RenderGuizmos()
+{
+	ImGuiContext& g = *GImGui;
+	IM_ASSERT(g.Initialized);   // Forgot to call ImGui::NewFrame()
+
+	// Skip render altogether if alpha is 0.0
+	// Note that vertex buffers have been created and are wasted, so it is best practice that you don't create windows in the first place, or consistently respond to Begin() returning false.
+	if (g.Style.Alpha > 0.0f)
+	{
+		// Gather windows to render
+		g.IO.MetricsRenderVertices = g.IO.MetricsRenderIndices = g.IO.MetricsActiveWindows = 0;
+		for (int i = 0; i < IM_ARRAYSIZE(g.RenderDrawLists); i++)
+			g.RenderDrawLists[i].resize(0);
+		for (int i = 0; i != g.Windows.Size; i++)
+		{
+			ImGuiWindow* window = g.Windows[i];
+			if (window->Active && window->HiddenFrames <= 0 && (window->Flags & (ImGuiWindowFlags_ChildWindow)) == 0)
+			{
+				AddWindowToGuizmoRenderList(g.RenderDrawLists[3], window);
+			}
+		}
+
+		// Flatten layers
+		int n = g.RenderDrawLists[3].Size;
+		int flattened_size = n;
+
+		ImVector<ImDrawList*>& layer = g.RenderDrawLists[3];
+		if (!layer.empty())
+			memcpy(&g.RenderDrawLists[3][n], &layer[0], layer.Size * sizeof(ImDrawList*));
+
+		// Draw software mouse cursor if requested
+		if (g.IO.MouseDrawCursor)
+		{
+			const ImGuiMouseCursorData& cursor_data = g.MouseCursorData[g.MouseCursor];
+			const ImVec2 pos = g.IO.MousePos - cursor_data.HotOffset;
+			const ImVec2 size = cursor_data.Size;
+			const ImTextureID tex_id = g.IO.Fonts->TexID;
+			g.OverlayDrawList.PushTextureID(tex_id);
+			g.OverlayDrawList.AddImage(tex_id, pos + ImVec2(1, 0), pos + ImVec2(1, 0) + size, cursor_data.TexUvMin[1], cursor_data.TexUvMax[1], IM_COL32(0, 0, 0, 48));        // Shadow
+			g.OverlayDrawList.AddImage(tex_id, pos + ImVec2(2, 0), pos + ImVec2(2, 0) + size, cursor_data.TexUvMin[1], cursor_data.TexUvMax[1], IM_COL32(0, 0, 0, 48));        // Shadow
+			g.OverlayDrawList.AddImage(tex_id, pos, pos + size, cursor_data.TexUvMin[1], cursor_data.TexUvMax[1], IM_COL32(0, 0, 0, 255));       // Black border
+			g.OverlayDrawList.AddImage(tex_id, pos, pos + size, cursor_data.TexUvMin[0], cursor_data.TexUvMax[0], IM_COL32(255, 255, 255, 255)); // White fill
+			g.OverlayDrawList.PopTextureID();
+		}
+		if (!g.OverlayDrawList.VtxBuffer.empty())
+			AddDrawListToRenderList(g.RenderDrawLists[0], &g.OverlayDrawList);
+
+		// Setup draw data
+		g.RenderDrawData.Valid = true;
+		g.RenderDrawData.CmdLists = (g.RenderDrawLists[3].Size > 0) ? &g.RenderDrawLists[3][0] : NULL;
+		g.RenderDrawData.CmdListsCount = g.RenderDrawLists[3].Size;
+		g.RenderDrawData.TotalVtxCount = g.IO.MetricsRenderVertices;
+		g.RenderDrawData.TotalIdxCount = g.IO.MetricsRenderIndices;
+
+		// Render. If user hasn't set a callback then they may retrieve the draw data via GetDrawData()
+		if (g.RenderDrawData.CmdListsCount > 0 && g.IO.RenderDrawListsFn != NULL)
+			g.IO.RenderDrawListsFn(&g.RenderDrawData);
+	}
 }
 
 const char* ImGui::FindRenderedTextEnd(const char* text, const char* text_end)
@@ -5183,6 +5270,12 @@ ImDrawList* ImGui::GetWindowDrawList()
 {
     ImGuiWindow* window = GetCurrentWindow();
     return window->DrawList;
+}
+
+IMGUI_API ImDrawList* ImGui::GetWindowGuizmoList()
+{
+	ImGuiWindow* window = GetCurrentWindow();
+	return window->GizmoDrawList;
 }
 
 ImFont* ImGui::GetFont()

@@ -669,7 +669,7 @@ void ModuleImgui::SetDarkTheme()
 	style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
 	style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
 	style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-	style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	style->Colors[ImGuiCol_Header] = ImVec4(0.35f, 0.25f, 0.0f, 1.00f);
 	style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
 	style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
 	style->Colors[ImGuiCol_Column] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
@@ -779,6 +779,11 @@ void ModuleImgui::RenderUI()
 	father_dock->EndWorkspace();
 	ImGui::End();
 	ImGui::Render();
+}
+
+void ModuleImgui::RenderGuizmos()
+{
+	ImGui::RenderGuizmos();
 }
 
 void ModuleImgui::CallExitWindow()

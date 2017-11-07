@@ -407,6 +407,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glEnd();
 
+	//App->imgui->RenderGuizmos();
+
 	//Focus render texture
 	render_to_texture->UnBind();
 

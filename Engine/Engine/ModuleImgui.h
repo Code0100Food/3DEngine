@@ -78,6 +78,7 @@ public:
 
 	//Functionality ---------
 	void RenderUI();
+	void RenderGuizmos();
 	void CallExitWindow();
 
 	
