@@ -436,16 +436,31 @@ void GameObject::BlitGameObjectHierarchy(uint index)
 	bool op = ImGui::TreeNodeEx(name_str, flags);
 
 	//Tree node input
-	if (ImGui::IsItemClicked() && ImGui::IsItemHovered())
+	if (!IsRoot())
 	{
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT))
-		{
-			App->scene->EnableInspector();
-			App->scene->SetSelectedGameObject(this);
-		}
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT))
-		{
+		bool is_sel = (App->scene->GetSelectedGameObject() == this);
 
+		
+		if (ImGui::IsItemHovered())
+		{
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+			{
+				App->scene->EnableInspector();
+				App->scene->SetSelectedGameObject(this);
+				App->scene->SetGameObjectHierarchyWindowState(false);
+			}
+			if (is_sel && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+			{
+				App->scene->SetGameObjectHierarchyWindowState(!App->scene->GetGameObjectHierarchyWindowState());
+			}
+		}
+		else if (App->scene->GetGameObjectHierarchyWindowState() && is_sel)
+		{
+			App->scene->BlitGameObjectHierarchyWindow(this);
+		}
+		else if (is_sel && (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN))
+		{
+			App->scene->SetGameObjectHierarchyWindowState(false);
 		}
 	}
 

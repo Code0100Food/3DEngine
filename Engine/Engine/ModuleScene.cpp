@@ -471,6 +471,35 @@ void ModuleScene::SetComponentsWindowState(bool val)
 	show_components_window = val;
 }
 
+void ModuleScene::BlitGameObjectHierarchyWindow(GameObject * target)
+{
+	bool val = true;
+	ImGui::Begin(".", &val, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
+	if (ImGui::Button("Remove", ImVec2(50, 20)))
+	{
+		objects_to_delete.push_back(target);
+		App->scene->SetGameObjectHierarchyWindowState(false);
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Clone", ImVec2(50, 20)))
+	{
+
+	}
+	ImGui::End();
+}
+
+bool ModuleScene::GetGameObjectHierarchyWindowState() const
+{
+	return show_gameobject_hierarchy_window;
+}
+
+void ModuleScene::SetGameObjectHierarchyWindowState(bool val)
+{
+	show_gameobject_hierarchy_window = val;
+}
+
 bool ModuleScene::IsRoot(const GameObject * target) const
 {
 	return (target == root_gameobject);

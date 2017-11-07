@@ -40,6 +40,7 @@ private:
 	bool					hierarchy_win_state = true;
 	bool					inspector_state = true;
 	bool					show_components_window = false;
+	bool					show_gameobject_hierarchy_window = false;
 
 	Octree<GameObject*>			octree;
 	std::vector<GameObject*>	static_objects;
@@ -81,6 +82,10 @@ public:
 	void		BlitComponentsWindow(GameObject* target);
 	bool		GetComponentsWinState()const;
 	void		SetComponentsWindowState(bool val);
+
+	void		BlitGameObjectHierarchyWindow(GameObject* target);
+	bool		GetGameObjectHierarchyWindowState()const;
+	void		SetGameObjectHierarchyWindowState(bool val);
 
 	//Hierarchy methods
 	bool		IsRoot(const GameObject* target)const;
