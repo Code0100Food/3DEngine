@@ -109,6 +109,11 @@ void Component::LinkComponent(const Component * target)
 
 }
 
+void Component::UnLinkComponent()
+{
+
+}
+
 COMPONENT_TYPE StrToComponentType(const char * str)
 {
 	if (strcmp(str, "transformation") == 0)	return COMP_TRANSFORMATION;

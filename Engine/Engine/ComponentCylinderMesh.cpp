@@ -3,6 +3,7 @@
 #include "ComponentMaterial.h"
 #include "Serializer.h"
 #include "CylinderGenerator.h"
+#include "GameObject.h"
 
 // Constructors =================================
 ComponentCylinderMesh::ComponentCylinderMesh()
@@ -111,4 +112,10 @@ bool ComponentCylinderMesh::Load(Serializer & data, std::vector<std::pair<Compon
 	SetupMesh();
 
 	return ret;
+}
+
+void ComponentCylinderMesh::UnLinkComponent()
+{
+	ComponentMeshRenderer* rend = (ComponentMeshRenderer*)parent->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+	if (rend != nullptr)rend->SetTargetMesh(nullptr);
 }

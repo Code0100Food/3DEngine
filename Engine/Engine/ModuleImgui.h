@@ -39,7 +39,7 @@ private:
 	bool	show_about_window = false;
 	bool	show_ui_conf_window = false;
 	bool	show_exit_window = false;
-
+	
 	//UI Configuration window data
 	bool		dark_theme = false;
 	bool		light_theme = false;
@@ -51,6 +51,14 @@ private:
 	uint		cond_flag_time = 0;
 	ImGuiCond_	cond_flag = ImGuiCond_::ImGuiCond_Once;
 
+	//To know sdl version
+	SDL_version sdl_version;
+
+	//Father Dock
+	DockContext* father_dock = nullptr;
+
+private:
+
 	void	BlitUIConfigWindow();
 	void	BlitAboutWindow();
 	void	BlitExitWindow();
@@ -58,12 +66,6 @@ private:
 	void	SetDarkTheme();
 	void	SetLightTheme();
 	void	SetCustomTheme();
-
-	//To know sdl version
-	SDL_version sdl_version;
-
-	//Father Dock
-	DockContext* father_dock = nullptr;
 
 public:
 

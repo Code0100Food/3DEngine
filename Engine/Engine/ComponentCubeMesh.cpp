@@ -3,6 +3,7 @@
 #include "ComponentMaterial.h"
 #include "Serializer.h"
 #include "CubeGenerator.h"
+#include "GameObject.h"
 
 // Constructors =================================
 ComponentCubeMesh::ComponentCubeMesh()
@@ -107,4 +108,10 @@ bool ComponentCubeMesh::Load(Serializer & data, std::vector<std::pair<Component*
 	SetupMesh();
 
 	return ret;
+}
+
+void ComponentCubeMesh::UnLinkComponent()
+{
+	ComponentMeshRenderer* rend = (ComponentMeshRenderer*)parent->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+	if (rend != nullptr)rend->SetTargetMesh(nullptr);
 }

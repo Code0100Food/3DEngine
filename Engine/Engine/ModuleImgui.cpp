@@ -174,6 +174,14 @@ update_status ModuleImgui::Update(float dt)
 		gameobjects_open = true;
 		if (gameobjects_open != cpy)App->audio->PlayFxForInput(WINDOW_FX);
 
+		//Create a empty game object
+		if (ImGui::MenuItem("Empty"))
+		{
+			GameObject* empty_obj = App->scene->CreateGameObject();
+			empty_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			App->scene->SetSelectedGameObject(empty_obj);
+		}
+
 		//Create Cube
 		if (ImGui::MenuItem("Cube"))
 		{

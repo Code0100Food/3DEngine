@@ -5,6 +5,7 @@
 
 #include "Application.h"
 #include "ModuleScene.h"
+#include "ModuleWindow.h"
 #include "GeometryManager.h"
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
@@ -214,6 +215,8 @@ bool GameObject::RemoveComponent(Component * cmp)
 	{
 		if (components[k] == cmp)
 		{
+			components[k]->UnLinkComponent();
+
 			RELEASE(components[k]);
 
 			for (uint h = k; h < size - 1; h++)
@@ -444,6 +447,26 @@ void GameObject::BlitGameObjectInspector()
 	for (uint k = 0; k < size; k++)
 	{
 		components[k]->BlitComponentInspector();
+		char str[60];
+		sprintf(str, "Delete Component##%i", k);
+		if (ImGui::Button(str))
+		{
+			this->RemoveComponent(components[k]);
+			break;
+		}
+	}
+
+	//Components factory
+	ImGui::Separator();
+	
+	if (ImGui::Button("Add Component", ImVec2(App->window->GetWidth() * 0.24f, 25)))
+	{
+		App->scene->SetComponentsWindowState(!App->scene->GetComponentsWinState());
+	}
+
+	if (App->scene->GetComponentsWinState())
+	{
+		App->scene->BlitComponentsWindow(this);
 	}
 
 	//Add a margin to scroll

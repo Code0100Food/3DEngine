@@ -3,6 +3,7 @@
 #include "ComponentMaterial.h"
 #include "Serializer.h"
 #include "SphereGenerator.h"
+#include "GameObject.h"
 
 // Constructors =================================
 ComponentSphereMesh::ComponentSphereMesh()
@@ -102,4 +103,10 @@ bool ComponentSphereMesh::Load(Serializer & data, std::vector<std::pair<Componen
 	SetupMesh();
 
 	return ret;
+}
+
+void ComponentSphereMesh::UnLinkComponent()
+{
+	ComponentMeshRenderer* rend = (ComponentMeshRenderer*)parent->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+	if(rend != nullptr)rend->SetTargetMesh(nullptr);
 }

@@ -38,9 +38,13 @@ private:
 	uint					play_tex_id = 0, stop_tex_id = 0, next_tex_id = 0;
 	bool					hierarchy_win_state = true;
 	bool					inspector_state = true;
+	bool					show_components_window = false;
 
 	Octree<GameObject*>			octree;
 	std::vector<GameObject*>	static_objects;
+
+	//Used to generate primitives 
+	std::pair<std::vector<uint>, std::vector<Vertex>> geometry_data;
 
 	//Vectors used during serialization
 	std::vector<std::pair<GameObject*, uint>>	objects_links;
@@ -55,11 +59,13 @@ public:
 	GameObject*	GetSelectedGameObject()const;
 
 	//Functionality ---------
+	//GameObject methods
 	GameObject* CreateGameObject();
 	bool		RemoveGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
 	GameObject* FindGameObject(uint id)const;
 	GameObject* CreatePrimitive(PRIMITIVE_TYPE type, uint divisions = 2);
 	
+	//UI Methods
 	void		BlitConfigInfo();
 	void		BlitHierarchy();
 	bool		GetHierarchyWinState()const;
@@ -70,23 +76,32 @@ public:
 	void		EnableInspector();
 	void		DisableInspector();
 
+	void		BlitComponentsWindow(GameObject* target);
+	bool		GetComponentsWinState()const;
+	void		SetComponentsWindowState(bool val);
+
+	//Hierarchy methods
 	bool		IsRoot(const GameObject* target)const;
 	GameObject* GetRoot()const;
 
+	//Octree methods
 	void		PushGameObjectInOctree(GameObject* target, bool childs = true);
 	void		ReFillOctree();
 	void		CollectOctreeCandidates(math::Frustum& frustum, std::queue<GameObject*>& queue);
 	void		CleanOctree();
 
+	//StaticObjects methods
 	void		InsertStaticObject(const GameObject* target);
 	void		RemoveStaticObject(const GameObject* target);
 	void		HideStaticObjects();
 
+	//Serialize methods
 	void		SerializeScene()const;
 	bool		LoadSerializedScene(const char* path);
 	bool		InitializeScene();
 	void		CleanScene();
 
+	//Play/Pause methods
 	void		PlayGame();
 	void		PauseGame();
 	void		NextGameFrame();

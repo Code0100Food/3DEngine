@@ -67,6 +67,8 @@ public:
 	virtual bool Save(Serializer& array_root)const;
 	virtual bool Load(Serializer& data, std::vector<std::pair<Component*, uint>>& links);
 	virtual void LinkComponent(const Component* target);
+	virtual void UnLinkComponent();
+
 };
 
 //Enums Methods ---------

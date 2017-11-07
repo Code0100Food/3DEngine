@@ -129,8 +129,7 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 {
 	GameObject* new_prim = nullptr;
 	ComponentMesh* mesh = nullptr;
-	std::pair<std::vector<uint>, std::vector<Vertex>> data;
-
+	
 	switch (type)
 	{
 	case UNDEF_PRIMITIVE:
@@ -150,7 +149,7 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 		CubeGenerator cube;
 		cube.SetGeometry(cube_logic);
 		cube.SetDivisions(divisions);
-		data = cube.Generate();
+		geometry_data = cube.Generate();
 
 		//Create the game object
 		new_prim = CreateGameObject();
@@ -172,7 +171,7 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 		SphereGenerator sphere;
 		sphere.SetGeometry(sphere_logic);
 		sphere.SetDivisions(divisions);
-		data = sphere.Generate();
+		geometry_data = sphere.Generate();
 		
 		//Create the game object
 		new_prim = CreateGameObject();
@@ -195,7 +194,7 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 		CylinderGenerator cylinder;
 		cylinder.SetGeometry(cylinder_logic);
 		cylinder.SetDivisions(divisions);
-		data = cylinder.Generate();
+		geometry_data = cylinder.Generate();
 
 		//Create the game object
 		new_prim = CreateGameObject();
@@ -230,11 +229,14 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 		mesh_renderer->SetTargetMesh(mesh);
 
 		//Set cube logic in mesh
-		mesh->SetIndices(data.first);
-		mesh->SetVertices(data.second);
+		mesh->SetIndices(geometry_data.first);
+		mesh->SetVertices(geometry_data.second);
 		mesh->SetupMesh();
 		new_prim->AdjustBoundingBox();
 	}
+
+	geometry_data.first.clear();
+	geometry_data.second.clear();
 
 	return new_prim;
 }
@@ -291,6 +293,154 @@ void ModuleScene::EnableInspector()
 void ModuleScene::DisableInspector()
 {
 	inspector_state = false;
+}
+
+void ModuleScene::BlitComponentsWindow(GameObject* target)
+{
+	if (target != nullptr)
+	{
+		if (target->FindMeshComponent() == nullptr)
+		{
+			if (ImGui::Button("Mesh"))
+			{
+				target->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+
+				/*In Process*/
+
+				show_components_window = false;
+			}
+			if (ImGui::Button("Cube Mesh"))
+			{
+				//Generate the cube logic
+				math::AABB cube_logic;
+				cube_logic.minPoint = math::float3(0, 0, 0);
+				cube_logic.maxPoint = math::float3(1, 1, 1);
+				CubeGenerator cube;
+				cube.SetGeometry(cube_logic);
+				cube.SetDivisions(2);
+				geometry_data = cube.Generate();
+
+				//Create the cube mesh
+				ComponentCubeMesh* cube_mesh = (ComponentCubeMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_CUBE_MESH);
+				cube_mesh->SetGeometry(cube_logic);
+				cube_mesh->SetDivisions(2);
+				cube_mesh->SetIndices(geometry_data.first);
+				cube_mesh->SetVertices(geometry_data.second);
+				cube_mesh->SetupMesh();
+				target->AdjustBoundingBox();
+
+				geometry_data.first.clear();
+				geometry_data.second.clear();
+
+				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+				if (rend != nullptr)rend->SetTargetMesh(cube_mesh);
+
+				show_components_window = false;
+			}
+			if (ImGui::Button("Sphere Mesh"))
+			{
+				//Generate the sphere logic
+				math::Sphere sphere_logic;
+				sphere_logic.r = 1;
+				sphere_logic.pos = math::float3(0, 0, 0);
+				SphereGenerator sphere;
+				sphere.SetGeometry(sphere_logic);
+				sphere.SetDivisions(3);
+				geometry_data = sphere.Generate();
+
+				//Create the sphere mesh
+				ComponentSphereMesh* sphere_mesh = (ComponentSphereMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_SPHERE_MESH);
+				sphere_mesh->SetGeometry(sphere_logic);
+				sphere_mesh->SetDivisions(3);
+				sphere_mesh->SetIndices(geometry_data.first);
+				sphere_mesh->SetVertices(geometry_data.second);
+				sphere_mesh->SetupMesh();
+				target->AdjustBoundingBox();
+				
+				geometry_data.first.clear();
+				geometry_data.second.clear();
+
+				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+				if (rend != nullptr)rend->SetTargetMesh(sphere_mesh);
+
+				show_components_window = false;
+			}
+			if (ImGui::Button("Cylinder Mesh"))
+			{
+				//Generate the cube logic
+				math::Cylinder cylinder_logic;
+				cylinder_logic.r = 1;
+				cylinder_logic.l.b = math::float3(0, 0, 0);
+				cylinder_logic.l.a = math::float3(0, 1, 0);
+				CylinderGenerator cylinder;
+				cylinder.SetGeometry(cylinder_logic);
+				cylinder.SetDivisions(10);
+				geometry_data = cylinder.Generate();
+
+				//Create the cylinder mesh
+				ComponentCylinderMesh* cylinder_mesh = (ComponentCylinderMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_CYLINDER_MESH);
+				cylinder_mesh->SetGeometry(cylinder_logic);
+				cylinder_mesh->SetDivisions(10);
+				cylinder_mesh->SetIndices(geometry_data.first);
+				cylinder_mesh->SetVertices(geometry_data.second);
+				cylinder_mesh->SetupMesh();
+				target->AdjustBoundingBox();
+
+				geometry_data.first.clear();
+				geometry_data.second.clear();
+
+				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+				if (rend != nullptr)rend->SetTargetMesh(cylinder_mesh);
+
+				show_components_window = false;
+			}
+		}
+		if (target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER) == nullptr)
+		{
+			if (ImGui::Button("Mesh Renderer"))
+			{
+				//Generate a mesh renderer
+				ComponentMeshRenderer* mesh_rend = (ComponentMeshRenderer*)target->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+				//Find the mesh to render
+				ComponentMesh* target_mesh = target->FindMeshComponent();
+				//Link the elements
+				if (target_mesh != nullptr)mesh_rend->SetTargetMesh(target_mesh);
+
+				show_components_window = false;
+			}
+		}
+		if (target->FindComponent(COMPONENT_TYPE::COMP_MATERIAL) == nullptr)
+		{
+			if (ImGui::Button("Material"))
+			{
+				target->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
+
+				/*In Process*/
+
+				show_components_window = false;
+			}
+		}
+
+		if (target->FindComponent(COMPONENT_TYPE::COMP_CAMERA) == nullptr)
+		{
+			if (ImGui::Button("Camera"))
+			{
+				//Generate a component camera
+				target->CreateComponent(COMPONENT_TYPE::COMP_CAMERA);
+				show_components_window = false;
+			}
+		}
+	}
+}
+
+bool ModuleScene::GetComponentsWinState() const
+{
+	return show_components_window;
+}
+
+void ModuleScene::SetComponentsWindowState(bool val)
+{
+	show_components_window = val;
 }
 
 bool ModuleScene::IsRoot(const GameObject * target) const
