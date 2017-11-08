@@ -18,6 +18,7 @@
 #include "Serializer.h"
 #include "ImporterManager.h"
 #include "TimeManager.h"
+#include "ResourcesManager.h"
 #include "Parson/parson.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "mmgr/mmgr.h"
@@ -83,8 +84,12 @@ Application::Application()
 	profiler->CallProfBlock(M_TEXTURES, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
-	geometry = new GeometryManager("Geometry Manager", M_GEOMETRY, true);;
+	geometry = new GeometryManager("Geometry Manager", M_GEOMETRY, true);
 	profiler->CallProfBlock(M_GEOMETRY, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
+	res_manager = new ResourcesManager("Resources Manager", M_RES_MANAGER, true);
+	profiler->CallProfBlock(M_RES_MANAGER, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
 	scene = new ModuleScene("Scene", M_SCENE, true);
@@ -105,6 +110,7 @@ Application::Application()
 	AddModule(hard);
 	AddModule(textures);
 	AddModule(geometry);
+	AddModule(res_manager);
 
 	// Scenes
 	AddModule(scene);

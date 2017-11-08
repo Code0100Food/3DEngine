@@ -31,6 +31,7 @@ class ModuleScene;
 class DockContext;
 class ImporterManager;
 class TimeManager;
+class ResourcesManager;
 
 enum MODULE_ID;
 
@@ -75,6 +76,7 @@ public:
 	ModuleTextures*		textures = nullptr;
 	GeometryManager*	geometry = nullptr;
 	TimeManager*		time_manager = nullptr;
+	ResourcesManager*	res_manager = nullptr;
 	ModuleScene*		scene = nullptr;
 
 	//Tools 

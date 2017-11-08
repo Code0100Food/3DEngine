@@ -61,6 +61,9 @@
     <Filter Include="Sources\Importers &amp; Serializer">
       <UniqueIdentifier>{71703e85-0e1f-4715-87f7-cc6cec5a046d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Resources">
+      <UniqueIdentifier>{2d5aa437-1437-4cf7-a6ac-784e664dd34d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Color.h">
@@ -426,6 +429,15 @@
     <ClInclude Include="Engine\imgui\ImGuizmo.h">
       <Filter>Sources\Tools\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourcesManager.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Resource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceMesh.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -691,6 +703,15 @@
     </ClCompile>
     <ClCompile Include="Engine\imgui\ImGuizmo.cpp">
       <Filter>Sources\Tools\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourcesManager.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Resource.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceMesh.cpp">
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

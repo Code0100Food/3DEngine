@@ -201,6 +201,9 @@
     <ClInclude Include="Engine\Profiler.h" />
     <ClInclude Include="Engine\Quadtree.h" />
     <ClInclude Include="Engine\ModuleScene.h" />
+    <ClInclude Include="Engine\Resource.h" />
+    <ClInclude Include="Engine\ResourceMesh.h" />
+    <ClInclude Include="Engine\ResourcesManager.h" />
     <ClInclude Include="Engine\Serializer.h" />
     <ClInclude Include="Engine\SphereGenerator.h" />
     <ClInclude Include="Engine\stb\stb.h" />
@@ -293,6 +296,9 @@
     <ClCompile Include="Engine\PrimitiveGenerator.cpp" />
     <ClCompile Include="Engine\Profiler.cpp" />
     <ClCompile Include="Engine\ModuleScene.cpp" />
+    <ClCompile Include="Engine\Resource.cpp" />
+    <ClCompile Include="Engine\ResourceMesh.cpp" />
+    <ClCompile Include="Engine\ResourcesManager.cpp" />
     <ClCompile Include="Engine\Serializer.cpp" />
     <ClCompile Include="Engine\SphereGenerator.cpp" />
     <ClCompile Include="Engine\TimeManager.cpp" />
