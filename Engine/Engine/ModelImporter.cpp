@@ -11,6 +11,7 @@
 #include "ModuleScene.h"
 #include "ImporterManager.h"
 #include "FileSystem.h"
+#include "ResourcesManager.h"
 
 // Constructors =================================
 ModelImporter::ModelImporter()
@@ -87,15 +88,12 @@ void ModelImporter::ProcessMesh(const char* name, aiMesh * mesh, const aiScene *
 {
 	//Generate the container mesh component
 	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+	ResourceMesh* resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
+	comp_mesh->SetResourceMesh(resource_mesh);
 
 	//Generate the container mesh renderer component
 	ComponentMeshRenderer* comp_mesh_renderer = (ComponentMeshRenderer*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 	comp_mesh_renderer->SetTargetMesh(comp_mesh);
-
-	std::vector<Vertex>			vertices;
-	std::vector<uint>			indices;
-	std::vector<Texture>		textures;
-	std::vector<math::float3>	vertices_pos;
 
 	LOG("Processing %s mesh!", mesh->mName.C_Str());
 
@@ -193,6 +191,12 @@ void ModelImporter::ProcessMesh(const char* name, aiMesh * mesh, const aiScene *
 
 	//Import the mesh 
 	App->importer->mesh_importer.Import(name, indices, vertices, textures);
+
+	//Clear the used containers
+	vertices.clear();
+	indices.clear();
+	textures.clear();
+	vertices_pos.clear();
 }
 
 std::vector<Texture> ModelImporter::LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)

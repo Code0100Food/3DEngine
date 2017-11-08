@@ -20,6 +20,11 @@ private:
 
 	std::string cur_path;
 
+	std::vector<Vertex>			vertices;
+	std::vector<uint>			indices;
+	std::vector<Texture>		textures;
+	std::vector<math::float3>	vertices_pos;
+
 public:
 
 	bool	Load(const char* path);

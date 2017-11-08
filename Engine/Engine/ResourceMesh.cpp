@@ -1,12 +1,15 @@
 #include "ResourceMesh.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
+
+#include "Application.h"
 #include "Serializer.h"
 
 // Constructors =================================
 ResourceMesh::ResourceMesh() :Resource(MESH_RESOURCE)
 {
-
+	//Generate a random id for the resource
+	id = App->randomizer->Int();
 }
 
 // Destructors ==================================

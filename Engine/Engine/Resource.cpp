@@ -11,7 +11,8 @@ Resource::Resource()
 
 Resource::Resource(RESOURCE_TYPE type) :type(type)
 {
-
+	//Generate a random id for the resource
+	id = App->randomizer->Int();
 }
 
 // Destructors ==================================

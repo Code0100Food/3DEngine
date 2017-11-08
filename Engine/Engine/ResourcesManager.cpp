@@ -156,7 +156,7 @@ Resource * ResourcesManager::CreateResource(RESOURCE_TYPE type)
 	//Add it to the map
 	if (new_res != nullptr)
 	{
-		resources[new_res->GetID()] = new_res;
+		resources.insert(std::pair<uint, Resource*>(new_res->GetID(), new_res));
 	}
 	
 	return new_res;
