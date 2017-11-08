@@ -14,6 +14,7 @@ ResourcesManager::~ResourcesManager()
 
 bool ResourcesManager::Start()
 {
+	return true;
 }
 
 Resource * ResourcesManager::CreateResource(RESOURCE_TYPE type)
