@@ -191,25 +191,25 @@ update_status ModuleImgui::Update(float dt)
 		//Create Sphere
 		if (ImGui::MenuItem("Sphere (LowPoly)"))
 		{
-			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE, 3));
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE));
 		}
 
 		//Create Sphere
 		if (ImGui::MenuItem("Sphere (HiPoly)"))
 		{
-			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE, 5));
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_SPHERE_HI));
 		}
 
 		//Create Cylinder
 		if (ImGui::MenuItem("Cylinder (LowPoly)"))
 		{
-			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER, 6));
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER));
 		}
 
 		//Create Cylinder
 		if (ImGui::MenuItem("Cylinder (HiPoly)"))
 		{
-			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER, 24));
+			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER_HI));
 		}
 
 		//Create Frustum

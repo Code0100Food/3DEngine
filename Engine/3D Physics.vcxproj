@@ -110,7 +110,6 @@
     <ClInclude Include="Engine\GeometryManager.h" />
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\Grid_.h" />
-    <ClInclude Include="Engine\imgui\IGizmo.h" />
     <ClInclude Include="Engine\imgui\imgui.h" />
     <ClInclude Include="Engine\imgui\imgui_dock.h" />
     <ClInclude Include="Engine\imgui\imgui_impl_sdl.h" />

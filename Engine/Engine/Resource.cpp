@@ -35,6 +35,16 @@ uint Resource::GetReferences() const
 	return references;
 }
 
+const char * Resource::GetOriginalFile() const
+{
+	return original_file.c_str();
+}
+
+const char * Resource::GetOwnFile() const
+{
+	return own_file.c_str();
+}
+
 void Resource::SetID(uint n_id)
 {
 	id = n_id;

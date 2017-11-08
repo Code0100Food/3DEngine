@@ -10,10 +10,7 @@
 #include "ModuleTextures.h"
 #include "TimeManager.h"
 #include "ModuleAudio.h"
-
-#include "SphereGenerator.h"
-#include "CubeGenerator.h"
-#include "CylinderGenerator.h"
+#include "ResourcesManager.h"
 
 // Constructors =================================
 ModuleScene::ModuleScene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
@@ -139,7 +136,7 @@ GameObject * ModuleScene::FindGameObject(uint id) const
 	return root_gameobject->FindChild(id);
 }
 
-GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
+GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 {
 	GameObject* new_prim = nullptr;
 	ComponentMesh* mesh = nullptr;
@@ -148,22 +145,12 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 	{
 	case UNDEF_PRIMITIVE:
 		break;
-	case PRIMITIVE_POINT:
-		break;
-	case PRIMITIVE_LINE:
-		break;
-	case PRIMITIVE_PLANE:
-		break;
 	case PRIMITIVE_CUBE:
 	{
 		//Generate the cube logic
 		math::AABB cube_logic;
 		cube_logic.minPoint = math::float3(0, 0, 0);
 		cube_logic.maxPoint = math::float3(1, 1, 1);
-		CubeGenerator cube;
-		cube.SetGeometry(cube_logic);
-		cube.SetDivisions(divisions);
-		geometry_data = cube.Generate();
 
 		//Create the game object
 		new_prim = CreateGameObject();
@@ -172,21 +159,19 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 		//Create the cube mesh
 		ComponentCubeMesh* cube_mesh = (ComponentCubeMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_CUBE_MESH);
 		cube_mesh->SetGeometry(cube_logic);
-		cube_mesh->SetDivisions(divisions);
+		cube_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(type));
+		cube_mesh->SetPrimitiveType(PRIMITIVE_TYPE::PRIMITIVE_CUBE);
 		mesh = cube_mesh;
 	}
 	break;
 	case PRIMITIVE_SPHERE:
+	case PRIMITIVE_SPHERE_HI:
 	{
 		//Generate the sphere logic
 		math::Sphere sphere_logic;
 		sphere_logic.r = 1;
 		sphere_logic.pos = math::float3(0, 0, 0);
-		SphereGenerator sphere;
-		sphere.SetGeometry(sphere_logic);
-		sphere.SetDivisions(divisions);
-		geometry_data = sphere.Generate();
-		
+
 		//Create the game object
 		new_prim = CreateGameObject();
 		new_prim->SetName("Sphere");
@@ -194,21 +179,21 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 		//Create the sphere mesh
 		ComponentSphereMesh* sphere_mesh = (ComponentSphereMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_SPHERE_MESH);
 		sphere_mesh->SetGeometry(sphere_logic);
-		sphere_mesh->SetDivisions(divisions);
+		ResourceMesh* res_mesh = nullptr;
+		sphere_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(type));
+		if(type == PRIMITIVE_SPHERE)sphere_mesh->SetPrimitiveType(PRIMITIVE_TYPE::PRIMITIVE_SPHERE);
+		else sphere_mesh->SetPrimitiveType(PRIMITIVE_TYPE::PRIMITIVE_SPHERE_HI);
 		mesh = sphere_mesh;
 	}
 	break;
 	case PRIMITIVE_CYLINDER:
+	case PRIMITIVE_CYLINDER_HI:
 	{
-		//Generate the cube logic
+		//Generate the cylinder logic
 		math::Cylinder cylinder_logic;
 		cylinder_logic.r = 1;
 		cylinder_logic.l.b = math::float3(0, 0, 0);
 		cylinder_logic.l.a = math::float3(0, 1, 0);
-		CylinderGenerator cylinder;
-		cylinder.SetGeometry(cylinder_logic);
-		cylinder.SetDivisions(divisions);
-		geometry_data = cylinder.Generate();
 
 		//Create the game object
 		new_prim = CreateGameObject();
@@ -217,12 +202,12 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 		//Create the cylinder mesh
 		ComponentCylinderMesh* cylinder_mesh = (ComponentCylinderMesh*)new_prim->CreateComponent(COMPONENT_TYPE::COMP_CYLINDER_MESH);
 		cylinder_mesh->SetGeometry(cylinder_logic);
-		cylinder_mesh->SetDivisions(divisions);
+		cylinder_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(type));
+		if (type == PRIMITIVE_CYLINDER)cylinder_mesh->SetPrimitiveType(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
+		else cylinder_mesh->SetPrimitiveType(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER);
 		mesh = cylinder_mesh;
 	}
 	break;
-	case PRIMITIVE_RAY:
-		break;
 	case PRIMITIVE_CAPSULE:
 		break;
 	case PRIMITIVE_FRUSTUM:
@@ -243,14 +228,9 @@ GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type, uint divisions)
 		mesh_renderer->SetTargetMesh(mesh);
 
 		//Set cube logic in mesh
-		mesh->SetIndices(geometry_data.first);
-		mesh->SetVertices(geometry_data.second);
 		mesh->SetupMesh();
 		new_prim->AdjustBoundingBox();
 	}
-
-	geometry_data.first.clear();
-	geometry_data.second.clear();
 
 	return new_prim;
 }
@@ -333,29 +313,19 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 				math::AABB cube_logic;
 				cube_logic.minPoint = math::float3(0, 0, 0);
 				cube_logic.maxPoint = math::float3(1, 1, 1);
-				CubeGenerator cube;
-				cube.SetGeometry(cube_logic);
-				cube.SetDivisions(2);
-				geometry_data = cube.Generate();
 
 				//Create the cube mesh
 				ComponentCubeMesh* cube_mesh = (ComponentCubeMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_CUBE_MESH);
 				cube_mesh->SetGeometry(cube_logic);
-				cube_mesh->SetDivisions(2);
-				cube_mesh->SetIndices(geometry_data.first);
-				cube_mesh->SetVertices(geometry_data.second);
-				cube_mesh->SetupMesh();
+				cube_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_CUBE));
 				target->AdjustBoundingBox();
-
-				geometry_data.first.clear();
-				geometry_data.second.clear();
 
 				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 				if (rend != nullptr)rend->SetTargetMesh(cube_mesh);
 
 				show_components_window = false;
 			}
-			if (ImGui::Button("Sphere Mesh"))
+			if (ImGui::Button("Sphere Mesh(LowPoly)"))
 			{
 				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 
@@ -363,29 +333,39 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 				math::Sphere sphere_logic;
 				sphere_logic.r = 1;
 				sphere_logic.pos = math::float3(0, 0, 0);
-				SphereGenerator sphere;
-				sphere.SetGeometry(sphere_logic);
-				sphere.SetDivisions(3);
-				geometry_data = sphere.Generate();
 
 				//Create the sphere mesh
 				ComponentSphereMesh* sphere_mesh = (ComponentSphereMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_SPHERE_MESH);
 				sphere_mesh->SetGeometry(sphere_logic);
-				sphere_mesh->SetDivisions(3);
-				sphere_mesh->SetIndices(geometry_data.first);
-				sphere_mesh->SetVertices(geometry_data.second);
-				sphere_mesh->SetupMesh();
+				sphere_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_SPHERE));
 				target->AdjustBoundingBox();
 				
-				geometry_data.first.clear();
-				geometry_data.second.clear();
+				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+				if (rend != nullptr)rend->SetTargetMesh(sphere_mesh);
+
+				show_components_window = false;
+			}
+			if (ImGui::Button("Sphere Mesh(HiPoly)"))
+			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
+				//Generate the sphere logic
+				math::Sphere sphere_logic;
+				sphere_logic.r = 1;
+				sphere_logic.pos = math::float3(0, 0, 0);
+
+				//Create the sphere mesh
+				ComponentSphereMesh* sphere_mesh = (ComponentSphereMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_SPHERE_MESH);
+				sphere_mesh->SetGeometry(sphere_logic);
+				sphere_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_SPHERE_HI));
+				target->AdjustBoundingBox();
 
 				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 				if (rend != nullptr)rend->SetTargetMesh(sphere_mesh);
 
 				show_components_window = false;
 			}
-			if (ImGui::Button("Cylinder Mesh"))
+			if (ImGui::Button("Cylinder Mesh(LowPoly)"))
 			{
 				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 
@@ -394,22 +374,33 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 				cylinder_logic.r = 1;
 				cylinder_logic.l.b = math::float3(0, 0, 0);
 				cylinder_logic.l.a = math::float3(0, 1, 0);
-				CylinderGenerator cylinder;
-				cylinder.SetGeometry(cylinder_logic);
-				cylinder.SetDivisions(10);
-				geometry_data = cylinder.Generate();
 
 				//Create the cylinder mesh
 				ComponentCylinderMesh* cylinder_mesh = (ComponentCylinderMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_CYLINDER_MESH);
 				cylinder_mesh->SetGeometry(cylinder_logic);
-				cylinder_mesh->SetDivisions(10);
-				cylinder_mesh->SetIndices(geometry_data.first);
-				cylinder_mesh->SetVertices(geometry_data.second);
-				cylinder_mesh->SetupMesh();
+				cylinder_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER));
 				target->AdjustBoundingBox();
 
-				geometry_data.first.clear();
-				geometry_data.second.clear();
+				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+				if (rend != nullptr)rend->SetTargetMesh(cylinder_mesh);
+
+				show_components_window = false;
+			}
+			if (ImGui::Button("Cylinder Mesh(HiPoly)"))
+			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
+				//Generate the cube logic
+				math::Cylinder cylinder_logic;
+				cylinder_logic.r = 1;
+				cylinder_logic.l.b = math::float3(0, 0, 0);
+				cylinder_logic.l.a = math::float3(0, 1, 0);
+
+				//Create the cylinder mesh
+				ComponentCylinderMesh* cylinder_mesh = (ComponentCylinderMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_CYLINDER_MESH);
+				cylinder_mesh->SetGeometry(cylinder_logic);
+				cylinder_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER_HI));
+				target->AdjustBoundingBox();
 
 				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 				if (rend != nullptr)rend->SetTargetMesh(cylinder_mesh);

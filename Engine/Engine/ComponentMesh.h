@@ -5,6 +5,7 @@
 #include "MathGeoLib/MathGeoLib.h"
 
 class ComponentMeshRenderer;
+class ResourceMesh;
 
 // Render Flags ---------------------------------
 enum RENDER_FLAGS
@@ -77,23 +78,8 @@ public:
 
 protected:
 
-	std::vector<Vertex>			vertices;
-	std::vector<uint>			indices;
-	
-	uint						num_tris = 0;
-	uint						num_vertex = 0;
-
-	std::string					path;
-
-	ComponentMaterial*			draw_material = nullptr;
-
-protected:
-
-	uint VertexArrayObject = 0, VertexBufferObject = 0, ElementBufferObject = 0;
-	
-	uint face_normalsID = 0;
-	uint vertex_normalsID = 0;
-	uint text_coordsID = 0;
+	ResourceMesh*		resource_mesh = nullptr;
+	ComponentMaterial*	draw_material = nullptr;
 
 public:
 
@@ -103,16 +89,25 @@ public:
 	uint						GetIndexSize()const;
 	int							GetIndexAt(int position) const;
 	math::float3				GetVertexPosAt(int position) const;
+	uint						GetNumTris()const;
+	uint						GetNumVertex()const;
+	uint						GetVertexArrayObject()const;
+	uint						GetVertexBufferObject()const;
+	uint						GetElementBufferObject()const;
+	uint						GetFaceNormalsID()const;
+	uint						GetVertexNormalsID()const;
+	uint						GetTextureCoordsID()const;
 	
 	//Set Methods -----------
-	void	SetVertices(std::vector<Vertex> v);
-	void	SetIndices(std::vector<uint> i);
+	void	SetVertices(const std::vector<Vertex>& v);
+	void	SetIndices(const std::vector<uint>& i);
 	void	SetPath(const char* str);
 	void	SetDrawMaterial(ComponentMaterial* mat);
+	void	SetResourceMesh(ResourceMesh* res);
 
 	//Functionality ---------
 	void	SetupMesh();
-	void	DeleteBuffers();
+	bool	MeshResourceIsNull()const;
 	void	BlitComponentInspector();
 
 	//Save/Load Methods -----

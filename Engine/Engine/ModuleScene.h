@@ -45,9 +45,6 @@ private:
 	Octree<GameObject*>			octree;
 	std::vector<GameObject*>	static_objects;
 
-	//Used to generate primitives 
-	std::pair<std::vector<uint>, std::vector<Vertex>> geometry_data;
-
 	//Vectors used during serialization
 	std::vector<std::pair<GameObject*, uint>>	objects_links;
 	std::vector<std::pair<Component*, uint>>	components_links;
@@ -66,7 +63,7 @@ public:
 	bool		ReleaseGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
 	void		SendGameObjectToRemoveVec(const GameObject* target);
 	GameObject* FindGameObject(uint id)const;
-	GameObject* CreatePrimitive(PRIMITIVE_TYPE type, uint divisions = 2);
+	GameObject* CreatePrimitive(PRIMITIVE_TYPE type);
 	
 	//UI Methods
 	void		BlitConfigInfo();

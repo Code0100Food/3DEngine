@@ -36,6 +36,8 @@ public:
 	uint			GetID()const;
 	RESOURCE_TYPE	GetResourceType()const;
 	uint			GetReferences()const;
+	const char*		GetOriginalFile()const;
+	const char*		GetOwnFile()const;
 
 	//Set Methods -----------
 	void SetID(uint n_id);

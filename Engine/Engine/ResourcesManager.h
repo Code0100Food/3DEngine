@@ -5,6 +5,7 @@
 #include <map>
 #include "Resource.h"
 #include "ResourceMesh.h"
+#include "Primitive_.h"
 
 class ResourcesManager : public Module
 {
@@ -16,6 +17,7 @@ public:
 public:
 
 	bool Start();
+	bool CleanUp();
 
 private:
 
@@ -31,6 +33,9 @@ private:
 public:
 
 	Resource* CreateResource(RESOURCE_TYPE type);
+
+
+	ResourceMesh*	GetPrimitiveResourceMesh(PRIMITIVE_TYPE type);
 
 };
 #endif // !_RESOURCES_MANAGER_

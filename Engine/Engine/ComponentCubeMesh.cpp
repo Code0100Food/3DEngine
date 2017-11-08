@@ -1,9 +1,12 @@
 #include "ComponentCubeMesh.h"
 
+#include "Application.h"
 #include "ComponentMaterial.h"
 #include "Serializer.h"
 #include "CubeGenerator.h"
 #include "GameObject.h"
+#include "ResourceMesh.h"
+#include "ResourcesManager.h"
 
 // Constructors =================================
 ComponentCubeMesh::ComponentCubeMesh()
@@ -35,10 +38,15 @@ void ComponentCubeMesh::BlitComponentInspector()
 
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Cube Mesh");
 
-	//Show mesh Tris & Vertex
-	ImGui::Text("Tris: %i", num_tris);
-	ImGui::SameLine();
-	ImGui::Text("Vertex: %i", num_vertex);
+	if (resource_mesh == nullptr)ImGui::Text("NULL MESH RESOURCE");
+
+	else
+	{
+		//Show mesh Tris & Vertex
+		ImGui::Text("Tris: %i", resource_mesh->GetNumTris());
+		ImGui::SameLine();
+		ImGui::Text("Vertex: %i", resource_mesh->GetNumVertex());
+	}
 }
 
 bool ComponentCubeMesh::Save(Serializer & array_root) const
@@ -55,6 +63,9 @@ bool ComponentCubeMesh::Save(Serializer & array_root) const
 	//Insert actived
 	ret = comp_data.InsertBool("actived", actived);
 
+	//Insert primitive type
+	comp_data.InsertString("primitive_type", PrimitiveTypeToStr(primitive_type));
+
 	//Insert geometry data
 	//Insert min point
 	Serializer min_point_array = comp_data.InsertArray("min_point");
@@ -62,8 +73,6 @@ bool ComponentCubeMesh::Save(Serializer & array_root) const
 	//Insert max point
 	Serializer max_point_array = comp_data.InsertArray("max_point");
 	for (uint k = 0; k < 3; k++)max_point_array.InsertArrayFloat(geometry.maxPoint.ptr()[k]);
-	//Insert divisions
-	comp_data.InsertInt("divisions", divisions);
 
 	//Insert draw material id
 	if (draw_material != nullptr)ret = comp_data.InsertInt("draw_material_id", draw_material->GetID());
@@ -83,6 +92,9 @@ bool ComponentCubeMesh::Load(Serializer & data, std::vector<std::pair<Component*
 	//Get actived
 	actived = data.GetBool("actived");
 
+	//Get primitive type
+	primitive_type = StrToPrimitiveType(data.GetString("primitive_type"));
+
 	//Get geometry data
 	//Get min point
 	Serializer min_point_array = data.GetArray("min_point");
@@ -90,22 +102,13 @@ bool ComponentCubeMesh::Load(Serializer & data, std::vector<std::pair<Component*
 	//Get max point
 	Serializer max_point_array = data.GetArray("max_point");
 	for (uint k = 0; k < 3; k++)geometry.maxPoint.ptr()[k] = max_point_array.GetArrayFloat(k);
-	//Get divisions
-	divisions = data.GetInt("divisions");
 
 	//Get draw material id
 	uint material_id = data.GetInt("draw_material_id");
 	if (material_id != 0)links.push_back(std::pair<Component*, uint>(this, material_id));
 
 	//Build the mesh with the loaded values
-	std::pair<std::vector<uint>, std::vector<Vertex>> mesh_data;
-	CubeGenerator cube;
-	cube.SetGeometry(geometry);
-	cube.SetDivisions(divisions);
-	mesh_data = cube.Generate();
-	SetIndices(mesh_data.first);
-	SetVertices(mesh_data.second);
-	SetupMesh();
+	resource_mesh = App->res_manager->GetPrimitiveResourceMesh(primitive_type);
 
 	return ret;
 }

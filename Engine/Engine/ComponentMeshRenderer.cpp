@@ -30,7 +30,7 @@ ComponentMeshRenderer::~ComponentMeshRenderer()
 // Game Loop ====================================
 bool ComponentMeshRenderer::Update(float dt)
 {
-	if (target_mesh == nullptr)return false;
+	if (target_mesh == nullptr || target_mesh->MeshResourceIsNull())return false;
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -74,14 +74,14 @@ bool ComponentMeshRenderer::Update(float dt)
 	//Draw the mesh
 	glLineWidth(App->geometry->mesh_lines_width);
 	glColor4f(App->geometry->mesh_color[0], App->geometry->mesh_color[1], App->geometry->mesh_color[2], App->geometry->mesh_color[3]);
-	glBindBuffer(GL_ARRAY_BUFFER, target_mesh->VertexBufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, target_mesh->GetVertexBufferObject());
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), NULL);
 	glNormalPointer(GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, normals));
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, target_mesh->ElementBufferObject);
-	glDrawElements(GL_TRIANGLES, target_mesh->indices.size(), GL_UNSIGNED_INT, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, target_mesh->GetElementBufferObject());
+	glDrawElements(GL_TRIANGLES, target_mesh->GetIndexSize(), GL_UNSIGNED_INT, NULL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
@@ -110,15 +110,15 @@ bool ComponentMeshRenderer::Update(float dt)
 // Functionality ================================
 void ComponentMeshRenderer::DrawVertexNormals() const
 {
-	if (target_mesh->vertex_normalsID == 0)return;
+	if (target_mesh->GetVertexNormalsID() == 0)return;
 
 	//Draw vertex normals
-	glBindBuffer(GL_ARRAY_BUFFER, target_mesh->vertex_normalsID);
+	glBindBuffer(GL_ARRAY_BUFFER, target_mesh->GetVertexNormalsID());
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glColor4f(App->geometry->vertex_normals_color[0], App->geometry->vertex_normals_color[1], App->geometry->vertex_normals_color[2], App->geometry->vertex_normals_color[3]);
 	glLineWidth(2.f);
-	glDrawArrays(GL_LINES, 0, target_mesh->vertices.size() * 2);
+	glDrawArrays(GL_LINES, 0, target_mesh->GetNumVertex() * 2);
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -126,15 +126,15 @@ void ComponentMeshRenderer::DrawVertexNormals() const
 
 void ComponentMeshRenderer::DrawFaceNormals() const
 {
-	if (target_mesh->face_normalsID == 0)return;
+	if (target_mesh->GetFaceNormalsID() == 0)return;
 
 	//Draw face normals
-	glBindBuffer(GL_ARRAY_BUFFER, target_mesh->face_normalsID);
+	glBindBuffer(GL_ARRAY_BUFFER, target_mesh->GetFaceNormalsID());
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glColor4f(App->geometry->face_normals_color[0], App->geometry->face_normals_color[1], App->geometry->face_normals_color[2], App->geometry->face_normals_color[3]);
 	glLineWidth(2.f);
-	glDrawArrays(GL_LINES, 0, target_mesh->num_tris * 2);
+	glDrawArrays(GL_LINES, 0, target_mesh->GetNumTris() * 2);
 
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

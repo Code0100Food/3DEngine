@@ -33,10 +33,18 @@ public:
 	uint						GetIndexSize()const;
 	int							GetIndexAt(int position) const;
 	math::float3				GetVertexPosAt(int position) const;
+	uint						GetNumTris()const;
+	uint						GetNumVertex()const;
+	uint						GetVertexArrayObject()const;
+	uint						GetVertexBufferObject()const;
+	uint						GetElementBufferObject()const;
+	uint						GetFaceNormalsID()const;
+	uint						GetVertexNormalsID()const;
+	uint						GetTextureCoordsID()const;
 
 	//Set Methods -----------
-	void	SetVertices(std::vector<Vertex> v);
-	void	SetIndices(std::vector<uint> i);
+	void	SetVertices(const std::vector<Vertex>& v);
+	void	SetIndices(const std::vector<uint>& i);
 
 	//Functionality ---------
 	void	SetupMesh();

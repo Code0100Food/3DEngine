@@ -6,7 +6,7 @@ ComponentPrimitiveMesh::ComponentPrimitiveMesh()
 	type = COMP_PRIMITIVE_MESH;
 }
 
-ComponentPrimitiveMesh::ComponentPrimitiveMesh(const ComponentPrimitiveMesh & cpy) :ComponentMesh(cpy), divisions(cpy.divisions)
+ComponentPrimitiveMesh::ComponentPrimitiveMesh(const ComponentPrimitiveMesh & cpy) :ComponentMesh(cpy)
 {
 	type = COMP_PRIMITIVE_MESH;
 }
@@ -17,8 +17,12 @@ ComponentPrimitiveMesh::~ComponentPrimitiveMesh()
 
 }
 
-// Set Methods ==================================
-void ComponentPrimitiveMesh::SetDivisions(uint val)
+void ComponentPrimitiveMesh::SetPrimitiveType(PRIMITIVE_TYPE type)
 {
-	divisions = val;
+	primitive_type = type;
+}
+
+PRIMITIVE_TYPE ComponentPrimitiveMesh::GetPrimitiveType() const
+{
+	return primitive_type;
 }

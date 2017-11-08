@@ -158,3 +158,35 @@ bool VertexToIndex(math::float3* all_vertex,uint vertex_num, std::vector<uint>* 
 
 	return true;
 }
+
+const char * PrimitiveTypeToStr(PRIMITIVE_TYPE type)
+{
+	switch (type)
+	{
+	case UNDEF_PRIMITIVE:		return "undef_primitive";
+	case PRIMITIVE_CUBE:		return "cube_primitive";
+	case PRIMITIVE_SPHERE:		return "sphere_primitive";
+	case PRIMITIVE_SPHERE_HI:	return "sphere_hi_primitive";
+	case PRIMITIVE_CYLINDER:	return "cylinder_primitive";
+	case PRIMITIVE_CYLINDER_HI:	return "cylinder_hi_primitive";
+	case PRIMITIVE_CAPSULE:		return "capsule_primitive";
+	case PRIMITIVE_FRUSTUM:		return "frustum_primitive";
+	case PRIMITIVE_GRID:		return "grid_primitive";
+	}
+
+	return nullptr;
+}
+
+PRIMITIVE_TYPE StrToPrimitiveType(const char * str)
+{
+	if (strcmp(str, "cube_primitive") == 0)			return PRIMITIVE_CUBE;
+	if (strcmp(str, "sphere_primitive") == 0)		return PRIMITIVE_SPHERE;
+	if (strcmp(str, "sphere_hi_primitive") == 0)	return PRIMITIVE_SPHERE_HI;
+	if (strcmp(str, "cylinder_primitive") == 0)		return PRIMITIVE_CYLINDER;
+	if (strcmp(str, "cylinder_hi_primitive") == 0)	return PRIMITIVE_CYLINDER_HI;
+	if (strcmp(str, "capsule_primitive") == 0)		return PRIMITIVE_CAPSULE;
+	if (strcmp(str, "frustum_primitive") == 0)		return PRIMITIVE_FRUSTUM;
+	if (strcmp(str, "grid_primitive") == 0)			return PRIMITIVE_GRID;
+
+	return UNDEF_PRIMITIVE;
+}

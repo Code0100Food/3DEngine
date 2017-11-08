@@ -435,9 +435,6 @@
     <ClInclude Include="Engine\ResourceMesh.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\imgui\IGizmo.h">
-      <Filter>Sources\Tools\Imgui</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">

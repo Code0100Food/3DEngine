@@ -12,7 +12,10 @@ ResourceMesh::ResourceMesh() :Resource(MESH_RESOURCE)
 // Destructors ==================================
 ResourceMesh::~ResourceMesh()
 {
-
+	vertices.clear();
+	indices.clear();
+	
+	DeleteBuffers();
 }
 
 // Get Methods ==================================
@@ -46,14 +49,54 @@ math::float3 ResourceMesh::GetVertexPosAt(int position) const
 	return vertices[position].position;
 }
 
+uint ResourceMesh::GetNumTris() const
+{
+	return num_tris;
+}
+
+uint ResourceMesh::GetNumVertex() const
+{
+	return num_vertex;
+}
+
+uint ResourceMesh::GetVertexArrayObject() const
+{
+	return VertexArrayObject;
+}
+
+uint ResourceMesh::GetVertexBufferObject() const
+{
+	return VertexBufferObject;
+}
+
+uint ResourceMesh::GetElementBufferObject() const
+{
+	return ElementBufferObject;
+}
+
+uint ResourceMesh::GetFaceNormalsID() const
+{
+	return face_normalsID;
+}
+
+uint ResourceMesh::GetVertexNormalsID() const
+{
+	return vertex_normalsID;
+}
+
+uint ResourceMesh::GetTextureCoordsID() const
+{
+	return text_coordsID;
+}
+
 // Set Methods ==================================
-void ResourceMesh::SetVertices(std::vector<Vertex> v)
+void ResourceMesh::SetVertices(const std::vector<Vertex>& v)
 {
 	vertices = v;
 	num_vertex = vertices.size();
 }
 
-void ResourceMesh::SetIndices(std::vector<uint> i)
+void ResourceMesh::SetIndices(const std::vector<uint>& i)
 {
 	indices = i;
 	if (indices.size() % 3 == 0)num_tris = indices.size() / 3;

@@ -1,9 +1,12 @@
 #include "ComponentSphereMesh.h"
 
+#include "Application.h"
 #include "ComponentMaterial.h"
 #include "Serializer.h"
 #include "SphereGenerator.h"
 #include "GameObject.h"
+#include "ResourceMesh.h"
+#include "ResourcesManager.h"
 
 // Constructors =================================
 ComponentSphereMesh::ComponentSphereMesh()
@@ -35,10 +38,15 @@ void ComponentSphereMesh::BlitComponentInspector()
 
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Sphere Mesh");
 
-	//Show mesh Tris & Vertex
-	ImGui::Text("Tris: %i", num_tris);
-	ImGui::SameLine();
-	ImGui::Text("Vertex: %i", num_vertex);
+	if (resource_mesh == nullptr)ImGui::Text("NULL MESH RESOURCE");
+
+	else
+	{
+		//Show mesh Tris & Vertex
+		ImGui::Text("Tris: %i", resource_mesh->GetNumTris());
+		ImGui::SameLine();
+		ImGui::Text("Vertex: %i", resource_mesh->GetNumVertex());
+	}
 }
 
 bool ComponentSphereMesh::Save(Serializer & array_root) const
@@ -55,11 +63,12 @@ bool ComponentSphereMesh::Save(Serializer & array_root) const
 	//Insert actived
 	ret = comp_data.InsertBool("actived", actived);
 
+	//Insert primitive type
+	comp_data.InsertString("primitive_type", PrimitiveTypeToStr(primitive_type));
+
 	//Insert geometry data
 	//Insert radius
 	comp_data.InsertFloat("radius",geometry.r);
-	//Insert divisions
-	comp_data.InsertInt("divisions", divisions);
 
 	//Insert draw material id
 	if (draw_material != nullptr)ret = comp_data.InsertInt("draw_material_id", draw_material->GetID());
@@ -79,6 +88,9 @@ bool ComponentSphereMesh::Load(Serializer & data, std::vector<std::pair<Componen
 	//Get actived
 	actived = data.GetBool("actived");
 
+	//Get primitive type
+	primitive_type = StrToPrimitiveType(data.GetString("primitive_type"));
+
 	//Get draw material id
 	uint material_id = data.GetInt("draw_material_id");
 	if (material_id != 0)links.push_back(std::pair<Component*, uint>(this, material_id));
@@ -89,18 +101,9 @@ bool ComponentSphereMesh::Load(Serializer & data, std::vector<std::pair<Componen
 	geometry.pos = math::float3(0, 0, 0);
 	//Get radius
 	geometry.r = data.GetFloat("radius");
-	//Get divisions
-	divisions = data.GetInt("divisions");
 	
 	//Build the mesh with the loaded values
-	std::pair<std::vector<uint>, std::vector<Vertex>> mesh_data;
-	SphereGenerator sphere;
-	sphere.SetGeometry(geometry);
-	sphere.SetDivisions(divisions);
-	mesh_data = sphere.Generate();
-	SetIndices(mesh_data.first);
-	SetVertices(mesh_data.second);
-	SetupMesh();
+	resource_mesh = App->res_manager->GetPrimitiveResourceMesh(primitive_type);
 
 	return ret;
 }

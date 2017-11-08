@@ -5,6 +5,7 @@
 #include "Serializer.h"
 #include "Application.h"
 #include "ImporterManager.h"
+#include "ResourceMesh.h"
 
 // Vertex ---------------------------------------
 Vertex::Vertex()
@@ -33,7 +34,7 @@ ComponentMesh::ComponentMesh() :Component(COMP_MESH)
 
 }
 
-ComponentMesh::ComponentMesh(const ComponentMesh & cpy) : Component(cpy), vertices(cpy.vertices), indices(cpy.indices)
+ComponentMesh::ComponentMesh(const ComponentMesh & cpy) : Component(cpy), resource_mesh(cpy.resource_mesh)
 {	
 
 }
@@ -41,11 +42,7 @@ ComponentMesh::ComponentMesh(const ComponentMesh & cpy) : Component(cpy), vertic
 // Destructors ==================================
 ComponentMesh::~ComponentMesh()
 {
-	vertices.clear();
-	indices.clear();
 	draw_material = nullptr;
-
-	this->DeleteBuffers();
 }
 
 // Get Methods ==================================
@@ -56,50 +53,78 @@ ComponentMaterial * ComponentMesh::GetDrawMaterial() const
 
 std::vector<math::float3> ComponentMesh::GetVertexPositions() const
 {
-	std::vector<math::float3> vec_pos;
-	uint size = vertices.size();
-	for (uint k = 0; k < size; k++)vec_pos.push_back(vertices[k].position);
-	return vec_pos;
+	return resource_mesh->GetVertexPositions();
 }
 
 uint ComponentMesh::GetIndexSize() const
 {
-	return indices.size();
+	return resource_mesh->GetIndexSize();
 }
 
 int ComponentMesh::GetIndexAt(int position) const
 {
-	if (position < indices.size())
-	{
-		return indices[position];
-	}
-	else
-	{
-		return -1;
-	}
+	return resource_mesh->GetIndexAt(position);
 }
 
 math::float3 ComponentMesh::GetVertexPosAt(int position) const
 {
-	return vertices[position].position;
+	return resource_mesh->GetVertexPosAt(position);
+}
+
+uint ComponentMesh::GetNumTris() const
+{
+	return resource_mesh->GetNumTris();
+}
+
+uint ComponentMesh::GetNumVertex() const
+{
+	return resource_mesh->GetNumVertex();
+}
+
+uint ComponentMesh::GetVertexArrayObject() const
+{
+	return resource_mesh->GetVertexArrayObject();
+}
+
+uint ComponentMesh::GetVertexBufferObject() const
+{
+	return resource_mesh->GetVertexBufferObject();
+}
+
+uint ComponentMesh::GetElementBufferObject() const
+{
+	return resource_mesh->GetElementBufferObject();
+}
+
+uint ComponentMesh::GetFaceNormalsID() const
+{
+	return resource_mesh->GetFaceNormalsID();
+}
+
+uint ComponentMesh::GetVertexNormalsID() const
+{
+	return resource_mesh->GetVertexNormalsID();
+}
+
+uint ComponentMesh::GetTextureCoordsID() const
+{
+	return resource_mesh->GetTextureCoordsID();
 }
 
 // Set Methods ==================================
-void ComponentMesh::SetVertices(std::vector<Vertex> v)
+void ComponentMesh::SetVertices(const std::vector<Vertex>& v)
 {
-	vertices = v;
-	num_vertex = vertices.size();
+	resource_mesh->SetVertices(v);
 }
 
-void ComponentMesh::SetIndices(std::vector<uint> i)
+void ComponentMesh::SetIndices(const std::vector<uint>& i)
 {
-	indices = i;
-	if (indices.size() % 3 == 0)num_tris = indices.size() / 3;
+	resource_mesh->SetIndices(i);
 }
 
 void ComponentMesh::SetPath(const char * str)
 {
-	path = str;
+	resource_mesh->SetOwnFile(str);
 }
 
 void ComponentMesh::SetDrawMaterial(ComponentMaterial * mat)
@@ -107,61 +132,20 @@ void ComponentMesh::SetDrawMaterial(ComponentMaterial * mat)
 	draw_material = mat;
 }
 
+void ComponentMesh::SetResourceMesh(ResourceMesh * res)
+{
+	resource_mesh = res;
+}
+
 // Functionality ================================
 void ComponentMesh::SetupMesh()
 {
-	glGenBuffers(1, &VertexBufferObject);
-	glGenBuffers(1, &ElementBufferObject);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-	num_vertex = vertices.size();
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObject);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint), &indices[0], GL_STATIC_DRAW);
-
-	//Build mesh vertex normals
-	std::vector<math::float3> vertex_normals;
-	for (uint k = 0; k < num_vertex; k++)
-	{
-		vertex_normals.push_back(vertices.data()[k].position);
-		vertex_normals.push_back((vertices.data()[k].position + vertices.data()[k].normals));
-	}
-
-	glGenBuffers(1, &vertex_normalsID);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_normalsID);
-	glBufferData(GL_ARRAY_BUFFER, vertex_normals.size() * sizeof(math::float3), &vertex_normals.data()[0], GL_STATIC_DRAW);
-
-	//Build mesh face normals
-	if (num_tris != 0)
-	{
-		std::vector<math::float3> face_normals;
-		uint size = indices.size();
-		for (uint k = 0; k < size - 2; k += 3)
-		{
-			math::float3 V(vertices[indices[k + 1]].position.x - vertices[indices[k]].position.x, vertices[indices[k + 1]].position.y - vertices[indices[k]].position.y, vertices[indices[k + 1]].position.z - vertices[indices[k]].position.z);
-			math::float3 W(vertices[indices[k + 2]].position.x - vertices[indices[k]].position.x, vertices[indices[k + 2]].position.y - vertices[indices[k]].position.y, vertices[indices[k + 2]].position.z - vertices[indices[k]].position.z);
-			math::float3 normal(V.Cross(W));
-			normal.Normalize();
-			math::float3 center_point((vertices[indices[k]].position.x + vertices[indices[k + 1]].position.x + vertices[indices[k + 2]].position.x) / 3, (vertices[indices[k]].position.y + vertices[indices[k + 1]].position.y + vertices[indices[k + 2]].position.y) / 3, (vertices[indices[k]].position.z + vertices[indices[k + 1]].position.z + vertices[indices[k + 2]].position.z) / 3);
-			face_normals.push_back(center_point);
-			face_normals.push_back(center_point + normal);
-		}
-
-		glGenBuffers(1, &face_normalsID);
-		glBindBuffer(GL_ARRAY_BUFFER, face_normalsID);
-		glBufferData(GL_ARRAY_BUFFER, face_normals.size() * sizeof(math::float3), &face_normals.data()[0], GL_STATIC_DRAW);
-	}
+	resource_mesh->SetupMesh();
 }
 
-void ComponentMesh::DeleteBuffers()
+bool ComponentMesh::MeshResourceIsNull() const
 {
-	if (VertexArrayObject != NULL)	glDeleteBuffers(1, &VertexArrayObject);
-	if (VertexBufferObject != NULL)	glDeleteBuffers(1, &VertexBufferObject);
-	if (ElementBufferObject != NULL)glDeleteBuffers(1, &ElementBufferObject);
-	if (face_normalsID != NULL)		glDeleteBuffers(1, &face_normalsID);
-	if (vertex_normalsID != NULL)	glDeleteBuffers(1, &vertex_normalsID);
-	if (text_coordsID != NULL)		glDeleteBuffers(1, &text_coordsID);
+	return bool(resource_mesh == nullptr);
 }
 
 void ComponentMesh::BlitComponentInspector()
@@ -170,10 +154,15 @@ void ComponentMesh::BlitComponentInspector()
 
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Mesh");
 
-	//Show mesh Tris & Vertex
-	ImGui::Text("Tris: %i", num_tris);
-	ImGui::SameLine();
-	ImGui::Text("Vertex: %i", num_vertex);
+	if (resource_mesh == nullptr)ImGui::Text("NULL MESH RESOURCE");
+
+	else
+	{
+		//Show mesh Tris & Vertex
+		ImGui::Text("Tris: %i", resource_mesh->GetNumTris());
+		ImGui::SameLine();
+		ImGui::Text("Vertex: %i", resource_mesh->GetNumVertex());
+	}
 }
 
 bool ComponentMesh::Save(Serializer & array_root) const
@@ -191,7 +180,7 @@ bool ComponentMesh::Save(Serializer & array_root) const
 	ret = comp_data.InsertBool("actived", actived);
 	
 	//Insert mesh file path
-	comp_data.InsertString("path", path.c_str());
+	comp_data.InsertString("path", resource_mesh->GetOwnFile());
 
 	//Insert draw material id
 	if (draw_material != nullptr)ret = comp_data.InsertInt("draw_material_id", draw_material->GetID());

@@ -9,13 +9,11 @@
 enum PRIMITIVE_TYPE
 {
 	UNDEF_PRIMITIVE = 0,
-	PRIMITIVE_POINT,
-	PRIMITIVE_LINE,
-	PRIMITIVE_PLANE,
 	PRIMITIVE_CUBE,
 	PRIMITIVE_SPHERE,
+	PRIMITIVE_SPHERE_HI,
 	PRIMITIVE_CYLINDER,
-	PRIMITIVE_RAY,
+	PRIMITIVE_CYLINDER_HI,
 	PRIMITIVE_CAPSULE,
 	PRIMITIVE_FRUSTUM,
 	PRIMITIVE_GRID
@@ -84,5 +82,8 @@ public:
 };
 
 bool VertexToIndex(math::float3* all_vertex, uint vertex_num, std::vector<uint>* index, std::vector<math::float3>* vertex);
+
+const char*		PrimitiveTypeToStr(PRIMITIVE_TYPE type);
+PRIMITIVE_TYPE	StrToPrimitiveType(const char* str);
 
 #endif // !_BASIC_PRIMITIVE_H_
