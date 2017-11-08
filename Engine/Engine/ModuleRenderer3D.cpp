@@ -15,6 +15,12 @@
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
 
+#ifdef _DEBUG
+#pragma comment (lib, "Engine/imgui/lib/libgizmo.lib")
+#else
+#pragma comment (lib, "Engine/imgui/lib/libgizmoRelease.lib")
+#endif // DEBUG
+
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Engine/Glew/lib/Win32/glew32.lib")
@@ -353,6 +359,10 @@ bool ModuleRenderer3D::Init()
 	game_to_texture = new FrameTexture();
 	game_to_texture->Create(App->window->GetWidth(), App->window->GetHeight());
 
+	trans_gizmo = CreateMoveGizmo();
+	rotate_gizmo = CreateRotateGizmo();
+	scale_gizmo = CreateScaleGizmo();
+
 	return ret;
 }
 
@@ -372,6 +382,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 	{
 		lights[i].Render();
+	}
+
+	if (print_gizmo)
+	{
+		print_gizmo->SetCameraMatrix(math::float4x4::identity.ptr(), App->camera->editor_camera_frustrum.ViewProjMatrix().Transposed().ptr());
 	}
 
 	return UPDATE_CONTINUE;
@@ -401,13 +416,14 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Draw / update scene objects
 	App->scene->SceneUpdate(dt);
 
+	if(print_gizmo)
+		print_gizmo->Draw();
+
 	glBegin(GL_LINES);
 
 	glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
 
 	glEnd();
-
-	//App->imgui->RenderGuizmos();
 
 	//Focus render texture
 	render_to_texture->UnBind();
@@ -814,6 +830,25 @@ void ModuleRenderer3D::SetMainCamera(ComponentCamera* new_main_cam)
 
 }
 
+void ModuleRenderer3D::SetGizmo(GUIZMO_STATE state)
+{
+	switch (state)
+	{
+	case GUIZMO_NONE:
+		print_gizmo = nullptr;
+		break;
+	case GUIZMO_TRANSLATE:
+		print_gizmo = trans_gizmo;
+		break;
+	case GUIZMO_ROTATE:
+		print_gizmo = rotate_gizmo;
+		break;
+	case GUIZMO_SCALE:
+		print_gizmo = scale_gizmo;
+		break;
+	}
+}
+
 // Get Methods ==================================
 bool ModuleRenderer3D::GetWireframe() const
 {
@@ -855,6 +890,11 @@ const FrameTexture * ModuleRenderer3D::GetFrameTextureGame() const
 	return game_to_texture;
 }
 
+IGizmo* ModuleRenderer3D::GetGizmo() const
+{
+	return print_gizmo;
+}
+
 // Functionality ================================
 void ModuleRenderer3D::OnResize(int width, int height)
 {
@@ -878,6 +918,11 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	App->window->SetAspectRatio(width, height);
 	App->camera->SetVerticalFov(90);
+
+	if (print_gizmo)
+	{
+		print_gizmo->SetScreenDimension(width, height);
+	}
 
 	for (std::vector<ComponentCamera*>::iterator item = game_cameras.begin(); item != game_cameras.end(); item++)
 	{
@@ -996,5 +1041,20 @@ void ModuleRenderer3D::PrintPlayPauseButton() const
 	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
 	{
 		App->scene->NextGameFrame();
+	}
+
+	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 100);
+	if (ImGui::Button("Local##button"))
+	{
+		trans_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_LOCAL);
+		rotate_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_LOCAL);
+		scale_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_LOCAL);
+	}
+	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 155);
+	if (ImGui::Button("Global##button"))
+	{
+		trans_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_WORLD);
+		rotate_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_WORLD);
+		scale_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_WORLD);
 	}
 }

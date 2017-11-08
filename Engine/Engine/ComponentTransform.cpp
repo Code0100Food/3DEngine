@@ -2,10 +2,12 @@
 #include "GameObject.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
-#include "imgui/ImGuizmo.h"
 #include "Application.h"
+#include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "Serializer.h"
+
+
 // Constructors =================================
 ComponentTransform::ComponentTransform() : Component(COMP_TRANSFORMATION)
 {
@@ -18,7 +20,6 @@ ComponentTransform::ComponentTransform(const ComponentTransform & cpy) : Compone
 // Destructors ==================================
 ComponentTransform::~ComponentTransform()
 {
-
 }
 
 // Game Loop ====================================
@@ -113,6 +114,7 @@ void ComponentTransform::SetTransformation(aiMatrix4x4 trans)
 	};
 
 	transform_matrix.Set(values);
+	transform_matrix_transposed = transform_matrix.Transposed();
 
 	//Set the variables that will be shown in the UI
 	transform_matrix.Decompose(position, rotation_quaternion, scale);
@@ -134,6 +136,7 @@ void ComponentTransform::SetTransformation(aiMatrix4x4 trans)
 void ComponentTransform::SetTransformation(math::float4x4 trans)
 {
 	transform_matrix = trans;
+	transform_matrix_transposed = transform_matrix.Transposed();
 
 	transform_matrix.Decompose(position, rotation_quaternion, scale);
 	rotation_euler_angles = rotation_quaternion.ToEulerXYZ();
@@ -262,6 +265,7 @@ void ComponentTransform::UpdateTransform()
 		parent->GetBoundingBox()->Scale(parent->GetBoundingBox()->CenterPoint(),scale);
 	}
 
+	transform_matrix_transposed = transform_matrix.Transposed();
 
 	has_been_modified = false;
 }
@@ -281,41 +285,14 @@ void ComponentTransform::QuitMatrixToDraw()
 	glPopMatrix();
 }
 
-void ComponentTransform::DrawOrientationAxis() const
+void ComponentTransform::DrawOrientationAxis()
 {
-	glLineWidth(2.0f);
-
-	glBegin(GL_LINES);
-
-	//AXIS X
-	math::float3 axis = inherited_transform.Col3(0).Normalized();
-	math::float3 pos;
-
-	if (!(parent->GetParent()->IsRoot()))
+	
+	if (App->renderer3D->GetGizmo())
 	{
-		pos = inherited_position + position;
-	}
-	else
-	{
-		pos = position;
+		App->renderer3D->GetGizmo()->SetEditMatrix(transform_matrix_transposed.ptr());
 	}
 	
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	glVertex3f(pos.x, pos.y, pos.z); glVertex3f(axis.x + pos.x, axis.y + pos.y, axis.z + pos.z);
-
-	//AXIS Y
-	axis = inherited_transform.Col3(1).Normalized();
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	glVertex3f(pos.x, pos.y, pos.z); glVertex3f(axis.x + pos.x, axis.y + pos.y, axis.z + pos.z);
-
-	//AXIS Z
-	axis = inherited_transform.Col3(2).Normalized();
-	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	glVertex3f(pos.x, pos.y, pos.z); glVertex3f(axis.x + pos.x, axis.y + pos.y, axis.z + pos.z);
-
-	glEnd();
-
-	glLineWidth(1.0f);
 }
 
 bool ComponentTransform::Save(Serializer & array_root) const

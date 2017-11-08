@@ -5,11 +5,20 @@
 #include "Globals.h"
 #include "Light.h"
 #include "MathGeoLib/MathGeoLib.h"
+#include "imgui/IGizmo.h"
 
 #define MAX_LIGHTS 8
 
 class DockContext;
 class ComponentCamera;
+
+enum GUIZMO_STATE
+{
+	GUIZMO_NONE,
+	GUIZMO_TRANSLATE,
+	GUIZMO_ROTATE,
+	GUIZMO_SCALE
+};
 
 class FrameTexture
 {
@@ -108,12 +117,19 @@ private:
 	
 	void CalculatePrespective(math::float4x4& target, float fovy, float aspect, float n, float f);
 
+	//Guizmos
+	IGizmo* print_gizmo = nullptr;
+	IGizmo* trans_gizmo = nullptr;
+	IGizmo* rotate_gizmo = nullptr;
+	IGizmo* scale_gizmo = nullptr;
+
 public:
 
 	//Set Methods -----------
 	void SetMinRenderDistance(float val);
 	void SetMaxRenderDistance(float val);
 	void SetMainCamera(ComponentCamera* new_main_cam);
+	void SetGizmo(GUIZMO_STATE state);
 
 	//Get Methods -----------
 	bool				GetWireframe() const;
@@ -124,6 +140,7 @@ public:
 	ImVec2				GetSceneImageSize()const;
 	const FrameTexture* GetFrameTextureRender() const;
 	const FrameTexture* GetFrameTextureGame() const;
+	IGizmo*				GetGizmo() const;
 
 	//Functionality ---------
 	void OnResize(int width, int height);

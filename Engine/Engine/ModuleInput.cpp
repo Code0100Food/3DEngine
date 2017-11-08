@@ -15,6 +15,7 @@
 #include "ImporterManager.h"
 #include "ModuleScene.h"
 #include "FileSystem.h"
+#include "imgui/IGizmo.h"
 
 #define MAX_KEYS 300
 
@@ -172,6 +173,26 @@ update_status ModuleInput::PreUpdate(float dt)
 			if (event.key.keysym.scancode == SDL_SCANCODE_GRAVE)
 			{
 				App->console->SwapConsoleState();
+			}
+
+			if (event.key.keysym.scancode == SDL_SCANCODE_Q)
+			{
+				App->renderer3D->SetGizmo(GUIZMO_STATE::GUIZMO_NONE);
+			}
+
+			if (event.key.keysym.scancode == SDL_SCANCODE_W)
+			{
+				App->renderer3D->SetGizmo(GUIZMO_STATE::GUIZMO_TRANSLATE);
+			}				  
+			
+			if (event.key.keysym.scancode == SDL_SCANCODE_E)
+			{
+				App->renderer3D->SetGizmo(GUIZMO_STATE::GUIZMO_ROTATE);
+			}
+
+			if (event.key.keysym.scancode == SDL_SCANCODE_R)
+			{
+				App->renderer3D->SetGizmo(GUIZMO_STATE::GUIZMO_SCALE);
 			}
 
 		case SDL_MOUSEWHEEL:
