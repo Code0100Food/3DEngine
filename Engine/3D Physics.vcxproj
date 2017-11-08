@@ -65,7 +65,7 @@
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>$(SolutionDir)\Engine\imgui\examples\libs\glfw\lib-vc2010-32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;Engine/imgui/lib/libgizmo.lib;Engine/imgui/lib/libgizmoRelease.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,8 +110,8 @@
     <ClInclude Include="Engine\GeometryManager.h" />
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\Grid_.h" />
+    <ClInclude Include="Engine\imgui\IGizmo.h" />
     <ClInclude Include="Engine\imgui\imgui.h" />
-    <ClInclude Include="Engine\imgui\ImGuizmo.h" />
     <ClInclude Include="Engine\imgui\imgui_dock.h" />
     <ClInclude Include="Engine\imgui\imgui_impl_sdl.h" />
     <ClInclude Include="Engine\imgui\imgui_internal.h" />
@@ -236,7 +236,6 @@
     <ClCompile Include="Engine\GeometryManager.cpp" />
     <ClCompile Include="Engine\Grid_.cpp" />
     <ClCompile Include="Engine\imgui\imgui.cpp" />
-    <ClCompile Include="Engine\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Engine\imgui\imgui_demo.cpp" />
     <ClCompile Include="Engine\imgui\imgui_dock.cpp" />
     <ClCompile Include="Engine\imgui\imgui_draw.cpp" />

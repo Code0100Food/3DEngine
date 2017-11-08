@@ -426,9 +426,6 @@
     <ClInclude Include="Engine\TimeManager.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\imgui\ImGuizmo.h">
-      <Filter>Sources\Tools\Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourcesManager.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -437,6 +434,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceMesh.h">
       <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\imgui\IGizmo.h">
+      <Filter>Sources\Tools\Imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -700,9 +700,6 @@
     </ClCompile>
     <ClCompile Include="Engine\TimeManager.cpp">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\imgui\ImGuizmo.cpp">
-      <Filter>Sources\Tools\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourcesManager.cpp">
       <Filter>Sources\Modules</Filter>
