@@ -121,6 +121,26 @@ void GameObject::SetActiveState(bool act)
 void GameObject::SetStatic(bool st)
 {
 	static_ = st;
+
+	if (static_)
+	{
+		App->scene->InsertStaticObject(this);
+	}
+	else
+	{
+		App->scene->RemoveStaticObject(this);
+	}
+
+	uint size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		childs[k]->SetStatic(st);
+	}
+}
+
+void GameObject::SetDrawBoundingBoxState(bool val)
+{
+	draw_bounding_box = val;
 }
 
 void GameObject::SetName(const char * str)
@@ -506,11 +526,7 @@ void GameObject::BlitGameObjectInspector()
 	//Static Object
 	if (ImGui::Checkbox("Static##object_static", &static_))
 	{
-		if (static_)
-		{
-			App->scene->InsertStaticObject(this);
-		}
-		else App->scene->RemoveStaticObject(this);
+		SetStatic(static_);
 	}
 
 	//Bounding box

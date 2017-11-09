@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "FileSystem.h"
 #include "ModuleScene.h"
+#include "ResourcesManager.h"
 
 // Constructors =================================
 MeshImporter::MeshImporter()
@@ -157,6 +158,9 @@ bool MeshImporter::Load(const char * path, ComponentMesh* target)
 
 	if (buffer)
 	{
+		//Create a resource mesh (temporal)
+		if (target->MeshResourceIsNull())target->SetResourceMesh((ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE));
+		
 		//Focus the cursor
 		char* cursor = buffer;
 

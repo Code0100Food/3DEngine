@@ -100,6 +100,7 @@ bool ModuleScene::CleanUp()
 void ModuleScene::SetSelectedGameObject(const GameObject * target)
 {
 	selected_gameobject = (GameObject*)target;
+	if(target != nullptr)selected_gameobject->SetDrawBoundingBoxState(true);
 }
 
 // Get Methods ==================================

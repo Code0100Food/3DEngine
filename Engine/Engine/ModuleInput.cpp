@@ -306,7 +306,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			App->fs->GetFileFormatFromPath(event.drop.file, &format);
 			
 			//If is an image sets it as custom texture and enable custom mode
-			if (strcmp(format.c_str(), "PNG") == 0 || strcmp(format.c_str(), "png") == 0 || strcmp(format.c_str(), "jpg") == 0 || strcmp(format.c_str(), "JPG") == 0 || strcmp(format.c_str(), "dds") == 0)
+			if (App->importer->GetImportTypeFromFormat(format.c_str()) == MATERIAL_IMPORT)
 			{
 				App->textures->LoadCustomTexture(event.drop.file);
 				App->textures->SetCustomMode();
@@ -314,7 +314,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			}
 
 			//If is a model focus the camera to the model size
-			if (strcmp(format.c_str(), "FBX") == 0 || strcmp(format.c_str(), "fbx") == 0 || strcmp(format.c_str(), "OBJ") == 0 || strcmp(format.c_str(), "obj") == 0 )
+			if (App->importer->GetImportTypeFromFormat(format.c_str()) == MESH_IMPORT)
 			{
 				App->camera->LookAtGameObject(App->scene->GetSelectedGameObject());
 			}

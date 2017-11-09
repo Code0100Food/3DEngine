@@ -49,6 +49,7 @@ public:
 	//Set Methods -----------
 	void SetActiveState(bool act);
 	void SetStatic(bool st);
+	void SetDrawBoundingBoxState(bool val);
 	void SetName(const char* str);
 	void SetParent(GameObject* target);
 

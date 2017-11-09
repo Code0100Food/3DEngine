@@ -324,9 +324,9 @@ bool ComponentTransform::Save(Serializer & array_root) const
 	//Insert scale
 	Serializer scale_array = comp_data.InsertArray("scale");
 	for (uint k = 0; k < 3; k++)scale_array.InsertArrayFloat(scale.ptr()[k]);
-	//Insert rotation quaternion
-	Serializer rot_quaternion_array = comp_data.InsertArray("rotation_quaternion");
-	for (uint k = 0; k < 4; k++)rot_quaternion_array.InsertArrayFloat(rotation_quaternion.ptr()[k]);
+	//Insert euler angles
+	Serializer euler_angles_array = comp_data.InsertArray("euler_angles");
+	for (uint k = 0; k < 3; k++)euler_angles_array.InsertArrayFloat(rotation_euler_angles.ptr()[k]);
 
 	//Save the built data in the components array
 	ret = array_root.InsertArrayElement(comp_data);
@@ -358,9 +358,12 @@ bool ComponentTransform::Load(Serializer & data, std::vector<std::pair<Component
 	//Get scale
 	Serializer scale_array = data.GetArray("scale");
 	for (uint k = 0; k < 3; k++)scale.ptr()[k] = scale_array.GetArrayFloat(k);
-	//Get rotation quaternion
-	Serializer rot_quaternion_array = data.GetArray("rotation_quaternion");
-	for (uint k = 0; k < 4; k++)rotation_quaternion.ptr()[k] = rot_quaternion_array.GetArrayFloat(k);
+	//Get euler angles
+	Serializer euler_angles_array = data.GetArray("euler_angles");
+	for (uint k = 0; k < 3; k++)rotation_euler_angles.ptr()[k] = euler_angles_array.GetArrayFloat(k);
+	
+	//Calculate the resulting transform with the loaded data
+	UpdateTransform();
 
 	return ret;
 }

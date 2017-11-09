@@ -81,7 +81,11 @@ bool ImporterManager::LoadFile(const char * str)
 		ret = model_importer.Load(str);
 	}
 	break;
-
+	case MATERIAL_IMPORT:
+	{
+		
+	}
+	break;
 	default:
 	{
 		LOG("[error] File extension not supported for import!");
@@ -103,6 +107,8 @@ IMPORT_TYPE ImporterManager::GetImportTypeFromFormat(const char * str) const
 	if (strcmp(str, "PNG") == 0)return MATERIAL_IMPORT;
 	if (strcmp(str, "jpg") == 0)return MATERIAL_IMPORT;
 	if (strcmp(str, "JPG") == 0)return MATERIAL_IMPORT;
+	if (strcmp(str, "tga") == 0)return MATERIAL_IMPORT;
+	if (strcmp(str, "TGA") == 0)return MATERIAL_IMPORT;
 	if (strcmp(str, "fiesta") == 0)return MESH_IMPORT;
 	return UNDEF_IMPORT;
 }
