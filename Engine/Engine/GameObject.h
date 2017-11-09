@@ -39,6 +39,7 @@ private:
 	std::vector<Component*>		components;
 	std::vector<GameObject*>	childs;
 	
+	bool						draw_selected_bounding_box = false;
 	bool						draw_bounding_box = false;
 	math::AABB					bounding_box;
 	math::AABB					original_bounding_box;
@@ -49,7 +50,7 @@ public:
 	//Set Methods -----------
 	void SetActiveState(bool act);
 	void SetStatic(bool st);
-	void SetDrawBoundingBoxState(bool val);
+	void SetDrawSelectedBoundingBoxState(bool val);
 	void SetName(const char* str);
 	void SetParent(GameObject* target);
 

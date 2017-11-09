@@ -47,6 +47,12 @@ bool GeometryManager::Awake(const JSON_Object * data_root)
 	bounding_box_color[2] = json_array_get_number(_array, 2);
 	bounding_box_color[3] = json_array_get_number(_array, 3);
 
+	_array = json_object_get_array(data_root, "selected_bounding_box_color");
+	selected_bounding_box_color[0] = json_array_get_number(_array, 0);
+	selected_bounding_box_color[1] = json_array_get_number(_array, 1);
+	selected_bounding_box_color[2] = json_array_get_number(_array, 2);
+	selected_bounding_box_color[3] = json_array_get_number(_array, 3);
+
 	primitive_lines_width = json_object_get_number(data_root, "primitive_lines_width");
 
 	_array = json_object_get_array(data_root, "primitive_color");
@@ -128,6 +134,7 @@ void GeometryManager::BlitConfigInfo()
 	ImGui::SliderFloat4("Vertex Normals Color", vertex_normals_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Face Normals Color", face_normals_color, 0.0, 1.0, "%.2f");
 	ImGui::SliderFloat4("Bounding Box Color", bounding_box_color, 0.0, 1.0, "%.2f");
+	ImGui::SliderFloat4("Selected Bounding Box Color", selected_bounding_box_color, 0.0, 1.0, "%.2f");
 
 	ImGui::Separator();
 	
@@ -167,6 +174,12 @@ void GeometryManager::SaveConfigInfo(JSON_Object * data_root)
 	json_array_replace_number(_array, 1, bounding_box_color[1]);
 	json_array_replace_number(_array, 2, bounding_box_color[2]);
 	json_array_replace_number(_array, 3, bounding_box_color[3]);
+
+	_array = json_object_get_array(data_root, "selected_bounding_box_color");
+	json_array_replace_number(_array, 0, selected_bounding_box_color[0]);
+	json_array_replace_number(_array, 1, selected_bounding_box_color[1]);
+	json_array_replace_number(_array, 2, selected_bounding_box_color[2]);
+	json_array_replace_number(_array, 3, selected_bounding_box_color[3]);
 
 	json_object_set_number(data_root, "primitive_lines_width", primitive_lines_width);
 

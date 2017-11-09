@@ -87,8 +87,8 @@ bool GameObject::Update(float dt)
 	bool ret = true;
 
 	/* This update*/
-	if (draw_bounding_box)DrawBoundingBox();
-
+	if (draw_bounding_box || draw_selected_bounding_box)DrawBoundingBox();
+	
 	uint size = components.size();
 	for (uint k = 0; k < size; k++)
 	{
@@ -138,9 +138,9 @@ void GameObject::SetStatic(bool st)
 	}
 }
 
-void GameObject::SetDrawBoundingBoxState(bool val)
+void GameObject::SetDrawSelectedBoundingBoxState(bool val)
 {
-	draw_bounding_box = val;
+	draw_selected_bounding_box = val;
 }
 
 void GameObject::SetName(const char * str)
@@ -574,8 +574,9 @@ void GameObject::DrawBoundingBox()
 {
 	App->renderer3D->DisableGLRenderFlags();
 
-	bounding_box.Draw(4.0f, App->geometry->bounding_box_color);
-
+	if (draw_selected_bounding_box)bounding_box.Draw(3.5f, App->geometry->selected_bounding_box_color);
+	else bounding_box.Draw(2.5f, App->geometry->bounding_box_color);
+	
 	App->renderer3D->EnableGLRenderFlags();
 }
 

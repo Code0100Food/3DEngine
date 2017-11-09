@@ -48,6 +48,7 @@ protected:
 	float	vertex_normals_color[4];
 	float	face_normals_color[4];
 	float	bounding_box_color[4];
+	float	selected_bounding_box_color[4];
 
 	float	primitive_lines_width = 1.0f;
 	float	primitive_color[4];
