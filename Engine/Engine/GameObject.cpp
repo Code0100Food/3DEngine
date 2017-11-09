@@ -12,7 +12,7 @@
 #include "TimeManager.h"
 #include "ModuleTextures.h"
 #include "ModuleInput.h"
-
+#include "ModuleScene.h"
 #include "Serializer.h"
 
 // Constructors =================================
@@ -356,6 +356,9 @@ bool GameObject::RemoveChild(GameObject * child, bool search_in)
 	{
 		if (childs[k] == child)
 		{
+			//If the object is static remove it from the static vec
+			if (childs[k]->GetStatic())App->scene->RemoveStaticObject(childs[k]);
+
 			RELEASE(childs[k]);
 
 			for (uint h = k; h < size - 1; h++)
@@ -492,7 +495,7 @@ void GameObject::BlitGameObjectInspector()
 	ImGui::SameLine();
 	
 	//Release button
-	if (ImGui::ImageButton((ImTextureID)App->textures->check_image,ImVec2(20,20)))
+	if (ImGui::ImageButton((ImTextureID)App->textures->garbage_icon,ImVec2(20,20)))
 	{
 		App->scene->SendGameObjectToRemoveVec(this);
 		App->scene->SetSelectedGameObject(nullptr);

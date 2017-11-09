@@ -297,7 +297,7 @@ public:
 
 	void AdjustBoundaries(const math::AABB& bb)
 	{
-		if (root != NULL)root->aabb.Enclose(bb);
+		if (root != NULL && bb.IsFinite())root->aabb.Enclose(bb);
 	}
 
 	void SetMaxObjects(uint max)

@@ -658,9 +658,12 @@ bool ModuleScene::InitializeScene()
 
 void ModuleScene::CleanScene()
 {
-	RELEASE(root_gameobject);
-	root_gameobject = CreateGameObject();
-	root_gameobject->SetName("Scene");
+	std::vector<GameObject*> root_objs = *root_gameobject->GetChilds();
+	uint size = root_objs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		ReleaseGameObject(root_objs[k], root_gameobject);
+	}
 	selected_gameobject = nullptr;
 }
 
