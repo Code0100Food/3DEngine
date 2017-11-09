@@ -155,47 +155,49 @@ public:
 	void Subdivide()
 	{
 		//Variables used to allocate the different divisions data
-		float			cube_size = aabb.HalfSize().x;
+		float			cube_size_x = aabb.HalfSize().x;
+		float			cube_size_y = aabb.HalfSize().y;
+		float			cube_size_z = aabb.HalfSize().z;
 		math::AABB		temp_ab;
 
 		//Calculate new AABB for each child
 		temp_ab.maxPoint = aabb.CenterPoint();
-		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size, temp_ab.maxPoint.y - cube_size,temp_ab.maxPoint.z - cube_size };
+		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size_x, temp_ab.maxPoint.y - cube_size_y,temp_ab.maxPoint.z - cube_size_z };
 		children[0] = new OctCube(temp_ab, max_objects);
 		children[0]->root = this;
 
 		temp_ab.maxPoint = aabb.CenterPoint();
-		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size,temp_ab.maxPoint.y - cube_size,temp_ab.maxPoint.z - cube_size };
+		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size_x,temp_ab.maxPoint.y - cube_size_y,temp_ab.maxPoint.z - cube_size_z };
 		children[1] = new OctCube(temp_ab, max_objects);
 		children[1]->root = this;
 
 		temp_ab.maxPoint = aabb.CenterPoint();
-		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size,temp_ab.maxPoint.y + cube_size,temp_ab.maxPoint.z - cube_size };
+		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size_x,temp_ab.maxPoint.y + cube_size_y,temp_ab.maxPoint.z - cube_size_z };
 		children[2] = new OctCube(temp_ab, max_objects);
 		children[2]->root = this;
 
 		temp_ab.maxPoint = aabb.CenterPoint();
-		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size, temp_ab.maxPoint.y - cube_size,temp_ab.maxPoint.z + cube_size };
+		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size_x, temp_ab.maxPoint.y - cube_size_y,temp_ab.maxPoint.z + cube_size_z };
 		children[3] = new OctCube(temp_ab, max_objects);
 		children[3]->root = this;
 
 		temp_ab.maxPoint = aabb.CenterPoint();
-		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size,temp_ab.maxPoint.y + cube_size,temp_ab.maxPoint.z + cube_size };
+		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size_x,temp_ab.maxPoint.y + cube_size_y,temp_ab.maxPoint.z + cube_size_z };
 		children[4] = new OctCube(temp_ab, max_objects);
 		children[4]->root = this;
 
 		temp_ab.maxPoint = aabb.CenterPoint();
-		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size,temp_ab.maxPoint.y + cube_size,temp_ab.maxPoint.z - cube_size };
+		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size_x,temp_ab.maxPoint.y + cube_size_y,temp_ab.maxPoint.z - cube_size_z };
 		children[5] = new OctCube(temp_ab, max_objects);
 		children[5]->root = this;
 
 		temp_ab.maxPoint = aabb.CenterPoint();
-		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size,temp_ab.maxPoint.y - cube_size,temp_ab.maxPoint.z + cube_size };
+		temp_ab.minPoint = { temp_ab.maxPoint.x + cube_size_x,temp_ab.maxPoint.y - cube_size_y,temp_ab.maxPoint.z + cube_size_z };
 		children[6] = new OctCube(temp_ab, max_objects);
 		children[6]->root = this;
 
 		temp_ab.maxPoint = aabb.CenterPoint();
-		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size,temp_ab.maxPoint.y + cube_size,temp_ab.maxPoint.z + cube_size };
+		temp_ab.minPoint = { temp_ab.maxPoint.x - cube_size_x,temp_ab.maxPoint.y + cube_size_y,temp_ab.maxPoint.z + cube_size_z };
 		children[7] = new OctCube(temp_ab, max_objects);
 		children[7]->root = this;
 
@@ -293,6 +295,11 @@ public:
 		}
 	}
 
+	void AdjustBoundaries(const math::AABB& bb)
+	{
+		if (root != NULL)root->aabb.Enclose(bb);
+	}
+
 	void SetMaxObjects(uint max)
 	{
 		max_objects = max;
@@ -334,9 +341,15 @@ public:
 
 	void Reset()
 	{
-		if (root != NULL && root->children[0] != nullptr)
+		if (root != NULL)
 		{
-			for (uint k = 0; k < NODE_SUBDIVISION; k++)RELEASE(root->children[k]);
+			if (root->children[0] != nullptr)
+			{
+				for (uint k = 0; k < NODE_SUBDIVISION; k++)RELEASE(root->children[k]);
+				root->full = false;
+			}
+			root->aabb.SetNegativeInfinity();
+			root->objects.clear();
 			root->full = false;
 		}
 	}

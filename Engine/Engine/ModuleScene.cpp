@@ -32,7 +32,7 @@ bool ModuleScene::Start()
 	root_gameobject->SetName("Scene");
 
 	//Set a default octree configuration
-	int bound_size = 10;
+	int bound_size = 0;
 	math::AABB boundaries = math::AABB(math::float3(-bound_size, -bound_size, -bound_size), math::float3(bound_size, bound_size, bound_size));
 	octree.SetBoundaries(boundaries);
 	octree.SetMaxObjects(1);
@@ -524,6 +524,10 @@ void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
 void ModuleScene::ReFillOctree()
 {
 	uint size = static_objects.size();
+	for (uint k = 0; k < size; k++)
+	{
+		octree.AdjustBoundaries(*static_objects[k]->GetBoundingBox());
+	}
 	for (uint k = 0; k < size; k++)
 	{
 		octree.Insert(static_objects[k], *static_objects[k]->GetBoundingBox());
