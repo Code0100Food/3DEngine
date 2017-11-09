@@ -1026,23 +1026,24 @@ void ModuleRenderer3D::CleanCameraView()
 void ModuleRenderer3D::PrintPlayPauseButton() const
 {
 	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() / 2);
-	if (ImGui::ImageButton((ImTextureID)App->textures->custom_check_image, ImVec2(20, 20)))
+	if (ImGui::ImageButton((ImTextureID)App->textures->pause_icon, ImVec2(20, 20), ImVec2(0, 0), ImVec2(1, 1)))
 	{
 		App->scene->PauseGame();
 	}
 
 	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 35);
-	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
+	if (ImGui::ImageButton((ImTextureID)App->textures->play_icon, ImVec2(20, 20)))
 	{
 		App->scene->PlayGame();
 	}
 	
 	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) + 35);
-	if (ImGui::ImageButton((ImTextureID)App->textures->check_image, ImVec2(20, 20)))
+	if (ImGui::ImageButton((ImTextureID)App->textures->next_icon, ImVec2(20, 20)))
 	{
 		App->scene->NextGameFrame();
 	}
 
+	
 	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 100);
 	if (ImGui::Button("Local##button"))
 	{
@@ -1057,4 +1058,14 @@ void ModuleRenderer3D::PrintPlayPauseButton() const
 		rotate_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_WORLD);
 		scale_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_WORLD);
 	}
+
+	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 188);
+	ImGui::Image((ImTextureID)App->textures->transform_icon, ImVec2(23, 23));
+
+	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 163);
+	ImGui::Text("[");
+
+	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 52);
+	ImGui::Text("]");
+
 }

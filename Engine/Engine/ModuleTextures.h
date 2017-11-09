@@ -33,6 +33,20 @@ public:
 	uint check_image = 0;
 	uint custom_check_image = 0;
 
+	//Icons 
+	uint play_icon = 0;
+	uint play_click_icon = 0;
+	uint pause_icon = 0;
+	uint pause_click_icon = 0;
+	uint next_icon = 0;
+	uint next_click_icon = 0;
+
+	uint garbage_icon = 0;
+	uint up_arrow_icon = 0;
+	uint down_arrow_icon = 0;
+
+	uint transform_icon = 0;
+
 public:
 
 	//Set Methods -----------
