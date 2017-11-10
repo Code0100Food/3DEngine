@@ -164,7 +164,7 @@ update_status ModuleCamera3D::Update(float dt)
 		//Camera stafe 
 		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
 		{
-			int dx = -App->input->GetMouseXMotion();
+			int dx = App->input->GetMouseXMotion();
 			int dy = -App->input->GetMouseYMotion();
 
 			if (dx != 0)
