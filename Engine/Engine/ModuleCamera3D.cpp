@@ -146,7 +146,7 @@ update_status ModuleCamera3D::Update(float dt)
 			mouse_y_normalized = (float)(App->input->GetMouseY() - App->renderer3D->GetSceneImagePos().y) / (App->renderer3D->GetSceneImageSize().y);
 
 			//Tansform position from range [0,1] to range [-1,1]
-			mouse_x_normalized = -((mouse_x_normalized * 2) - 1);
+			mouse_x_normalized = ((mouse_x_normalized * 2) - 1);
 			mouse_y_normalized = -((mouse_y_normalized * 2) - 1);
 
 			mouse_picking = editor_camera_frustrum.UnProjectFromNearPlane(mouse_x_normalized, mouse_y_normalized).ToLineSegment(editor_camera_frustrum.farPlaneDistance);
