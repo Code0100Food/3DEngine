@@ -8,6 +8,8 @@
 #include "imgui/IGizmo.h"
 
 #define MAX_LIGHTS 8
+#define SCENE_BORDER_X 15
+#define SCENE_BORDER_Y 30
 
 class DockContext;
 class ComponentCamera;

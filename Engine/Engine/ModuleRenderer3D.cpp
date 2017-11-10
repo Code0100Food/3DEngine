@@ -14,6 +14,7 @@
 #include "imgui/imgui_dock.h"
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
+#include "ModuleInput.h"
 
 #ifdef _DEBUG
 #pragma comment (lib, "Engine/imgui/lib/libgizmo.lib")
@@ -350,6 +351,13 @@ bool ModuleRenderer3D::Init()
 	
 	}
 
+	//gizmos
+	trans_gizmo = CreateMoveGizmo();
+	rotate_gizmo = CreateRotateGizmo();
+	scale_gizmo = CreateScaleGizmo();
+
+	print_gizmo = trans_gizmo;
+
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -359,10 +367,6 @@ bool ModuleRenderer3D::Init()
 	game_to_texture = new FrameTexture();
 	game_to_texture->Create(App->window->GetWidth(), App->window->GetHeight());
 
-	trans_gizmo = CreateMoveGizmo();
-	rotate_gizmo = CreateRotateGizmo();
-	scale_gizmo = CreateScaleGizmo();
-
 	return ret;
 }
 
@@ -371,8 +375,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	CleanCameraView();
 
+	math::float4x4 camera_viwe_mat = App->camera->editor_camera_frustrum.ViewMatrix();
+	camera_viwe_mat.Transpose();
+
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	glLoadMatrixf(camera_viwe_mat.ptr());
 	
 
 
@@ -386,7 +393,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	if (print_gizmo)
 	{
-		print_gizmo->SetCameraMatrix(math::float4x4::identity.ptr(), App->camera->editor_camera_frustrum.ViewProjMatrix().Transposed().ptr());
+		
+		print_gizmo->SetCameraMatrix(camera_viwe_mat.ptr(), App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
 	}
 
 	return UPDATE_CONTINUE;
@@ -397,7 +405,10 @@ update_status ModuleRenderer3D::Update(float dt)
 	//Info Source
 	//http://www.pascalgamedevelopment.com/showthread.php?6617-drawing-3d-geometrical-shapes-using-opengl-but-without-glu
 
-
+	if (print_gizmo)
+	{
+		print_gizmo->OnMouseMove((App->input->GetMouseX() - (image_window_pos.x - SCENE_BORDER_X)), (App->input->GetMouseY() - (image_window_pos.y - SCENE_BORDER_Y)));
+	}
 	
 	return update_status::UPDATE_CONTINUE;
 }
@@ -415,9 +426,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	//Draw / update scene objects
 	App->scene->SceneUpdate(dt);
-
-	if(print_gizmo)
-		print_gizmo->Draw();
 
 	glBegin(GL_LINES);
 
@@ -449,16 +457,16 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Scene and Game Dock
 	App->imgui->GetWorkspace()->BeginDock("Game##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 	PrintPlayPauseButton();
-	ImGui::Image((void*)game_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(1, 1), ImVec2(0, 0));
+	ImGui::Image((void*)game_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 	App->imgui->GetWorkspace()->EndDock();
 
-	App->imgui->GetWorkspace()->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	App->imgui->GetWorkspace()->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 	//Detect if the mouse is inside the workspace
 	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
 
-	PrintPlayPauseButton();
+	//PrintPlayPauseButton();
 
-	ImGui::Image((void*)render_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(1, 1), ImVec2(0, 0));
+	ImGui::Image((void*)render_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 	image_window_pos = ImGui::GetItemRectMin();
 	image_window_size = ImGui::GetItemRectSize();
 	App->imgui->GetWorkspace()->EndDock();
@@ -478,6 +486,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
+
+	RELEASE(trans_gizmo);
+	RELEASE(rotate_gizmo);
+	RELEASE(scale_gizmo);
 
 	RELEASE(render_dock);
 	RELEASE(render_to_texture);
@@ -918,12 +930,11 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	App->window->SetAspectRatio(width, height);
 	App->camera->SetVerticalFov(90);
-
-	if (print_gizmo)
-	{
-		print_gizmo->SetScreenDimension(width, height);
-	}
-
+	
+	trans_gizmo->SetScreenDimension(width, height);
+	rotate_gizmo->SetScreenDimension(width, height);
+	scale_gizmo->SetScreenDimension(width, height);
+	
 	for (std::vector<ComponentCamera*>::iterator item = game_cameras.begin(); item != game_cameras.end(); item++)
 	{
 		(*item)->SetVerticalFov((*item)->GetFrustum().verticalFov * RADTODEG);
@@ -1012,7 +1023,7 @@ void ModuleRenderer3D::SetEditorCameraView()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf(App->camera->editor_camera_frustrum.ViewProjMatrix().Transposed().ptr());
+	glLoadMatrixf(App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrixTransposed());
 }

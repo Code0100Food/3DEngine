@@ -134,6 +134,13 @@ update_status ModuleCamera3D::Update(float dt)
 		//Mouse picking
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
 		{
+			unsigned int gizmo_x = (App->input->GetMouseX() - (App->renderer3D->GetSceneImagePos().x - SCENE_BORDER_X));
+			unsigned int gizmo_y = (App->input->GetMouseY() - (App->renderer3D->GetSceneImagePos().y - SCENE_BORDER_Y));
+			if (App->renderer3D->GetGizmo() && App->renderer3D->GetGizmo()->OnMouseDown(gizmo_x, gizmo_y))
+			{
+				return UPDATE_CONTINUE;
+			}
+
 			//Get the coords normalized and in screen percent
 			mouse_x_normalized = (float)(App->input->GetMouseX() - App->renderer3D->GetSceneImagePos().x) / (App->renderer3D->GetSceneImageSize().x);
 			mouse_y_normalized = (float)(App->input->GetMouseY() - App->renderer3D->GetSceneImagePos().y) / (App->renderer3D->GetSceneImageSize().y);
