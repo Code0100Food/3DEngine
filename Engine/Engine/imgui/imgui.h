@@ -46,7 +46,6 @@ struct ImDrawChannel;               // Temporary storage for outputting drawing 
 struct ImDrawCmd;                   // A single draw command within a parent ImDrawList (generally maps to 1 GPU draw call)
 struct ImDrawData;                  // All draw command lists required to render the frame
 struct ImDrawList;                  // A single draw command list (generally one per window)
-struct ImDrawListGuizmo;
 struct ImDrawVert;                  // A single vertex (20 bytes by default, override layout with IMGUI_OVERRIDE_DRAWVERT_STRUCT_LAYOUT)
 struct ImFont;                      // Runtime data for a single font within a parent ImFontAtlas
 struct ImFontAtlas;                 // Runtime data for multiple fonts, bake multiple fonts into a single texture, TTF/OTF font loader
@@ -125,7 +124,6 @@ namespace ImGui
     IMGUI_API ImDrawData*   GetDrawData();                              // same value as passed to your io.RenderDrawListsFn() function. valid after Render() and until the next call to NewFrame()
     IMGUI_API void          NewFrame();                                 // start a new ImGui frame, you can submit any command from this point until NewFrame()/Render().
     IMGUI_API void          Render();                                   // ends the ImGui frame, finalize rendering data, then call your io.RenderDrawListsFn() function if set.
-	IMGUI_API void          RenderGuizmos();
 	IMGUI_API void          Shutdown();
 
     // Demo/Debug/Info
@@ -148,7 +146,6 @@ namespace ImGui
     IMGUI_API ImVec2        GetWindowContentRegionMax();                                        // content boundaries max (roughly (0,0)+Size-Scroll) where Size can be override with SetNextWindowContentSize(), in window coordinates
     IMGUI_API float         GetWindowContentRegionWidth();                                      //
     IMGUI_API ImDrawList*   GetWindowDrawList();                                                // get rendering command-list if you want to append your own draw primitives
-	IMGUI_API ImDrawList*   GetWindowGuizmoList();
 	IMGUI_API ImVec2        GetWindowPos();                                                     // get current window position in screen space (useful if you want to do your own drawing via the DrawList api)
     IMGUI_API ImVec2        GetWindowSize();                                                    // get current window size
     IMGUI_API float         GetWindowWidth();

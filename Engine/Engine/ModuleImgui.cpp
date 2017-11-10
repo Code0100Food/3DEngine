@@ -781,11 +781,6 @@ void ModuleImgui::RenderUI()
 	ImGui::Render();
 }
 
-void ModuleImgui::RenderGuizmos()
-{
-	ImGui::RenderGuizmos();
-}
-
 void ModuleImgui::CallExitWindow()
 {
 	show_exit_window = !show_exit_window;
