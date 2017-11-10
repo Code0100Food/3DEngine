@@ -97,7 +97,7 @@ update_status ModuleCamera3D::Update(float dt)
 		//Camera rotate around point
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 		{
-			int dx = App->input->GetMouseXMotion();
+			int dx = -App->input->GetMouseXMotion();
 			int dy = -App->input->GetMouseYMotion();
 
 			if (dx != 0)
@@ -200,13 +200,13 @@ update_status ModuleCamera3D::Update(float dt)
 			}
 			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 			{
-				editor_camera_frustrum.pos += math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up) * wasd_vel;
-				focus_point += math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up) * wasd_vel;
+				editor_camera_frustrum.pos -= math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up) * wasd_vel;
+				focus_point -= math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up) * wasd_vel;
 			}
 			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 			{
-				editor_camera_frustrum.pos -= math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up) * wasd_vel;
-				focus_point -= math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up) * wasd_vel;
+				editor_camera_frustrum.pos += math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up) * wasd_vel;
+				focus_point += math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up) * wasd_vel;
 			}
 			if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
 			{
