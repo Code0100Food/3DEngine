@@ -63,18 +63,22 @@ bool ModuleTextures::Start()
 	//Load lenna image
 	custom_check_image = LoadTexture("Lenna.png", "DATA/Textures/");
 
-	play_icon =	 LoadTexture("play_icon.png", "DATA/Textures/");
+	play_icon =	LoadTexture("play_icon.png", "DATA/Textures/");
 	play_click_icon = LoadTexture("play_click_icon.png", "DATA/Textures/");
-	pause_icon = 		  LoadTexture("pause_icon.png", "DATA/Textures/");
+	pause_icon = LoadTexture("pause_icon.png", "DATA/Textures/");
 	pause_click_icon = LoadTexture("pause_click_icon.png", "DATA/Textures/");
-	next_icon = 		  LoadTexture("next_icon.png", "DATA/Textures/");
-	next_click_icon =   LoadTexture("next_click_icon.png", "DATA/Textures/");
+	next_icon = LoadTexture("next_icon.png", "DATA/Textures/");
+	next_click_icon = LoadTexture("next_click_icon.png", "DATA/Textures/");
 
-	garbage_icon = 	  LoadTexture("garbage_icon.png", "DATA/Textures/");
-	up_arrow_icon = 	  LoadTexture("up_arrow_icon.png", "DATA/Textures/");
-	down_arrow_icon =   LoadTexture("down_arrow_icon.png", "DATA/Textures/");
+	garbage_icon = LoadTexture("garbage_icon.png", "DATA/Textures/");
+	up_arrow_icon = LoadTexture("up_arrow_icon.png", "DATA/Textures/");
+	down_arrow_icon = LoadTexture("down_arrow_icon.png", "DATA/Textures/");
 
-	transform_icon = 	  LoadTexture("transform_icon.png", "DATA/Textures/");
+	transform_icon = LoadTexture("transform_icon.png", "DATA/Textures/");
+
+	play_icon_id = play_icon;
+	pause_icon_id = pause_icon;
+	next_icon_id = next_icon;
 
 	return true;
 }

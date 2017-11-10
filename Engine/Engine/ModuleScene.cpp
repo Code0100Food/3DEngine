@@ -116,6 +116,11 @@ GameObject * ModuleScene::GetSelectedGameObject() const
 	return selected_gameobject;
 }
 
+SCENE_UPDATE_STATE ModuleScene::GetSceneState() const
+{
+	return scene_update_state;
+}
+
 // Functionality ================================
 GameObject * ModuleScene::CreateGameObject()
 {
@@ -686,12 +691,14 @@ void ModuleScene::PlayGame()
 		App->scene->LoadSerializedScene(str);
 		LOG("Game Ended!");
 		App->time_manager->SetGameTimeSinceStartup(0.0f);
+		App->textures->play_icon_id = App->textures->play_icon;
 	}
 	else
 	{
 		scene_update_state = PLAY_SCENE_STATE;
 		App->scene->SerializeScene();
 		App->scene->InitializeScene();
+		App->textures->play_icon_id = App->textures->play_click_icon;
 		LOG("Game Started!");
 	}
 }
@@ -703,11 +710,13 @@ void ModuleScene::PauseGame()
 	if (scene_update_state == PAUSE_SCENE_STATE)
 	{
 		scene_update_state = PLAY_SCENE_STATE;
+		App->textures->pause_icon_id = App->textures->pause_icon;
 		LOG("Game Unpaused!");
 	}
 	else
 	{
 		scene_update_state = PAUSE_SCENE_STATE;
+		App->textures->pause_icon_id = App->textures->pause_click_icon;
 		LOG("Game Paused!");
 	}
 }

@@ -464,7 +464,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Detect if the mouse is inside the workspace
 	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
 
-	//PrintPlayPauseButton();
+	PrintPlayPauseButton();
 
 	ImGui::Image((void*)render_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 	image_window_pos = ImGui::GetItemRectMin();
@@ -1037,19 +1037,30 @@ void ModuleRenderer3D::CleanCameraView()
 void ModuleRenderer3D::PrintPlayPauseButton() const
 {
 	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() / 2);
-	if (ImGui::ImageButton((ImTextureID)App->textures->pause_icon, ImVec2(20, 20), ImVec2(0, 0), ImVec2(1, 1)))
+	if (ImGui::ImageButton((ImTextureID)App->textures->pause_icon_id, ImVec2(20, 20), ImVec2(0, 0), ImVec2(1, 1)))
 	{
 		App->scene->PauseGame();
 	}
 
 	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 35);
-	if (ImGui::ImageButton((ImTextureID)App->textures->play_icon, ImVec2(20, 20)))
+	if (ImGui::ImageButton((ImTextureID)App->textures->play_icon_id, ImVec2(20, 20)))
 	{
+		if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::EDIT_SCENE_STATE)
+		{
+			App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->active = false;
+			App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active = true;
+		}
+		if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::PLAY_SCENE_STATE)
+		{
+			App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->active = true;
+			App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active = false;
+		}
+
 		App->scene->PlayGame();
 	}
 	
 	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) + 35);
-	if (ImGui::ImageButton((ImTextureID)App->textures->next_icon, ImVec2(20, 20)))
+	if (ImGui::ImageButton((ImTextureID)App->textures->next_icon_id, ImVec2(20, 20)))
 	{
 		App->scene->NextGameFrame();
 	}

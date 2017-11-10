@@ -47,6 +47,11 @@ public:
 
 	uint transform_icon = 0;
 
+	//Play / Pause / Next buttons (to change between ids)
+	uint play_icon_id = 0;
+	uint pause_icon_id = 0;
+	uint next_icon_id = 0;
+
 public:
 
 	//Set Methods -----------

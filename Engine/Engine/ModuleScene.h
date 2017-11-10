@@ -55,7 +55,8 @@ public:
 	void		SetSelectedGameObject(const GameObject* target);
 
 	//Get Methods -----------
-	GameObject*	GetSelectedGameObject()const;
+	GameObject*			GetSelectedGameObject()const;
+	SCENE_UPDATE_STATE	GetSceneState() const;
 
 	//Functionality ---------
 	//GameObject methods
