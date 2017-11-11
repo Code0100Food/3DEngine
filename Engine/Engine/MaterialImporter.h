@@ -4,6 +4,7 @@
 #include "Importer.h"
 
 class ComponentMaterial;
+class ResourceMaterial;
 
 class MaterialImporter : public Importer
 {
@@ -14,7 +15,7 @@ public:
 public:
 
 	bool Load(const char* path, ComponentMaterial* target);
-	bool Import(const char* path);
+	bool Import(const char* path, ResourceMaterial* resource);
 
 };
 #endif // !_MATERIAL_IMPORTER_H_

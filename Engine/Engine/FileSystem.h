@@ -72,7 +72,7 @@ public:
 	Directory*			CreateDir(const char* name, bool hidden, Directory* parent = nullptr);
 	int					LoadFile(const char* path, char** buffer_to_fill);
 	void				SaveFile(const char* file, const char* buffer, unsigned int size, const char* library_folder);
-	void				CloneFile(const char* file, Directory* folder);
+	int					CloneFile(const char* file, Directory* folder, std::string* n_path = nullptr);
 	void				GetFileNameFromPath(const char* path, std::string* name)const;
 	void				GetFileFormatFromPath(const char* path, std::string* format)const;
 	void				GetFolderFromPath(const char* path, std::string* folder)const;

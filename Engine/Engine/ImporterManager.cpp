@@ -20,6 +20,7 @@ bool ImporterManager::ImportFile(const char * str)
 	std::string format;
 	App->fs->GetFileFormatFromPath(str, &format);
 	IMPORT_TYPE type = GetImportTypeFromFormat(format.c_str());
+
 	switch (type)
 	{
 	case UNDEF_IMPORT:
@@ -36,7 +37,7 @@ bool ImporterManager::ImportFile(const char * str)
 
 	case MATERIAL_IMPORT:
 	{
-		ret = material_importer.Import(str);
+		//ret = material_importer.Import(str);
 	}
 	break;
 

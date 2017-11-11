@@ -435,6 +435,9 @@
     <ClInclude Include="Engine\ResourceMesh.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceMaterial.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -705,6 +708,9 @@
       <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceMesh.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceMaterial.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
   </ItemGroup>

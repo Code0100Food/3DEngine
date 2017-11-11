@@ -145,6 +145,7 @@ bool FileSystem::Start()
 	engine_root_dir = CreateDir("Library", true);
 	CreateDir("Meshes", true, engine_root_dir);
 	CreateDir("Materials", true, engine_root_dir);
+	CreateDir("Metas", true, engine_root_dir);
 
 	file_system_dock = new DockContext();
 
@@ -304,7 +305,7 @@ void FileSystem::SaveFile(const char * file, const char* buffer, unsigned int si
 	}
 }
 
-void FileSystem::CloneFile(const char * file, Directory * folder)
+int FileSystem::CloneFile(const char * file, Directory * folder, std::string* n_path)
 {
 	//Get file path
 	std::string file_path;
@@ -313,12 +314,14 @@ void FileSystem::CloneFile(const char * file, Directory * folder)
 	std::string d_str;
 	folder->GetDirPath(&d_str);
 	//Check if the file already exists in the target directory
-	if (strcmp(file_path.c_str(),d_str.c_str()) == 0)return;
+	if (strcmp(file_path.c_str(),d_str.c_str()) == 0)return 0;
 
 	char* buffer = nullptr;
 	
 	//Load the file
 	LoadFile(file, &buffer);
+
+	if (buffer == NULL)return -1;
 
 	//Get file name
 	std::string f_str;
@@ -327,6 +330,14 @@ void FileSystem::CloneFile(const char * file, Directory * folder)
 
 	//Save the file
 	SaveFile(f_str.c_str(), buffer, sizeof(buffer), d_str.c_str());
+
+	if (n_path != nullptr)
+	{
+		*n_path = d_str;
+		*n_path += f_str;
+	}
+
+	return 1;
 }
 
 void FileSystem::GetFileNameFromPath(const char * path, std::string* name)const

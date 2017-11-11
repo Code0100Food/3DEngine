@@ -76,7 +76,7 @@ void Resource::RestReference()
 	if(references > 0)references -= 1;
 }
 
-bool Resource::Save(Serializer & array_root) const
+bool Resource::Save(Serializer & file_root) const
 {
 	return true;
 }

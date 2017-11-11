@@ -4,6 +4,11 @@
 #include "SphereGenerator.h"
 #include "CylinderGenerator.h"
 
+#include "Application.h"
+#include "FileSystem.h"
+#include "ImporterManager.h"
+#include "Serializer.h"
+
 // Constructors =================================
 ResourcesManager::ResourcesManager(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
@@ -146,11 +151,9 @@ Resource * ResourcesManager::CreateResource(RESOURCE_TYPE type)
 	//Generate the new resource
 	switch (type)
 	{
-	case MESH_RESOURCE: new_res = (Resource*)new ResourceMesh();	break;
-	case MATERIAL_RESOURCE:
-		break;
-	case SCENE_RESOURCE:
-		break;
+	case MESH_RESOURCE:			new_res = (Resource*)new ResourceMesh();		break;
+	case MATERIAL_RESOURCE:		new_res = (Resource*)new ResourceMaterial();	break;
+	case SCENE_RESOURCE:		break;
 	}
 
 	//Add it to the map
@@ -182,4 +185,76 @@ ResourceMesh * ResourcesManager::GetPrimitiveResourceMesh(PRIMITIVE_TYPE type)
 	}
 
 	return nullptr;
+}
+
+bool ResourcesManager::ImportFile(const char * path)
+{
+	bool b_ret = false;
+
+	std::string n_path;
+	int ret = App->fs->CloneFile(path, App->fs->GetAssetsFolder(),&n_path);
+
+	if(ret == -1)
+	{
+		LOG("[error] Error Importing [%s]", path);
+		return false;
+	}
+
+	if (ret == 0)
+	{
+		LOG("File already exists in assets!");
+		//If the file already exists in assets lets update the content!
+
+
+		return true;
+	}
+
+	if (ret == 1)
+	{
+		/*Import the file*/
+		//Get the file format to call the correct importer
+		std::string format;
+		App->fs->GetFileFormatFromPath(path, &format);
+		IMPORT_TYPE imp_type = App->importer->GetImportTypeFromFormat(format.c_str());
+
+		Resource* new_resource = nullptr;
+
+		switch (imp_type)
+		{
+		case UNDEF_IMPORT:
+			LOG("[error] File format not supported!");
+			break;
+		case MATERIAL_IMPORT:
+			new_resource = App->res_manager->CreateResource(RESOURCE_TYPE::MATERIAL_RESOURCE);
+			b_ret = App->importer->material_importer.Import(n_path.c_str(), (ResourceMaterial*)new_resource);
+			break;
+		case MESH_IMPORT:
+			break;
+		case MODEL_IMPORT:
+			b_ret = App->importer->model_importer.Import(path);
+			break;
+		}
+
+		if (new_resource != nullptr)
+		{
+			//Generate a meta file to link the generated resource with the file data
+			Serializer meta_file;
+
+			bool ret = new_resource->Save(meta_file);
+
+			if (ret)
+			{
+				//Save the generated meta file
+				char* buffer = nullptr;
+				uint size = meta_file.Save(&buffer);
+				std::string meta_name;
+				App->fs->ChangeFileFormat(new_resource->GetOwnFile(), "meta", &meta_name);
+				App->fs->SaveFile(meta_name.c_str(), buffer, size - 1, LIBRARY_META_FOLDER);
+				
+				RELEASE_ARRAY(buffer);
+			}
+		}
+	}
+	
+	return b_ret;
 }

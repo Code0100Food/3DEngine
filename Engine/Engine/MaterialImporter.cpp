@@ -2,7 +2,6 @@
 #include "Glew/include/glew.h"
 #include "Application.h"
 #include "FileSystem.h"
-#include "ComponentMaterial.h"
 
 #include "Devil/include/il.h"
 #include "Devil/include/ilu.h"
@@ -17,6 +16,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "ComponentMaterial.h"
+#include "ResourceMaterial.h"
 
 // Constructors =================================
 MaterialImporter::MaterialImporter()
@@ -119,7 +120,7 @@ bool MaterialImporter::Load(const char * path, ComponentMaterial * target)
 	return (textureID != 0);
 }
 
-bool MaterialImporter::Import(const char* path)
+bool MaterialImporter::Import(const char* path, ResourceMaterial* resource)
 {
 	//Texture buffer
 	char* buffer = nullptr;
@@ -130,9 +131,33 @@ bool MaterialImporter::Import(const char* path)
 		ILuint image_name;
 		ilGenImages(1, &image_name);
 		ilBindImage(image_name);
+		resource->SetMaterialID(image_name);
+		resource->SetOriginalFile(path);
 
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, lenght))
 		{
+			//Get the information of the original file
+			ILinfo info;
+			iluGetImageInfo(&info);
+			resource->SetWidth(info.Width);
+			resource->SetHeight(info.Height);
+			resource->SetBytesPerPixel(info.Bpp);
+			resource->SetDepth(info.Depth);
+			resource->SetNumMipMaps(info.NumMips);
+			resource->SetNumLayers(info.NumLayers);
+			resource->SetBytes(info.SizeOfData);
+
+			switch (info.Format)
+			{
+			case IL_COLOUR_INDEX:	resource->SetColorFormat(COLOR_FORMAT::INDEX_COLOR);		break;
+			case IL_RGB:			resource->SetColorFormat(COLOR_FORMAT::RGB_COLOR);			break;
+			case IL_RGBA:			resource->SetColorFormat(COLOR_FORMAT::RGBA_COLOR);			break;
+			case IL_BGR:			resource->SetColorFormat(COLOR_FORMAT::BGR_COLOR);			break;
+			case IL_BGRA:			resource->SetColorFormat(COLOR_FORMAT::BGRA_COLOR);			break;
+			case IL_LUMINANCE:		resource->SetColorFormat(COLOR_FORMAT::LUMINANCE_COLOR);	break;
+			}
+
+			//Import a dds file of the original file in the correct folder
 			ilEnable(IL_FILE_OVERWRITE);
 
 			ILuint   size = 0;
@@ -152,6 +177,7 @@ bool MaterialImporter::Import(const char* path)
 					std::string name;
 					App->fs->GetFileNameFromPath(path, &name);
 					App->fs->ChangeFileFormat(name.c_str(), "dds", &name);
+					resource->SetOwnFile(name.c_str());
 					App->fs->SaveFile(name.c_str(), (char*)data, size, LIBRARY_TEXTURES_FOLDER);
 				}
 

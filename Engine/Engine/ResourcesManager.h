@@ -2,10 +2,12 @@
 #define _RESOURCES_MANAGER_
 
 #include "Module.h"
+#include "Primitive_.h"
 #include <map>
+
 #include "Resource.h"
 #include "ResourceMesh.h"
-#include "Primitive_.h"
+#include "ResourceMaterial.h"
 
 class ResourcesManager : public Module
 {
@@ -32,10 +34,12 @@ private:
 
 public:
 
-	Resource* CreateResource(RESOURCE_TYPE type);
-
-
+	//Resource management methods
+	Resource*		CreateResource(RESOURCE_TYPE type);
 	ResourceMesh*	GetPrimitiveResourceMesh(PRIMITIVE_TYPE type);
+
+	//Import methods
+	bool	ImportFile(const char* path);
 
 };
 #endif // !_RESOURCES_MANAGER_

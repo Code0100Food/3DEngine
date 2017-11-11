@@ -201,6 +201,7 @@
     <ClInclude Include="Engine\Quadtree.h" />
     <ClInclude Include="Engine\ModuleScene.h" />
     <ClInclude Include="Engine\Resource.h" />
+    <ClInclude Include="Engine\ResourceMaterial.h" />
     <ClInclude Include="Engine\ResourceMesh.h" />
     <ClInclude Include="Engine\ResourcesManager.h" />
     <ClInclude Include="Engine\Serializer.h" />
@@ -295,6 +296,7 @@
     <ClCompile Include="Engine\Profiler.cpp" />
     <ClCompile Include="Engine\ModuleScene.cpp" />
     <ClCompile Include="Engine\Resource.cpp" />
+    <ClCompile Include="Engine\ResourceMaterial.cpp" />
     <ClCompile Include="Engine\ResourceMesh.cpp" />
     <ClCompile Include="Engine\ResourcesManager.cpp" />
     <ClCompile Include="Engine\Serializer.cpp" />
