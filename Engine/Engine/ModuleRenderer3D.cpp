@@ -456,15 +456,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//Scene and Game Dock
 	App->imgui->GetWorkspace()->BeginDock("Game##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
-	PrintPlayPauseButton();
 	ImGui::Image((void*)game_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 	App->imgui->GetWorkspace()->EndDock();
 
 	App->imgui->GetWorkspace()->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 	//Detect if the mouse is inside the workspace
 	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
-
-	PrintPlayPauseButton();
 
 	ImGui::Image((void*)render_to_texture->texture_id, ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 	image_window_pos = ImGui::GetItemRectMin();
@@ -1036,44 +1033,18 @@ void ModuleRenderer3D::CleanCameraView()
 
 void ModuleRenderer3D::PrintPlayPauseButton() const
 {
-	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() / 2);
-	if (ImGui::ImageButton((ImTextureID)App->textures->pause_icon_id, ImVec2(20, 20), ImVec2(0, 0), ImVec2(1, 1)))
-	{
-		App->scene->PauseGame();
-	}
+	//Transform
+	ImGui::Image((ImTextureID)App->textures->transform_icon, ImVec2(23, 23));
 
-	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 35);
-	if (ImGui::ImageButton((ImTextureID)App->textures->play_icon_id, ImVec2(20, 20)))
-	{
-		if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::EDIT_SCENE_STATE)
-		{
-			App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->active = false;
-			App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active = true;
-		}
-		if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::PLAY_SCENE_STATE)
-		{
-			App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->active = true;
-			App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active = false;
-		}
-
-		App->scene->PlayGame();
-	}
-	
-	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) + 35);
-	if (ImGui::ImageButton((ImTextureID)App->textures->next_icon_id, ImVec2(20, 20)))
-	{
-		App->scene->NextGameFrame();
-	}
-
-	
-	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 100);
+	ImGui::SameLine();
 	if (ImGui::Button("Local##button"))
 	{
 		trans_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_LOCAL);
 		rotate_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_LOCAL);
 		scale_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_LOCAL);
+
 	}
-	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 155);
+	ImGui::SameLine();
 	if (ImGui::Button("Global##button"))
 	{
 		trans_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_WORLD);
@@ -1081,13 +1052,42 @@ void ModuleRenderer3D::PrintPlayPauseButton() const
 		scale_gizmo->SetLocation(IGizmo::LOCATION::LOCATE_WORLD);
 	}
 
-	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 188);
-	ImGui::Image((ImTextureID)App->textures->transform_icon, ImVec2(23, 23));
+	ImGui::SameLine();
 
-	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 163);
-	ImGui::Text("[");
+	//Plat Pause Next Button
+	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() / 2);
+	if (ImGui::ImageButton((ImTextureID)App->textures->pause_icon_id, ImVec2(15, 15), ImVec2(0, 0), ImVec2(1, 1)))
+	{
+		App->scene->PauseGame();
+	}
 
-	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 52);
-	ImGui::Text("]");
+	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) - 35);
+	if (ImGui::ImageButton((ImTextureID)App->textures->play_icon_id, ImVec2(15, 15)))
+	{
+		if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::EDIT_SCENE_STATE)
+		{
+			if (App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active == false)
+			{
+				App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->active = false;
+				App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active = true;
+			}	
+		}
+		if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::PLAY_SCENE_STATE)
+		{
+			if (App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->active == false)
+			{
+				App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->active = true;
+				App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active = false;
+			}
+		
+		}
 
+		App->scene->PlayGame();
+	}
+	
+	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) + 35);
+	if (ImGui::ImageButton((ImTextureID)App->textures->next_icon_id, ImVec2(15, 15)))
+	{
+		App->scene->NextGameFrame();
+	}
 }

@@ -152,13 +152,14 @@ public:
 	void AddGameCamera(ComponentCamera* new_game_cam);
 	void RemoveGameCamera(ComponentCamera* removed_game_cam);
 
+	void PrintPlayPauseButton() const;
+
 private:
 
 	//Functions to change the 
 	void SetGameCameraView();
 	void SetEditorCameraView();
 	void CleanCameraView();
-	void PrintPlayPauseButton() const;
 
 	
 };

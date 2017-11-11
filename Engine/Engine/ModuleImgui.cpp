@@ -101,11 +101,7 @@ bool ModuleImgui::Start()
 
 update_status ModuleImgui::PreUpdate(float dt)
 {
-	ImGui::SetNextWindowPos({ 0, 20 }, cond_flag);
-	ImGui::SetNextWindowSize({ (float)App->window->GetWidth(), (float)App->window->GetHeight() - 20 }, cond_flag);
-	ImGui::Begin("", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
-
-	father_dock->BeginWorkspace("##father_workspace");
+	
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -321,6 +317,22 @@ update_status ModuleImgui::Update(float dt)
 
 	ImGui::EndMainMenuBar();
 	// ------------------------------------------
+
+	//Play / Pause / Next buttons
+	ImGui::SetNextWindowPos({ 0, 15 }, cond_flag);
+	ImGui::SetNextWindowSize({ (float)App->window->GetWidth(), 45}, cond_flag);
+	ImGui::Begin("PlayPauseNext", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
+	App->renderer3D->PrintPlayPauseButton();
+	ImGui::End();
+
+	//Docks
+	ImGui::SetNextWindowPos({ 0, 45 }, cond_flag);
+	ImGui::SetNextWindowSize({ (float)App->window->GetWidth(), (float)App->window->GetHeight() - 45 }, cond_flag);
+	ImGui::Begin("", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
+
+	father_dock->BeginWorkspace("##father_workspace");
+
+	//-------------------------------------------
 
 	//Profiler window
 	if (show_profiler_window)
