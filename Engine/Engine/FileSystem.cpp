@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleImgui.h"
+#include "ResourcesManager.h"
 #include <fstream>
 #include <iostream>
 
@@ -120,6 +121,64 @@ void Directory::BlitFilesInside() const
 
 	FindClose(file_handle);
 }
+
+uint Directory::ImportAllFilesInside()
+{
+	uint updates = 0;
+
+	//Set String to look inside Parent folder
+	char str[150];
+	sprintf(str, "%s\\*.*", path.c_str());
+
+	//Will recieve all the files list
+	WIN32_FIND_DATA files_list;
+
+	//Will handle the list when changing the looked element
+	HANDLE file_handle = FindFirstFileA(LPCSTR(str), &files_list);
+
+	if (file_handle == INVALID_HANDLE_VALUE)
+	{
+		LOG("Error in path");
+	}
+
+	DWORD attribute;
+
+	bool still_elements = true;
+	while (still_elements)
+	{
+		attribute = GetFileAttributes(files_list.cFileName);
+
+		//Search for directories
+		if (FILE_ATTRIBUTE_ARCHIVE & files_list.dwFileAttributes)
+		{
+			//Need the full path
+			char full_path[200];
+			sprintf(full_path, "%s\\%s", path.c_str(), files_list.cFileName);
+			if (App->res_manager->ImportFile(full_path, false))
+			{
+				updates++;
+			}
+		}
+
+		//Jump to the other element
+		if (!FindNextFile(file_handle, &files_list))
+		{
+			still_elements = false;
+		}
+
+	}
+
+	FindClose(file_handle);
+	
+	//Iterate all the sub folders
+	uint size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		updates += childs[k]->ImportAllFilesInside();
+	}
+
+	return updates;
+}
 //-----------------------------------------------
 
 // Constructors =================================
@@ -160,6 +219,12 @@ bool FileSystem::CleanUp()
 
 	RELEASE(file_system_dock);
 	return true;
+}
+
+// Get Methods ==================================
+Directory * FileSystem::GetUserRootDir() const
+{
+	return user_root_dir;
 }
 
 // Functionality ================================
@@ -373,6 +438,20 @@ void FileSystem::ChangeFileFormat(const char * path, const char* new_format, std
 	std::string unformated_str = str.substr(0,pos_separator + 1);
 	unformated_str += new_format;
 	*new_path = unformated_str;
+}
+
+bool FileSystem::IsInAssets(const char * path) const
+{
+	const char* user_dir = user_root_dir->GetPath();
+	uint size = strlen(user_dir);
+	
+	if (strlen(path) < size)return false;
+	
+	char cmp_part[150];
+	memcpy(cmp_part, user_dir, size);
+	cmp_part[size] = '\0';
+
+	return strcmp(cmp_part, user_dir) == 0;
 }
 
 void FileSystem::BlitFileSystemInfo()

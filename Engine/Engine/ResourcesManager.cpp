@@ -127,6 +127,9 @@ bool ResourcesManager::Start()
 	geometry_data.first.clear();
 	geometry_data.second.clear();
 
+	//Check the user assets ---------------------
+	LOG("Assets Updated with %i changes!", CheckAssetsResources());
+
 	return true;
 }
 
@@ -187,29 +190,33 @@ ResourceMesh * ResourcesManager::GetPrimitiveResourceMesh(PRIMITIVE_TYPE type)
 	return nullptr;
 }
 
-bool ResourcesManager::ImportFile(const char * path)
+bool ResourcesManager::ImportFile(const char * path, bool put_on_scene)
 {
 	bool b_ret = false;
 
-	std::string n_path;
-	int ret = App->fs->CloneFile(path, App->fs->GetAssetsFolder(),&n_path);
+	std::string n_path = path;
+	int ret = -1;
+	if (!App->fs->IsInAssets(path))
+	{
+		ret = App->fs->CloneFile(path, App->fs->GetAssetsFolder(), &n_path);
+	}
+	else if (!CheckIfFileIsImported(path)) ret = 1;
 
-	if(ret == -1)
+	if(ret == -1) //Error on file read case
 	{
 		LOG("[error] Error Importing [%s]", path);
 		return false;
 	}
 
-	if (ret == 0)
+	if (ret == 0) //File is in assets and imported but lets check if it's the actual version
 	{
 		LOG("File already exists in assets!");
 		//If the file already exists in assets lets update the content!
 
-
 		return true;
 	}
 
-	if (ret == 1)
+	if (ret == 1) //File is not imported case
 	{
 		/*Import the file*/
 		//Get the file format to call the correct importer
@@ -257,4 +264,18 @@ bool ResourcesManager::ImportFile(const char * path)
 	}
 	
 	return b_ret;
+}
+
+uint ResourcesManager::CheckAssetsResources()
+{
+	return App->fs->GetUserRootDir()->ImportAllFilesInside();
+}
+
+bool ResourcesManager::CheckIfFileIsImported(const char * path) const
+{
+	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
+	{
+		if (strcmp(res->second->GetOriginalFile(),path) == 0)return true;
+	}
+	return false;
 }

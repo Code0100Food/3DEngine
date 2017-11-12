@@ -46,7 +46,7 @@ bool ModelImporter::Load(const char* path)
 
 	//Load all the meshes & materials
 	LOG("Loading %i meshes...", scene->mNumMeshes);
-	ProcessNode(scene->mRootNode, scene, obj);
+	LoadNode(scene->mRootNode, scene, obj);
 	
 	//Focus the loaded game object
 	App->scene->SetSelectedGameObject(obj);
@@ -57,10 +57,25 @@ bool ModelImporter::Load(const char* path)
 
 bool ModelImporter::Import(const char * path)
 {
+	Assimp::Importer import;
+	const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		LOG("[error] ASSIMP: %s", import.GetErrorString());
+		return false;
+	}
+
+	LOG("Loading %s model!", scene->mRootNode->mName.C_Str());
+
+	//Load all the meshes & materials
+	LOG("Loading %i meshes...", scene->mNumMeshes);
+	ImportNode(scene->mRootNode, scene);
+
 	return true;
 }
 
-void ModelImporter::ProcessNode(aiNode * node, const aiScene * scene, GameObject* parent)
+void ModelImporter::LoadNode(aiNode * node, const aiScene * scene, GameObject* parent)
 {
 	// process all the node's meshes (if any)
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -75,16 +90,16 @@ void ModelImporter::ProcessNode(aiNode * node, const aiScene * scene, GameObject
 		comp->SetTransformation(node->mTransformation);
 
 		//Generate mesh obj
-		ProcessMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, obj);
+		LoadMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, obj);
 	}
 	// then do the same for each of its children
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene, parent);
+		LoadNode(node->mChildren[i], scene, parent);
 	}
 }
 
-void ModelImporter::ProcessMesh(const char* name, aiMesh * mesh, const aiScene * scene, GameObject* container)
+void ModelImporter::LoadMesh(const char* name, aiMesh * mesh, const aiScene * scene, GameObject* container)
 {
 	//Generate the container mesh component
 	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
@@ -245,4 +260,33 @@ std::vector<Texture> ModelImporter::LoadMaterialTextures(aiMaterial *mat, aiText
 	}
 
 	return n_textures;
+}
+
+void ModelImporter::ImportNode(aiNode * node, const aiScene * scene)
+{
+	// process all the node's meshes (if any)
+	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	{
+		/*//Generate game object
+		GameObject* obj = App->scene->CreateGameObject();
+		obj->SetName(node->mName.C_Str());
+		obj->SetParent(parent);
+
+		//Set transformation component
+		ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		comp->SetTransformation(node->mTransformation);
+		*/
+		//Generate mesh obj
+		ImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene);
+	}
+	// then do the same for each of its children
+	for (unsigned int i = 0; i < node->mNumChildren; i++)
+	{
+		ImportNode(node->mChildren[i], scene);
+	}
+}
+
+void ModelImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene * scene)
+{
+
 }

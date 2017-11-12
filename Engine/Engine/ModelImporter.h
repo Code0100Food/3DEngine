@@ -32,9 +32,12 @@ public:
 
 private:
 	
-	void					ProcessNode(aiNode *node, const aiScene *scene, GameObject* parent);
-	void					ProcessMesh(const char* name, aiMesh *mesh, const aiScene *scene, GameObject* container);
+	void					LoadNode(aiNode *node, const aiScene *scene, GameObject* parent);
+	void					LoadMesh(const char* name, aiMesh *mesh, const aiScene *scene, GameObject* container);
 	std::vector<Texture>	LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
+
+	void					ImportNode(aiNode *node, const aiScene *scene);
+	void					ImportMesh(const char* name, aiMesh *mesh, const aiScene *scene);
 
 };
 #endif // !_MODEL_IMPORTER_H_

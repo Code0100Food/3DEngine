@@ -39,7 +39,9 @@ public:
 	ResourceMesh*	GetPrimitiveResourceMesh(PRIMITIVE_TYPE type);
 
 	//Import methods
-	bool	ImportFile(const char* path);
+	bool	ImportFile(const char* path, bool put_on_scene);
+	uint	CheckAssetsResources();
+	bool	CheckIfFileIsImported(const char* path)const;
 
 };
 #endif // !_RESOURCES_MANAGER_
