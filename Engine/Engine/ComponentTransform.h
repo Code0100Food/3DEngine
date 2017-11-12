@@ -70,6 +70,7 @@ public:
 	void QuitMatrixToDraw();
 
 	void DrawOrientationAxis();
+	void UpdateRotationPositionScale();
 
 	//Save/Load Methods -----
 	bool Save(Serializer& array_root)const;

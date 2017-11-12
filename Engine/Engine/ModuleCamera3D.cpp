@@ -457,7 +457,7 @@ GameObject* ModuleCamera3D::CheckTriangles()
 
 		//Transform the linesegment to local coordinates
 		mouse_picking_local_space = mouse_picking;
-		mouse_picking_local_space.Transform(tmp_trans->GetInheritedTransform().Inverted());
+		mouse_picking_local_space.Transform(tmp_trans->GetInheritedTransform().Transposed().Inverted());
 
 		//Get the triangles of the mesh
 		ComponentMesh* tmp_mesh = (ComponentMesh*)(*item).second->FindMeshComponent();

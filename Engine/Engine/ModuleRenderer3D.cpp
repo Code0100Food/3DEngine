@@ -405,10 +405,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	//Info Source
 	//http://www.pascalgamedevelopment.com/showthread.php?6617-drawing-3d-geometrical-shapes-using-opengl-but-without-glu
 
-	if (print_gizmo)
-	{
-		print_gizmo->OnMouseMove((App->input->GetMouseX() - (image_window_pos.x - SCENE_BORDER_X)), (App->input->GetMouseY() - (image_window_pos.y - SCENE_BORDER_Y)));
-	}
+	
 	
 	return update_status::UPDATE_CONTINUE;
 }
@@ -470,6 +467,19 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 
 	DisableGLRenderFlags();	
+
+	if (print_gizmo)
+	{
+		print_gizmo->OnMouseMove((App->input->GetMouseX() - (image_window_pos.x - SCENE_BORDER_X)), (App->input->GetMouseY() - (image_window_pos.y - SCENE_BORDER_Y)));
+
+
+		if (App->scene->GetSelectedGameObject())
+		{
+			ComponentTransform* tmp = (ComponentTransform*)App->scene->GetSelectedGameObject()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			tmp->UpdateRotationPositionScale();
+		}
+
+	}
 
 	// Rendering GUI
 	App->imgui->RenderUI();

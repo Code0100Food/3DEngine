@@ -589,7 +589,7 @@ math::AABB GameObject::GetInheritTransformedBoundingBox()
 {
 	math::AABB tmp = original_bounding_box;
 	ComponentTransform* trans = (ComponentTransform*)FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-	if (trans != nullptr)tmp.TransformAsAABB(trans->GetInheritedTransform());
+	if (trans != nullptr)tmp.TransformAsAABB(trans->GetInheritedTransform().Transposed());
 	return tmp;
 }
 
@@ -597,7 +597,7 @@ math::AABB GameObject::GetTransformedBoundingBox()
 {
 	math::AABB tmp = original_bounding_box;
 	ComponentTransform* trans = (ComponentTransform*)FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-	if (trans != nullptr)tmp.TransformAsAABB(trans->GetTransform());
+	if (trans != nullptr)tmp.TransformAsAABB(trans->GetTransform().Transposed());
 	return tmp;
 }
 
