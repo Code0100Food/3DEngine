@@ -65,9 +65,19 @@ Console is initially closed.
 To open/close the console pulse the grave key.
 Console shows information of the engine operations and can handle some basic input.(help,quit,clear).
 
-To see all the console commands you can open the console header in the configuration window or enter “help” in the console
+To see all the console commands, you can open the console header in the configuration window or enter “help” in the console
 
 # Changelog
+
+	 -Release 0.2.6:
+		Adaptative Octree
+		Octree subdivision optimized
+		Gizmos UI working
+		Gizmos Input(in process)
+		Resource Manager Meta generation
+		Resource Manager Mesh and Material Resources
+		Resource Manager Assets folder load on start
+
 	 -Release 0.2.5:
 		Octree multiple subdivision works
 		Octree store static objects
