@@ -74,6 +74,7 @@ void Resource::AddReference()
 void Resource::RestReference()
 {
 	if(references > 0)references -= 1;
+	if (references == 0)UnloadInMemory();
 }
 
 bool Resource::Save(Serializer & file_root) const

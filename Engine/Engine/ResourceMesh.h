@@ -53,6 +53,9 @@ public:
 	//Save/Load Methods -----
 	bool	Save(Serializer& array_root)const;
 	bool	Load(Serializer& data);
+
+	//Load/Unload in memory
+	void	LoadInMemory();
 };
 
 #endif // !_RESOURCE_MESH_H_

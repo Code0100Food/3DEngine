@@ -171,3 +171,8 @@ bool ResourceMesh::Load(Serializer & data)
 {
 	return true;
 }
+
+void ResourceMesh::LoadInMemory()
+{
+	SetupMesh();
+}

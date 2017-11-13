@@ -421,10 +421,23 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 				show_components_window = false;
 			}
 
-			ResourceMesh* n_mesh = App->res_manager->BlitImportedMeshes();
-			if (n_mesh != nullptr)
+			ResourceMesh* n_mesh_resource = App->res_manager->BlitImportedMeshes();
+			if (n_mesh_resource != nullptr)
 			{
-				//if(n_mesh->GetReferences() == 0)
+				if (n_mesh_resource->GetReferences() == 0)
+				{
+					n_mesh_resource->LoadInMemory();
+				}
+				
+				//Create the cylinder mesh
+				ComponentMesh* n_mesh_component = (ComponentMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+				n_mesh_component->SetResourceMesh(n_mesh_resource);
+				target->AdjustBoundingBox();
+
+				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+				if (rend != nullptr)rend->SetTargetMesh(n_mesh_component);
+
+				show_components_window = false;
 			}
 		}
 		if (target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER) == nullptr)
