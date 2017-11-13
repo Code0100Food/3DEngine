@@ -10,6 +10,8 @@
 #include "ModuleRenderer3D.h"
 #include "Serializer.h"
 
+#include "ResourceMaterial.h"
+
 // Constructors =================================
 ComponentMeshRenderer::ComponentMeshRenderer():Component(COMP_MESH_RENDERER)
 {
@@ -59,7 +61,7 @@ bool ComponentMeshRenderer::Update(float dt)
 		{
 			for (int i = 0; i < mat->textures.size(); i++)
 			{
-				glBindTexture(GL_TEXTURE_2D, mat->textures[i].id);
+				glBindTexture(GL_TEXTURE_2D, mat->textures[i]->GetMaterialID());
 
 			}
 		}

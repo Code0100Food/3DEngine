@@ -15,6 +15,7 @@ public:
 public:
 
 	bool Load(const char* path, ComponentMaterial* target);
+	bool Load(ResourceMaterial* to_load);
 	bool Import(const char* path, ResourceMaterial* resource);
 
 };

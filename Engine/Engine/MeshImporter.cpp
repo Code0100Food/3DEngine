@@ -11,7 +11,7 @@ MeshImporter::MeshImporter()
 }
 
 // Functionality ================================
-bool MeshImporter::Import(const char* name, std::vector<uint> indices, std::vector<Vertex> vertices, std::vector<Texture> textures)
+bool MeshImporter::Import(const char* name, std::vector<uint> indices, std::vector<Vertex> vertices)
 {
 	if (name == nullptr || vertices.size() == 0)return false;
 

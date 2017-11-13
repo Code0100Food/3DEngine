@@ -54,5 +54,8 @@ public:
 	virtual bool Save(Serializer& file_root)const;
 	virtual bool Load(Serializer& data);
 
+	//UI
+	virtual void BlitUI()const;
+
 };
 #endif // !_RESOURCE_H_

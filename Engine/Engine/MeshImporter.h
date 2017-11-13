@@ -5,6 +5,8 @@
 #include "ComponentMesh.h"
 #include"MathGeoLib/Math/float3.h"
 
+class ResourceMaterial;
+
 class MeshImporter : public Importer
 {
 public:
@@ -13,7 +15,7 @@ public:
 
 public:
 
-	bool Import(const char* name, std::vector<uint> indices, std::vector<Vertex> vertices, std::vector<Texture> textures);
+	bool Import(const char* name, std::vector<uint> indices, std::vector<Vertex> vertices);
 	bool Load(const char* path);
 	bool Load(const char* path, ComponentMesh* target);
 

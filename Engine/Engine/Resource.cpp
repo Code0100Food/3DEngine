@@ -85,3 +85,8 @@ bool Resource::Load(Serializer & data)
 {
 	return true;
 }
+
+void Resource::BlitUI() const
+{
+
+}

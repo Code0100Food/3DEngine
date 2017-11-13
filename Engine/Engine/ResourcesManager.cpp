@@ -8,6 +8,7 @@
 #include "FileSystem.h"
 #include "ImporterManager.h"
 #include "Serializer.h"
+#include "ModuleTextures.h"
 
 // Constructors =================================
 ResourcesManager::ResourcesManager(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
@@ -193,6 +194,13 @@ ResourceMesh * ResourcesManager::GetPrimitiveResourceMesh(PRIMITIVE_TYPE type)
 bool ResourcesManager::ImportFile(const char * path, bool put_on_scene)
 {
 	bool b_ret = false;
+	bool on_scene = put_on_scene;
+
+	//Get the file format to call the correct importer
+	std::string format;
+	App->fs->GetFileFormatFromPath(path, &format);
+	IMPORT_TYPE imp_type = App->importer->GetImportTypeFromFormat(format.c_str());
+	Resource* new_resource = nullptr;
 
 	std::string n_path = path;
 	int ret = -1;
@@ -201,6 +209,7 @@ bool ResourcesManager::ImportFile(const char * path, bool put_on_scene)
 		ret = App->fs->CloneFile(path, App->fs->GetAssetsFolder(), &n_path);
 	}
 	else if (!CheckIfFileIsImported(path)) ret = 1;
+	else ret = 0;
 
 	if(ret == -1) //Error on file read case
 	{
@@ -208,32 +217,29 @@ bool ResourcesManager::ImportFile(const char * path, bool put_on_scene)
 		return false;
 	}
 
-	if (ret == 0) //File is in assets and imported but lets check if it's the actual version
+	else if (ret == 0) //File is in assets and imported but lets check if it's the actual version
 	{
-		LOG("File already exists in assets!");
+		LOG("File is already imported!");
 		//If the file already exists in assets lets update the content!
-
-		return true;
+		new_resource = Find(path);
 	}
 
-	if (ret == 1) //File is not imported case
+	else if (ret == 1) //File is not imported case
 	{
 		/*Import the file*/
-		//Get the file format to call the correct importer
-		std::string format;
-		App->fs->GetFileFormatFromPath(path, &format);
-		IMPORT_TYPE imp_type = App->importer->GetImportTypeFromFormat(format.c_str());
 
-		Resource* new_resource = nullptr;
+
 
 		switch (imp_type)
 		{
 		case UNDEF_IMPORT:
 			LOG("[error] File format not supported!");
+			on_scene = false;
 			break;
 		case MATERIAL_IMPORT:
 			new_resource = App->res_manager->CreateResource(RESOURCE_TYPE::MATERIAL_RESOURCE);
 			b_ret = App->importer->material_importer.Import(n_path.c_str(), (ResourceMaterial*)new_resource);
+			b_ret = App->importer->material_importer.Load((ResourceMaterial*)new_resource);
 			break;
 		case MESH_IMPORT:
 			break;
@@ -254,12 +260,29 @@ bool ResourcesManager::ImportFile(const char * path, bool put_on_scene)
 				//Save the generated meta file
 				char* buffer = nullptr;
 				uint size = meta_file.Save(&buffer);
-				std::string meta_name;
-				App->fs->ChangeFileFormat(new_resource->GetOwnFile(), "meta", &meta_name);
-				App->fs->SaveFile(meta_name.c_str(), buffer, size - 1, LIBRARY_META_FOLDER);
+				char meta_name[200];
+				sprintf(meta_name, "%s.meta", new_resource->GetOwnFile());
+				App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
 				
 				RELEASE_ARRAY(buffer);
 			}
+			else on_scene = false;
+		}
+	}
+
+	if (on_scene)
+	{
+		switch (imp_type)
+		{
+		case MATERIAL_IMPORT:
+			if(new_resource != nullptr)App->textures->SetCustomTexutreID(((ResourceMaterial*)new_resource)->GetMaterialID());
+			break;
+		case MESH_IMPORT:
+			break;
+		case MODEL_IMPORT:
+			/*Here we generate model objects and link them*/
+			//b_ret = App->importer->model_importer.Load(path);
+			break;
 		}
 	}
 	
@@ -278,4 +301,22 @@ bool ResourcesManager::CheckIfFileIsImported(const char * path) const
 		if (strcmp(res->second->GetOriginalFile(),path) == 0)return true;
 	}
 	return false;
+}
+
+Resource * ResourcesManager::Find(const char * file_path) const
+{
+	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
+	{
+		if (strcmp(res->second->GetOriginalFile(), file_path) == 0)return res._Ptr->_Myval.second;
+	}
+	return nullptr;
+}
+
+void ResourcesManager::BlitConfigInfo()
+{
+	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
+	{
+		ImGui::Text(res->second->GetOwnFile());
+		ImGui::Text("References: %i", res->second->GetReferences());
+	}
 }

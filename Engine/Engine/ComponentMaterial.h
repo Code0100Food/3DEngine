@@ -4,6 +4,8 @@
 #include "ComponentMesh.h"
 #include <vector>
 
+class ResourceMaterial;
+
 class ComponentMaterial : public Component
 {
 
@@ -17,16 +19,16 @@ public:
 
 private:
 
-	std::vector<Texture> textures;
+	std::vector<ResourceMaterial*> textures;
 
 public:
 
 	//Set Methods -----------
-	void SetTextures(std::vector<Texture> textures);
+	void SetTextures(std::vector<ResourceMaterial*> textures);
 
 	//Functionality ---------
 	void BlitComponentInspector();
-	void AddTexture(const Texture& tex);
+	void AddTexture(const ResourceMaterial* tex);
 
 	//Save/Load Methods -----
 	bool Save(Serializer& array_root)const;

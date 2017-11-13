@@ -56,6 +56,7 @@ public:
 
 	//Set Methods -----------
 	void SetCustomMode();
+	void SetCustomTexutreID(uint id);
 
 	//Get Methods -----------
 	bool GetCheckMode() const;

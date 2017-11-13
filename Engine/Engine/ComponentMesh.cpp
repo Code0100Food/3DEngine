@@ -43,6 +43,8 @@ ComponentMesh::ComponentMesh(const ComponentMesh & cpy) : Component(cpy), resour
 ComponentMesh::~ComponentMesh()
 {
 	draw_material = nullptr;
+	if (resource_mesh != nullptr)resource_mesh->RestReference();
+	resource_mesh = nullptr;
 }
 
 // Get Methods ==================================
@@ -135,6 +137,7 @@ void ComponentMesh::SetDrawMaterial(ComponentMaterial * mat)
 void ComponentMesh::SetResourceMesh(ResourceMesh * res)
 {
 	resource_mesh = res;
+	resource_mesh->AddReference();
 }
 
 // Functionality ================================

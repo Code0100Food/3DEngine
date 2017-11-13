@@ -32,6 +32,8 @@ private:
 	uint bytes = 0;
 	uint mat_id = 0;
 
+	std::string type;
+
 	COLOR_FORMAT color_format = UNKNOWN_COLOR;
 
 public:
@@ -45,10 +47,16 @@ public:
 	void SetNumLayers(uint val);
 	void SetBytes(uint val);
 	void SetMaterialID(uint val);
+	void SetMaterialType(const char* str);
 	void SetColorFormat(COLOR_FORMAT fmt);
 	
+	//Get Methods -----------
+	uint GetMaterialID()const;
+
 	//Functionality ---------
 	bool Save(Serializer& file_root)const;
+
+	void BlitUI()const;
 };
 
 const char*		ColorFormatToStr(COLOR_FORMAT fmt);

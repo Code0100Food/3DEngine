@@ -1,8 +1,10 @@
 #include "ResourceMaterial.h"
 #include "Serializer.h"
 
+#include "imgui/imgui.h"
+
 // Constructors =================================
-ResourceMaterial::ResourceMaterial()
+ResourceMaterial::ResourceMaterial() :Resource(MATERIAL_RESOURCE)
 {
 
 }
@@ -54,15 +56,32 @@ void ResourceMaterial::SetMaterialID(uint val)
 	mat_id = val;
 }
 
+void ResourceMaterial::SetMaterialType(const char * str)
+{
+	type = str;
+}
+
 void ResourceMaterial::SetColorFormat(COLOR_FORMAT fmt)
 {
 	color_format = fmt;
 }
 
+// Get Methods ==================================
+uint ResourceMaterial::GetMaterialID() const
+{
+	return mat_id;
+}
+
 // Functionality ================================
 bool ResourceMaterial::Save(Serializer & file_root) const
 {
+	//Save all the standard resource data
+	file_root.InsertInt("id", id);
+	file_root.InsertString("original_file", original_file.c_str());
+	file_root.InsertString("own_file", own_file.c_str());
+
 	//Save all the material resource data
+	file_root.InsertString("type", type.c_str());
 	file_root.InsertInt("width", width);
 	file_root.InsertInt("height", height);
 	file_root.InsertInt("depth", depth);
@@ -75,6 +94,13 @@ bool ResourceMaterial::Save(Serializer & file_root) const
 	file_root.InsertString("color_format", ColorFormatToStr(color_format));
 
 	return true;
+}
+
+void ResourceMaterial::BlitUI() const
+{
+	ImGui::Text("%s", type.c_str());
+	ImGui::Image((void*)mat_id, ImVec2(100, 100));
+	ImGui::Text("Size: %ix%i", width, height);
 }
 
 const char * ColorFormatToStr(COLOR_FORMAT fmt)

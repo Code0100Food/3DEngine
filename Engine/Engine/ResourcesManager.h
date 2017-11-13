@@ -43,5 +43,11 @@ public:
 	uint	CheckAssetsResources();
 	bool	CheckIfFileIsImported(const char* path)const;
 
+	//Find Methods
+	Resource* Find(const char* file_path)const;
+
+	//UI
+	void	BlitConfigInfo();
+
 };
 #endif // !_RESOURCES_MANAGER_

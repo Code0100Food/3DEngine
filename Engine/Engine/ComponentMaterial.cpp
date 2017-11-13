@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "FileSystem.h"
 #include "ImporterManager.h"
+#include "ResourceMaterial.h"
 
 // Constructors =================================
 ComponentMaterial::ComponentMaterial() :Component(COMPONENT_TYPE::COMP_MATERIAL)
@@ -22,7 +23,7 @@ ComponentMaterial::~ComponentMaterial()
 }
 
 // Set Methods ==================================
-void ComponentMaterial::SetTextures(std::vector<Texture> textures)
+void ComponentMaterial::SetTextures(std::vector<ResourceMaterial*> textures)
 {
 	this->textures = textures;
 }
@@ -39,13 +40,13 @@ void ComponentMaterial::BlitComponentInspector()
 	uint size = textures.size();
 	for (uint k = 0; k < size; k++)
 	{
-		textures[k].BlitUI();
+		textures[k]->BlitUI();
 	}
 }
 
-void ComponentMaterial::AddTexture(const Texture & tex)
+void ComponentMaterial::AddTexture(const ResourceMaterial* tex)
 {
-	textures.push_back(tex);
+	textures.push_back((ResourceMaterial*)tex);
 }
 
 bool ComponentMaterial::Save(Serializer & array_root) const
@@ -67,7 +68,10 @@ bool ComponentMaterial::Save(Serializer & array_root) const
 	uint size = textures.size();
 	for (uint k = 0; k < size; k++)
 	{
-		Serializer texture_data;
+		//Only save the id of the resource
+		textures_array.InsertArrayInt(textures[k]->GetID());
+
+		/*Serializer texture_data;
 		
 		//Texture path
 		std::string file_name;
@@ -77,7 +81,7 @@ bool ComponentMaterial::Save(Serializer & array_root) const
 		texture_data.InsertString("path", file_name.c_str());
 		texture_data.InsertString("type", textures[k].type.c_str());
 
-		textures_array.InsertArrayElement(texture_data);
+		textures_array.InsertArrayElement(texture_data);*/
 	}
 
 	//Save the built data in the components array
@@ -100,7 +104,11 @@ bool ComponentMaterial::Load(Serializer & data, std::vector<std::pair<Component*
 	uint size = textures_array.GetArraySize();
 	for (uint k = 0; k < size; k++)
 	{
-		Serializer texture_data = textures_array.GetArrayElement(k);
+		//Find the resources with the saved ids
+		textures_array.GetArrayInt(k);
+
+
+		/*Serializer texture_data = textures_array.GetArrayElement(k);
 		
 		char str[80];
 		sprintf(str, "%s%s.dds", LIBRARY_TEXTURES_FOLDER, texture_data.GetString("path"));
@@ -110,7 +118,7 @@ bool ComponentMaterial::Load(Serializer & data, std::vector<std::pair<Component*
 			textures.back().type = texture_data.GetString("type");
 			textures.back().path = texture_data.GetString("path");
 		}
-		if (!ret)break;
+		if (!ret)break;*/
 	}
 
 	return ret;

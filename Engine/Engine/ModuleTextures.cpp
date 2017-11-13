@@ -128,6 +128,11 @@ void ModuleTextures::SetCustomMode()
 	check_mode = mesh_mode = false;
 }
 
+void ModuleTextures::SetCustomTexutreID(uint id)
+{
+	custom_check_image = id;
+}
+
 // Get Methods ==================================
 bool ModuleTextures::GetCheckMode() const
 {
