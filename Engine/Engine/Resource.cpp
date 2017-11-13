@@ -90,3 +90,13 @@ void Resource::BlitUI() const
 {
 
 }
+
+void Resource::LoadInMemory()
+{
+
+}
+
+void Resource::UnloadInMemory()
+{
+
+}

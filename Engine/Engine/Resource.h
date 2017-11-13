@@ -57,5 +57,9 @@ public:
 	//UI
 	virtual void BlitUI()const;
 
+	//Load/Unload in memory
+	virtual void LoadInMemory();
+	virtual void UnloadInMemory();
+
 };
 #endif // !_RESOURCE_H_

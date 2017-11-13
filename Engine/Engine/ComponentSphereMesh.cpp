@@ -104,6 +104,7 @@ bool ComponentSphereMesh::Load(Serializer & data, std::vector<std::pair<Componen
 	
 	//Build the mesh with the loaded values
 	resource_mesh = App->res_manager->GetPrimitiveResourceMesh(primitive_type);
+	resource_mesh->AddReference();
 
 	return ret;
 }

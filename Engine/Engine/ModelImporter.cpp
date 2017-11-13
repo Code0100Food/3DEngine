@@ -378,8 +378,7 @@ void ModelImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	resource_mesh->SetOwnFile(f_name);
 	resource_mesh->SetIndices(indices);
 	resource_mesh->SetVertices(vertices);
-	resource_mesh->SetupMesh();
-	
+		
 	resource_mesh->Save(meta_file);
 
 	//Save the generated meta file

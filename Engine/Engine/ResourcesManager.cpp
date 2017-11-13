@@ -239,7 +239,6 @@ bool ResourcesManager::ImportFile(const char * path, bool put_on_scene)
 		case MATERIAL_IMPORT:
 			new_resource = App->res_manager->CreateResource(RESOURCE_TYPE::MATERIAL_RESOURCE);
 			b_ret = App->importer->material_importer.Import(n_path.c_str(), (ResourceMaterial*)new_resource);
-			b_ret = App->importer->material_importer.Load((ResourceMaterial*)new_resource);
 			break;
 		case MESH_IMPORT:
 			break;
@@ -319,4 +318,17 @@ void ResourcesManager::BlitConfigInfo()
 		ImGui::Text(res->second->GetOwnFile());
 		ImGui::Text("References: %i", res->second->GetReferences());
 	}
+}
+
+ResourceMesh * ResourcesManager::BlitImportedMeshes() const
+{
+	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
+	{
+		if (ImGui::Button(res->second->GetOwnFile()))
+		{
+			return (ResourceMesh*)res->second;
+		}
+	}
+	
+	return nullptr;
 }

@@ -420,6 +420,12 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 
 				show_components_window = false;
 			}
+
+			ResourceMesh* n_mesh = App->res_manager->BlitImportedMeshes();
+			if (n_mesh != nullptr)
+			{
+				//if(n_mesh->GetReferences() == 0)
+			}
 		}
 		if (target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER) == nullptr)
 		{

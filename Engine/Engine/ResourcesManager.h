@@ -47,7 +47,7 @@ public:
 	Resource* Find(const char* file_path)const;
 
 	//UI
-	void	BlitConfigInfo();
-
+	void			BlitConfigInfo();
+	ResourceMesh*	BlitImportedMeshes()const;
 };
 #endif // !_RESOURCES_MANAGER_
