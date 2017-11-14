@@ -101,7 +101,8 @@ public:
 	void		HideStaticObjects();
 
 	//Serialize methods
-	void		SerializeScene()const;
+	bool		SerializeScene(const GameObject* root, Serializer& serializer)const;
+	void		SerializeAndSaveCurrentScene();
 	bool		LoadSerializedScene(const char* path);
 	bool		InitializeScene();
 	void		CleanScene();

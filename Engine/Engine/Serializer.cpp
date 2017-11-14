@@ -91,17 +91,17 @@ bool Serializer::InsertString(const char * var_name, const char * value)
 
 bool Serializer::InsertInt(const char * var_name, int value)
 {
-	return json_object_set_number(current_node, var_name, value);
+	return json_object_set_number(current_node, var_name, value) == JSONSuccess;
 }
 
 bool Serializer::InsertFloat(const char * var_name, float value)
 {
-	return json_object_set_number(current_node, var_name, value);
+	return json_object_set_number(current_node, var_name, value) == JSONSuccess;
 }
 
 bool Serializer::InsertBool(const char * var_name, bool value)
 {
-	return json_object_set_boolean(current_node, var_name, value);
+	return json_object_set_boolean(current_node, var_name, value) == JSONSuccess;
 }
 
 Serializer Serializer::GetChild(const char * name) const

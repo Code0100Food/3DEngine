@@ -63,6 +63,9 @@ private:
 
 	Directory* focus_dir = nullptr;
 
+	mutable std::string usable_str_a;
+	mutable std::string usable_str_b;
+	
 public:
 
 	std::string data_folder = "DATA";
@@ -86,11 +89,12 @@ public:
 	int					CloneFile(const char* file, Directory* folder, std::string* n_path = nullptr);
 	
 	//Paths methods
-	void				GetFileNameFromPath(const char* path, std::string* name)const;
-	void				GetFileFormatFromPath(const char* path, std::string* format)const;
-	void				GetFolderFromPath(const char* path, std::string* folder)const;
+	void				GetUnformatedFileNameFromPath(const char* path, std::string* name);
+	void				GetFileNameFromPath(const char* path, std::string* name);
+	void				GetFileFormatFromPath(const char* path, std::string* format);
+	void				GetFolderFromPath(const char* path, std::string* folder);
 	Directory*			GetAssetsFolder()const;
-	void				ChangeFileFormat(const char* path,const char* new_format, std::string* new_path)const;
+	void				ChangeFileFormat(const char* path,const char* new_format, std::string* new_path);
 	bool				IsInAssets(const char* path)const;
 	
 	//UI

@@ -320,50 +320,48 @@ Directory* FileSystem::CreateDir(const char* name, bool hidden, Directory* paren
 	GetCurrentDirectory(MAX_PATH, my_path);
 
 	//Create the New Directory path
-	std::string new_dir;
-
 	if (parent)
 	{
-		new_dir = parent->GetPath();
+		usable_str_a = parent->GetPath();
 	}
 	else
 	{
-		new_dir = my_path;
+		usable_str_a = my_path;
 	}
 
-	new_dir += "\\";
-	new_dir += name;
+	usable_str_a += "\\";
+	usable_str_a += name;
 
 	//Create the Dir
-	if (CreateDirectory(new_dir.c_str(), NULL))
+	if (CreateDirectory(usable_str_a.c_str(), NULL))
 	{
 		if (hidden)
 		{
-			SetFileAttributes(new_dir.c_str(), FILE_ATTRIBUTE_HIDDEN);
+			SetFileAttributes(usable_str_a.c_str(), FILE_ATTRIBUTE_HIDDEN);
 		}
-		ret = new Directory(new_dir.c_str());
+		ret = new Directory(usable_str_a.c_str());
 		ret->SetName(name);
 		if (parent)
 		{
 			parent->AddChild(ret);
 		}
-		LOG("Created New Directory: %s, path: %s", name, new_dir.c_str());
+		LOG("Created New Directory: %s, path: %s", name, usable_str_a.c_str());
 	}
 	else
 	{
 		if (GetLastError() == ERROR_ALREADY_EXISTS)
 		{
-			ret = new Directory(new_dir.c_str());
+			ret = new Directory(usable_str_a.c_str());
 			ret->SetName(name);
 			if (parent)
 			{
 				parent->AddChild(ret);
 			}
-			LOG("Directory (%s) already exists", new_dir.c_str());
+			LOG("Directory (%s) already exists", usable_str_a.c_str());
 		}
 
 		if (GetLastError() == ERROR_PATH_NOT_FOUND)
-			LOG("Path (%s) not found", new_dir.c_str());
+			LOG("Path (%s) not found", usable_str_a.c_str());
 	}
 
 	return ret;
@@ -405,10 +403,10 @@ int FileSystem::LoadFile(const char * path, char ** buffer_to_fill)
 
 void FileSystem::SaveFile(const char * file, const char* buffer, unsigned int size, const char* library_folder)
 {
-	string full_path = library_folder;
-	full_path += file;
+	usable_str_a = library_folder;
+	usable_str_a += file;
 
-	std::ofstream outfile(full_path.c_str(), std::ofstream::binary);
+	std::ofstream outfile(usable_str_a.c_str(), std::ofstream::binary);
 
 	if (outfile.good())
 	{
@@ -425,13 +423,11 @@ void FileSystem::SaveFile(const char * file, const char* buffer, unsigned int si
 int FileSystem::CloneFile(const char * file, Directory * folder, std::string* n_path)
 {
 	//Get file path
-	std::string file_path;
-	GetFolderFromPath(file, &file_path);
+	GetFolderFromPath(file, &usable_str_a);
 	//Get folder path
-	std::string d_str;
-	folder->GetDirPath(&d_str);
+	folder->GetDirPath(&usable_str_b);
 	//Check if the file already exists in the target directory
-	if (strcmp(file_path.c_str(),d_str.c_str()) == 0)return 0;
+	if (strcmp(usable_str_a.c_str(), usable_str_b.c_str()) == 0)return 0;
 
 	char* buffer = nullptr;
 	
@@ -441,41 +437,50 @@ int FileSystem::CloneFile(const char * file, Directory * folder, std::string* n_
 	if (buffer == NULL)return -1;
 
 	//Get file name
-	std::string f_str;
-	GetFileNameFromPath(file, &f_str);
+	GetFileNameFromPath(file, &usable_str_a);
 
 
 	//Save the file
-	SaveFile(f_str.c_str(), buffer, sizeof(buffer), d_str.c_str());
+	SaveFile(usable_str_a.c_str(), buffer, sizeof(buffer), usable_str_b.c_str());
 
 	if (n_path != nullptr)
 	{
-		*n_path = d_str;
-		*n_path += f_str;
+		*n_path = usable_str_b;
+		*n_path += usable_str_a;
 	}
 
 	return 1;
 }
 
-void FileSystem::GetFileNameFromPath(const char * path, std::string* name)const
+void FileSystem::GetUnformatedFileNameFromPath(const char * path, std::string * name)
 {
-	std::string str = path;
-	size_t pos_separator = str.find_last_of("\\/");
-	*name = str.substr(pos_separator + 1);
+	usable_str_a = (char*)path;
+	size_t pos_separator = usable_str_a.find_last_of("\\/");
+	*name = usable_str_a.substr(pos_separator + 1);
+	pos_separator = name->find_last_of(".");
+	usable_str_b = name->substr(0, pos_separator);
+	*name = usable_str_b;
 }
 
-void FileSystem::GetFileFormatFromPath(const char * path, std::string* format)const
+void FileSystem::GetFileNameFromPath(const char * path, std::string* name)
 {
-	std::string str = path;
-	size_t pos_separator = str.find_last_of(".");
-	*format = str.substr(pos_separator + 1).c_str();
+	usable_str_a = path;
+	size_t pos_separator = usable_str_a.find_last_of("\\/");
+	*name = usable_str_a.substr(pos_separator + 1);
 }
 
-void FileSystem::GetFolderFromPath(const char * path, std::string * folder) const
+void FileSystem::GetFileFormatFromPath(const char * path, std::string* format)
 {
-	std::string str = path;
-	size_t pos_separator = str.find_last_of("\\/");
-	*folder = str.substr(0, pos_separator + 1);
+	usable_str_a = path;
+	size_t pos_separator = usable_str_a.find_last_of(".");
+	*format = usable_str_a.substr(pos_separator + 1).c_str();
+}
+
+void FileSystem::GetFolderFromPath(const char * path, std::string * folder) 
+{
+	usable_str_a = path;
+	size_t pos_separator = usable_str_a.find_last_of("\\/");
+	*folder = usable_str_a.substr(0, pos_separator + 1);
 }
 
 Directory * FileSystem::GetAssetsFolder() const
@@ -483,11 +488,11 @@ Directory * FileSystem::GetAssetsFolder() const
 	return user_root_dir;
 }
 
-void FileSystem::ChangeFileFormat(const char * path, const char* new_format, std::string* new_path) const
+void FileSystem::ChangeFileFormat(const char * path, const char* new_format, std::string* new_path)
 {
-	std::string str = path;
-	size_t pos_separator = str.find_last_of(".");
-	std::string unformated_str = str.substr(0,pos_separator + 1);
+	usable_str_a = path;
+	size_t pos_separator = usable_str_a.find_last_of(".");
+	std::string unformated_str = usable_str_a.substr(0,pos_separator + 1);
 	unformated_str += new_format;
 	*new_path = unformated_str;
 }

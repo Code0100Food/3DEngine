@@ -25,7 +25,7 @@ bool SceneImporter::Import(const char * path)
 {
 	//Get paths data
 	file_path = path;
-	App->fs->GetFileNameFromPath(path, &usable_str);
+	App->fs->GetUnformatedFileNameFromPath(path, &usable_str);
 	App->fs->GetFolderFromPath(path, &cur_path);
 
 	Assimp::Importer import;
@@ -39,18 +39,28 @@ bool SceneImporter::Import(const char * path)
 
 	LOG("Loading %s scene!", usable_str.c_str());
 
-	//Generate the scene resource & json structure file
-	Resource* scene_res = App->res_manager->CreateResource(RESOURCE_TYPE::SCENE_RESOURCE);
-	Serializer meta_file;
-	scene_res->SetOriginalFile(path);
-	App->fs->ChangeFileFormat(usable_str.c_str(), "scn", &usable_str);
-	scene_res->SetOwnFile(usable_str.c_str());
-
 	Serializer scene_structure;
 
 	//Load all the meshes & materials
 	LOG("Loading %i meshes...", scene->mNumMeshes);
+
+	//Generate root game object
+	GameObject* obj = App->scene->CreateGameObject();
+	obj->SetName(usable_str.c_str());
+
+	//scene->mRootNode->mTransformation
 	ImportNode(scene->mRootNode, scene, scene_structure);
+
+	App->scene->SerializeScene(obj, scene_structure);
+	RELEASE(obj);
+
+	//Generate the scene resource & json structure file
+	Resource* scene_res = App->res_manager->CreateResource(RESOURCE_TYPE::SCENE_RESOURCE);
+	Serializer meta_file;
+	scene_res->SetOriginalFile(path);
+	char own_name[200];
+	sprintf(own_name, "%s.scn", usable_str.c_str());
+	scene_res->SetOwnFile(own_name);
 
 	//Save the generated structure file
 	char* buffer = nullptr;
@@ -65,6 +75,11 @@ bool SceneImporter::Import(const char * path)
 	App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
 	RELEASE_ARRAY(buffer);
 
+	return true;
+}
+
+bool SceneImporter::Load(Resource * target)
+{
 	return true;
 }
 
@@ -186,7 +201,7 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	sprintf(f_name, "%s.fiesta", name);
 	resource_mesh->SetOwnFile(f_name);
 		
-	//Save the the meta file
+	//Save the meta file
 	Serializer meta_file;
 	resource_mesh->Save(meta_file);
 	char* buffer = nullptr;

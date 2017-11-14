@@ -325,6 +325,8 @@ void ResourcesManager::LoadMetaFiles()
 
 void ResourcesManager::BlitConfigInfo()
 {
+	BlitResourceButtonsByType(RESOURCE_TYPE::SCENE_RESOURCE);
+
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
 		ImGui::Text(res->second->GetOwnFile());

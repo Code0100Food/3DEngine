@@ -446,6 +446,11 @@ std::vector<GameObject*>* GameObject::GetChilds()
 	return &childs;
 }
 
+const std::vector<GameObject*>* GameObject::GetChildsConst()const
+{
+	return &childs;
+}
+
 void GameObject::BlitGameObjectHierarchy(uint index)
 {
 	//Check the tree node flags

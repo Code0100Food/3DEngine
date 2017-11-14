@@ -130,7 +130,7 @@ update_status ModuleImgui::Update(float dt)
 		//Save button
 		if (ImGui::MenuItem("Save"))
 		{
-			App->scene->SerializeScene();
+			App->scene->SerializeAndSaveCurrentScene();
 		}
 
 		//Load button

@@ -136,7 +136,9 @@ bool ModuleScene::ReleaseGameObject(GameObject * target, const GameObject * pare
 	GameObject* root = (GameObject*)parent;
 	if (root == nullptr)root = root_gameobject;
 
-	return root->RemoveChild(target, search_in);
+	bool ret;
+	root == nullptr ? ret = false : ret = root->RemoveChild(target, search_in);
+	return ret;
 }
 
 void ModuleScene::SendGameObjectToRemoveVec(const GameObject * target)
@@ -436,7 +438,7 @@ void ModuleScene::PushGameObjectInOctree(GameObject * target, bool _childs)
 
 	if (_childs)
 	{
-		std::vector<GameObject*> childs = *target->GetChilds();
+		std::vector<GameObject*> childs = *target->GetChildsConst();
 		uint size = childs.size();
 		for (uint k = 0; k < size; k++)
 		{
@@ -502,35 +504,41 @@ void ModuleScene::HideStaticObjects()
 	}
 }
 
-void ModuleScene::SerializeScene() const
+bool ModuleScene::SerializeScene(const GameObject* root, Serializer& serializer) const
 {
-	//Create the serialized file root
-	Serializer serialized_file;
+	if (root == nullptr)return false;
+	
+	bool ret = true;
 
 	//Insert GameObjects array
-	Serializer game_objects_array(serialized_file.InsertArray("GameObjects"));
+	Serializer game_objects_array(serializer.InsertArray("GameObjects"));
 
 	//Here we iterate all the game objects and save all the necessary data
-	bool correct = true;
-	std::vector<GameObject*> objs = *root_gameobject->GetChilds();
+	std::vector<GameObject*> objs = *root->GetChildsConst();
 	uint size = objs.size();
 	for (uint k = 0; k < size; k++)
 	{
-		correct = objs[k]->Save(game_objects_array);
-		if (!correct)
+		ret = objs[k]->Save(game_objects_array);
+		if (!ret)
 		{
 			LOG("[error] Error Serializing Scene!");
 			break;
 		}
 	}
 
-	if (correct)
+	return ret;
+}
+
+void ModuleScene::SerializeAndSaveCurrentScene()
+{
+	Serializer serialized_file;
+	bool succes = App->scene->SerializeScene(root_gameobject, serialized_file);
+	if (succes)
 	{
 		//Save the built json file
 		char* buffer = nullptr;
 		uint size = serialized_file.Save(&buffer);
 		App->fs->SaveFile("scene.json", buffer, size - 1, LIBRARY_FOLDER);
-
 		RELEASE_ARRAY(buffer);
 	}
 }
@@ -608,7 +616,7 @@ void ModuleScene::PlayGame()
 	else
 	{
 		scene_update_state = PLAY_SCENE_STATE;
-		App->scene->SerializeScene();
+		App->scene->SerializeAndSaveCurrentScene();
 		App->scene->InitializeScene();
 		App->textures->play_icon_id = App->textures->play_click_icon;
 		LOG("Game Started!");
