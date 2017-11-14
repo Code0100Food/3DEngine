@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "FileSystem.h"
 #include "ImporterManager.h"
-#include "ResourceMaterial.h"
+#include "ResourcesManager.h"
 
 // Constructors =================================
 ComponentMaterial::ComponentMaterial() :Component(COMPONENT_TYPE::COMP_MATERIAL)
@@ -94,20 +94,7 @@ bool ComponentMaterial::Load(Serializer & data, std::vector<std::pair<Component*
 	for (uint k = 0; k < size; k++)
 	{
 		//Find the resources with the saved ids
-		textures_array.GetArrayInt(k);
-
-
-		/*Serializer texture_data = textures_array.GetArrayElement(k);
-		
-		char str[80];
-		sprintf(str, "%s%s.dds", LIBRARY_TEXTURES_FOLDER, texture_data.GetString("path"));
-		ret = App->importer->material_importer.Load(str, this);
-		if (ret)
-		{
-			textures.back().type = texture_data.GetString("type");
-			textures.back().path = texture_data.GetString("path");
-		}
-		if (!ret)break;*/
+		AddTexture((ResourceMaterial*)App->res_manager->Find(textures_array.GetArrayInt(k)));
 	}
 
 	return ret;

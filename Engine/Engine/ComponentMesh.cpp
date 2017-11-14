@@ -7,6 +7,7 @@
 #include "ImporterManager.h"
 #include "ResourceMesh.h"
 #include "GameObject.h"
+#include "ResourcesManager.h"
 
 // Vertex ---------------------------------------
 Vertex::Vertex()
@@ -205,9 +206,7 @@ bool ComponentMesh::Load(Serializer & data, std::vector<std::pair<Component*, ui
 	actived = data.GetBool("actived");
 
 	//Get mesh file path
-	char str[80];
-	sprintf(str, "%s%s.fiesta",LIBRARY_MESH_FOLDER, data.GetString("path"));
-	App->importer->mesh_importer.Load(str, this);
+	SetResourceMesh((ResourceMesh*)App->res_manager->Find(data.GetInt("resource_mesh_id")));
 		
 	//Get draw material id
 	uint material_id = data.GetInt("draw_material_id");
