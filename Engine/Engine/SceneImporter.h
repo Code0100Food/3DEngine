@@ -1,5 +1,5 @@
-#ifndef _MODEL_IMPORTER_H_
-#define _MODEL_IMPORTER_H_
+#ifndef _SCENE_IMPORTER_H_
+#define _SCENE_IMPORTER_H_
 
 class	aiNode;
 class	aiMesh;
@@ -10,11 +10,11 @@ class	GameObject;
 
 #include "ComponentMesh.h"
 
-class ModelImporter
+class SceneImporter
 {
 public:
 
-	ModelImporter();
+	SceneImporter();
 
 private:
 
@@ -31,15 +31,10 @@ private:
 
 public:
 
-	bool	Load(const char* path);
 	bool	Import(const char* path);
 
 private:
 	
-	void					LoadNode(aiNode *node, const aiScene *scene, GameObject* parent);
-	void					LoadMesh(const char* name, aiMesh *mesh, const aiScene *scene, GameObject* container);
-	std::vector<Texture>	LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
-
 	void					ImportNode(aiNode *node, const aiScene *scene);
 	void					ImportMesh(const char* name, aiMesh *mesh, const aiScene *scene);
 	void					ImportMaterialTextures(aiMaterial *mat, aiTextureType type);

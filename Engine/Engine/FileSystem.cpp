@@ -4,7 +4,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleImgui.h"
-#include "ResourcesManager.h"
+#include "ImporterManager.h"
 #include <fstream>
 #include <iostream>
 #include "Serializer.h"
@@ -155,7 +155,7 @@ uint Directory::ImportAllFilesInside()
 			//Need the full path
 			char full_path[200];
 			sprintf(full_path, "%s\\%s", path.c_str(), files_list.cFileName);
-			if (App->res_manager->ImportFile(full_path))
+			if (App->importer->ImportFile(full_path))
 			{
 				updates++;
 			}

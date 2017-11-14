@@ -6,7 +6,7 @@
 
 #include "MeshImporter.h"
 #include "MaterialImporter.h"
-#include "ModelImporter.h"
+#include "SceneImporter.h"
 
 class ImporterManager
 {
@@ -18,7 +18,7 @@ public:
 
 	MeshImporter		mesh_importer;
 	MaterialImporter	material_importer;
-	ModelImporter		model_importer;
+	SceneImporter		scene_importer;
 
 public:
 

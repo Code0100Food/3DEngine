@@ -15,7 +15,6 @@
 #include "ImporterManager.h"
 #include "ModuleScene.h"
 #include "FileSystem.h"
-#include "ResourcesManager.h"
 #include "imgui/IGizmo.h"
 
 #define MAX_KEYS 300
@@ -296,7 +295,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_DROPFILE:
-			App->res_manager->ImportFile(event.drop.file);
+			App->importer->ImportFile(event.drop.file);
 
 			/*//Import/load the file in the engine file system
 			bool res = App->importer->ImportFile(event.drop.file);

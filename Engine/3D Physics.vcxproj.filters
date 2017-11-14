@@ -369,9 +369,6 @@
     <ClInclude Include="Engine\Light.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ModelImporter.h">
-      <Filter>Sources\Importers &amp; Serializer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Importer.h">
       <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
@@ -437,6 +434,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceMaterial.h">
       <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SceneImporter.h">
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -647,9 +647,6 @@
     <ClCompile Include="Engine\Light.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ModelImporter.cpp">
-      <Filter>Sources\Importers &amp; Serializer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Importer.cpp">
       <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClCompile>
@@ -712,6 +709,9 @@
     </ClCompile>
     <ClCompile Include="Engine\ResourceMaterial.cpp">
       <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SceneImporter.cpp">
+      <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

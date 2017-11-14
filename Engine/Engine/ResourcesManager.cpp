@@ -204,45 +204,6 @@ ResourceMesh * ResourcesManager::GetPrimitiveResourceMesh(PRIMITIVE_TYPE type)
 	return nullptr;
 }
 
-bool ResourcesManager::ImportFile(const char * path)
-{
-	if (Find(path) != nullptr)return true; //If is already imported!
-
-	bool b_ret = false;
-
-	//Get the file format to call the correct importer
-	std::string format;
-	App->fs->GetFileFormatFromPath(path, &format);
-	IMPORT_TYPE imp_type = App->importer->GetImportTypeFromFormat(format.c_str());
-
-	std::string n_path = path;
-	if (!App->fs->IsInAssets(path))
-	{
-		if (App->fs->CloneFile(path, App->fs->GetAssetsFolder(), &n_path) == -1)
-		{
-			LOG("[error] Error Importing [%s]", path);
-			return false;
-		}
-	}
-
-	switch (imp_type)
-	{
-	case UNDEF_IMPORT:
-		LOG("[error] File format not supported!");
-		break;
-	case MATERIAL_IMPORT:
-		b_ret = App->importer->material_importer.Import(n_path.c_str());
-		break;
-	case MESH_IMPORT:
-		break;
-	case MODEL_IMPORT:
-		b_ret = App->importer->model_importer.Import(n_path.c_str());
-		break;
-	}
-
-	return b_ret;
-}
-
 uint ResourcesManager::CheckAssetsResources()
 {
 	return App->fs->GetUserRootDir()->ImportAllFilesInside();

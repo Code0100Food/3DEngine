@@ -1,5 +1,4 @@
 #include "Importer.h"
-#include "ModelImporter.h"
 
 // Constructors =================================
 Importer::Importer()
