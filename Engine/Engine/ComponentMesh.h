@@ -103,7 +103,7 @@ public:
 	void	SetIndices(const std::vector<uint>& i);
 	void	SetPath(const char* str);
 	void	SetDrawMaterial(ComponentMaterial* mat);
-	void	SetResourceMesh(ResourceMesh* res);
+	void	SetResourceMesh(ResourceMesh* res, bool ad_ref = true);
 
 	//Functionality ---------
 	void	SetupMesh();

@@ -41,7 +41,7 @@ bool ModuleScene::Start()
 	App->time_manager->SetGameTimeScale(1.0f);
 
 	//Load a scene if theres a saved one
-	char str[50];
+	char str[150];
 	sprintf(str, "%sscene.json", LIBRARY_FOLDER);
 	if (!App->scene->LoadSerializedScene(str))
 	{

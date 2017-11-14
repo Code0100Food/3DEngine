@@ -25,7 +25,7 @@ bool SceneImporter::Import(const char * path)
 {
 	//Get paths data
 	file_path = path;
-	App->fs->GetUnformatedFileNameFromPath(path, &usable_str);
+	App->fs->GetUnformatedFileNameFromPath(path, &usable_str_a);
 	App->fs->GetFolderFromPath(path, &cur_path);
 
 	Assimp::Importer import;
@@ -37,7 +37,7 @@ bool SceneImporter::Import(const char * path)
 		return false;
 	}
 
-	LOG("Loading %s scene!", usable_str.c_str());
+	LOG("Loading %s scene!", usable_str_a.c_str());
 
 	Serializer scene_structure;
 
@@ -46,10 +46,14 @@ bool SceneImporter::Import(const char * path)
 
 	//Generate root game object
 	GameObject* obj = App->scene->CreateGameObject();
-	obj->SetName(usable_str.c_str());
+	obj->SetName(usable_str_a.c_str());
+
+	//Set root transformation
+	ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	comp->SetTransformation(scene->mRootNode->mTransformation);
 
 	//scene->mRootNode->mTransformation
-	ImportNode(scene->mRootNode, scene, scene_structure);
+	ImportNode(scene->mRootNode, scene, obj);
 
 	App->scene->SerializeScene(obj, scene_structure);
 	RELEASE(obj);
@@ -59,7 +63,7 @@ bool SceneImporter::Import(const char * path)
 	Serializer meta_file;
 	scene_res->SetOriginalFile(path);
 	char own_name[200];
-	sprintf(own_name, "%s.scn", usable_str.c_str());
+	sprintf(own_name, "%s.scn", usable_str_a.c_str());
 	scene_res->SetOwnFile(own_name);
 
 	//Save the generated structure file
@@ -80,39 +84,45 @@ bool SceneImporter::Import(const char * path)
 
 bool SceneImporter::Load(Resource * target)
 {
-	return true;
+	char str[150];
+	sprintf(str, "%s%s", LIBRARY_SCENE_FOLDER, target->GetOwnFile());
+	return App->scene->LoadSerializedScene(str);
 }
 
-void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, Serializer& root)
+void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* parent)
 {
-	Serializer  node_root = root.InsertChild(node->mName.C_Str());
-	
-	// process all the node's meshes (if any)
-	if (node->mNumMeshes > 0)
+	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
-		Serializer meshes_array = node_root.InsertArray("meshes");
-		for (unsigned int i = 0; i < node->mNumMeshes; i++)
-		{
-			Serializer mesh_struc;
-			
-			//Import the mesh and the related materials
-			ImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, mesh_struc);
+		//Generate game object
+		GameObject* obj = App->scene->CreateGameObject();
+		obj->SetName(node->mName.C_Str());
+		obj->SetParent(parent);
 
-			meshes_array.InsertArrayElement(mesh_struc);
-		}
+		//Set transformation component
+		ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		comp->SetTransformation(node->mTransformation);
+		
+		//Import the mesh and the related materials
+		ImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, obj);
 	}
+	
 	// then do the same for each of its children
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ImportNode(node->mChildren[i], scene, node_root);
+		ImportNode(node->mChildren[i], scene, parent);
 	}
 }
 
-void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene * scene, Serializer& root)
+void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene * scene, GameObject* container)
 {
 	//Generate the container mesh component
 	ResourceMesh* resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
-	root.InsertInt("id", resource_mesh->GetID());
+	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+	comp_mesh->SetResourceMesh(resource_mesh, false);
+	
+	//Generate the container mesh renderer component
+	ComponentMeshRenderer* comp_mesh_renderer = (ComponentMeshRenderer*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+	comp_mesh_renderer->SetTargetMesh(comp_mesh);
 
 	LOG("Processing %s mesh!", name);
 
@@ -174,22 +184,25 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	//Build the different materials (textures)
 	if (mesh->mMaterialIndex >= 0)
 	{
-		//Generate the materials array
-		Serializer materials_array = root.InsertArray("materials");
+		//Generate the container material component (used by mesh too)
+		ComponentMaterial* comp_material = (ComponentMaterial*)container->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
 		
 		//Get the material
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
 		//Load Normal data
-		ImportMaterialTextures(material, aiTextureType_HEIGHT, materials_array);
+		ImportMaterialTextures(material, aiTextureType_HEIGHT, comp_material);
 		
 		//Load diffuse data
-		ImportMaterialTextures(material, aiTextureType_DIFFUSE, materials_array);
+		ImportMaterialTextures(material, aiTextureType_DIFFUSE, comp_material);
 		
 		//Load Specular data
-		ImportMaterialTextures(material, aiTextureType_SPECULAR, materials_array);
+		ImportMaterialTextures(material, aiTextureType_SPECULAR, comp_material);
 		
 		LOG("- Material with index %i loaded!", mesh->mMaterialIndex);
+
+		//Set mesh material
+		comp_mesh->SetDrawMaterial(comp_material);
 	}
 
 	//Import the mesh (own format)
@@ -219,7 +232,7 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	vertices_pos.clear();
 }
 
-void SceneImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type, Serializer& root)
+void SceneImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type, ComponentMaterial* container)
 {
 	n_textures.clear();
 	_textures.clear();
@@ -250,13 +263,13 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type,
 			_textures.push_back(texture);
 
 			//Import material
-			std::string file_folder = cur_path;
-			file_folder += texture.path.c_str();
-			App->importer->ImportFile(file_folder.c_str());
+			usable_str_b = cur_path;
+			usable_str_b += texture.path.c_str();
+			App->importer->ImportFile(usable_str_b.c_str());
 			
 			//Find the loaded mat and add the id on the mesh materials
-			Resource* mat = App->res_manager->Find(file_folder.c_str());
-			if (mat != nullptr)root.InsertArrayInt(mat->GetID());
+			Resource* mat = App->res_manager->Find(usable_str_b.c_str());
+			if (mat != nullptr)container->AddTexture((ResourceMaterial*)mat, false);
 		}
 	}
 

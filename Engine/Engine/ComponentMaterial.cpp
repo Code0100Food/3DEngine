@@ -19,7 +19,12 @@ ComponentMaterial::ComponentMaterial(const ComponentMaterial & cpy) : Component(
 // Destructors ==================================
 ComponentMaterial::~ComponentMaterial()
 {
-
+	uint size = textures.size();
+	for (uint k = 0; k < size; k++)
+	{
+		textures[k]->RestReference();
+	}
+	textures.clear();
 }
 
 // Set Methods ==================================
@@ -44,10 +49,10 @@ void ComponentMaterial::BlitComponentInspector()
 	}
 }
 
-void ComponentMaterial::AddTexture(ResourceMaterial* tex)
+void ComponentMaterial::AddTexture(ResourceMaterial* tex, bool ad_ref)
 {
 	textures.push_back((ResourceMaterial*)tex);
-	tex->AddReference();
+	if(ad_ref)tex->AddReference();
 }
 
 bool ComponentMaterial::Save(Serializer & array_root) const

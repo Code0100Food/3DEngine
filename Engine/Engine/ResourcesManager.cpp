@@ -325,7 +325,11 @@ void ResourcesManager::LoadMetaFiles()
 
 void ResourcesManager::BlitConfigInfo()
 {
-	BlitResourceButtonsByType(RESOURCE_TYPE::SCENE_RESOURCE);
+	Resource* target = BlitResourceButtonsByType(RESOURCE_TYPE::SCENE_RESOURCE);
+	if (target != nullptr)
+	{
+		App->importer->scene_importer.Load(target);
+	}
 
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{

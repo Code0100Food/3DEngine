@@ -136,10 +136,10 @@ void ComponentMesh::SetDrawMaterial(ComponentMaterial * mat)
 	draw_material = mat;
 }
 
-void ComponentMesh::SetResourceMesh(ResourceMesh * res)
+void ComponentMesh::SetResourceMesh(ResourceMesh * res, bool ad_ref)
 {
 	resource_mesh = res;
-	resource_mesh->AddReference();
+	if(ad_ref)resource_mesh->AddReference();
 }
 
 // Functionality ================================
