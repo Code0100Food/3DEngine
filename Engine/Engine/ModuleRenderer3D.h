@@ -146,6 +146,8 @@ public:
 
 	//Functionality ---------
 	void OnResize(int width, int height);
+	void OnSceneResize(int width, int height);
+	void OnGameResize(int width, int height);
 	void DisableGLRenderFlags();
 	void EnableGLRenderFlags();
 

@@ -85,6 +85,10 @@ void FrameTexture::Create(int width, int height)
 	{
 		LOG("Frame Buffer Load nice");
 	}
+	else
+	{
+		LOG("[error] Framebuffer error")
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -97,17 +101,23 @@ void FrameTexture::Bind()
 	if (this == App->renderer3D->GetFrameTextureRender())
 	{
 		window_size = App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->size;
+
+		if (window_size.x != width || window_size.y != height)
+		{
+			App->renderer3D->OnSceneResize(window_size.x, window_size.y);
+		}
+
 	}
 
 	if (this == App->renderer3D->GetFrameTextureGame())
 	{
 		window_size = App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->size;
-	}
 
+		if (window_size.x != width || window_size.y != height)
+		{
+			App->renderer3D->OnGameResize(window_size.x, window_size.y);
+		}
 
-	if (window_size.x != width || window_size.y != height)
-	{
-		App->renderer3D->OnResize(window_size.x, window_size.y);
 	}
 
 	//glViewport(0, 0, width, height);
@@ -424,12 +434,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Draw / update scene objects
 	App->scene->SceneUpdate(dt);
 
-	glBegin(GL_LINES);
-
-	glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
-
-	glEnd();
-
 	//Focus render texture
 	render_to_texture->UnBind();
 
@@ -439,13 +443,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		game_to_texture->Bind();
 		App->geometry->Draw();
 		App->scene->SceneUpdate(dt);
-		float color[4] = { 1.0f, 1.0f, 0.0f, 1.0f };
-		App->camera->editor_camera_frustrum.Draw(1.0f, color);
-		glBegin(GL_LINES);
-
-		glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
-
-		glEnd();
 		game_to_texture->UnBind();
 		CleanCameraView();
 		SetEditorCameraView();
@@ -457,6 +454,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	App->imgui->GetWorkspace()->EndDock();
 
 	App->imgui->GetWorkspace()->BeginDock("Scene##texture", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
+
 	//Detect if the mouse is inside the workspace
 	mouse_on_workspace = ImGui::IsMouseHoveringWindow();
 
@@ -919,9 +917,9 @@ void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 
-	glMatrixMode(GL_PROJECTION);
+	/*glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
+	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());*/
 
 	if (render_to_texture)
 	{
@@ -944,10 +942,44 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	
 	for (std::vector<ComponentCamera*>::iterator item = game_cameras.begin(); item != game_cameras.end(); item++)
 	{
+		(*item)->SetVerticalFov((*item)->GetFrustum().verticalFov * RADTODEG, ((float)width / height));
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void ModuleRenderer3D::OnSceneResize(int width, int height)
+{
+	glViewport(0, 0, width, height);
+
+
+	render_to_texture->Destroy();
+	render_to_texture->Create(width, height);
+	
+	App->camera->SetVerticalFov(App->camera->editor_camera_frustrum.verticalFov * RADTODEG, ((float)width/height));
+
+	trans_gizmo->SetScreenDimension(width, height);
+	rotate_gizmo->SetScreenDimension(width, height);
+	scale_gizmo->SetScreenDimension(width, height);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void ModuleRenderer3D::OnGameResize(int width, int height)
+{
+	glViewport(0, 0, width, height);
+
+	game_to_texture->Destroy();
+	game_to_texture->Create(width, height);
+	
+	for (std::vector<ComponentCamera*>::iterator item = game_cameras.begin(); item != game_cameras.end(); item++)
+	{
 		(*item)->SetVerticalFov((*item)->GetFrustum().verticalFov * RADTODEG);
 	}
 
-	for(int i = 0; i < game_cameras.size(); i++)
+
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

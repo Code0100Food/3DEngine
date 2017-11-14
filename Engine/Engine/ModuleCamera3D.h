@@ -68,6 +68,7 @@ public:
 	void	Look(const math::float3& look_here, bool RotateAroundLookingPoint);
 
 	void	SetVerticalFov(float angle_in_deg);
+	void	SetVerticalFov(float angle_in_deg, float new_aspect_ratio);
 
 	float*			GetViewMatrix() const;
 	float*			GetViewMatrixTransposed() const;

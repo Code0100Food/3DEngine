@@ -339,6 +339,12 @@ void ModuleCamera3D::SetVerticalFov(float angle_in_deg)
 	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * App->window->GetAspectRatio()));
 }
 
+void ModuleCamera3D::SetVerticalFov(float angle_in_deg, float new_aspect_ratio)
+{
+	editor_camera_frustrum.verticalFov = angle_in_deg * DEGTORAD;
+	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * new_aspect_ratio));
+}
+
 void ModuleCamera3D::LookAt(const math::float3 &Spot)
 {
 	focus_point = Spot;
