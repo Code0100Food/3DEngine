@@ -942,7 +942,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	
 	for (std::vector<ComponentCamera*>::iterator item = game_cameras.begin(); item != game_cameras.end(); item++)
 	{
-		(*item)->SetVerticalFov((*item)->GetFrustum().verticalFov * RADTODEG, ((float)width / height));
+		(*item)->SetVerticalFov((*item)->GetFrustum().verticalFov * RADTODEG);
 	}
 
 	glMatrixMode(GL_MODELVIEW);

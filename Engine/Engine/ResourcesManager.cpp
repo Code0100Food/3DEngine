@@ -46,6 +46,7 @@ bool ResourcesManager::Start()
 	cube_mesh->SetIndices(geometry_data.first);
 	cube_mesh->SetVertices(geometry_data.second);
 	cube_mesh->SetupMesh();
+	cube_mesh->SetID(1);
 	cube_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();
@@ -67,6 +68,7 @@ bool ResourcesManager::Start()
 	sphere_low_mesh->SetIndices(geometry_data.first);
 	sphere_low_mesh->SetVertices(geometry_data.second);
 	sphere_low_mesh->SetupMesh();
+	sphere_low_mesh->SetID(2);
 	sphere_low_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();
@@ -86,6 +88,7 @@ bool ResourcesManager::Start()
 	sphere_hi_mesh->SetIndices(geometry_data.first);
 	sphere_hi_mesh->SetVertices(geometry_data.second);
 	sphere_hi_mesh->SetupMesh();
+	sphere_hi_mesh->SetID(3);
 	sphere_hi_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();
@@ -108,6 +111,7 @@ bool ResourcesManager::Start()
 	cylinder_low_mesh->SetIndices(geometry_data.first);
 	cylinder_low_mesh->SetVertices(geometry_data.second);
 	cylinder_low_mesh->SetupMesh();
+	cylinder_low_mesh->SetID(4);
 	cylinder_low_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();
@@ -128,6 +132,7 @@ bool ResourcesManager::Start()
 	cylinder_hi_mesh->SetIndices(geometry_data.first);
 	cylinder_hi_mesh->SetVertices(geometry_data.second);
 	cylinder_hi_mesh->SetupMesh();
+	cylinder_hi_mesh->SetID(5);
 	cylinder_hi_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();

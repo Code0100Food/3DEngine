@@ -43,7 +43,7 @@ bool ModuleScene::Start()
 	//Load a scene if theres a saved one
 	char str[50];
 	sprintf(str, "%sscene.json", LIBRARY_FOLDER);
-	if (false)//!App->scene->LoadSerializedScene(str))
+	if (!App->scene->LoadSerializedScene(str))
 	{
 		LOG("No default saved scene!");
 		//Generate a default main camera
