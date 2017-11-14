@@ -23,9 +23,9 @@ SceneImporter::SceneImporter()
 // Functionality ================================
 bool SceneImporter::Import(const char * path)
 {
+	//Get paths data
 	file_path = path;
-
-	//Get the model path
+	App->fs->GetFileNameFromPath(path, &usable_str);
 	App->fs->GetFolderFromPath(path, &cur_path);
 
 	Assimp::Importer import;
@@ -37,37 +37,68 @@ bool SceneImporter::Import(const char * path)
 		return false;
 	}
 
-	LOG("Loading %s model!", scene->mRootNode->mName.C_Str());
+	LOG("Loading %s scene!", usable_str.c_str());
+
+	//Generate the scene resource & json structure file
+	Resource* scene_res = App->res_manager->CreateResource(RESOURCE_TYPE::SCENE_RESOURCE);
+	Serializer meta_file;
+	scene_res->SetOriginalFile(path);
+	App->fs->ChangeFileFormat(usable_str.c_str(), "scn", &usable_str);
+	scene_res->SetOwnFile(usable_str.c_str());
+
+	Serializer scene_structure;
 
 	//Load all the meshes & materials
 	LOG("Loading %i meshes...", scene->mNumMeshes);
-	ImportNode(scene->mRootNode, scene);
+	ImportNode(scene->mRootNode, scene, scene_structure);
+
+	//Save the generated structure file
+	char* buffer = nullptr;
+	uint size = scene_structure.Save(&buffer);
+	App->fs->SaveFile(scene_res->GetOwnFile(), buffer, size - 1, LIBRARY_SCENE_FOLDER);
+	RELEASE_ARRAY(buffer);
+	
+	char meta_name[200];
+	sprintf(meta_name, "%s.meta", scene_res->GetOwnFile());
+	scene_res->Save(meta_file);
+	size = meta_file.Save(&buffer);
+	App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
+	RELEASE_ARRAY(buffer);
 
 	return true;
 }
 
-void SceneImporter::ImportNode(aiNode * node, const aiScene * scene)
+void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, Serializer& root)
 {
+	Serializer  node_root = root.InsertChild(node->mName.C_Str());
+	
 	// process all the node's meshes (if any)
-	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	if (node->mNumMeshes > 0)
 	{
-		//Import the mesh and the related materials
-		ImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene);
-	}
+		Serializer meshes_array = node_root.InsertArray("meshes");
+		for (unsigned int i = 0; i < node->mNumMeshes; i++)
+		{
+			Serializer mesh_struc;
+			
+			//Import the mesh and the related materials
+			ImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, mesh_struc);
 
+			meshes_array.InsertArrayElement(mesh_struc);
+		}
+	}
 	// then do the same for each of its children
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ImportNode(node->mChildren[i], scene);
+		ImportNode(node->mChildren[i], scene, node_root);
 	}
 }
 
-void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene * scene)
+void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene * scene, Serializer& root)
 {
 	//Generate the container mesh component
-	Serializer meta_file;
 	ResourceMesh* resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
-	
+	root.InsertInt("id", resource_mesh->GetID());
+
 	LOG("Processing %s mesh!", name);
 
 	//Iterate all the mesh vertices and load all the data
@@ -128,19 +159,20 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	//Build the different materials (textures)
 	if (mesh->mMaterialIndex >= 0)
 	{
-		//Generate the container material component (used by mesh too)
+		//Generate the materials array
+		Serializer materials_array = root.InsertArray("materials");
 		
 		//Get the material
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
 		//Load Normal data
-		ImportMaterialTextures(material, aiTextureType_HEIGHT);
+		ImportMaterialTextures(material, aiTextureType_HEIGHT, materials_array);
 		
 		//Load diffuse data
-		ImportMaterialTextures(material, aiTextureType_DIFFUSE);
+		ImportMaterialTextures(material, aiTextureType_DIFFUSE, materials_array);
 		
 		//Load Specular data
-		ImportMaterialTextures(material, aiTextureType_SPECULAR);
+		ImportMaterialTextures(material, aiTextureType_SPECULAR, materials_array);
 		
 		LOG("- Material with index %i loaded!", mesh->mMaterialIndex);
 	}
@@ -155,11 +187,11 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	resource_mesh->SetOwnFile(f_name);
 		
 	//Save the the meta file
+	Serializer meta_file;
 	resource_mesh->Save(meta_file);
 	char* buffer = nullptr;
 	uint size = meta_file.Save(&buffer);
 	char meta_name[200];
-	sprintf(meta_name, "%s.fiesta.meta", name);
 	sprintf(meta_name, "%s.meta", resource_mesh->GetOwnFile());
 	App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
 
@@ -172,7 +204,7 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	vertices_pos.clear();
 }
 
-void SceneImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type)
+void SceneImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type, Serializer& root)
 {
 	n_textures.clear();
 	_textures.clear();
@@ -206,6 +238,10 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type)
 			std::string file_folder = cur_path;
 			file_folder += texture.path.c_str();
 			App->importer->ImportFile(file_folder.c_str());
+			
+			//Find the loaded mat and add the id on the mesh materials
+			Resource* mat = App->res_manager->Find(file_folder.c_str());
+			if (mat != nullptr)root.InsertArrayInt(mat->GetID());
 		}
 	}
 

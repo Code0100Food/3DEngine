@@ -1,6 +1,7 @@
 #include "Resource.h"
 
 #include "Application.h"
+#include "Serializer.h"
 
 // Constructors =================================
 Resource::Resource()
@@ -88,11 +89,22 @@ void Resource::RestReference()
 
 bool Resource::Save(Serializer & file_root) const
 {
+	//Save all the standard resource data
+	file_root.InsertInt("id", id);
+	file_root.InsertString("res_type", ResourceTypeToStr(type));
+	file_root.InsertString("original_file", original_file.c_str());
+	file_root.InsertString("own_file", own_file.c_str());
+
 	return true;
 }
 
 bool Resource::Load(Serializer & data)
 {
+	//Load all the standard resource data
+	id = data.GetInt("id");
+	original_file = data.GetString("original_file");
+	own_file = data.GetString("own_file");
+
 	return true;
 }
 

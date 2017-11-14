@@ -250,6 +250,7 @@ bool FileSystem::Start()
 	engine_root_dir = CreateDir("Library", true);
 	CreateDir("Meshes", true, engine_root_dir);
 	CreateDir("Materials", true, engine_root_dir);
+	CreateDir("Scenes", true, engine_root_dir);
 	metas_dir = CreateDir("Metas", true, engine_root_dir);
 
 	file_system_dock = new DockContext();

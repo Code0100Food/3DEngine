@@ -174,6 +174,7 @@ bool ResourceMesh::Save(Serializer & file_root) const
 
 bool ResourceMesh::Load(Serializer & data)
 {
+	//Load all the standard resource data
 	id = data.GetInt("id");
 	original_file = data.GetString("original_file");
 	own_file = data.GetString("own_file");

@@ -168,9 +168,9 @@ Resource * ResourcesManager::CreateResource(RESOURCE_TYPE type)
 	//Generate the new resource
 	switch (type)
 	{
-	case MESH_RESOURCE:			new_res = (Resource*)new ResourceMesh();		break;
-	case MATERIAL_RESOURCE:		new_res = (Resource*)new ResourceMaterial();	break;
-	case SCENE_RESOURCE:		break;
+	case MESH_RESOURCE:			new_res = (Resource*)new ResourceMesh();				break;
+	case MATERIAL_RESOURCE:		new_res = (Resource*)new ResourceMaterial();			break;
+	case SCENE_RESOURCE:		new_res = new Resource(RESOURCE_TYPE::SCENE_RESOURCE);	break;
 	}
 
 	//Add it to the map

@@ -7,6 +7,7 @@ struct	aiScene;
 enum	aiTextureType;
 class	aiMaterial;
 class	GameObject;
+class	Serializer;
 
 #include "ComponentMesh.h"
 
@@ -20,6 +21,7 @@ private:
 
 	std::string cur_path;
 	std::string file_path;
+	std::string usable_str;
 
 	std::vector<Vertex>			vertices;
 	std::vector<uint>			indices;
@@ -35,9 +37,9 @@ public:
 
 private:
 	
-	void					ImportNode(aiNode *node, const aiScene *scene);
-	void					ImportMesh(const char* name, aiMesh *mesh, const aiScene *scene);
-	void					ImportMaterialTextures(aiMaterial *mat, aiTextureType type);
+	void					ImportNode(aiNode *node, const aiScene *scene, Serializer& root);
+	void					ImportMesh(const char* name, aiMesh *mesh, const aiScene *scene, Serializer& root);
+	void					ImportMaterialTextures(aiMaterial *mat, aiTextureType type, Serializer& root);
 
 };
 #endif // !_MODEL_IMPORTER_H_

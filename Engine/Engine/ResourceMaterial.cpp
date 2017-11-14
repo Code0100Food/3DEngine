@@ -102,9 +102,11 @@ bool ResourceMaterial::Save(Serializer & file_root) const
 
 bool ResourceMaterial::Load(Serializer & data)
 {
+	//Load all the standard resource data
 	id = data.GetInt("id");
 	original_file = data.GetString("original_file");
 	own_file = data.GetString("own_file");
+
 	mat_type = data.GetString("mat_type");
 
 	return true;
