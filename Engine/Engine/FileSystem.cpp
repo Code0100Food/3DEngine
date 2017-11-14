@@ -7,6 +7,7 @@
 #include "ResourcesManager.h"
 #include <fstream>
 #include <iostream>
+#include "Serializer.h"
 
 //Directory -------------------------------------
 Directory::Directory()
@@ -154,7 +155,7 @@ uint Directory::ImportAllFilesInside()
 			//Need the full path
 			char full_path[200];
 			sprintf(full_path, "%s\\%s", path.c_str(), files_list.cFileName);
-			if (App->res_manager->ImportFile(full_path, false))
+			if (App->res_manager->ImportFile(full_path))
 			{
 				updates++;
 			}
@@ -178,6 +179,51 @@ uint Directory::ImportAllFilesInside()
 	}
 
 	return updates;
+}
+bool Directory::FindFile(const char * file_name) const
+{
+	bool ret = false;
+
+	//Set String to look inside Parent folder
+	char str[150];
+	sprintf(str, "%s\\*.*", path.c_str());
+
+	//Will recieve all the files list
+	WIN32_FIND_DATA files_list;
+
+	//Will handle the list when changing the looked element
+	HANDLE file_handle = FindFirstFileA(LPCSTR(str), &files_list);
+
+	if (file_handle == INVALID_HANDLE_VALUE)
+	{
+		LOG("Error in path");
+	}
+
+	DWORD attribute;
+
+	bool still_elements = true;
+	while (still_elements)
+	{
+		attribute = GetFileAttributes(files_list.cFileName);
+
+		//Search for directories
+		if (strcmp(files_list.cFileName,file_name) == 0)
+		{
+			ret = true;
+			break;
+		}
+
+		//Jump to the other element
+		if (!FindNextFile(file_handle, &files_list))
+		{
+			still_elements = false;
+		}
+
+	}
+
+	FindClose(file_handle);
+
+	return ret;
 }
 //-----------------------------------------------
 
@@ -204,7 +250,7 @@ bool FileSystem::Start()
 	engine_root_dir = CreateDir("Library", true);
 	CreateDir("Meshes", true, engine_root_dir);
 	CreateDir("Materials", true, engine_root_dir);
-	CreateDir("Metas", true, engine_root_dir);
+	metas_dir = CreateDir("Metas", true, engine_root_dir);
 
 	file_system_dock = new DockContext();
 
@@ -225,6 +271,11 @@ bool FileSystem::CleanUp()
 Directory * FileSystem::GetUserRootDir() const
 {
 	return user_root_dir;
+}
+
+Directory * FileSystem::GetMetasDir() const
+{
+	return metas_dir;
 }
 
 // Functionality ================================

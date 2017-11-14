@@ -39,13 +39,17 @@ public:
 	ResourceMesh*	GetPrimitiveResourceMesh(PRIMITIVE_TYPE type);
 
 	//Import methods
-	bool	ImportFile(const char* path, bool put_on_scene);
+	bool	ImportFile(const char* path);
 	uint	CheckAssetsResources();
 	bool	CheckIfFileIsImported(const char* path)const;
 
 	//Find Methods
-	Resource* Find(const char* file_path)const;
+	Resource*	Find(const char* file_path)const;
+	uint		FindMetaFile(const char* own_file_path)const;
 
+	//Load Methods
+	void		LoadMetaFiles();
+	
 	//UI
 	void			BlitConfigInfo();
 	ResourceMesh*	BlitImportedMeshes()const;

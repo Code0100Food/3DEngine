@@ -32,7 +32,7 @@ private:
 	uint bytes = 0;
 	uint mat_id = 0;
 
-	std::string type;
+	std::string mat_type;
 
 	COLOR_FORMAT color_format = UNKNOWN_COLOR;
 
@@ -54,8 +54,11 @@ public:
 	uint GetMaterialID()const;
 
 	//Functionality ---------
+	//Save/Load Methods
 	bool Save(Serializer& file_root)const;
+	bool Load(Serializer& data);
 
+	//UI
 	void BlitUI()const;
 };
 

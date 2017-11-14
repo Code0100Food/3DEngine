@@ -291,7 +291,7 @@ void ModelImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	Serializer meta_file;
 	ResourceMesh* resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
 	
-	LOG("Processing %s mesh!", mesh->mName.C_Str());
+	LOG("Processing %s mesh!", name);
 
 	//Iterate all the mesh vertices and load all the data
 	for (uint i = 0; i < mesh->mNumVertices; i++)
@@ -385,6 +385,7 @@ void ModelImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	char* buffer = nullptr;
 	uint size = meta_file.Save(&buffer);
 	char meta_name[200];
+	sprintf(meta_name, "%s.fiesta.meta", name);
 	sprintf(meta_name, "%s.meta", resource_mesh->GetOwnFile());
 	App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
 
@@ -430,7 +431,7 @@ void ModelImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type)
 			//Import material
 			std::string file_folder = cur_path;
 			file_folder += texture.path.c_str();
-			App->res_manager->ImportFile(file_folder.c_str(), false);
+			App->res_manager->ImportFile(file_folder.c_str());
 		}
 	}
 

@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "ImporterManager.h"
 #include "ResourceMesh.h"
+#include "GameObject.h"
 
 // Vertex ---------------------------------------
 Vertex::Vertex()
@@ -182,8 +183,8 @@ bool ComponentMesh::Save(Serializer & array_root) const
 	//Insert actived
 	ret = comp_data.InsertBool("actived", actived);
 	
-	//Insert mesh file path
-	comp_data.InsertString("path", resource_mesh->GetOwnFile());
+	//Insert the resource mesh ID
+	comp_data.InsertInt("resource_mesh_id", resource_mesh->GetID());
 
 	//Insert draw material id
 	if (draw_material != nullptr)ret = comp_data.InsertInt("draw_material_id", draw_material->GetID());
@@ -218,4 +219,10 @@ bool ComponentMesh::Load(Serializer & data, std::vector<std::pair<Component*, ui
 void ComponentMesh::LinkComponent(const Component * target)
 {
 	draw_material = (ComponentMaterial*)target;
+}
+
+void ComponentMesh::UnLinkComponent()
+{
+	ComponentMeshRenderer* rend = (ComponentMeshRenderer*)parent->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+	if (rend != nullptr)rend->SetTargetMesh(nullptr);
 }

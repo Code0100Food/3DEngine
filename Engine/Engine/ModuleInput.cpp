@@ -296,7 +296,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_DROPFILE:
-			App->res_manager->ImportFile(event.drop.file, true);
+			App->res_manager->ImportFile(event.drop.file);
 
 			/*//Import/load the file in the engine file system
 			bool res = App->importer->ImportFile(event.drop.file);

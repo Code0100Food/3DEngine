@@ -1,1 +1,65 @@
-{"GameObjects":[{"actived":true,"name":"Unnamed","id":1890810463,"static":false,"Components":[{"type":"transformation","id":1515167070,"actived":true,"transform_matrix":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],"position":[0,0,0],"inherited_transform":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],"scale":[1,1,1],"euler_angles":[0,0,0]},{"type":"camera","id":902356183,"actived":true,"far_plane_dist":15,"near_plane_dist":0.0099999997764825821,"up_vec":[0,1,0],"front":[0,0,1],"vertical_fov":1.5707963705062866,"position":[0,0,0]}]},{"actived":true,"name":"Sphere","id":1185031344,"static":false,"Components":[{"type":"transformation","id":410945581,"actived":true,"transform_matrix":[0.13992007076740265,0.99016278982162476,0,0,-0.77625501155853271,0.10969273000955582,-0.62080240249633789,0,-0.61469542980194092,0.086862713098526001,0.78396707773208618,0,0,0,1.0899672508239746,1],"position":[0,0,1.0899672508239746],"inherited_transform":[0.13992007076740265,0.99016278982162476,0,0,-0.77625501155853271,0.10969273000955582,-0.62080240249633789,0,-0.61469542980194092,0.086862713098526001,0.78396707773208618,0,0,0,1.0899672508239746,1],"scale":[1,1,1],"euler_angles":[-6.3225202560424805,-37.929794311523438,79.782150268554688]},{"type":"sphere_mesh","id":1040450178,"actived":true,"primitive_type":"sphere_hi_primitive","radius":1},{"type":"mesh_renderer","id":1665149467,"actived":true,"target_mesh_id":1040450178,"render_face_normals":false,"render_vertex_normals":false}]}]}
+{
+  "GameObjects": [
+    {
+      "actived": true,
+      "name": "Unnamed",
+      "id": 883219180,
+      "static": false,
+      "Components": [
+        {
+          "type": "transformation",
+          "id": 1703266229,
+          "actived": true,
+          "transform_matrix": [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ],
+          "position": [ 0, 0, 0 ],
+          "inherited_transform": [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ],
+          "scale": [ 1, 1, 1 ],
+          "euler_angles": [ -0, 0, -0 ]
+        },
+        {
+          "type": "camera",
+          "id": 1198625516,
+          "actived": true,
+          "far_plane_dist": 15,
+          "near_plane_dist": 0.0099999997764825821,
+          "up_vec": [ 0, 1, 0 ],
+          "front": [ 0, 0, 1 ],
+          "vertical_fov": 1.5707963705062866,
+          "position": [ 0, 0, 0 ]
+        }
+      ]
+    },
+    {
+      "actived": true,
+      "name": "Sphere",
+      "id": 440010663,
+      "static": false,
+      "Components": [
+        {
+          "type": "transformation",
+          "id": 885012790,
+          "actived": true,
+          "transform_matrix": [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ],
+          "position": [ 0, 0, 0 ],
+          "inherited_transform": [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ],
+          "scale": [ 1, 1, 1 ],
+          "euler_angles": [ -0, 0, -0 ]
+        },
+        {
+          "type": "mesh_renderer",
+          "id": 2022136513,
+          "actived": true,
+          "target_mesh_id": 580725194,
+          "render_face_normals": false,
+          "render_vertex_normals": false
+        },
+        {
+          "type": "mesh",
+          "id": 580725194,
+          "actived": true,
+          "resource_mesh_id": 220170698
+        }
+      ]
+    }
+  ]
+}

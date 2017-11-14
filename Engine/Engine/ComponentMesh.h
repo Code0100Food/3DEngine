@@ -114,5 +114,6 @@ public:
 	bool	Save(Serializer& array_root)const;
 	bool	Load(Serializer& data, std::vector<std::pair<Component*, uint>>& links);
 	void	LinkComponent(const Component* target);
+	void	UnLinkComponent();
 };
 #endif // !_COMPONENT_MESH_H_

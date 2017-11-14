@@ -70,18 +70,6 @@ bool ComponentMaterial::Save(Serializer & array_root) const
 	{
 		//Only save the id of the resource
 		textures_array.InsertArrayInt(textures[k]->GetID());
-
-		/*Serializer texture_data;
-		
-		//Texture path
-		std::string file_name;
-		App->fs->GetFileNameFromPath(textures[k].path.c_str(), &file_name);
-		file_name = file_name.substr(0, file_name.length() - (file_name.length() - file_name.find_last_of(".")));
-
-		texture_data.InsertString("path", file_name.c_str());
-		texture_data.InsertString("type", textures[k].type.c_str());
-
-		textures_array.InsertArrayElement(texture_data);*/
 	}
 
 	//Save the built data in the components array

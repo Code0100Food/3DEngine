@@ -30,6 +30,8 @@ protected:
 	std::string		original_file;
 	std::string		own_file;
 
+	bool			const_in_memory = false;
+
 public:
 
 	//Get Methods -----------
@@ -44,6 +46,7 @@ public:
 	void SetResourceType(RESOURCE_TYPE n_type);
 	void SetOriginalFile(const char* str);
 	void SetOwnFile(const char* str);
+	void SetConstInMemory();
 
 	//Functionality ---------
 	//References Methods
@@ -62,4 +65,8 @@ public:
 	virtual void UnloadInMemory();
 
 };
+
+RESOURCE_TYPE	StrToResourceType(const char* str);
+const char*		ResourceTypeToStr(RESOURCE_TYPE type);
+
 #endif // !_RESOURCE_H_

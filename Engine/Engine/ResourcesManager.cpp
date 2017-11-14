@@ -46,6 +46,7 @@ bool ResourcesManager::Start()
 	cube_mesh->SetIndices(geometry_data.first);
 	cube_mesh->SetVertices(geometry_data.second);
 	cube_mesh->SetupMesh();
+	cube_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();
 	geometry_data.second.clear();
@@ -66,6 +67,7 @@ bool ResourcesManager::Start()
 	sphere_low_mesh->SetIndices(geometry_data.first);
 	sphere_low_mesh->SetVertices(geometry_data.second);
 	sphere_low_mesh->SetupMesh();
+	sphere_low_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();
 	geometry_data.second.clear();
@@ -84,6 +86,7 @@ bool ResourcesManager::Start()
 	sphere_hi_mesh->SetIndices(geometry_data.first);
 	sphere_hi_mesh->SetVertices(geometry_data.second);
 	sphere_hi_mesh->SetupMesh();
+	sphere_hi_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();
 	geometry_data.second.clear();
@@ -105,6 +108,7 @@ bool ResourcesManager::Start()
 	cylinder_low_mesh->SetIndices(geometry_data.first);
 	cylinder_low_mesh->SetVertices(geometry_data.second);
 	cylinder_low_mesh->SetupMesh();
+	cylinder_low_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();
 	geometry_data.second.clear();
@@ -124,9 +128,13 @@ bool ResourcesManager::Start()
 	cylinder_hi_mesh->SetIndices(geometry_data.first);
 	cylinder_hi_mesh->SetVertices(geometry_data.second);
 	cylinder_hi_mesh->SetupMesh();
+	cylinder_hi_mesh->SetConstInMemory();
 
 	geometry_data.first.clear();
 	geometry_data.second.clear();
+
+	//Load all the resources meta files ---------
+	LoadMetaFiles();
 
 	//Check the user assets ---------------------
 	LOG("Assets Updated with %i changes!", CheckAssetsResources());
@@ -191,10 +199,11 @@ ResourceMesh * ResourcesManager::GetPrimitiveResourceMesh(PRIMITIVE_TYPE type)
 	return nullptr;
 }
 
-bool ResourcesManager::ImportFile(const char * path, bool put_on_scene)
+bool ResourcesManager::ImportFile(const char * path)
 {
+	if (Find(path) != nullptr)return true; //If is already imported!
+
 	bool b_ret = false;
-	bool on_scene = put_on_scene;
 
 	//Get the file format to call the correct importer
 	std::string format;
@@ -203,51 +212,39 @@ bool ResourcesManager::ImportFile(const char * path, bool put_on_scene)
 	Resource* new_resource = nullptr;
 
 	std::string n_path = path;
-	int ret = -1;
 	if (!App->fs->IsInAssets(path))
 	{
-		ret = App->fs->CloneFile(path, App->fs->GetAssetsFolder(), &n_path);
-	}
-	else if (!CheckIfFileIsImported(path)) ret = 1;
-	else ret = 0;
-
-	if(ret == -1) //Error on file read case
-	{
-		LOG("[error] Error Importing [%s]", path);
-		return false;
-	}
-
-	else if (ret == 0) //File is in assets and imported but lets check if it's the actual version
-	{
-		LOG("File is already imported!");
-		//If the file already exists in assets lets update the content!
-		new_resource = Find(path);
-	}
-
-	else if (ret == 1) //File is not imported case
-	{
-		/*Import the file*/
-
-
-
-		switch (imp_type)
+		if (App->fs->CloneFile(path, App->fs->GetAssetsFolder(), &n_path) == -1)
 		{
-		case UNDEF_IMPORT:
-			LOG("[error] File format not supported!");
-			on_scene = false;
-			break;
-		case MATERIAL_IMPORT:
-			new_resource = App->res_manager->CreateResource(RESOURCE_TYPE::MATERIAL_RESOURCE);
-			b_ret = App->importer->material_importer.Import(n_path.c_str(), (ResourceMaterial*)new_resource);
-			break;
-		case MESH_IMPORT:
-			break;
-		case MODEL_IMPORT:
-			b_ret = App->importer->model_importer.Import(path);
-			break;
+			LOG("[error] Error Importing [%s]", path);
+			return false;
 		}
+	}
 
-		if (new_resource != nullptr)
+	switch (imp_type)
+	{
+	case UNDEF_IMPORT:
+		LOG("[error] File format not supported!");
+		break;
+	case MATERIAL_IMPORT:
+		new_resource = App->res_manager->CreateResource(RESOURCE_TYPE::MATERIAL_RESOURCE);
+		b_ret = App->importer->material_importer.Import(n_path.c_str(), (ResourceMaterial*)new_resource);
+		break;
+	case MESH_IMPORT:
+		break;
+	case MODEL_IMPORT:
+		b_ret = App->importer->model_importer.Import(path);
+		break;
+	}
+
+	if (new_resource != nullptr)
+	{
+		char meta_name[200];
+		sprintf(meta_name, "%s.meta", new_resource->GetOwnFile());
+		uint meta_id = this->FindMetaFile(meta_name);
+			
+		if (meta_id != 0)new_resource->SetID(meta_id);
+		else
 		{
 			//Generate a meta file to link the generated resource with the file data
 			Serializer meta_file;
@@ -259,32 +256,14 @@ bool ResourcesManager::ImportFile(const char * path, bool put_on_scene)
 				//Save the generated meta file
 				char* buffer = nullptr;
 				uint size = meta_file.Save(&buffer);
-				char meta_name[200];
-				sprintf(meta_name, "%s.meta", new_resource->GetOwnFile());
 				App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
-				
+
 				RELEASE_ARRAY(buffer);
 			}
-			else on_scene = false;
 		}
+		
 	}
 
-	if (on_scene)
-	{
-		switch (imp_type)
-		{
-		case MATERIAL_IMPORT:
-			if(new_resource != nullptr)App->textures->SetCustomTexutreID(((ResourceMaterial*)new_resource)->GetMaterialID());
-			break;
-		case MESH_IMPORT:
-			break;
-		case MODEL_IMPORT:
-			/*Here we generate model objects and link them*/
-			//b_ret = App->importer->model_importer.Load(path);
-			break;
-		}
-	}
-	
 	return b_ret;
 }
 
@@ -311,6 +290,95 @@ Resource * ResourcesManager::Find(const char * file_path) const
 	return nullptr;
 }
 
+uint ResourcesManager::FindMetaFile(const char * own_file_path) const
+{
+	//Look for the meta inside the metas folder
+	if (App->fs->GetMetasDir()->FindFile(own_file_path))
+	{
+		//Load meta and get the ID
+		char str[150];
+		sprintf(str, "%s%s", LIBRARY_META_FOLDER, own_file_path);
+		const JSON_Value* data = json_parse_file(str);
+		if (data == nullptr)
+		{
+			LOG("[error] Meta file %s found but error on load!", own_file_path);
+			return 0;
+		}
+
+		//Serializer whit all the new scene data
+		Serializer file_data(data);
+
+		return file_data.GetInt("id");
+	}
+
+	return 0;
+}
+
+void ResourcesManager::LoadMetaFiles()
+{
+	//Set String to look inside Parent folder
+	char str[150];
+	sprintf(str, "%s\\*.*", App->fs->GetMetasDir()->GetPath());
+
+	//Will recieve all the files list
+	WIN32_FIND_DATA files_list;
+
+	//Will handle the list when changing the looked element
+	HANDLE file_handle = FindFirstFileA(LPCSTR(str), &files_list);
+
+	if (file_handle == INVALID_HANDLE_VALUE)
+	{
+		LOG("Error in path");
+	}
+
+	DWORD attribute;
+
+	bool still_elements = true;
+	while (still_elements)
+	{
+		if (strcmp(files_list.cFileName,".") == 0 || strcmp(files_list.cFileName,"..") == 0)
+		{
+			//Jump to the other element
+			if (!FindNextFile(file_handle, &files_list))
+			{
+				still_elements = false;
+			}
+			continue;
+		}
+
+		//Load the meta file
+		char str[200];
+		sprintf(str, "%s%s", LIBRARY_META_FOLDER, files_list.cFileName);
+		const JSON_Value* val = json_parse_file(str);
+		if (val == NULL)
+		{
+			LOG("[error] Error on meta file load!");
+		}
+		else
+		{
+			Serializer meta_data(val);
+
+			Resource* new_resource = nullptr;
+			RESOURCE_TYPE ty = StrToResourceType(meta_data.GetString("res_type"));
+			if (ty != UNDEF_RESOURCE)
+			{
+				new_resource = CreateResource(ty);
+				new_resource->SetID(meta_data.GetInt("id"));
+				new_resource->SetOriginalFile(meta_data.GetString("original_file"));
+				new_resource->SetOwnFile(meta_data.GetString("own_file"));
+			}
+		}
+
+		//Jump to the other element
+		if (!FindNextFile(file_handle, &files_list))
+		{
+			still_elements = false;
+		}
+	}
+
+	FindClose(file_handle);
+}
+
 void ResourcesManager::BlitConfigInfo()
 {
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
@@ -324,6 +392,8 @@ ResourceMesh * ResourcesManager::BlitImportedMeshes() const
 {
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
+		if (res->second->GetResourceType() != RESOURCE_TYPE::MESH_RESOURCE)continue;
+
 		if (ImGui::Button(res->second->GetOwnFile()))
 		{
 			return (ResourceMesh*)res->second;

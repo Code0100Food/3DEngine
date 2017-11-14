@@ -43,7 +43,7 @@ bool ModuleScene::Start()
 	//Load a scene if theres a saved one
 	char str[50];
 	sprintf(str, "%sscene.json", LIBRARY_FOLDER);
-	if (!App->scene->LoadSerializedScene(str))
+	if (false)//!App->scene->LoadSerializedScene(str))
 	{
 		LOG("No default saved scene!");
 		//Generate a default main camera
@@ -308,127 +308,11 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 	{
 		if (target->FindMeshComponent() == nullptr)
 		{
-			if (ImGui::Button("Mesh"))
-			{
-				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
-
-				target->CreateComponent(COMPONENT_TYPE::COMP_MESH);
-
-				/*In Process*/
-
-				show_components_window = false;
-			}
-			if (ImGui::Button("Cube Mesh"))
-			{
-				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
-
-				//Generate the cube logic
-				math::AABB cube_logic;
-				cube_logic.minPoint = math::float3(0, 0, 0);
-				cube_logic.maxPoint = math::float3(1, 1, 1);
-
-				//Create the cube mesh
-				ComponentCubeMesh* cube_mesh = (ComponentCubeMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_CUBE_MESH);
-				cube_mesh->SetGeometry(cube_logic);
-				cube_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_CUBE));
-				target->AdjustBoundingBox();
-
-				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
-				if (rend != nullptr)rend->SetTargetMesh(cube_mesh);
-
-				show_components_window = false;
-			}
-			if (ImGui::Button("Sphere Mesh(LowPoly)"))
-			{
-				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
-
-				//Generate the sphere logic
-				math::Sphere sphere_logic;
-				sphere_logic.r = 1;
-				sphere_logic.pos = math::float3(0, 0, 0);
-
-				//Create the sphere mesh
-				ComponentSphereMesh* sphere_mesh = (ComponentSphereMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_SPHERE_MESH);
-				sphere_mesh->SetGeometry(sphere_logic);
-				sphere_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_SPHERE));
-				target->AdjustBoundingBox();
-				
-				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
-				if (rend != nullptr)rend->SetTargetMesh(sphere_mesh);
-
-				show_components_window = false;
-			}
-			if (ImGui::Button("Sphere Mesh(HiPoly)"))
-			{
-				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
-
-				//Generate the sphere logic
-				math::Sphere sphere_logic;
-				sphere_logic.r = 1;
-				sphere_logic.pos = math::float3(0, 0, 0);
-
-				//Create the sphere mesh
-				ComponentSphereMesh* sphere_mesh = (ComponentSphereMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_SPHERE_MESH);
-				sphere_mesh->SetGeometry(sphere_logic);
-				sphere_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_SPHERE_HI));
-				target->AdjustBoundingBox();
-
-				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
-				if (rend != nullptr)rend->SetTargetMesh(sphere_mesh);
-
-				show_components_window = false;
-			}
-			if (ImGui::Button("Cylinder Mesh(LowPoly)"))
-			{
-				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
-
-				//Generate the cube logic
-				math::Cylinder cylinder_logic;
-				cylinder_logic.r = 1;
-				cylinder_logic.l.b = math::float3(0, 0, 0);
-				cylinder_logic.l.a = math::float3(0, 1, 0);
-
-				//Create the cylinder mesh
-				ComponentCylinderMesh* cylinder_mesh = (ComponentCylinderMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_CYLINDER_MESH);
-				cylinder_mesh->SetGeometry(cylinder_logic);
-				cylinder_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER));
-				target->AdjustBoundingBox();
-
-				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
-				if (rend != nullptr)rend->SetTargetMesh(cylinder_mesh);
-
-				show_components_window = false;
-			}
-			if (ImGui::Button("Cylinder Mesh(HiPoly)"))
-			{
-				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
-
-				//Generate the cube logic
-				math::Cylinder cylinder_logic;
-				cylinder_logic.r = 1;
-				cylinder_logic.l.b = math::float3(0, 0, 0);
-				cylinder_logic.l.a = math::float3(0, 1, 0);
-
-				//Create the cylinder mesh
-				ComponentCylinderMesh* cylinder_mesh = (ComponentCylinderMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_CYLINDER_MESH);
-				cylinder_mesh->SetGeometry(cylinder_logic);
-				cylinder_mesh->SetResourceMesh(App->res_manager->GetPrimitiveResourceMesh(PRIMITIVE_TYPE::PRIMITIVE_CYLINDER_HI));
-				target->AdjustBoundingBox();
-
-				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
-				if (rend != nullptr)rend->SetTargetMesh(cylinder_mesh);
-
-				show_components_window = false;
-			}
+			ImGui::Separator();
 
 			ResourceMesh* n_mesh_resource = App->res_manager->BlitImportedMeshes();
 			if (n_mesh_resource != nullptr)
-			{
-				if (n_mesh_resource->GetReferences() == 0)
-				{
-					n_mesh_resource->LoadInMemory();
-				}
-				
+			{		
 				//Create the cylinder mesh
 				ComponentMesh* n_mesh_component = (ComponentMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_MESH);
 				n_mesh_component->SetResourceMesh(n_mesh_resource);
@@ -442,6 +326,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 		}
 		if (target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER) == nullptr)
 		{
+			ImGui::Separator();
+
 			if (ImGui::Button("Mesh Renderer"))
 			{
 				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
@@ -458,6 +344,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 		}
 		if (target->FindComponent(COMPONENT_TYPE::COMP_MATERIAL) == nullptr)
 		{
+			ImGui::Separator();
+
 			if (ImGui::Button("Material"))
 			{
 				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
@@ -472,6 +360,8 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 
 		if (target->FindComponent(COMPONENT_TYPE::COMP_CAMERA) == nullptr)
 		{
+			ImGui::Separator();
+
 			if (ImGui::Button("Camera"))
 			{
 				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);

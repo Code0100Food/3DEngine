@@ -39,6 +39,8 @@ public:
 	void		BlitDirectoryChilds();
 	void		BlitFilesInside()const;
 	uint		ImportAllFilesInside();
+	bool		FindFile(const char* file_name)const;
+
 };
 
 class FileSystem : public Module
@@ -57,6 +59,8 @@ private:
 
 	Directory* user_root_dir = nullptr;
 	Directory* engine_root_dir = nullptr;
+	Directory* metas_dir = nullptr;
+
 	Directory* focus_dir = nullptr;
 
 public:
@@ -67,6 +71,7 @@ public:
 
 	//Get Methods -----------
 	Directory* GetUserRootDir()const;
+	Directory* GetMetasDir()const;
 
 	//Functionality ---------
 	//Load/Save
@@ -87,7 +92,7 @@ public:
 	Directory*			GetAssetsFolder()const;
 	void				ChangeFileFormat(const char* path,const char* new_format, std::string* new_path)const;
 	bool				IsInAssets(const char* path)const;
-
+	
 	//UI
 	void				BlitFileSystemInfo();
 

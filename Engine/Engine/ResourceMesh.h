@@ -17,6 +17,9 @@ private:
 	std::vector<Vertex>			vertices;
 	std::vector<uint>			indices;
 
+	std::vector<math::float3> vertex_normals;
+	std::vector<math::float3> face_normals;
+
 	uint						num_tris = 0;
 	uint						num_vertex = 0;
 
@@ -51,11 +54,12 @@ public:
 	void	DeleteBuffers();
 
 	//Save/Load Methods -----
-	bool	Save(Serializer& array_root)const;
+	bool	Save(Serializer& file_root)const;
 	bool	Load(Serializer& data);
 
 	//Load/Unload in memory
 	void	LoadInMemory();
+	void	UnloadInMemory();
 };
 
 #endif // !_RESOURCE_MESH_H_

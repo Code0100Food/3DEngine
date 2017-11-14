@@ -58,7 +58,7 @@ void ResourceMaterial::SetMaterialID(uint val)
 
 void ResourceMaterial::SetMaterialType(const char * str)
 {
-	type = str;
+	mat_type = str;
 }
 
 void ResourceMaterial::SetColorFormat(COLOR_FORMAT fmt)
@@ -77,12 +77,13 @@ bool ResourceMaterial::Save(Serializer & file_root) const
 {
 	//Save all the standard resource data
 	file_root.InsertInt("id", id);
+	file_root.InsertString("res_type", ResourceTypeToStr(type));
 	file_root.InsertString("original_file", original_file.c_str());
 	file_root.InsertString("own_file", own_file.c_str());
 
 	//Save all the material resource data
-	file_root.InsertString("type", type.c_str());
-	file_root.InsertInt("width", width);
+	file_root.InsertString("mat_type", mat_type.c_str());
+	/*file_root.InsertInt("width", width);
 	file_root.InsertInt("height", height);
 	file_root.InsertInt("depth", depth);
 	file_root.InsertInt("bytes_per_pixel", bytes_per_pixel);
@@ -91,14 +92,19 @@ bool ResourceMaterial::Save(Serializer & file_root) const
 	file_root.InsertInt("bytes", bytes);
 	file_root.InsertInt("mat_id", mat_id);
 	file_root.InsertInt("height", height);
-	file_root.InsertString("color_format", ColorFormatToStr(color_format));
+	file_root.InsertString("color_format", ColorFormatToStr(color_format));*/
 
+	return true;
+}
+
+bool ResourceMaterial::Load(Serializer & data)
+{
 	return true;
 }
 
 void ResourceMaterial::BlitUI() const
 {
-	ImGui::Text("%s", type.c_str());
+	ImGui::Text("%s", mat_type.c_str());
 	ImGui::Image((void*)mat_id, ImVec2(100, 100));
 	ImGui::Text("Size: %ix%i", width, height);
 }

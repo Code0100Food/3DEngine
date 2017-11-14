@@ -119,7 +119,6 @@ void ResourceMesh::SetupMesh()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint), &indices[0], GL_STATIC_DRAW);
 
 	//Build mesh vertex normals
-	std::vector<math::float3> vertex_normals;
 	for (uint k = 0; k < num_vertex; k++)
 	{
 		vertex_normals.push_back(vertices.data()[k].position);
@@ -133,7 +132,6 @@ void ResourceMesh::SetupMesh()
 	//Build mesh face normals
 	if (num_tris != 0)
 	{
-		std::vector<math::float3> face_normals;
 		uint size = indices.size();
 		for (uint k = 0; k < size - 2; k += 3)
 		{
@@ -162,8 +160,14 @@ void ResourceMesh::DeleteBuffers()
 	if (text_coordsID != NULL)		glDeleteBuffers(1, &text_coordsID);
 }
 
-bool ResourceMesh::Save(Serializer & array_root) const
+bool ResourceMesh::Save(Serializer & file_root) const
 {
+	//Save all the standard resource data
+	file_root.InsertInt("id", id);
+	file_root.InsertString("res_type", ResourceTypeToStr(type));
+	file_root.InsertString("original_file", original_file.c_str());
+	file_root.InsertString("own_file", own_file.c_str());
+
 	return true;
 }
 
@@ -175,4 +179,12 @@ bool ResourceMesh::Load(Serializer & data)
 void ResourceMesh::LoadInMemory()
 {
 	SetupMesh();
+}
+
+void ResourceMesh::UnloadInMemory()
+{
+	vertex_normals.clear();
+	face_normals.clear();
+
+	DeleteBuffers();
 }
