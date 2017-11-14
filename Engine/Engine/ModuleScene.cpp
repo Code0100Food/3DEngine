@@ -310,7 +310,7 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 		{
 			ImGui::Separator();
 
-			ResourceMesh* n_mesh_resource = App->res_manager->BlitImportedMeshes();
+			ResourceMesh* n_mesh_resource = (ResourceMesh*)App->res_manager->BlitResourceButtonsByType(RESOURCE_TYPE::MESH_RESOURCE);
 			if (n_mesh_resource != nullptr)
 			{		
 				//Create the cylinder mesh
@@ -346,13 +346,16 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 		{
 			ImGui::Separator();
 
-			if (ImGui::Button("Material"))
+			ResourceMaterial* n_mat_resource = (ResourceMaterial*)App->res_manager->BlitResourceButtonsByType(RESOURCE_TYPE::MATERIAL_RESOURCE);
+			if (n_mat_resource != nullptr)
 			{
-				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+				//Create the cylinder mesh
+				ComponentMaterial* n_material_component = (ComponentMaterial*)target->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
+				n_material_component->AddTexture(n_mat_resource);
+				target->AdjustBoundingBox();
 
-				target->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
-
-				/*In Process*/
+				ComponentMesh* mesh = (ComponentMesh*)target->FindMeshComponent();
+				if (mesh != nullptr)mesh->SetDrawMaterial(n_material_component);
 
 				show_components_window = false;
 			}

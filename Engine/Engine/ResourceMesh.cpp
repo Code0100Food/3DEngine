@@ -4,6 +4,7 @@
 
 #include "Application.h"
 #include "Serializer.h"
+#include "ImporterManager.h"
 
 // Constructors =================================
 ResourceMesh::ResourceMesh() :Resource(MESH_RESOURCE)
@@ -173,11 +174,16 @@ bool ResourceMesh::Save(Serializer & file_root) const
 
 bool ResourceMesh::Load(Serializer & data)
 {
+	id = data.GetInt("id");
+	original_file = data.GetString("original_file");
+	own_file = data.GetString("own_file");
+
 	return true;
 }
 
 void ResourceMesh::LoadInMemory()
 {
+	App->importer->mesh_importer.Load(this);
 	SetupMesh();
 }
 
@@ -185,6 +191,11 @@ void ResourceMesh::UnloadInMemory()
 {
 	vertex_normals.clear();
 	face_normals.clear();
+	vertices.clear();
+	indices.clear();
+
+	num_tris = 0;
+	num_vertex = 0;
 
 	DeleteBuffers();
 }

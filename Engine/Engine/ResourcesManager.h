@@ -51,7 +51,7 @@ public:
 	void		LoadMetaFiles();
 	
 	//UI
-	void			BlitConfigInfo();
-	ResourceMesh*	BlitImportedMeshes()const;
+	void				BlitConfigInfo();
+	Resource*			BlitResourceButtonsByType(RESOURCE_TYPE type);
 };
 #endif // !_RESOURCES_MANAGER_

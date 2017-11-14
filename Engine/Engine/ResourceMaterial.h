@@ -32,7 +32,7 @@ private:
 	uint bytes = 0;
 	uint mat_id = 0;
 
-	std::string mat_type;
+	std::string mat_type = "undef_material";
 
 	COLOR_FORMAT color_format = UNKNOWN_COLOR;
 
@@ -57,6 +57,10 @@ public:
 	//Save/Load Methods
 	bool Save(Serializer& file_root)const;
 	bool Load(Serializer& data);
+
+	//Load/Unload in memory
+	void	LoadInMemory();
+	void	UnloadInMemory();
 
 	//UI
 	void BlitUI()const;

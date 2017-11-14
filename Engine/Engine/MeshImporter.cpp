@@ -35,7 +35,6 @@ bool MeshImporter::Import(const char* name, std::vector<uint> indices, std::vect
 	// Store vertices positions
 	cur_buffer_pos += bytes;
 	bytes = sizeof(float) * num_vertices * 3;
-	std::vector<math::float3> v_pos;
 	for (uint k = 0; k < num_vertices; k++)v_pos.push_back(vertices[k].position);
 	memcpy(cur_buffer_pos, v_pos.data(), bytes);
 	v_pos.clear();
@@ -43,7 +42,6 @@ bool MeshImporter::Import(const char* name, std::vector<uint> indices, std::vect
 	//Store vertices normals
 	cur_buffer_pos += bytes;
 	bytes = sizeof(float) * num_vertices * 3;
-	std::vector<math::float3> v_norm;
 	for (uint k = 0; k < num_vertices; k++)v_norm.push_back(vertices[k].normals);
 	memcpy(cur_buffer_pos, v_norm.data(), bytes);
 	v_norm.clear();
@@ -51,7 +49,6 @@ bool MeshImporter::Import(const char* name, std::vector<uint> indices, std::vect
 	//Store vertices texture coords
 	cur_buffer_pos += bytes;
 	bytes = sizeof(float) * num_vertices * 2;
-	std::vector<math::float2> v_tex_coords;
 	for (uint k = 0; k < num_vertices; k++)v_tex_coords.push_back(vertices[k].tex_coords);
 	memcpy(cur_buffer_pos, v_tex_coords.data(), bytes);
 	v_tex_coords.clear();
@@ -64,7 +61,10 @@ bool MeshImporter::Import(const char* name, std::vector<uint> indices, std::vect
 	App->fs->SaveFile(file_name.c_str(), (char*)data, size, LIBRARY_MESH_FOLDER);
 
 	file_name.clear();
-	
+	v_pos.clear();
+	v_norm.clear();
+	v_tex_coords.clear();
+
 	return true;
 }
 
@@ -97,7 +97,6 @@ bool MeshImporter::Load(const char * path)
 		uint* indices_i = new uint[num_indices];
 		memcpy(indices_i, cursor, bytes);
 
-		std::vector<uint> indices;
 		for (uint k = 0; k < num_indices; k++)indices.push_back(indices_i[k]);
 		mesh_comp->SetIndices(indices);
 		RELEASE_ARRAY(indices_i);
@@ -121,7 +120,6 @@ bool MeshImporter::Load(const char * path)
 		memcpy(tex_coords_i, cursor, bytes);
 
 		//Built vertex with the loaded data
-		std::vector<Vertex> vertices;
 		for (uint k = 0; k < num_vertices; k++)vertices.push_back(Vertex(vertices_i[k], normals_i[k], tex_coords_i[k]));
 		mesh_comp->SetVertices(vertices);
 		
@@ -140,6 +138,9 @@ bool MeshImporter::Load(const char * path)
 		
 		//Active mesh renderer
 		mesh_rend_comp->SetTargetMesh(mesh_comp);
+
+		indices.clear();
+		vertices.clear();
 	}
 	else
 	{
@@ -148,6 +149,72 @@ bool MeshImporter::Load(const char * path)
 	}
 	RELEASE_ARRAY(buffer);
 	return true;
+}
+
+bool MeshImporter::Load(ResourceMesh * target)
+{
+	//Load the buffer from the file
+	char* buffer = nullptr;
+	char path[250];
+	sprintf(path, "%s%s", LIBRARY_MESH_FOLDER, target->GetOwnFile());
+	App->fs->LoadFile(path, &buffer);
+
+	if (buffer)
+	{
+		//Focus the cursor
+		char* cursor = buffer;
+
+		//Load  amount of indices and vertices
+		uint ranges[2];
+		uint bytes = sizeof(ranges);
+		memcpy(ranges, cursor, bytes);
+		uint num_indices = ranges[0];
+		uint num_vertices = ranges[1];
+
+		// Load indices
+		cursor += bytes;
+		bytes = sizeof(uint) * num_indices;
+		uint* indices_i = new uint[num_indices];
+		memcpy(indices_i, cursor, bytes);
+
+		for (uint k = 0; k < num_indices; k++)indices.push_back(indices_i[k]);
+		target->SetIndices(indices);
+		RELEASE_ARRAY(indices_i);
+
+		//Load vertices
+		cursor += bytes;
+		bytes = sizeof(math::float3) * num_vertices;
+		math::float3* vertices_i = new math::float3[num_vertices];
+		memcpy(vertices_i, cursor, bytes);
+
+		//Load normals
+		cursor += bytes;
+		bytes = sizeof(math::float3) * num_vertices;
+		math::float3* normals_i = new math::float3[num_vertices];
+		memcpy(normals_i, cursor, bytes);
+
+		//Load texture coords
+		cursor += bytes;
+		bytes = sizeof(math::float2) * num_vertices;
+		math::float2* tex_coords_i = new math::float2[num_vertices];
+		memcpy(tex_coords_i, cursor, bytes);
+
+		//Built vertex with the loaded data
+		for (uint k = 0; k < num_vertices; k++)vertices.push_back(Vertex(vertices_i[k], normals_i[k], tex_coords_i[k]));
+		target->SetVertices(vertices);
+
+		//Release all the arrays
+		RELEASE_ARRAY(vertices_i);
+		RELEASE_ARRAY(normals_i);
+		RELEASE_ARRAY(tex_coords_i);
+
+		indices.clear();
+		vertices.clear();
+
+		return true;
+	}
+
+	return false;
 }
 
 bool MeshImporter::Load(const char * path, ComponentMesh* target)
@@ -177,7 +244,6 @@ bool MeshImporter::Load(const char * path, ComponentMesh* target)
 		uint* indices_i = new uint[num_indices];
 		memcpy(indices_i, cursor, bytes);
 
-		std::vector<uint> indices;
 		for (uint k = 0; k < num_indices; k++)indices.push_back(indices_i[k]);
 		target->SetIndices(indices);
 		RELEASE_ARRAY(indices_i);
@@ -201,7 +267,6 @@ bool MeshImporter::Load(const char * path, ComponentMesh* target)
 		memcpy(tex_coords_i, cursor, bytes);
 
 		//Built vertex with the loaded data
-		std::vector<Vertex> vertices;
 		for (uint k = 0; k < num_vertices; k++)vertices.push_back(Vertex(vertices_i[k], normals_i[k], tex_coords_i[k]));
 		target->SetVertices(vertices);
 
@@ -218,6 +283,9 @@ bool MeshImporter::Load(const char * path, ComponentMesh* target)
 
 		//Built the mesh buffers
 		target->SetupMesh();
+
+		indices.clear();
+		vertices.clear();
 	}
 	else
 	{

@@ -16,8 +16,8 @@
 #include <fstream>
 #include <iostream>
 
-#include "ComponentMaterial.h"
-#include "ResourceMaterial.h"
+#include "ResourcesManager.h"
+#include "Serializer.h"
 
 // Constructors =================================
 MaterialImporter::MaterialImporter()
@@ -138,11 +138,34 @@ bool MaterialImporter::Load(ResourceMaterial* to_load)
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	//Load the image
-	ILboolean success = ilLoadImage(to_load->GetOwnFile());
+	char path[250];
+	sprintf(path, "%s%s", LIBRARY_TEXTURES_FOLDER, to_load->GetOwnFile());
+	ILboolean success = ilLoadImage(path);
 
 	//If the image is correctly loaded
 	if (success)
 	{
+		//Get the information of the original file
+		ILinfo info;
+		iluGetImageInfo(&info);
+		to_load->SetWidth(info.Width);
+		to_load->SetHeight(info.Height);
+		to_load->SetBytesPerPixel(info.Bpp);
+		to_load->SetDepth(info.Depth);
+		to_load->SetNumMipMaps(info.NumMips);
+		to_load->SetNumLayers(info.NumLayers);
+		to_load->SetBytes(info.SizeOfData);
+
+		switch (info.Format)
+		{
+		case IL_COLOUR_INDEX:	to_load->SetColorFormat(COLOR_FORMAT::INDEX_COLOR);		break;
+		case IL_RGB:			to_load->SetColorFormat(COLOR_FORMAT::RGB_COLOR);			break;
+		case IL_RGBA:			to_load->SetColorFormat(COLOR_FORMAT::RGBA_COLOR);			break;
+		case IL_BGR:			to_load->SetColorFormat(COLOR_FORMAT::BGR_COLOR);			break;
+		case IL_BGRA:			to_load->SetColorFormat(COLOR_FORMAT::BGRA_COLOR);			break;
+		case IL_LUMINANCE:		to_load->SetColorFormat(COLOR_FORMAT::LUMINANCE_COLOR);	break;
+		}
+
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		success = ilConvertImage(ilGetInteger(IL_IMAGE_FORMAT), IL_UNSIGNED_BYTE);
 
@@ -196,7 +219,7 @@ bool MaterialImporter::Load(ResourceMaterial* to_load)
 	return (textureID != 0);
 }
 
-bool MaterialImporter::Import(const char* path, ResourceMaterial* resource)
+bool MaterialImporter::Import(const char* path)
 {
 	//Texture buffer
 	char* buffer = nullptr;
@@ -204,35 +227,14 @@ bool MaterialImporter::Import(const char* path, ResourceMaterial* resource)
 
 	if (buffer && lenght)
 	{
+		ResourceMaterial* resource = (ResourceMaterial*)App->res_manager->CreateResource(RESOURCE_TYPE::MATERIAL_RESOURCE);
+
 		ILuint image_name;
 		ilGenImages(1, &image_name);
 		ilBindImage(image_name);
-		resource->SetMaterialID(image_name);
-		resource->SetOriginalFile(path);
-
+		
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, lenght))
 		{
-			//Get the information of the original file
-			ILinfo info;
-			iluGetImageInfo(&info);
-			resource->SetWidth(info.Width);
-			resource->SetHeight(info.Height);
-			resource->SetBytesPerPixel(info.Bpp);
-			resource->SetDepth(info.Depth);
-			resource->SetNumMipMaps(info.NumMips);
-			resource->SetNumLayers(info.NumLayers);
-			resource->SetBytes(info.SizeOfData);
-
-			switch (info.Format)
-			{
-			case IL_COLOUR_INDEX:	resource->SetColorFormat(COLOR_FORMAT::INDEX_COLOR);		break;
-			case IL_RGB:			resource->SetColorFormat(COLOR_FORMAT::RGB_COLOR);			break;
-			case IL_RGBA:			resource->SetColorFormat(COLOR_FORMAT::RGBA_COLOR);			break;
-			case IL_BGR:			resource->SetColorFormat(COLOR_FORMAT::BGR_COLOR);			break;
-			case IL_BGRA:			resource->SetColorFormat(COLOR_FORMAT::BGRA_COLOR);			break;
-			case IL_LUMINANCE:		resource->SetColorFormat(COLOR_FORMAT::LUMINANCE_COLOR);	break;
-			}
-
 			//Import a dds file of the original file in the correct folder
 			ilEnable(IL_FILE_OVERWRITE);
 
@@ -254,6 +256,7 @@ bool MaterialImporter::Import(const char* path, ResourceMaterial* resource)
 					App->fs->GetFileNameFromPath(path, &name);
 					App->fs->ChangeFileFormat(name.c_str(), "dds", &name);
 					resource->SetOwnFile(name.c_str());
+					resource->SetOriginalFile(path);
 					App->fs->SaveFile(name.c_str(), (char*)data, size, LIBRARY_TEXTURES_FOLDER);
 				}
 
@@ -261,11 +264,30 @@ bool MaterialImporter::Import(const char* path, ResourceMaterial* resource)
 			}
 			ilDeleteImages(1, &image_name);
 		}
+
+		char meta_name[200];
+		sprintf(meta_name, "%s.meta", resource->GetOwnFile());
+
+		//Generate a meta file to link the generated resource with the file data
+		Serializer meta_file;
+
+		bool ret = resource->Save(meta_file);
+
+		if (ret)
+		{
+			//Save the generated meta file
+			char* buffer = nullptr;
+			uint size = meta_file.Save(&buffer);
+			App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
+
+			RELEASE_ARRAY(buffer);
+		}		
 	}
 	else
 	{
 		LOG("Cannot load texture from path: %s", path);
 		return false;
 	}
+
 	return true;
 }

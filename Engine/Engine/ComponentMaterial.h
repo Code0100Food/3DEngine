@@ -28,7 +28,7 @@ public:
 
 	//Functionality ---------
 	void BlitComponentInspector();
-	void AddTexture(const ResourceMaterial* tex);
+	void AddTexture(ResourceMaterial* tex);
 
 	//Save/Load Methods -----
 	bool Save(Serializer& array_root)const;

@@ -16,7 +16,7 @@ public:
 
 	bool Load(const char* path, ComponentMaterial* target);
 	bool Load(ResourceMaterial* to_load);
-	bool Import(const char* path, ResourceMaterial* resource);
+	bool Import(const char* path);
 
 };
 #endif // !_MATERIAL_IMPORTER_H_

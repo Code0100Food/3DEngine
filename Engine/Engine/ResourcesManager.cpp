@@ -209,7 +209,6 @@ bool ResourcesManager::ImportFile(const char * path)
 	std::string format;
 	App->fs->GetFileFormatFromPath(path, &format);
 	IMPORT_TYPE imp_type = App->importer->GetImportTypeFromFormat(format.c_str());
-	Resource* new_resource = nullptr;
 
 	std::string n_path = path;
 	if (!App->fs->IsInAssets(path))
@@ -227,41 +226,13 @@ bool ResourcesManager::ImportFile(const char * path)
 		LOG("[error] File format not supported!");
 		break;
 	case MATERIAL_IMPORT:
-		new_resource = App->res_manager->CreateResource(RESOURCE_TYPE::MATERIAL_RESOURCE);
-		b_ret = App->importer->material_importer.Import(n_path.c_str(), (ResourceMaterial*)new_resource);
+		b_ret = App->importer->material_importer.Import(n_path.c_str());
 		break;
 	case MESH_IMPORT:
 		break;
 	case MODEL_IMPORT:
-		b_ret = App->importer->model_importer.Import(path);
+		b_ret = App->importer->model_importer.Import(n_path.c_str());
 		break;
-	}
-
-	if (new_resource != nullptr)
-	{
-		char meta_name[200];
-		sprintf(meta_name, "%s.meta", new_resource->GetOwnFile());
-		uint meta_id = this->FindMetaFile(meta_name);
-			
-		if (meta_id != 0)new_resource->SetID(meta_id);
-		else
-		{
-			//Generate a meta file to link the generated resource with the file data
-			Serializer meta_file;
-
-			bool ret = new_resource->Save(meta_file);
-
-			if (ret)
-			{
-				//Save the generated meta file
-				char* buffer = nullptr;
-				uint size = meta_file.Save(&buffer);
-				App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
-
-				RELEASE_ARRAY(buffer);
-			}
-		}
-		
 	}
 
 	return b_ret;
@@ -363,9 +334,7 @@ void ResourcesManager::LoadMetaFiles()
 			if (ty != UNDEF_RESOURCE)
 			{
 				new_resource = CreateResource(ty);
-				new_resource->SetID(meta_data.GetInt("id"));
-				new_resource->SetOriginalFile(meta_data.GetString("original_file"));
-				new_resource->SetOwnFile(meta_data.GetString("own_file"));
+				new_resource->Load(meta_data);
 			}
 		}
 
@@ -388,17 +357,17 @@ void ResourcesManager::BlitConfigInfo()
 	}
 }
 
-ResourceMesh * ResourcesManager::BlitImportedMeshes() const
+Resource * ResourcesManager::BlitResourceButtonsByType(RESOURCE_TYPE type)
 {
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
-		if (res->second->GetResourceType() != RESOURCE_TYPE::MESH_RESOURCE)continue;
+		if (res->second->GetResourceType() != type)continue;
 
 		if (ImGui::Button(res->second->GetOwnFile()))
 		{
 			return (ResourceMesh*)res->second;
 		}
 	}
-	
+
 	return nullptr;
 }

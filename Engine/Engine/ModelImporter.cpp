@@ -376,12 +376,9 @@ void ModelImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	char f_name[100];
 	sprintf(f_name, "%s.fiesta", name);
 	resource_mesh->SetOwnFile(f_name);
-	resource_mesh->SetIndices(indices);
-	resource_mesh->SetVertices(vertices);
 		
+	//Save the the meta file
 	resource_mesh->Save(meta_file);
-
-	//Save the generated meta file
 	char* buffer = nullptr;
 	uint size = meta_file.Save(&buffer);
 	char meta_name[200];

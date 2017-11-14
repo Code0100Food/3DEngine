@@ -1,7 +1,10 @@
 #include "ResourceMaterial.h"
 #include "Serializer.h"
-
+#include "Application.h"
+#include "ImporterManager.h"
 #include "imgui/imgui.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 // Constructors =================================
 ResourceMaterial::ResourceMaterial() :Resource(MATERIAL_RESOURCE)
@@ -99,7 +102,33 @@ bool ResourceMaterial::Save(Serializer & file_root) const
 
 bool ResourceMaterial::Load(Serializer & data)
 {
+	id = data.GetInt("id");
+	original_file = data.GetString("original_file");
+	own_file = data.GetString("own_file");
+	mat_type = data.GetString("mat_type");
+
 	return true;
+}
+
+void ResourceMaterial::LoadInMemory()
+{
+	App->importer->material_importer.Load(this);
+}
+
+void ResourceMaterial::UnloadInMemory()
+{
+	glDeleteTextures(1, &mat_id);
+
+	width = 0;
+	height = 0;
+	depth = 0;
+	bytes_per_pixel = 0;
+	num_mip_maps = 0;
+	num_layers = 0;
+	bytes = 0;
+	mat_id = 0;
+	mat_type = "undef_material";
+	color_format = UNKNOWN_COLOR;
 }
 
 void ResourceMaterial::BlitUI() const

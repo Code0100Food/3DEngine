@@ -44,9 +44,10 @@ void ComponentMaterial::BlitComponentInspector()
 	}
 }
 
-void ComponentMaterial::AddTexture(const ResourceMaterial* tex)
+void ComponentMaterial::AddTexture(ResourceMaterial* tex)
 {
 	textures.push_back((ResourceMaterial*)tex);
+	tex->AddReference();
 }
 
 bool ComponentMaterial::Save(Serializer & array_root) const
