@@ -614,7 +614,7 @@ math::AABB GameObject::GetTransformedBoundingBox()
 {
 	math::AABB tmp = original_bounding_box;
 	ComponentTransform* trans = (ComponentTransform*)FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-	if (trans != nullptr)tmp.TransformAsAABB(trans->GetTransform().Transposed());
+	if (trans != nullptr)tmp.TransformAsAABB(trans->GetTransform());
 	return tmp;
 }
 

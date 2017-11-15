@@ -38,7 +38,7 @@ bool ComponentTransform::Update(float dt)
 	if (!parent->GetParent()->IsRoot())
 	{
 		ComponentTransform* tmp = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION));
-		inherited_transform = tmp->inherited_transform * transform_matrix;
+		inherited_transform = transform_matrix.Transposed() * tmp->inherited_transform;
 	}
 
 	return true;
@@ -57,43 +57,39 @@ void ComponentTransform::SetTransformation(aiMatrix4x4 trans)
 	};
 
 	transform_matrix.Set(values);
-	transform_matrix_transposed = transform_matrix.Transposed();
-
+	
 	//Set the variables that will be shown in the UI
 	transform_matrix.Decompose(position, rotation_quaternion, scale);
 	rotation_euler_angles = (rotation_quaternion.ToEulerXYZ() * RADTODEG);
 
-	transform_matrix.Transpose();
 	//Set the inherited transform
 	if (!(parent->GetParent()->IsRoot()))
 	{
 		ComponentTransform* tmp = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION));
-		inherited_transform = tmp->inherited_transform * transform_matrix;
+		inherited_transform = tmp->inherited_transform * transform_matrix.Transposed();
 	}
 	else
 	{
-		inherited_transform = transform_matrix;
+		inherited_transform = transform_matrix.Transposed();
 	}
 }
 
 void ComponentTransform::SetTransformation(math::float4x4 trans)
 {
 	transform_matrix = trans;
-	transform_matrix_transposed = transform_matrix.Transposed();
 
 	transform_matrix.Decompose(position, rotation_quaternion, scale);
 	rotation_euler_angles = rotation_quaternion.ToEulerXYZ();
 
-	transform_matrix.Transpose();
 	//Set the inherited transform
 	if (!(parent->GetParent()->IsRoot()))
 	{
 		ComponentTransform* tmp = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION));
-		inherited_transform = tmp->inherited_transform * transform_matrix;
+		inherited_transform = tmp->inherited_transform * transform_matrix.Transposed();
 	}
 	else
 	{
-		inherited_transform = trans;
+		inherited_transform = transform_matrix.Transposed();
 	}
 }
 
@@ -197,16 +193,13 @@ void ComponentTransform::UpdateTransform()
 	transform_matrix = math::float4x4::FromQuat(rotation_quaternion);
 	transform_matrix = math::float4x4::Scale(scale, math::float3(0, 0, 0)) * transform_matrix;
 	transform_matrix.SetTranslatePart(position.x, position.y, position.z);
-	transform_matrix.Transpose();
 	//If its parent is scene update inherited matrix
 
 	if (parent->GetParent()->IsRoot())
 	{
-		inherited_transform = transform_matrix;
+		inherited_transform = transform_matrix.Transposed();
 		parent->GetBoundingBox()->Scale(parent->GetBoundingBox()->CenterPoint(),scale);
 	}
-
-	transform_matrix_transposed = transform_matrix.Transposed();
 
 	has_been_modified = false;
 }
@@ -217,8 +210,6 @@ void ComponentTransform::SetMatrixToDraw()
 	glPushMatrix();
 
 	glMultMatrixf(inherited_transform.ptr());
-	
-
 }
 
 void ComponentTransform::QuitMatrixToDraw()
@@ -231,21 +222,20 @@ void ComponentTransform::DrawOrientationAxis()
 	
 	if (App->renderer3D->GetGizmo())
 	{
-		App->renderer3D->GetGizmo()->SetEditMatrix(transform_matrix.ptr());
+		App->renderer3D->GetGizmo()->SetEditMatrix(inherited_transform.ptr());
 	}
 	
 }
 
 void ComponentTransform::UpdateRotationPositionScale()
 {
-	transform_matrix.Transposed().Decompose(position, rotation_quaternion, scale);
-	rotation_euler_angles = rotation_quaternion.ToEulerXYZ() * RADTODEG;
 
 	if (parent->GetParent()->IsRoot())
 	{
-		inherited_transform = transform_matrix;
+		transform_matrix = inherited_transform.Transposed();
+		transform_matrix.Decompose(position, rotation_quaternion, scale);
+		rotation_euler_angles = rotation_quaternion.ToEulerXYZ() * RADTODEG;
 	}
-
 }
 
 bool ComponentTransform::Save(Serializer & array_root) const
@@ -270,7 +260,7 @@ bool ComponentTransform::Save(Serializer & array_root) const
 	for (uint k = 0; k < 3; k++)position_array.InsertArrayFloat(position.ptr()[k]);
 	//Insert inherited transform matrix
 	Serializer inherited_trans_array = comp_data.InsertArray("inherited_transform");
-	for (uint k = 0; k < 16; k++)inherited_trans_array.InsertArrayFloat(inherited_transform.ptr()[k]);
+	for (uint k = 0; k < 16; k++)inherited_trans_array.InsertArrayFloat(inherited_transform.Transposed().ptr()[k]);
 
 	//Insert scale
 	Serializer scale_array = comp_data.InsertArray("scale");
