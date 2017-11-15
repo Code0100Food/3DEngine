@@ -209,9 +209,9 @@ bool ModuleRenderer3D::Awake(const JSON_Object * data_root)
 	
 	clear_depth = json_object_get_number(data_root, "clear_depth");
 	
-	min_render_distance = json_object_get_number(data_root, "min_render_distance");
+//	min_render_distance = json_object_get_number(data_root, "min_render_distance");
 	
-	max_render_distance = json_object_get_number(data_root, "max_render_distance");
+	//max_render_distance = json_object_get_number(data_root, "max_render_distance");
 
 	config_menu = true;
 
@@ -257,10 +257,6 @@ bool ModuleRenderer3D::Init()
 			SDL_GL_SetSwapInterval(0);
 		}
 
-		//Initialize Projection Matrix
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-
 		//Check for error
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
@@ -268,10 +264,6 @@ bool ModuleRenderer3D::Init()
 			LOG("[error] Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
-
-		//Initialize Model view Matrix
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
 
 		//Check for error
 		error = glGetError();
@@ -380,19 +372,33 @@ bool ModuleRenderer3D::Init()
 	return ret;
 }
 
+bool ModuleRenderer3D::Start()
+{
+	//Set the projection matrix
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glLoadMatrixf(App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
+
+	ViewMatrix = App->camera->editor_camera_frustrum.ViewMatrix();
+	ViewMatrix.Transpose();
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(ViewMatrix.ptr());
+
+	return true;
+}
+
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	CleanCameraView();
 
-	math::float4x4 camera_viwe_mat = App->camera->editor_camera_frustrum.ViewMatrix();
-	camera_viwe_mat.Transpose();
+	ViewMatrix = App->camera->editor_camera_frustrum.ViewMatrix();
+	ViewMatrix.Transpose();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(camera_viwe_mat.ptr());
+	glLoadMatrixf(ViewMatrix.ptr());
 	
-
-
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->GetPosition().x, App->camera->GetPosition().y, App->camera->GetPosition().z);
 
@@ -403,8 +409,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	if (print_gizmo)
 	{
-		
-		print_gizmo->SetCameraMatrix(camera_viwe_mat.ptr(), App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
+		print_gizmo->SetCameraMatrix(ViewMatrix.ptr(), App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
 	}
 
 	return UPDATE_CONTINUE;
@@ -1064,7 +1069,7 @@ void ModuleRenderer3D::SetEditorCameraView()
 	glLoadIdentity();
 	glLoadMatrixf(App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrixTransposed());
+	glLoadMatrixf(ViewMatrix.ptr());
 }
 
 void ModuleRenderer3D::CleanCameraView()
