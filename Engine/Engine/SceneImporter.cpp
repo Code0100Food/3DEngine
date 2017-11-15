@@ -98,25 +98,42 @@ bool SceneImporter::Load(Resource * target)
 
 void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* parent)
 {
-	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	GameObject* node_obj = parent;
+
+	if (node->mMetaData != NULL)
 	{
-		//Generate game object
-		GameObject* obj = App->scene->CreateGameObject();
-		obj->SetName(node->mName.C_Str());
-		obj->SetParent(parent);
+		if (node->mNumMeshes == 0)
+		{
+			//Generate game object
+			node_obj = App->scene->CreateGameObject();
+			node_obj->SetName(node->mName.C_Str());
+			node_obj->SetParent(parent);
 
-		//Set transformation component
-		ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-		comp->SetTransformation(node->mTransformation);
+			//Set transformation component
+			ComponentTransform* node_comp = (ComponentTransform*)node_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			node_comp->SetTransformation(node->mTransformation);
+		}
 
-		//Import the mesh and the related materials
-		ImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, obj);
+		for (unsigned int i = 0; i < node->mNumMeshes; i++)
+		{
+			//Generate game object
+			GameObject* obj = App->scene->CreateGameObject();
+			obj->SetName(node->mName.C_Str());
+			obj->SetParent(parent);
+			
+			//Set transformation component
+			ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			comp->SetTransformation(node->mTransformation);
+
+			//Import the mesh and the related materials
+			ImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, obj);
+		}
 	}
 
 	// then do the same for each of its children
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ImportNode(node->mChildren[i], scene, parent);
+		ImportNode(node->mChildren[i], scene, node_obj);
 	}
 }
 

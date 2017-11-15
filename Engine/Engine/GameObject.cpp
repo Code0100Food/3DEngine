@@ -431,14 +431,21 @@ bool GameObject::PopChild(GameObject * child, bool search_in)
 
 GameObject * GameObject::FindChild(uint id) const
 {
+	GameObject* found = nullptr;
+
 	uint size = childs.size();
-	for (uint k = 0; k < size; k++)
+	for (uint k = 0; k < size && found == nullptr; k++)
 	{
-		if (childs[k]->id == id)return childs[k];
-		else childs[k]->FindChild(id);
+		if (childs[k]->id == id)
+		{
+			found = childs[k];
+			break;
+		}
+		
+		found = childs[k]->FindChild(id);
 	}
 
-	return nullptr;
+	return found;
 }
 
 std::vector<GameObject*>* GameObject::GetChilds()
@@ -464,8 +471,8 @@ void GameObject::BlitGameObjectHierarchy(uint index)
 	if (this == App->scene->GetSelectedGameObject())flags += ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Selected;
 	
 	//Generate the node
-	char name_str[40];
-	sprintf_s(name_str, 40, "%s##%i", name.c_str(), index);
+	char name_str[250];
+	sprintf_s(name_str, 250, "%s##%i", name.c_str(), index);
 	bool op = ImGui::TreeNodeEx(name_str, flags);
 
 	//Tree node input
