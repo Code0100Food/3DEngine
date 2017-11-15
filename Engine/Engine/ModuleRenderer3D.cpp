@@ -968,8 +968,11 @@ void ModuleRenderer3D::OnSceneResize(int width, int height)
 	rotate_gizmo->SetScreenDimension(width, height);
 	scale_gizmo->SetScreenDimension(width, height);
 
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(App->camera->editor_camera_frustrum.ProjectionMatrix().ptr());
+
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	glLoadMatrixf(ViewMatrix.ptr());
 }
 
 void ModuleRenderer3D::OnGameResize(int width, int height)
