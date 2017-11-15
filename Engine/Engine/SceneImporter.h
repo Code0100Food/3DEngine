@@ -34,8 +34,8 @@ private:
 	std::vector<Texture> n_textures;
 	std::vector<Texture> _textures;
 
-	std::map<aiMesh*, ResourceMesh*>			loaded_meshes;
-	std::map<aiMaterial*, ResourceMaterial*>	loaded_materials;
+	std::map<uint, aiMesh*>		loaded_meshes;
+	std::map<uint, aiMaterial*>	loaded_materials;
 
 	mutable std::string usable_str_a;
 	mutable std::string usable_str_b;

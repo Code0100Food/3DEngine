@@ -126,13 +126,18 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
 	bool found = false;
 
-	std::map<aiMesh*, ResourceMesh*>::const_iterator item = loaded_meshes.find(mesh);
-	if (item != loaded_meshes.end())
+	std::map<uint, aiMesh*>::const_iterator item = loaded_meshes.begin();
+	while (item != loaded_meshes.end())
 	{
-		resource_mesh = item._Ptr->_Myval.second;
-		found = true;
+		if (item._Ptr->_Myval.second == mesh)
+		{
+			resource_mesh = (ResourceMesh*)App->res_manager->Find(item._Ptr->_Myval.first);
+			found = true;
+		}
+
+		item++;
 	}
-	else resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
+	if(!found)resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
 
 	comp_mesh->SetResourceMesh(resource_mesh, false);
 
@@ -245,6 +250,9 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 		App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
 
 		RELEASE_ARRAY(buffer);
+
+		//Insert the loaded mesh 
+		loaded_meshes.insert(std::pair<uint, aiMesh*>(resource_mesh->GetID(), mesh));
 	}
 
 	//Clear the used containers
@@ -256,11 +264,14 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 
 void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType type, ComponentMaterial* container)
 {
-	std::map<aiMaterial*, ResourceMaterial*>::const_iterator item = loaded_materials.find(material);
-	if (item != loaded_materials.end())
+	std::map<uint, aiMaterial*>::const_iterator item = loaded_materials.begin();
+	while (item != loaded_materials.end())
 	{
-		container->AddTexture(item._Ptr->_Myval.second);
-		return;
+		if (item._Ptr->_Myval.second == material)
+		{
+			container->AddTexture((ResourceMaterial*)App->res_manager->Find(item._Ptr->_Myval.first));
+			return;
+		}
 	}
 
 	n_textures.clear();
@@ -302,7 +313,7 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType 
 			{
 				container->AddTexture((ResourceMaterial*)mat, false);
 				//Track the loaded material
-				loaded_materials.insert(std::pair<aiMaterial*, ResourceMaterial*>(material, (ResourceMaterial*)mat));
+				loaded_materials.insert(std::pair<uint, aiMaterial*>(mat->GetID(), material));
 			}
 		}
 	}
