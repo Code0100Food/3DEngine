@@ -48,6 +48,9 @@ private:
 	std::queue<GameObject*>				check_objects;
 	std::multimap<float, GameObject*>	objects_to_pick;
 
+	//Dot product of the camera axis
+	float dot_product = 0.0f;
+
 public:
 
 	math::Triangle					triangle_to_test;

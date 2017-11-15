@@ -159,6 +159,10 @@ update_status ModuleCamera3D::Update(float dt)
 			{
 				App->scene->SetSelectedGameObject(CheckTriangles());		
 			}
+			else
+			{
+				App->scene->SetSelectedGameObject(nullptr);
+			}
 		}
 
 		//Camera stafe 
@@ -237,6 +241,8 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 
+	dot_product = math::Dot(editor_camera_frustrum.front, editor_camera_frustrum.up);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -288,6 +294,7 @@ void ModuleCamera3D::BlitConfigInfo()
 	ImGui::Text("Mouse Pick Normal Location:");
 	ImGui::SameLine();
 	ImGui::Text("%.4f, %.4f", mouse_x_normalized, mouse_y_normalized);
+	ImGui::Text("%.2f", dot_product);
 }
 
 void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
