@@ -61,15 +61,18 @@ public:
 	uint			GetID()const;
 
 	//Functionality ---------
+
 	//UI Methods
 	virtual void BlitComponentInspector();
 	
 	//Save/Load Methods -----
 	virtual bool Save(Serializer& array_root)const;
 	virtual bool Load(Serializer& data, std::vector<std::pair<Component*, uint>>& links);
-	virtual void LinkComponent(const Component* target);
-	virtual void UnLinkComponent();
-
+	
+	//Link Methods
+	virtual void	LinkComponent(const Component* target);
+	virtual void	UnLinkComponent();
+	void			RecalculateID();
 };
 
 //Enums Methods ---------

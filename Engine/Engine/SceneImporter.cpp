@@ -44,19 +44,23 @@ bool SceneImporter::Import(const char * path)
 	//Load all the meshes & materials
 	LOG("Loading %i meshes...", scene->mNumMeshes);
 
-	//Generate root game object
-	GameObject* obj = App->scene->CreateGameObject();
-	obj->SetName(usable_str_a.c_str());
+	//Generate load root game object
+	GameObject* root_obj = App->scene->CreateGameObject();
+	root_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 
-	//Set root transformation
+	//Generate real root obj
+	GameObject* obj = App->scene->CreateGameObject();
+	obj->SetParent(root_obj);
+	obj->SetName(usable_str_a.c_str());
+	//Set real root transformation
 	ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 	comp->SetTransformation(scene->mRootNode->mTransformation);
 
 	//scene->mRootNode->mTransformation
 	ImportNode(scene->mRootNode, scene, obj);
 
-	App->scene->SerializeScene(obj, scene_structure);
-	RELEASE(obj);
+	App->scene->SerializeScene(root_obj, scene_structure);
+	RELEASE(root_obj);
 
 	//Generate the scene resource & json structure file
 	Resource* scene_res = App->res_manager->CreateResource(RESOURCE_TYPE::SCENE_RESOURCE);
@@ -71,7 +75,7 @@ bool SceneImporter::Import(const char * path)
 	uint size = scene_structure.Save(&buffer);
 	App->fs->SaveFile(scene_res->GetOwnFile(), buffer, size - 1, LIBRARY_SCENE_FOLDER);
 	RELEASE_ARRAY(buffer);
-	
+
 	char meta_name[200];
 	sprintf(meta_name, "%s.meta", scene_res->GetOwnFile());
 	scene_res->Save(meta_file);
@@ -101,11 +105,11 @@ void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject*
 		//Set transformation component
 		ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 		comp->SetTransformation(node->mTransformation);
-		
+
 		//Import the mesh and the related materials
 		ImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, obj);
 	}
-	
+
 	// then do the same for each of its children
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
@@ -119,7 +123,7 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	ResourceMesh* resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
 	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
 	comp_mesh->SetResourceMesh(resource_mesh, false);
-	
+
 	//Generate the container mesh renderer component
 	ComponentMeshRenderer* comp_mesh_renderer = (ComponentMeshRenderer*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 	comp_mesh_renderer->SetTargetMesh(comp_mesh);
@@ -186,19 +190,19 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	{
 		//Generate the container material component (used by mesh too)
 		ComponentMaterial* comp_material = (ComponentMaterial*)container->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
-		
+
 		//Get the material
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
 		//Load Normal data
 		ImportMaterialTextures(material, aiTextureType_HEIGHT, comp_material);
-		
+
 		//Load diffuse data
 		ImportMaterialTextures(material, aiTextureType_DIFFUSE, comp_material);
-		
+
 		//Load Specular data
 		ImportMaterialTextures(material, aiTextureType_SPECULAR, comp_material);
-		
+
 		LOG("- Material with index %i loaded!", mesh->mMaterialIndex);
 
 		//Set mesh material
@@ -213,7 +217,7 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	char f_name[100];
 	sprintf(f_name, "%s.fiesta", name);
 	resource_mesh->SetOwnFile(f_name);
-		
+
 	//Save the meta file
 	Serializer meta_file;
 	resource_mesh->Save(meta_file);
@@ -266,7 +270,7 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type,
 			usable_str_b = cur_path;
 			usable_str_b += texture.path.c_str();
 			App->importer->ImportFile(usable_str_b.c_str());
-			
+
 			//Find the loaded mat and add the id on the mesh materials
 			Resource* mat = App->res_manager->Find(usable_str_b.c_str());
 			if (mat != nullptr)container->AddTexture((ResourceMaterial*)mat, false);

@@ -80,6 +80,7 @@ public:
 	GameObject*						FindChild(uint id)const;
 	std::vector<GameObject*>*		GetChilds();
 	const std::vector<GameObject*>*	GetChildsConst()const;
+	void							RecalculateID();
 
 	//UI Methods
 	void		BlitGameObjectHierarchy(uint index);
@@ -95,7 +96,7 @@ public:
 
 	//Save/Load Methods
 	bool Save(Serializer& array_root)const;
-	bool Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links, std::vector<std::pair<Component*, uint>>& components_links);
+	bool Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links, std::vector<std::pair<Component*, uint>>& components_links, std::vector<Component*>& loaded_cmps);
 
 };
 #endif // !_GAME_OBJECT_H_

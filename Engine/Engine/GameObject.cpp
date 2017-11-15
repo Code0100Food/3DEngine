@@ -451,6 +451,11 @@ const std::vector<GameObject*>* GameObject::GetChildsConst()const
 	return &childs;
 }
 
+void GameObject::RecalculateID()
+{
+	id = App->randomizer->Int();
+}
+
 void GameObject::BlitGameObjectHierarchy(uint index)
 {
 	//Check the tree node flags
@@ -735,7 +740,7 @@ bool GameObject::Save(Serializer& array_root) const
 	return ret;
 }
 
-bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links, std::vector<std::pair<Component*, uint>>& components_links)
+bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>>& links, std::vector<std::pair<Component*, uint>>& components_links, std::vector<Component*>& loaded_cmps)
 {
 	bool ret = true;
 
@@ -760,6 +765,7 @@ bool GameObject::Load(Serializer& data, std::vector<std::pair<GameObject*, uint>
 		Serializer comp_data = components_data.GetArrayElement(k);
 		Component* component = CreateComponent(StrToComponentType(comp_data.GetString("type")));
 		ret = component->Load(comp_data, components_links);
+		loaded_cmps.push_back(component);
 		if (!ret)break;
 	}
 

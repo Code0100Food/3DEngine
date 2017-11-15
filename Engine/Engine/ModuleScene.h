@@ -48,6 +48,8 @@ private:
 	//Vectors used during serialization
 	std::vector<std::pair<GameObject*, uint>>	objects_links;
 	std::vector<std::pair<Component*, uint>>	components_links;
+	std::vector<GameObject*>					loaded_objs;
+	std::vector<Component*>						loaded_cmps;
 
 public:
 

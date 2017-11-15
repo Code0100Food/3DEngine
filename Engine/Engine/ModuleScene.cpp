@@ -566,7 +566,8 @@ bool ModuleScene::LoadSerializedScene(const char * path)
 	for(uint k = 0; k < size;k++)
 	{
 		GameObject* new_obj = CreateGameObject();
-		new_obj->Load(objects.GetArrayElement(k), objects_links, components_links);
+		new_obj->Load(objects.GetArrayElement(k), objects_links, components_links, loaded_cmps);
+		loaded_objs.push_back(new_obj);
 	}
 
 	//Link all the loaded objects
@@ -577,7 +578,22 @@ bool ModuleScene::LoadSerializedScene(const char * path)
 		if (parent != nullptr)objects_links[k].first->SetParent(parent);
 	}
 	
+	//Recalculate all the elements ids
+	size = loaded_objs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		loaded_objs[k]->RecalculateID();
+	}
+	size = loaded_cmps.size();
+	for (uint k = 0; k < size; k++)
+	{
+		loaded_cmps[k]->RecalculateID();
+	}
+
+	loaded_cmps.clear();
+	loaded_objs.clear();
 	objects_links.clear();
+	components_links.clear();
 
 	if (ret)LOG("Scene Correctly Loaded!");
 

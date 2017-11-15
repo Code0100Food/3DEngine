@@ -124,6 +124,11 @@ void Component::UnLinkComponent()
 
 }
 
+void Component::RecalculateID()
+{
+	id = App->randomizer->Int();
+}
+
 COMPONENT_TYPE StrToComponentType(const char * str)
 {
 	if (strcmp(str, "transformation") == 0)	return COMP_TRANSFORMATION;
