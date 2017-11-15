@@ -236,6 +236,16 @@ Resource * ResourcesManager::Find(uint id) const
 	return nullptr;
 }
 
+Resource * ResourcesManager::FindLast(RESOURCE_TYPE type) const
+{
+	Resource* target = nullptr;
+	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
+	{
+		if (res->second->GetResourceType() == type)target = res._Ptr->_Myval.second;
+	}
+	return target;
+}
+
 uint ResourcesManager::FindMetaFile(const char * own_file_path) const
 {
 	//Look for the meta inside the metas folder

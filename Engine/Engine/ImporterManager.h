@@ -22,9 +22,8 @@ public:
 
 public:
 
-	bool ImportFile(const char* str);
-	bool LoadFile(const char* str);
-
+	bool ImportFile(const char* str, bool place_on_scene = false);
+	
 	IMPORT_TYPE	GetImportTypeFromFormat(const char* str)const;
 
 };

@@ -296,33 +296,6 @@ update_status ModuleInput::PreUpdate(float dt)
 
 		case SDL_DROPFILE:
 			App->importer->ImportFile(event.drop.file);
-
-			/*//Import/load the file in the engine file system
-			bool res = App->importer->ImportFile(event.drop.file);
-			if (res)App->importer->LoadFile(event.drop.file);
-			
-			App->fs->CloneFile(event.drop.file,App->fs->GetAssetsFolder());
-
-			if (!res)break;
-
-			//Get the file format to do extra processes
-			std::string format;
-			App->fs->GetFileFormatFromPath(event.drop.file, &format);
-			
-			//If is an image sets it as custom texture and enable custom mode
-			if (App->importer->GetImportTypeFromFormat(format.c_str()) == MATERIAL_IMPORT)
-			{
-				App->textures->LoadCustomTexture(event.drop.file);
-				App->textures->SetCustomMode();
-				break;
-			}
-
-			//If is a model focus the camera to the model size
-			if (App->importer->GetImportTypeFromFormat(format.c_str()) == MESH_IMPORT)
-			{
-				App->camera->LookAtGameObject(App->scene->GetSelectedGameObject());
-			}
-			*/
 			break;
 		}
 	}

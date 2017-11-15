@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "FileSystem.h"
 #include "ResourcesManager.h"
+#include "ModuleScene.h"
 
 // Constructors =================================
 ImporterManager::ImporterManager()
@@ -11,7 +12,7 @@ ImporterManager::ImporterManager()
 }
 
 // Functionality ================================
-bool ImporterManager::ImportFile(const char * path)
+bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 {
 	if (App->res_manager->Find(path) != nullptr)return true; //If is already imported!
 
@@ -39,11 +40,21 @@ bool ImporterManager::ImportFile(const char * path)
 		break;
 	case MATERIAL_IMPORT:
 		b_ret = material_importer.Import(n_path.c_str());
+		if(b_ret && place_on_scene)
+		{
+			ResourceMaterial* res = (ResourceMaterial*)App->res_manager->FindLast(RESOURCE_TYPE::MATERIAL_RESOURCE);
+			/*Apply the drop effect here*/
+		}
 		break;
 	case MESH_IMPORT:
 		break;
 	case SCENE_IMPORT:
 		b_ret = scene_importer.Import(n_path.c_str());
+		if (b_ret && place_on_scene)
+		{
+			Resource* res = (Resource*)App->res_manager->FindLast(RESOURCE_TYPE::SCENE_RESOURCE);
+			/*Apply the drop effect here*/
+		}
 		break;
 	}
 
