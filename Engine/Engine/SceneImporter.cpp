@@ -83,6 +83,9 @@ bool SceneImporter::Import(const char * path)
 	App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
 	RELEASE_ARRAY(buffer);
 
+	loaded_meshes.clear();
+	loaded_materials.clear();
+
 	return true;
 }
 
@@ -119,71 +122,83 @@ void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject*
 
 void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene * scene, GameObject* container)
 {
-	//Generate the container mesh component
-	ResourceMesh* resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
+	ResourceMesh* resource_mesh = nullptr;
 	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+	bool found = false;
+
+	std::map<aiMesh*, ResourceMesh*>::const_iterator item = loaded_meshes.find(mesh);
+	if (item != loaded_meshes.end())
+	{
+		resource_mesh = item._Ptr->_Myval.second;
+		found = true;
+	}
+	else resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
+
 	comp_mesh->SetResourceMesh(resource_mesh, false);
 
 	//Generate the container mesh renderer component
 	ComponentMeshRenderer* comp_mesh_renderer = (ComponentMeshRenderer*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
 	comp_mesh_renderer->SetTargetMesh(comp_mesh);
 
-	LOG("Processing %s mesh!", name);
-
-	//Iterate all the mesh vertices and load all the data
-	for (uint i = 0; i < mesh->mNumVertices; i++)
+	if (!found)
 	{
-		Vertex			vertex;
-		math::float3	data;
-		math::float2	tex_color;
-		//Build vertex positions
-		if (mesh->HasPositions())
+		LOG("Processing %s mesh!", name);
+
+		//Iterate all the mesh vertices and load all the data
+		for (uint i = 0; i < mesh->mNumVertices; i++)
 		{
-			data.x = mesh->mVertices[i].x;
-			data.y = mesh->mVertices[i].y;
-			data.z = mesh->mVertices[i].z;
-			vertex.position = data;
-			vertices_pos.push_back(data);
-		}
-
-		//Build vertex normals
-		if (mesh->HasNormals())
-		{
-			data.x = mesh->mNormals[i].x;
-			data.y = mesh->mNormals[i].y;
-			data.z = mesh->mNormals[i].z;
-			vertex.normals = data;
-		}
-
-		//Build texture coordinates
-		if (mesh->HasTextureCoords(0))
-		{
-			tex_color.x = mesh->mTextureCoords[0][i].x;
-			tex_color.y = mesh->mTextureCoords[0][i].y;
-			vertex.tex_coords = tex_color;
-		}
-
-		//Add the built vertex to the vertex vector
-		vertices.push_back(vertex);
-	}
-
-	LOG("- %i Vertices loaded!", mesh->mNumVertices);
-
-	//Build the triangles with the index
-	if (mesh->HasFaces())
-	{
-		for (uint i = 0; i < mesh->mNumFaces; i++)
-		{
-			aiFace face = mesh->mFaces[i];
-
-			for (uint j = 0; j < face.mNumIndices; j++)
+			Vertex			vertex;
+			math::float3	data;
+			math::float2	tex_color;
+			//Build vertex positions
+			if (mesh->HasPositions())
 			{
-				indices.push_back(face.mIndices[j]);
+				data.x = mesh->mVertices[i].x;
+				data.y = mesh->mVertices[i].y;
+				data.z = mesh->mVertices[i].z;
+				vertex.position = data;
+				vertices_pos.push_back(data);
+			}
+
+			//Build vertex normals
+			if (mesh->HasNormals())
+			{
+				data.x = mesh->mNormals[i].x;
+				data.y = mesh->mNormals[i].y;
+				data.z = mesh->mNormals[i].z;
+				vertex.normals = data;
+			}
+
+			//Build texture coordinates
+			if (mesh->HasTextureCoords(0))
+			{
+				tex_color.x = mesh->mTextureCoords[0][i].x;
+				tex_color.y = mesh->mTextureCoords[0][i].y;
+				vertex.tex_coords = tex_color;
+			}
+
+			//Add the built vertex to the vertex vector
+			vertices.push_back(vertex);
+		}
+
+		LOG("- %i Vertices loaded!", mesh->mNumVertices);
+
+		//Build the triangles with the index
+		if (mesh->HasFaces())
+		{
+			for (uint i = 0; i < mesh->mNumFaces; i++)
+			{
+				aiFace face = mesh->mFaces[i];
+
+				for (uint j = 0; j < face.mNumIndices; j++)
+				{
+					indices.push_back(face.mIndices[j]);
+				}
 			}
 		}
-	}
 
-	LOG("- %i Faces loaded!", mesh->mNumFaces);
+		LOG("- %i Faces loaded!", mesh->mNumFaces);
+	}
 
 	//Build the different materials (textures)
 	if (mesh->mMaterialIndex >= 0)
@@ -209,25 +224,28 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 		comp_mesh->SetDrawMaterial(comp_material);
 	}
 
-	//Import the mesh (own format)
-	App->importer->mesh_importer.Import(name, indices, vertices);
+	if (!found)
+	{
+		//Import the mesh (own format)
+		App->importer->mesh_importer.Import(name, indices, vertices);
 
-	//Generate the mesh resource
-	resource_mesh->SetOriginalFile(file_path.c_str());
-	char f_name[100];
-	sprintf(f_name, "%s.fiesta", name);
-	resource_mesh->SetOwnFile(f_name);
+		//Generate the mesh resource
+		resource_mesh->SetOriginalFile(file_path.c_str());
+		char f_name[100];
+		sprintf(f_name, "%s.fiesta", name);
+		resource_mesh->SetOwnFile(f_name);
 
-	//Save the meta file
-	Serializer meta_file;
-	resource_mesh->Save(meta_file);
-	char* buffer = nullptr;
-	uint size = meta_file.Save(&buffer);
-	char meta_name[200];
-	sprintf(meta_name, "%s.meta", resource_mesh->GetOwnFile());
-	App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
+		//Save the meta file
+		Serializer meta_file;
+		resource_mesh->Save(meta_file);
+		char* buffer = nullptr;
+		uint size = meta_file.Save(&buffer);
+		char meta_name[200];
+		sprintf(meta_name, "%s.meta", resource_mesh->GetOwnFile());
+		App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
 
-	RELEASE_ARRAY(buffer);
+		RELEASE_ARRAY(buffer);
+	}
 
 	//Clear the used containers
 	vertices.clear();
@@ -236,15 +254,22 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	vertices_pos.clear();
 }
 
-void SceneImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type, ComponentMaterial* container)
+void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType type, ComponentMaterial* container)
 {
+	std::map<aiMaterial*, ResourceMaterial*>::const_iterator item = loaded_materials.find(material);
+	if (item != loaded_materials.end())
+	{
+		container->AddTexture(item._Ptr->_Myval.second);
+		return;
+	}
+
 	n_textures.clear();
 	_textures.clear();
 
-	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+	for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
 	{
 		aiString str;
-		mat->GetTexture(type, i, &str);
+		material->GetTexture(type, i, &str);
 		bool skip = false;
 		for (unsigned int j = 0; j < _textures.size(); j++)
 		{
@@ -273,7 +298,12 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * mat, aiTextureType type,
 
 			//Find the loaded mat and add the id on the mesh materials
 			Resource* mat = App->res_manager->Find(usable_str_b.c_str());
-			if (mat != nullptr)container->AddTexture((ResourceMaterial*)mat, false);
+			if (mat != nullptr)
+			{
+				container->AddTexture((ResourceMaterial*)mat, false);
+				//Track the loaded material
+				loaded_materials.insert(std::pair<aiMaterial*, ResourceMaterial*>(material, (ResourceMaterial*)mat));
+			}
 		}
 	}
 

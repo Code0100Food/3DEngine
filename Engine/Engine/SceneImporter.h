@@ -9,7 +9,10 @@ class	aiMaterial;
 class	GameObject;
 class	Serializer;
 class	Resource;
+class	ResourceMaterial;
+class	ResourceMesh;
 
+#include <map>
 #include "ComponentMesh.h"
 
 class SceneImporter
@@ -30,6 +33,9 @@ private:
 
 	std::vector<Texture> n_textures;
 	std::vector<Texture> _textures;
+
+	std::map<aiMesh*, ResourceMesh*>			loaded_meshes;
+	std::map<aiMaterial*, ResourceMaterial*>	loaded_materials;
 
 	mutable std::string usable_str_a;
 	mutable std::string usable_str_b;

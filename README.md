@@ -68,6 +68,9 @@ Console shows information of the engine operations and can handle some basic inp
 To see all the console commands, you can open the console header in the configuration window or enter “help” in the console
 
 # Changelog
+	 -Release 0.2.7:
+		Scene Save/Load with resources
+		Scene Resource added
 
 	 -Release 0.2.6:
 		Adaptative Octree
