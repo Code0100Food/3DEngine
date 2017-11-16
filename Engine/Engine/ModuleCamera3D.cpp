@@ -374,7 +374,7 @@ void ModuleCamera3D::LookAtGameObject(GameObject * obj)
 		return;
 	}
 
-	focus_point = trans_cmp->GetPosition();
+	focus_point = trans_cmp->GetInheritedTransform().Transposed().TranslatePart();
 	Look(focus_point, true);
 
 	editor_camera_frustrum.pos = focus_point - (editor_camera_frustrum.front * obj->GetBoundingBoxDiagonalSize() * CAMERA_DIST_ON_FOCUS);
