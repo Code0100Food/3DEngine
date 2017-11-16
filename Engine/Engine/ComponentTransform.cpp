@@ -236,6 +236,18 @@ void ComponentTransform::UpdateRotationPositionScale()
 		transform_matrix.Decompose(position, rotation_quaternion, scale);
 		rotation_euler_angles = rotation_quaternion.ToEulerXYZ() * RADTODEG;
 	}
+	else
+	{
+		ComponentTransform* tmp = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION));
+
+		if (tmp)
+		{
+			transform_matrix = inherited_transform * tmp->inherited_transform.Inverted();
+			transform_matrix.Transpose();
+			transform_matrix.Decompose(position, rotation_quaternion, scale);
+			rotation_euler_angles = rotation_quaternion.ToEulerXYZ() * RADTODEG;
+		}	
+	}
 }
 
 bool ComponentTransform::Save(Serializer & array_root) const

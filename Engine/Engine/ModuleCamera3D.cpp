@@ -138,6 +138,7 @@ update_status ModuleCamera3D::Update(float dt)
 			unsigned int gizmo_y = (App->input->GetMouseY() - (App->renderer3D->GetSceneImagePos().y - SCENE_BORDER_Y));
 			if (App->renderer3D->GetGizmo() && App->renderer3D->GetGizmo()->OnMouseDown(gizmo_x, gizmo_y))
 			{
+				gizmo_pressed = true;
 				return UPDATE_CONTINUE;
 			}
 
@@ -412,6 +413,16 @@ float ModuleCamera3D::GetFrustrumFarPlaneDistance() const
 math::float3 ModuleCamera3D::GetPosition() const
 {
 	return editor_camera_frustrum.pos;
+}
+
+void ModuleCamera3D::SetGizmoClicked(bool pressed)
+{
+	gizmo_pressed = pressed;
+}
+
+bool ModuleCamera3D::GetGizmoClicked() const
+{
+	return gizmo_pressed;
 }
 
 void ModuleCamera3D::CheckAllAABB() 

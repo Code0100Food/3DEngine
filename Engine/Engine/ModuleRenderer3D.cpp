@@ -476,7 +476,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		print_gizmo->OnMouseMove((App->input->GetMouseX() - (image_window_pos.x - SCENE_BORDER_X)), (App->input->GetMouseY() - (image_window_pos.y - SCENE_BORDER_Y)));
 
 
-		if (App->scene->GetSelectedGameObject())
+		if (App->scene->GetSelectedGameObject() && App->camera->GetGizmoClicked())
 		{
 			ComponentTransform* tmp = (ComponentTransform*)App->scene->GetSelectedGameObject()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 			tmp->UpdateRotationPositionScale();

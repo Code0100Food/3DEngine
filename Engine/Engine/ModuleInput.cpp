@@ -208,7 +208,10 @@ update_status ModuleInput::PreUpdate(float dt)
 			mouse_buttons[event.button.button - 1] = KEY_UP;
 			
 			if (App->renderer3D->GetGizmo())
+			{
 				App->renderer3D->GetGizmo()->OnMouseUp(0, 0);
+				App->camera->SetGizmoClicked(false);
+			}
 
 			break;
 

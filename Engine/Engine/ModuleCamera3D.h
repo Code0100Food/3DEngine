@@ -51,6 +51,9 @@ private:
 	//Dot product of the camera axis
 	float dot_product = 0.0f;
 
+	//Guizmo detected
+	bool gizmo_pressed = false;
+
 public:
 
 	math::Triangle					triangle_to_test;
@@ -80,6 +83,9 @@ public:
 	float			GetFrustrumNearPlaneDistance() const;
 	float			GetFrustrumFarPlaneDistance() const;
 	math::float3	GetPosition() const;
+
+	void			SetGizmoClicked(bool);
+	bool			GetGizmoClicked() const;
 
 private:
 
