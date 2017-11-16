@@ -55,9 +55,9 @@ ComponentMaterial * ComponentMesh::GetDrawMaterial() const
 	return draw_material;
 }
 
-std::vector<math::float3> ComponentMesh::GetVertexPositions() const
+void ComponentMesh::GetVertexPositions(std::vector<math::float3>& vec)
 {
-	return resource_mesh->GetVertexPositions();
+	if (resource_mesh != nullptr) resource_mesh->GetVertexPositions(vec);
 }
 
 uint ComponentMesh::GetIndexSize() const
@@ -206,7 +206,8 @@ bool ComponentMesh::Load(Serializer & data, std::vector<std::pair<Component*, ui
 	actived = data.GetBool("actived");
 
 	//Get mesh file path
-	SetResourceMesh((ResourceMesh*)App->res_manager->Find(data.GetInt("resource_mesh_id")));
+	ResourceMesh* mesh = (ResourceMesh*)App->res_manager->Find(data.GetInt("resource_mesh_id"));
+	if (mesh != nullptr)SetResourceMesh(mesh);
 		
 	//Get draw material id
 	uint material_id = data.GetInt("draw_material_id");

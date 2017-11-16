@@ -23,12 +23,10 @@ ResourceMesh::~ResourceMesh()
 }
 
 // Get Methods ==================================
-std::vector<math::float3> ResourceMesh::GetVertexPositions() const
+void ResourceMesh::GetVertexPositions(std::vector<math::float3>& vec)
 {
-	std::vector<math::float3> vec_pos;
 	uint size = vertices.size();
-	for (uint k = 0; k < size; k++)vec_pos.push_back(vertices[k].position);
-	return vec_pos;
+	for (uint k = 0; k < size; k++)vec.push_back(vertices[k].position);
 }
 
 uint ResourceMesh::GetIndexSize() const

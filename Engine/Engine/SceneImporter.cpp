@@ -65,7 +65,7 @@ uint SceneImporter::Import(const char * path)
 	//Generate the scene resource & json structure file
 	Resource* scene_res = App->res_manager->CreateResource(RESOURCE_TYPE::SCENE_RESOURCE);
 	Serializer meta_file;
-	scene_res->SetOriginalFile(path);
+	scene_res->SetOriginalFile(file_path.c_str());
 	char own_name[200];
 	sprintf(own_name, "%s.scn", usable_str_a.c_str());
 	scene_res->SetOwnFile(own_name);
@@ -332,7 +332,7 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType 
 			App->importer->ImportFile(usable_str_b.c_str());
 
 			//Find the loaded mat and add the id on the mesh materials
-			ResourceMaterial* mat = (ResourceMaterial*)App->res_manager->Find(usable_str_b.c_str());
+			ResourceMaterial* mat = (ResourceMaterial*)App->res_manager->Find(usable_str_b.c_str(),RESOURCE_TYPE::MATERIAL_RESOURCE);
 			mat->SetMaterialType(AiTextureTypeToStr(type));
 
 			if (mat != nullptr)

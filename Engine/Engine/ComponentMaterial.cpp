@@ -43,9 +43,13 @@ void ComponentMaterial::BlitComponentInspector()
 	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "Material");
 
 	uint size = textures.size();
-	for (uint k = 0; k < size; k++)
+	if (size == 0)ImGui::Text("NULL_MATERIAL");
+	else
 	{
-		textures[k]->BlitUI();
+		for (uint k = 0; k < size; k++)
+		{
+			textures[k]->BlitUI();
+		}
 	}
 }
 
@@ -127,7 +131,8 @@ bool ComponentMaterial::Load(Serializer & data, std::vector<std::pair<Component*
 	for (uint k = 0; k < size; k++)
 	{
 		//Find the resources with the saved ids
-		AddTexture((ResourceMaterial*)App->res_manager->Find(textures_array.GetArrayInt(k)));
+		ResourceMaterial* mat = (ResourceMaterial*)App->res_manager->Find(textures_array.GetArrayInt(k));
+		if (mat != nullptr)AddTexture(mat);
 	}
 
 	return ret;

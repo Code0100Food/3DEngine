@@ -32,7 +32,7 @@ private:
 public:
 
 	//Get Methods -----------
-	std::vector<math::float3>	GetVertexPositions()const;
+	void						GetVertexPositions(std::vector<math::float3>& vec);
 	uint						GetIndexSize()const;
 	int							GetIndexAt(int position) const;
 	math::float3				GetVertexPosAt(int position) const;

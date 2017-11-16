@@ -18,11 +18,23 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 	bool b_ret = false;
 	
 	//Get the file format to call the correct importer
+	Resource* res = nullptr;
 	App->fs->GetFileFormatFromPath(path, &format);
 	IMPORT_TYPE imp_type = App->importer->GetImportTypeFromFormat(format.c_str());
 
+	switch (imp_type)
+	{
+	case MATERIAL_IMPORT:
+		res = App->res_manager->Find(path, RESOURCE_TYPE::MATERIAL_RESOURCE);
+		break;
+	case MESH_IMPORT:
+		res = App->res_manager->Find(path, RESOURCE_TYPE::MESH_RESOURCE);
+		break;
+	case SCENE_IMPORT:
+		res = App->res_manager->Find(path, RESOURCE_TYPE::SCENE_RESOURCE);
+		break;
+	}
 	//Already imported resource case
-	Resource* res = App->res_manager->Find(path);
 	uint res_id = 0;
 	if (res == nullptr)
 	{
@@ -56,7 +68,6 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 	}
 	else
 	{
-		res_id = res->GetID();
 		b_ret = true;
 	}
 
@@ -85,7 +96,7 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 		case SCENE_IMPORT:
 			if (b_ret && place_on_scene)
 			{
-				Resource* res = (Resource*)App->res_manager->Find(res_id);
+				if (res == nullptr)res = App->res_manager->Find(res_id);
 				//Place the imported scene in the 3D world
 				App->importer->scene_importer.Load(res);
 			}

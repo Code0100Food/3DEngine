@@ -701,10 +701,10 @@ std::pair<math::float3, math::float3> GameObject::AdjustBoundingBox(bool all_chi
 
 		ComponentMesh* mesh = FindMeshComponent();
 		
-		if (mesh != nullptr)
+		if (mesh != nullptr && !mesh->MeshResourceIsNull())
 		{
 			//Collect all the vertex and bb corners
-			v_pos = mesh->GetVertexPositions();
+			mesh->GetVertexPositions(v_pos);
 		}
 		else if(v_pos.empty())bounding_box.SetNegativeInfinity();
 

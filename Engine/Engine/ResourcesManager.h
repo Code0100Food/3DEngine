@@ -43,7 +43,7 @@ public:
 	bool	CheckIfFileIsImported(const char* path)const;
 
 	//Find Methods
-	Resource*	Find(const char* file_path)const;
+	Resource*	Find(const char* file_path, RESOURCE_TYPE type)const;
 	Resource*	Find(uint id)const;
 	uint		FindMetaFile(const char* own_file_path)const;
 

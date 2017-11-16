@@ -218,11 +218,11 @@ bool ResourcesManager::CheckIfFileIsImported(const char * path) const
 	return false;
 }
 
-Resource * ResourcesManager::Find(const char * file_path) const
+Resource * ResourcesManager::Find(const char * file_path, RESOURCE_TYPE type) const
 {
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
-		if (strcmp(res->second->GetOriginalFile(), file_path) == 0)return res._Ptr->_Myval.second;
+		if (strcmp(res->second->GetOriginalFile(), file_path) == 0 && res->second->GetResourceType() == type)return res._Ptr->_Myval.second;
 	}
 	return nullptr;
 }
@@ -231,7 +231,7 @@ Resource * ResourcesManager::Find(uint id) const
 {
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
-		if (res->second->GetID() == id)return res._Ptr->_Myval.second;
+		if (res->first == id)return res._Ptr->_Myval.second;
 	}
 	return nullptr;
 }
@@ -263,7 +263,7 @@ uint ResourcesManager::FindMetaFile(const char * own_file_path) const
 void ResourcesManager::LoadMetaFiles()
 {
 	//Set String to look inside Parent folder
-	char str[150];
+	char str[250];
 	sprintf(str, "%s\\*.*", App->fs->GetMetasDir()->GetPath());
 
 	//Will recieve all the files list
