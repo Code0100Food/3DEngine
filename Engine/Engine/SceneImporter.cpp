@@ -281,12 +281,19 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 
 void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType type, ComponentMaterial* container)
 {
+	if (material->GetTextureCount(type) == 0)return;
+
 	std::map<uint, aiMaterial*>::const_iterator item = loaded_materials.begin();
 	while (item != loaded_materials.end())
 	{
 		if (item._Ptr->_Myval.second == material)
 		{
-			container->AddTexture((ResourceMaterial*)App->res_manager->Find(item._Ptr->_Myval.first));
+			ResourceMaterial* m_res = (ResourceMaterial*)App->res_manager->Find(item._Ptr->_Myval.first);
+
+			if (m_res != nullptr && StrToAiTextureType(m_res->GetMaterialType()) == type)
+			{
+				container->AddTexture(m_res);
+			}
 			return;
 		}
 	}
@@ -325,10 +332,12 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType 
 			App->importer->ImportFile(usable_str_b.c_str());
 
 			//Find the loaded mat and add the id on the mesh materials
-			Resource* mat = App->res_manager->Find(usable_str_b.c_str());
+			ResourceMaterial* mat = (ResourceMaterial*)App->res_manager->Find(usable_str_b.c_str());
+			mat->SetMaterialType(AiTextureTypeToStr(type));
+
 			if (mat != nullptr)
 			{
-				container->AddTexture((ResourceMaterial*)mat, false);
+				container->AddTexture(mat, false);
 				//Track the loaded material
 				loaded_materials.insert(std::pair<uint, aiMaterial*>(mat->GetID(), material));
 			}
@@ -337,3 +346,43 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType 
 
 	return;
 }
+
+const char* SceneImporter::AiTextureTypeToStr(aiTextureType ty)
+{
+	switch (ty)
+	{
+	case aiTextureType_DIFFUSE:		return "diffuse";
+	case aiTextureType_SPECULAR:	return "specular";
+	case aiTextureType_AMBIENT:		return "ambient";
+	case aiTextureType_EMISSIVE:	return "emissive";
+	case aiTextureType_HEIGHT:		return "height";
+	case aiTextureType_NORMALS:		return "normals";
+	case aiTextureType_SHININESS:	return "shininess";
+	case aiTextureType_OPACITY:		return "opacity";
+	case aiTextureType_DISPLACEMENT:return "displacement";
+	case aiTextureType_LIGHTMAP:	return "lightmap";
+	case aiTextureType_REFLECTION:	return "reflection";
+	case aiTextureType_UNKNOWN:		return "unknown";
+	}
+
+	return "none";
+}
+
+aiTextureType SceneImporter::StrToAiTextureType(const char* str)
+{
+	if (strcmp(str, "diffuse") == 0)return aiTextureType_DIFFUSE;
+	if (strcmp(str, "specular") == 0)return aiTextureType_SPECULAR;
+	if (strcmp(str, "ambient") == 0)return aiTextureType_AMBIENT;
+	if (strcmp(str, "emissive") == 0)return aiTextureType_EMISSIVE;
+	if (strcmp(str, "height") == 0)return aiTextureType_HEIGHT;
+	if (strcmp(str, "normals") == 0)return aiTextureType_NORMALS;
+	if (strcmp(str, "shininess") == 0)return aiTextureType_SHININESS;
+	if (strcmp(str, "opacity") == 0)return aiTextureType_OPACITY;
+	if (strcmp(str, "displacement") == 0)return aiTextureType_DISPLACEMENT;
+	if (strcmp(str, "lightmap") == 0)return aiTextureType_LIGHTMAP;
+	if (strcmp(str, "reflection") == 0)return aiTextureType_REFLECTION;
+	if (strcmp(str, "unknown") == 0)return aiTextureType_UNKNOWN;
+
+	return aiTextureType_NONE;
+}
+

@@ -51,5 +51,7 @@ private:
 	void ImportMesh(const char* name, aiMesh *mesh, const aiScene *scene, GameObject* container);
 	void ImportMaterialTextures(aiMaterial *mat, aiTextureType type, ComponentMaterial* container);
 
+	const char* SceneImporter::AiTextureTypeToStr(aiTextureType ty);
+	aiTextureType SceneImporter::StrToAiTextureType(const char* str);
 };
 #endif // !_MODEL_IMPORTER_H_

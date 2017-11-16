@@ -75,6 +75,11 @@ uint ResourceMaterial::GetMaterialID() const
 	return mat_id;
 }
 
+const char * ResourceMaterial::GetMaterialType() const
+{
+	return mat_type.c_str();
+}
+
 // Functionality ================================
 bool ResourceMaterial::Save(Serializer & file_root) const
 {
@@ -129,7 +134,6 @@ void ResourceMaterial::UnloadInMemory()
 	num_layers = 0;
 	bytes = 0;
 	mat_id = 0;
-	mat_type = "undef_material";
 	color_format = UNKNOWN_COLOR;
 }
 

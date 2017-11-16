@@ -51,7 +51,8 @@ public:
 	void SetColorFormat(COLOR_FORMAT fmt);
 	
 	//Get Methods -----------
-	uint GetMaterialID()const;
+	uint		GetMaterialID()const;
+	const char* GetMaterialType()const;
 
 	//Functionality ---------
 	//Save/Load Methods
