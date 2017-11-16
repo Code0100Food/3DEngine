@@ -55,6 +55,34 @@ void ComponentMaterial::AddTexture(ResourceMaterial* tex, bool ad_ref)
 	if(ad_ref)tex->AddReference();
 }
 
+void ComponentMaterial::RestTexture(ResourceMaterial * tex)
+{
+	uint size = textures.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (textures[k] == tex)
+		{
+			textures[k]->RestReference();
+			for (uint h = k; h < size - 1; h++)
+			{
+				textures[h] = textures[h + 1];
+			}
+			textures.pop_back();
+			break;
+		}
+	}
+}
+
+void ComponentMaterial::ClearTextures()
+{
+	uint size = textures.size();
+	for (uint k = 0; k < size; k++)
+	{
+		textures[k]->RestReference();
+	}
+	textures.clear();
+}
+
 bool ComponentMaterial::Save(Serializer & array_root) const
 {
 	bool ret = false;

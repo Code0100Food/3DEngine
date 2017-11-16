@@ -15,6 +15,8 @@
 #include "ComponentCamera.h"
 
 class Serializer;
+class ResourceMaterial;
+class ResourceMesh;
 
 class GameObject
 {
@@ -53,6 +55,8 @@ public:
 	void SetDrawSelectedBoundingBoxState(bool val);
 	void SetName(const char* str);
 	void SetParent(GameObject* target);
+	void SetMaterial(ResourceMaterial* mat);
+	void SetMesh(ResourceMesh* mesh);
 
 	//Get Methods -----------
 	bool				GetActive()const;

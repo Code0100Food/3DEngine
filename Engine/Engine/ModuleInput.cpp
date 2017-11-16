@@ -295,7 +295,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 		case SDL_DROPFILE:
-			App->importer->ImportFile(event.drop.file);
+			App->importer->ImportFile(event.drop.file, true);
 			break;
 		}
 	}

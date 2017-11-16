@@ -163,6 +163,23 @@ void GameObject::SetParent(GameObject * target)
 	parent = (GameObject*)target;
 }
 
+void GameObject::SetMaterial(ResourceMaterial * mat)
+{
+	//Get the component material
+	ComponentMaterial* mat_comp = (ComponentMaterial*)FindComponent(COMPONENT_TYPE::COMP_MATERIAL);
+	if (mat_comp == nullptr)
+	{
+		mat_comp = (ComponentMaterial*)CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
+	}
+	mat_comp->ClearTextures();
+	mat_comp->AddTexture(mat);
+}
+
+void GameObject::SetMesh(ResourceMesh * mesh)
+{
+
+}
+
 // Get Methods ==================================
 bool GameObject::GetActive() const
 {

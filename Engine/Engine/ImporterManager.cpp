@@ -43,7 +43,12 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 		if(b_ret && place_on_scene)
 		{
 			ResourceMaterial* res = (ResourceMaterial*)App->res_manager->FindLast(RESOURCE_TYPE::MATERIAL_RESOURCE);
-			/*Apply the drop effect here*/
+			//Set the target texture
+			GameObject* obj = App->scene->GetSelectedGameObject();
+			if (obj != nullptr)
+			{
+				obj->SetMaterial(res);
+			}
 		}
 		break;
 	case MESH_IMPORT:
@@ -53,7 +58,8 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 		if (b_ret && place_on_scene)
 		{
 			Resource* res = (Resource*)App->res_manager->FindLast(RESOURCE_TYPE::SCENE_RESOURCE);
-			/*Apply the drop effect here*/
+			//Place the imported scene in the 3D world
+			App->importer->scene_importer.Load(res);
 		}
 		break;
 	}
