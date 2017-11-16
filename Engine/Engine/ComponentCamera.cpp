@@ -124,7 +124,7 @@ void ComponentCamera::ApplyDinamicFrustum()
 
 	while (!remaining_childs.empty())
 	{
-		//Look if the front element is root node or camera parent or element is out the frustrum
+		//Look if the front element is root node or camera parent or element is out the frustum
 		if (remaining_childs.front() != parent && remaining_childs.front()->GetParent() != nullptr && frustum.VertexOutside(*remaining_childs.front()->GetBoundingBox()))
 		{
 			//if it is we will ignore its childs and set him to false

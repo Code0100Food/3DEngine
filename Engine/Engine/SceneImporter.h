@@ -42,7 +42,7 @@ private:
 
 public:
 
-	bool Import(const char* path);
+	uint Import(const char* path);
 	bool Load(Resource* target);
 
 private:

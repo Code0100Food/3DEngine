@@ -21,7 +21,7 @@ SceneImporter::SceneImporter()
 }
 
 // Functionality ================================
-bool SceneImporter::Import(const char * path)
+uint SceneImporter::Import(const char * path)
 {
 	//Get paths data
 	file_path = path;
@@ -34,7 +34,7 @@ bool SceneImporter::Import(const char * path)
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		LOG("[error] ASSIMP: %s", import.GetErrorString());
-		return false;
+		return 0;
 	}
 
 	LOG("Loading %s scene!", usable_str_a.c_str());
@@ -86,7 +86,7 @@ bool SceneImporter::Import(const char * path)
 	loaded_meshes.clear();
 	loaded_materials.clear();
 
-	return true;
+	return scene_res->GetID();
 }
 
 bool SceneImporter::Load(Resource * target)

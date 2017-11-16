@@ -14,6 +14,11 @@ public:
 
 	ImporterManager();
 
+private:
+
+	std::string format;
+	std::string n_path;
+
 public:
 
 	MeshImporter		mesh_importer;

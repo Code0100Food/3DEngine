@@ -219,8 +219,9 @@ bool MaterialImporter::Load(ResourceMaterial* to_load)
 	return (textureID != 0);
 }
 
-bool MaterialImporter::Import(const char* path)
+uint MaterialImporter::Import(const char* path)
 {
+	uint ret = 0;
 	//Texture buffer
 	char* buffer = nullptr;
 	int	  lenght = App->fs->LoadFile(path, &buffer);
@@ -228,6 +229,7 @@ bool MaterialImporter::Import(const char* path)
 	if (buffer && lenght)
 	{
 		ResourceMaterial* resource = (ResourceMaterial*)App->res_manager->CreateResource(RESOURCE_TYPE::MATERIAL_RESOURCE);
+		ret = resource->GetID();
 
 		ILuint image_name;
 		ilGenImages(1, &image_name);
@@ -286,8 +288,8 @@ bool MaterialImporter::Import(const char* path)
 	else
 	{
 		LOG("Cannot load texture from path: %s", path);
-		return false;
+		return ret;
 	}
 
-	return true;
+	return ret;
 }

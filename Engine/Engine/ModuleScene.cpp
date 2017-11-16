@@ -339,7 +339,11 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 				//Find the mesh to render
 				ComponentMesh* target_mesh = target->FindMeshComponent();
 				//Link the elements
-				if (target_mesh != nullptr)mesh_rend->SetTargetMesh(target_mesh);
+				if (target_mesh != nullptr)
+				{
+					mesh_rend->SetTargetMesh(target_mesh);
+					target_mesh->SetDrawMaterial((ComponentMaterial*)target->FindComponent(COMPONENT_TYPE::COMP_MATERIAL));
+				}
 
 				show_components_window = false;
 			}

@@ -170,6 +170,8 @@ void GameObject::SetMaterial(ResourceMaterial * mat)
 	if (mat_comp == nullptr)
 	{
 		mat_comp = (ComponentMaterial*)CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
+		ComponentMesh* target_mesh = FindMeshComponent();
+		target_mesh->SetDrawMaterial((ComponentMaterial*)FindComponent(COMPONENT_TYPE::COMP_MATERIAL));
 	}
 	mat_comp->ClearTextures();
 	mat_comp->AddTexture(mat);

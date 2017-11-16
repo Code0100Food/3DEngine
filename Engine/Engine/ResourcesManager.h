@@ -45,7 +45,6 @@ public:
 	//Find Methods
 	Resource*	Find(const char* file_path)const;
 	Resource*	Find(uint id)const;
-	Resource*	FindLast(RESOURCE_TYPE type)const; //Find the latest loaded res by type
 	uint		FindMetaFile(const char* own_file_path)const;
 
 	//Load Methods

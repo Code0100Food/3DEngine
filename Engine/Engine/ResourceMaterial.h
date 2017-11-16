@@ -32,7 +32,7 @@ private:
 	uint bytes = 0;
 	uint mat_id = 0;
 
-	std::string mat_type = "undef_material";
+	std::string mat_type = "undef_type";
 
 	COLOR_FORMAT color_format = UNKNOWN_COLOR;
 
