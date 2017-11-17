@@ -77,10 +77,10 @@ void ComponentCamera::SetIsMain(bool value)
 	is_main = value;
 }
 
-void ComponentCamera::SetVerticalFov(float angle_in_deg)
+void ComponentCamera::SetVerticalFov(float angle_in_deg, float aspect_ratio)
 {
 	frustum.verticalFov = angle_in_deg * DEGTORAD;
-	frustum.horizontalFov = (2 * math::Atan(math::Tan(frustum.verticalFov / 2) * App->window->GetAspectRatio()));
+	frustum.horizontalFov = (2 * math::Atan(math::Tan(frustum.verticalFov / 2) * aspect_ratio));
 }
 
 // Functionality ================================
@@ -95,10 +95,10 @@ void ComponentCamera::UpdateFrustumTransform()
 	const ComponentTransform* parent_transform = (ComponentTransform*)this->parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 
 	//Z axis of the transform
-	frustum.front = parent_transform->GetTransform().Transposed().Col3(2);
+	frustum.front = parent_transform->GetTransform().Col3(2).Normalized();
 
 	//Y axis of the transform
-	frustum.up = parent_transform->GetTransform().Transposed().Col3(1);
+	frustum.up = parent_transform->GetTransform().Col3(1).Normalized();
 
 	frustum.pos = parent_transform->GetPosition();
 }
