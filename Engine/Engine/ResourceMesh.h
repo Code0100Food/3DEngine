@@ -56,6 +56,8 @@ public:
 	//Load/Unload in memory
 	void	LoadInMemory();
 	void	UnloadInMemory();
+	void	ReImport();
+
 };
 
 #endif // !_RESOURCE_MESH_H_

@@ -341,9 +341,10 @@ void ResourcesManager::UpdateMetaFiles()
 {
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
-		if (res->second->CheckEditionTime())
+		if (!res->second->GetConstInMemory() && res->second->CheckEditionTime())
 		{
 			/*Here re import the resource*/
+			res->second->ReImport();
 		}
 	}
 }

@@ -152,6 +152,14 @@ void ResourceMaterial::UnloadInMemory()
 	color_format = UNKNOWN_COLOR;
 }
 
+void ResourceMaterial::ReImport()
+{
+	if(references > 0)UnloadInMemory();
+	
+	LoadInMemory();
+	if (references == 0)UnloadInMemory();
+}
+
 void ResourceMaterial::BlitUI() const
 {
 	ImGui::Text("%s", mat_type.c_str());

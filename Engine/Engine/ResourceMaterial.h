@@ -62,6 +62,7 @@ public:
 	//Load/Unload in memory
 	void	LoadInMemory();
 	void	UnloadInMemory();
+	void	ReImport();
 
 	//UI
 	void BlitUI()const;

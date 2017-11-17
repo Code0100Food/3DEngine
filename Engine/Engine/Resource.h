@@ -41,6 +41,7 @@ public:
 	uint			GetReferences()const;
 	const char*		GetOriginalFile()const;
 	const char*		GetOwnFile()const;
+	bool			GetConstInMemory()const;
 
 	//Set Methods -----------
 	void SetID(uint n_id);
@@ -65,6 +66,7 @@ public:
 	//Load/Unload in memory
 	virtual void LoadInMemory();
 	virtual void UnloadInMemory();
+	virtual void ReImport();
 
 };
 

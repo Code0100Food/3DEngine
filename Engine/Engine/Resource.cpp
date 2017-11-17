@@ -50,6 +50,11 @@ const char * Resource::GetOwnFile() const
 	return own_file.c_str();
 }
 
+bool Resource::GetConstInMemory() const
+{
+	return const_in_memory;
+}
+
 void Resource::SetID(uint n_id)
 {
 	id = n_id;
@@ -164,6 +169,11 @@ void Resource::LoadInMemory()
 }
 
 void Resource::UnloadInMemory()
+{
+
+}
+
+void Resource::ReImport()
 {
 
 }

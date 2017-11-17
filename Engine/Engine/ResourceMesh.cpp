@@ -177,3 +177,8 @@ void ResourceMesh::UnloadInMemory()
 
 	DeleteBuffers();
 }
+
+void ResourceMesh::ReImport()
+{
+
+}

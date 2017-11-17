@@ -17,6 +17,7 @@ public:
 	bool Load(const char* path, ComponentMaterial* target);
 	bool Load(ResourceMaterial* to_load);
 	uint Import(const char* path);
+	void ReImport(ResourceMaterial* to_reload);
 
 };
 #endif // !_MATERIAL_IMPORTER_H_
