@@ -315,17 +315,20 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType 
 			//Import material
 			usable_str_b = cur_path;
 			usable_str_b += texture.path.c_str();
-			App->importer->ImportFile(usable_str_b.c_str());
+			bool imported_correctly = App->importer->ImportFile(usable_str_b.c_str());
 
-			//Find the loaded mat and add the id on the mesh materials
-			ResourceMaterial* mat = (ResourceMaterial*)App->res_manager->Find(usable_str_b.c_str(),RESOURCE_TYPE::MATERIAL_RESOURCE);
-			mat->SetMaterialType(AiTextureTypeToStr(type));
-
-			if (mat != nullptr)
+			if (imported_correctly)
 			{
-				container->AddTexture(mat, false);
-				//Track the loaded material
-				loaded_materials.insert(std::pair<uint, aiMaterial*>(mat->GetID(), material));
+				//Find the loaded mat and add the id on the mesh materials
+				ResourceMaterial* mat = (ResourceMaterial*)App->res_manager->Find(usable_str_b.c_str(), RESOURCE_TYPE::MATERIAL_RESOURCE);
+				mat->SetMaterialType(AiTextureTypeToStr(type));
+
+				if (mat != nullptr)
+				{
+					container->AddTexture(mat, false);
+					//Track the loaded material
+					loaded_materials.insert(std::pair<uint, aiMaterial*>(mat->GetID(), material));
+				}
 			}
 		}
 	}

@@ -9,6 +9,8 @@
 #include "ImporterManager.h"
 #include "Serializer.h"
 #include "ModuleTextures.h"
+#include "ModuleImgui.h"
+#include "imgui/imgui_dock.h"
 
 // Constructors =================================
 ResourcesManager::ResourcesManager(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
@@ -156,6 +158,12 @@ update_status ResourcesManager::Update(float dt)
 		metas_timer.Start();
 		UpdateMetaFiles();
 	}
+
+	App->imgui->GetWorkspace()->BeginDock("Resource Inspector", NULL, NULL);
+		
+
+	App->imgui->GetWorkspace()->EndDock();
+
 
 	return UPDATE_CONTINUE;
 }
