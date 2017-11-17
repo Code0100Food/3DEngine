@@ -64,7 +64,6 @@ uint SceneImporter::Import(const char * path)
 
 	//Generate the scene resource & json structure file
 	Resource* scene_res = App->res_manager->CreateResource(RESOURCE_TYPE::SCENE_RESOURCE);
-	Serializer meta_file;
 	scene_res->SetOriginalFile(file_path.c_str());
 	char own_name[200];
 	sprintf(own_name, "%s.scn", usable_str_a.c_str());
@@ -76,12 +75,7 @@ uint SceneImporter::Import(const char * path)
 	App->fs->SaveFile(scene_res->GetOwnFile(), buffer, size - 1, LIBRARY_SCENE_FOLDER);
 	RELEASE_ARRAY(buffer);
 
-	char meta_name[200];
-	sprintf(meta_name, "%s.meta", scene_res->GetOwnFile());
-	scene_res->Save(meta_file);
-	size = meta_file.Save(&buffer);
-	App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
-	RELEASE_ARRAY(buffer);
+	scene_res->Save();
 
 	loaded_meshes.clear();
 	loaded_materials.clear();
@@ -258,16 +252,8 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 		resource_mesh->SetOwnFile(f_name);
 
 		//Save the meta file
-		Serializer meta_file;
-		resource_mesh->Save(meta_file);
-		char* buffer = nullptr;
-		uint size = meta_file.Save(&buffer);
-		char meta_name[200];
-		sprintf(meta_name, "%s.meta", resource_mesh->GetOwnFile());
-		App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
-
-		RELEASE_ARRAY(buffer);
-
+		resource_mesh->Save();
+		
 		//Insert the loaded mesh 
 		loaded_meshes.insert(std::pair<uint, aiMesh*>(resource_mesh->GetID(), mesh));
 	}

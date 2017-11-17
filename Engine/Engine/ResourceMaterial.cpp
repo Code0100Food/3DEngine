@@ -5,6 +5,7 @@
 #include "imgui/imgui.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include "FileSystem.h"
 
 // Constructors =================================
 ResourceMaterial::ResourceMaterial() :Resource(MATERIAL_RESOURCE)
@@ -81,28 +82,33 @@ const char * ResourceMaterial::GetMaterialType() const
 }
 
 // Functionality ================================
-bool ResourceMaterial::Save(Serializer & file_root) const
+bool ResourceMaterial::Save()
 {
+	bool ret = false;
+
+	//Save the meta file
+	Serializer meta_file;
+
 	//Save all the standard resource data
-	file_root.InsertInt("id", id);
-	file_root.InsertString("res_type", ResourceTypeToStr(type));
-	file_root.InsertString("original_file", original_file.c_str());
-	file_root.InsertString("own_file", own_file.c_str());
+	meta_file.InsertInt("id", id);
+	meta_file.InsertString("res_type", ResourceTypeToStr(type));
+	meta_file.InsertString("original_file", original_file.c_str());
+	meta_file.InsertString("own_file", own_file.c_str());
+	meta_file.InsertString("mat_type", mat_type.c_str());
 
-	//Save all the material resource data
-	file_root.InsertString("mat_type", mat_type.c_str());
-	/*file_root.InsertInt("width", width);
-	file_root.InsertInt("height", height);
-	file_root.InsertInt("depth", depth);
-	file_root.InsertInt("bytes_per_pixel", bytes_per_pixel);
-	file_root.InsertInt("num_mip_maps", num_mip_maps);
-	file_root.InsertInt("num_layers", num_layers);
-	file_root.InsertInt("bytes", bytes);
-	file_root.InsertInt("mat_id", mat_id);
-	file_root.InsertInt("height", height);
-	file_root.InsertString("color_format", ColorFormatToStr(color_format));*/
+	char* buffer = nullptr;
+	uint size = meta_file.Save(&buffer);
+	if (buffer != nullptr)
+	{
+		char meta_name[200];
+		sprintf(meta_name, "%s.meta", own_file.c_str());
+		App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
 
-	return true;
+		RELEASE_ARRAY(buffer);
+		ret = true;
+	}
+
+	return ret;
 }
 
 bool ResourceMaterial::Load(Serializer & data)

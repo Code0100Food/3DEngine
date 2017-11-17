@@ -53,10 +53,6 @@ public:
 	void	SetupMesh();
 	void	DeleteBuffers();
 
-	//Save/Load Methods -----
-	bool	Save(Serializer& file_root)const;
-	bool	Load(Serializer& data);
-
 	//Load/Unload in memory
 	void	LoadInMemory();
 	void	UnloadInMemory();

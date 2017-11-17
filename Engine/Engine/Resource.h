@@ -54,7 +54,7 @@ public:
 	void RestReference();
 
 	//Save/Load Methods
-	virtual bool Save(Serializer& file_root)const;
+	virtual bool Save();
 	virtual bool Load(Serializer& data);
 
 	//UI

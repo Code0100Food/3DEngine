@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "Serializer.h"
+#include "FileSystem.h"
 
 // Constructors =================================
 Resource::Resource()
@@ -87,15 +88,32 @@ void Resource::RestReference()
 	}
 }
 
-bool Resource::Save(Serializer & file_root) const
+bool Resource::Save()
 {
-	//Save all the standard resource data
-	file_root.InsertInt("id", id);
-	file_root.InsertString("res_type", ResourceTypeToStr(type));
-	file_root.InsertString("original_file", original_file.c_str());
-	file_root.InsertString("own_file", own_file.c_str());
+	bool ret = false;
 
-	return true;
+	//Save the meta file
+	Serializer meta_file;
+	
+	//Save all the standard resource data
+	meta_file.InsertInt("id", id);
+	meta_file.InsertString("res_type", ResourceTypeToStr(type));
+	meta_file.InsertString("original_file", original_file.c_str());
+	meta_file.InsertString("own_file", own_file.c_str());
+
+	char* buffer = nullptr;
+	uint size = meta_file.Save(&buffer);
+	if (buffer != nullptr)
+	{
+		char meta_name[200];
+		sprintf(meta_name, "%s.meta", own_file.c_str());
+		App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
+
+		RELEASE_ARRAY(buffer);
+		ret = true;
+	}
+	
+	return ret;
 }
 
 bool Resource::Load(Serializer & data)

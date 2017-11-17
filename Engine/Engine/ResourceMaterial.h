@@ -56,7 +56,7 @@ public:
 
 	//Functionality ---------
 	//Save/Load Methods
-	bool Save(Serializer& file_root)const;
+	bool Save();
 	bool Load(Serializer& data);
 
 	//Load/Unload in memory

@@ -271,19 +271,8 @@ uint MaterialImporter::Import(const char* path)
 		sprintf(meta_name, "%s.meta", resource->GetOwnFile());
 
 		//Generate a meta file to link the generated resource with the file data
-		Serializer meta_file;
-
-		bool ret = resource->Save(meta_file);
-
-		if (ret)
-		{
-			//Save the generated meta file
-			char* buffer = nullptr;
-			uint size = meta_file.Save(&buffer);
-			App->fs->SaveFile(meta_name, buffer, size - 1, LIBRARY_META_FOLDER);
-
-			RELEASE_ARRAY(buffer);
-		}		
+		resource->Save();
+	
 	}
 	else
 	{
