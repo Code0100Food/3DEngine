@@ -29,6 +29,7 @@ protected:
 	uint			references = 0;
 	std::string		original_file;
 	std::string		own_file;
+	uint			last_edition_time = 0;
 
 	bool			const_in_memory = false;
 
@@ -54,8 +55,9 @@ public:
 	void RestReference();
 
 	//Save/Load Methods
-	virtual bool Save();
-	virtual bool Load(Serializer& data);
+	virtual bool	Save();
+	virtual bool	Load(Serializer& data);
+	bool			CheckEditionTime();//Return true if the file has been modified
 
 	//UI
 	virtual void BlitUI()const;

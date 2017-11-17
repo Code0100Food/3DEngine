@@ -339,79 +339,13 @@ void ResourcesManager::LoadMetaFiles()
 
 void ResourcesManager::UpdateMetaFiles()
 {
-	//Set String to look inside Parent folder
-	char str[250];
-	sprintf(str, "%s\\*.*", App->fs->GetMetasDir()->GetPath());
-
-	//Will recieve all the files list
-	WIN32_FIND_DATA files_list;
-
-	//Will handle the list when changing the looked element
-	HANDLE file_handle = FindFirstFileA(LPCSTR(str), &files_list);
-
-	if (file_handle == INVALID_HANDLE_VALUE)
+	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
-		LOG("Error in path");
-	}
-
-	DWORD attribute;
-
-	bool still_elements = true;
-	while (still_elements)
-	{
-		if (strcmp(files_list.cFileName, ".") == 0 || strcmp(files_list.cFileName, "..") == 0)
+		if (res->second->CheckEditionTime())
 		{
-			//Jump to the other element
-			if (!FindNextFile(file_handle, &files_list))
-			{
-				still_elements = false;
-			}
-			continue;
-		}
-
-		//Load the meta file
-		char str[200];
-		sprintf(str, "%s%s", LIBRARY_META_FOLDER, files_list.cFileName);
-		const JSON_Value* val = json_parse_file(str);
-		if (val == NULL)
-		{
-			LOG("[error] Error on meta file load!");
-		}
-		else
-		{
-			Serializer meta_data(val);
-
-			Resource* new_resource = nullptr;
-			RESOURCE_TYPE ty = StrToResourceType(meta_data.GetString("res_type"));
-			if (ty != UNDEF_RESOURCE)
-			{
-				uint id = meta_data.GetInt("id");
-				Resource* res = App->res_manager->Find(id);
-				if (res != nullptr)
-				{
-					/*char file_path[250];
-					sprintf(file_path, "%s%s", ASSETS_FOLDER, res->GetOriginalFile());
-					exp_path = file_path;
-					std::experimental::filesystem::path p = exp_path;
-					auto ftime = std::experimental::filesystem::last_write_time(p);
-					std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime);
-					std::experimental::filesystem::last_write_time(sys_path);*/
-
-					//new_resource = CreateResource(ty);
-					//new_resource->Load(meta_data);
-				}
-				/*else delete the meta file because is obsolete*/
-			}
-		}
-
-		//Jump to the other element
-		if (!FindNextFile(file_handle, &files_list))
-		{
-			still_elements = false;
+			/*Here re import the resource*/
 		}
 	}
-
-	FindClose(file_handle);
 }
 
 void ResourcesManager::BlitConfigInfo()

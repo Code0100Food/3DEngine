@@ -4,6 +4,8 @@
 #include "Serializer.h"
 #include "FileSystem.h"
 
+#include <experimental/filesystem>
+
 // Constructors =================================
 Resource::Resource()
 {
@@ -100,7 +102,13 @@ bool Resource::Save()
 	meta_file.InsertString("res_type", ResourceTypeToStr(type));
 	meta_file.InsertString("original_file", original_file.c_str());
 	meta_file.InsertString("own_file", own_file.c_str());
-
+	//Modification time
+	std::experimental::filesystem::path path = original_file;
+	auto real_last_time = std::experimental::filesystem::last_write_time(path);
+	std::time_t last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
+	meta_file.InsertInt("last_edition_time", last_time);
+	
+	//Save the generated meta file
 	char* buffer = nullptr;
 	uint size = meta_file.Save(&buffer);
 	if (buffer != nullptr)
@@ -122,8 +130,27 @@ bool Resource::Load(Serializer & data)
 	id = data.GetInt("id");
 	original_file = data.GetString("original_file");
 	own_file = data.GetString("own_file");
+	last_edition_time = data.GetInt("last_edition_time");
 
 	return true;
+}
+
+bool Resource::CheckEditionTime()
+{
+	bool ret = false;
+
+	//Modification time
+	std::experimental::filesystem::path path = original_file;
+	auto real_last_time = std::experimental::filesystem::last_write_time(path);
+	std::time_t last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
+	
+	if (last_time != last_edition_time)
+	{
+		ret = true;
+		last_edition_time = last_time;
+	}
+
+	return ret;
 }
 
 void Resource::BlitUI() const
