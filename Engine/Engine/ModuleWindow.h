@@ -46,6 +46,8 @@ private:
 	std::vector<string>			windows_names;
 
 	float	aspect_ratio = 0;
+	float	scene_aspect_ratio = 0;
+	float	game_aspect_ratio = 0;
 
 public:
 
@@ -60,6 +62,8 @@ public:
 	//Set Methods =====================
 	void SetTitle(const char* title);
 	void SetAspectRatio(int width, int height);
+	void SetSceneAspectRatio(int width, int height);
+	void SetGameAspectRatio(int width, int height);
 	void SetWidth(int width);
 	void SetHeight(int height);
 
@@ -67,7 +71,10 @@ public:
 	float	 GetBrightness()const;
 	int		 GetWidth() const;
 	int		 GetHeight() const;
+
 	float	 GetAspectRatio() const;
+	float	 GetSceneAspectRation()const;
+	float	 GetGameAspectRatio()const;
 
 };
 

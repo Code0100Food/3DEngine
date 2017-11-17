@@ -119,8 +119,8 @@ update_status ModuleCamera3D::Update(float dt)
 			{
 				if (dy > 1)dy = 1;
 				if (dy < -1)dy = -1;
-
-				rotate_quaternion.SetFromAxisAngle(math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up), angle_to_rotate * dy * DEGTORAD);
+				//math::Cross(editor_camera_frustrum.front, editor_camera_frustrum.up)
+				rotate_quaternion.SetFromAxisAngle(editor_camera_frustrum.WorldRight(), angle_to_rotate * dy * DEGTORAD);
 				editor_camera_frustrum.Transform(rotate_quaternion);
 				if ((focus_point - editor_camera_frustrum.pos).Length() > camera_dist || (focus_point - editor_camera_frustrum.pos).Length() < camera_dist)
 				{
@@ -288,7 +288,7 @@ void ModuleCamera3D::BlitConfigInfo()
 	float new_fov = editor_camera_frustrum.verticalFov * RADTODEG;
 	if (ImGui::DragFloat("Vertical FOV", &new_fov, 1.0, 1.0, 179))
 	{
-		SetVerticalFov(new_fov);
+		SetVerticalFovDeg(new_fov, App->window->GetSceneAspectRation());
 	}
 
 	ImGui::Separator();
@@ -341,15 +341,15 @@ void ModuleCamera3D::Look(const math::float3& look_here, bool RotateAroundLookin
 	else editor_camera_frustrum.up = res;
 }
 
-void ModuleCamera3D::SetVerticalFov(float angle_in_deg)
+void ModuleCamera3D::SetVerticalFovDeg(float angle_in_deg, float new_aspect_ratio)
 {
 	editor_camera_frustrum.verticalFov = angle_in_deg * DEGTORAD;
-	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * App->window->GetAspectRatio()));
+	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * new_aspect_ratio));
 }
 
-void ModuleCamera3D::SetVerticalFov(float angle_in_deg, float new_aspect_ratio)
+void ModuleCamera3D::SetVerticalFovRad(float angle_in_rad, float new_aspect_ratio)
 {
-	editor_camera_frustrum.verticalFov = angle_in_deg * DEGTORAD;
+	editor_camera_frustrum.verticalFov = angle_in_rad;
 	editor_camera_frustrum.horizontalFov = (2 * math::Atan(math::Tan(editor_camera_frustrum.verticalFov / 2) * new_aspect_ratio));
 }
 

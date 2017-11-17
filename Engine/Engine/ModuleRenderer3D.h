@@ -107,6 +107,7 @@ private:
 	DockContext*	render_dock = nullptr;
 	ImVec2			image_window_pos;
 	ImVec2			image_window_size;
+	ImVec2			game_window_size;
 
 	//Editor Camera texture
 	FrameTexture*	render_to_texture = nullptr;
@@ -141,6 +142,7 @@ public:
 	float				GetMaxRenderDistance()const;
 	ImVec2				GetSceneImagePos()const;
 	ImVec2				GetSceneImageSize()const;
+	ImVec2				GetGameImageSize()const;
 	const FrameTexture* GetFrameTextureRender() const;
 	const FrameTexture* GetFrameTextureGame() const;
 	IGizmo*				GetGizmo() const;

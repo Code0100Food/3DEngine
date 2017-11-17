@@ -280,6 +280,16 @@ void ModuleWindow::SetAspectRatio(int width, int height)
 	aspect_ratio = (float)width / height;
 }
 
+void ModuleWindow::SetSceneAspectRatio(int width, int height)
+{
+	scene_aspect_ratio = (float)width / height;
+}
+
+void ModuleWindow::SetGameAspectRatio(int width, int height)
+{
+	game_aspect_ratio = (float)width / height;
+}
+
 void ModuleWindow::SetWidth(int width)
 {
 	this->width = width;
@@ -309,4 +319,14 @@ int ModuleWindow::GetHeight() const
 float ModuleWindow::GetAspectRatio() const
 {
 	return aspect_ratio;
+}
+
+float ModuleWindow::GetSceneAspectRation() const
+{
+	return scene_aspect_ratio;
+}
+
+float ModuleWindow::GetGameAspectRatio() const
+{
+	return game_aspect_ratio;
 }
