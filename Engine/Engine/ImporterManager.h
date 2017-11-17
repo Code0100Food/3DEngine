@@ -8,6 +8,8 @@
 #include "MaterialImporter.h"
 #include "SceneImporter.h"
 
+class Resource;
+
 class ImporterManager
 {
 public:
@@ -28,7 +30,8 @@ public:
 public:
 
 	bool ImportFile(const char* str, bool place_on_scene = false);
-	
+	bool ReImportResource(Resource* target);
+
 	IMPORT_TYPE	GetImportTypeFromFormat(const char* str)const;
 
 };

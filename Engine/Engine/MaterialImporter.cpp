@@ -267,9 +267,6 @@ uint MaterialImporter::Import(const char* path)
 			ilDeleteImages(1, &image_name);
 		}
 
-		char meta_name[200];
-		sprintf(meta_name, "%s.meta", resource->GetOwnFile());
-
 		//Generate a meta file to link the generated resource with the file data
 		resource->Save();
 	
@@ -283,18 +280,16 @@ uint MaterialImporter::Import(const char* path)
 	return ret;
 }
 
-void MaterialImporter::ReImport(ResourceMaterial * to_reload)
+bool MaterialImporter::ReImport(ResourceMaterial * to_reload)
 {
-	/*uint ret = 0;
+	bool ret = false;
+
 	//Texture buffer
 	char* buffer = nullptr;
-	int	  lenght = App->fs->LoadFile(path, &buffer);
+	int	  lenght = App->fs->LoadFile(to_reload->GetOriginalFile(), &buffer);
 
 	if (buffer && lenght)
 	{
-		ResourceMaterial* resource = (ResourceMaterial*)App->res_manager->CreateResource(RESOURCE_TYPE::MATERIAL_RESOURCE);
-		ret = resource->GetID();
-
 		ILuint image_name;
 		ilGenImages(1, &image_name);
 		ilBindImage(image_name);
@@ -318,12 +313,7 @@ void MaterialImporter::ReImport(ResourceMaterial * to_reload)
 				// Save with the ilSaveIL function
 				if (ilSaveL(IL_DDS, data, size) > 0)
 				{
-					std::string name;
-					App->fs->GetFileNameFromPath(path, &name);
-					App->fs->ChangeFileFormat(name.c_str(), "dds", &name);
-					resource->SetOwnFile(name.c_str());
-					resource->SetOriginalFile(path);
-					App->fs->SaveFile(name.c_str(), (char*)data, size, LIBRARY_TEXTURES_FOLDER);
+					App->fs->SaveFile(to_reload->GetOwnFile(), (char*)data, size, LIBRARY_TEXTURES_FOLDER);
 				}
 
 				RELEASE_ARRAY(data);
@@ -331,15 +321,14 @@ void MaterialImporter::ReImport(ResourceMaterial * to_reload)
 			ilDeleteImages(1, &image_name);
 		}
 
-		char meta_name[200];
-		sprintf(meta_name, "%s.meta", resource->GetOwnFile());
-
 		//Generate a meta file to link the generated resource with the file data
-		resource->Save();
-
+		to_reload->Save();
+		ret = true;
 	}
 	else
 	{
-		LOG("Cannot reimport texture from path: %s", path);
-	}*/
+		LOG("Cannot reimport texture from path: %s", to_reload->GetOriginalFile());
+	}
+
+	return ret;
 }

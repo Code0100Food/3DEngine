@@ -36,7 +36,7 @@ public:
 	
 	//Functionality ---------
 	void		AddChild(Directory* new_child);
-	void		BlitDirectoryChilds();
+	void		BlitDirectoryChilds(uint index);
 	void		BlitFilesInside()const;
 	uint		ImportAllFilesInside();
 	bool		FindFile(const char* file_name)const;
@@ -73,9 +73,13 @@ public:
 
 public:
 
+	//Set Methods -----------
+	void SetFocusDir(const Directory* dir);
+
 	//Get Methods -----------
 	Directory* GetUserRootDir()const;
 	Directory* GetMetasDir()const;
+	Directory* GetFocusDir()const;
 
 	//Functionality ---------
 	//Load/Save

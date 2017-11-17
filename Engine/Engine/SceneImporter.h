@@ -8,9 +8,8 @@ enum	aiTextureType;
 class	aiMaterial;
 class	GameObject;
 class	Serializer;
-class	Resource;
-class	ResourceMaterial;
 class	ResourceMesh;
+class	Resource;
 
 #include <map>
 #include "ComponentMesh.h"
@@ -44,13 +43,14 @@ public:
 
 	uint Import(const char* path);
 	bool Load(Resource* target);
+	bool ReImport(Resource* to_reload);
 
 private:
 	
 	void ImportNode(aiNode *node, const aiScene *scene, GameObject* parent);
 	void ImportMesh(const char* name, aiMesh *mesh, const aiScene *scene, GameObject* container);
 	void ImportMaterialTextures(aiMaterial *mat, aiTextureType type, ComponentMaterial* container);
-
+	
 	const char* SceneImporter::AiTextureTypeToStr(aiTextureType ty);
 	aiTextureType SceneImporter::StrToAiTextureType(const char* str);
 };

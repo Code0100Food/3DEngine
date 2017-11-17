@@ -68,6 +68,13 @@ bool MeshImporter::Import(const char* name, std::vector<uint> indices, std::vect
 	return true;
 }
 
+bool MeshImporter::ReImport(ResourceMesh * to_reload)
+{
+	bool ret = false;
+
+	return ret;
+}
+
 bool MeshImporter::Load(const char * path)
 {
 	//Load the buffer from the file

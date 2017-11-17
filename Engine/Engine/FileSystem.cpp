@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include "Serializer.h"
+#include "ModuleInput.h"
 
 //Directory -------------------------------------
 Directory::Directory()
@@ -67,15 +68,28 @@ void Directory::AddChild(Directory * new_child)
 		childs.push_back(new_child);
 	}
 }
-void Directory::BlitDirectoryChilds()
+void Directory::BlitDirectoryChilds(uint index)
 {
-	bool opened = ImGui::TreeNode(name.c_str());
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	if (childs.empty())flags += ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Leaf;
+	if(App->fs->GetFocusDir() == this)flags += ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Selected;
+	
+	char name_str[250];
+	sprintf_s(name_str, 250, "%s##%i", name.c_str(), index);
+	bool opened = ImGui::TreeNodeEx(name_str, flags);
+
+	//Focus the dir on click
+	if (ImGui::IsItemHovered() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		App->fs->SetFocusDir(this);
+	}
 
 	if (opened)
 	{
 		for (std::vector<Directory*>::const_iterator it = childs.begin(); it != childs.end(); it++)
 		{
-			(*it)->BlitDirectoryChilds();
+			index++;
+			(*it)->BlitDirectoryChilds(index);
 		}
 		
 		ImGui::TreePop();
@@ -268,6 +282,12 @@ bool FileSystem::CleanUp()
 	return true;
 }
 
+// Set Methods ==================================
+void FileSystem::SetFocusDir(const Directory* dir)
+{
+	focus_dir = (Directory*)dir;
+}
+
 // Get Methods ==================================
 Directory * FileSystem::GetUserRootDir() const
 {
@@ -277,6 +297,11 @@ Directory * FileSystem::GetUserRootDir() const
 Directory * FileSystem::GetMetasDir() const
 {
 	return metas_dir;
+}
+
+Directory * FileSystem::GetFocusDir() const
+{
+	return focus_dir;
 }
 
 // Functionality ================================
@@ -518,7 +543,7 @@ void FileSystem::BlitFileSystemInfo()
 {
 	//Blit directories
 	App->imgui->GetWorkspace()->BeginDock("Directories", 0, 0);
-	user_root_dir->BlitDirectoryChilds();
+	user_root_dir->BlitDirectoryChilds(0);
 	App->imgui->GetWorkspace()->EndDock();
 
 	//Blit data inside the selected directory

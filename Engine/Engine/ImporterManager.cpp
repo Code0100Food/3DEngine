@@ -110,6 +110,26 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 	return b_ret;
 }
 
+bool ImporterManager::ReImportResource(Resource * target)
+{
+	bool ret = false;
+
+	switch (target->GetResourceType())
+	{
+	case MESH_RESOURCE:
+		ret = mesh_importer.ReImport((ResourceMesh*)target);
+		break;
+	case MATERIAL_RESOURCE:
+		ret = material_importer.ReImport((ResourceMaterial*)target);
+		break;
+	case SCENE_RESOURCE:
+		ret = scene_importer.ReImport(target);
+		break;
+	}
+
+	return ret;
+}
+
 IMPORT_TYPE ImporterManager::GetImportTypeFromFormat(const char * str) const
 {
 	if (strcmp(str, "fbx") == 0)return SCENE_IMPORT;

@@ -155,9 +155,8 @@ void ResourceMaterial::UnloadInMemory()
 void ResourceMaterial::ReImport()
 {
 	if(references > 0)UnloadInMemory();
-	
-	LoadInMemory();
-	if (references == 0)UnloadInMemory();
+	App->importer->material_importer.ReImport(this);
+	if (references > 0)LoadInMemory();
 }
 
 void ResourceMaterial::BlitUI() const

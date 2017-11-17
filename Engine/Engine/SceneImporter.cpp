@@ -333,6 +333,13 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType 
 	return;
 }
 
+bool SceneImporter::ReImport(Resource * to_reload)
+{
+	bool ret = false;
+
+	return ret;
+}
+
 const char* SceneImporter::AiTextureTypeToStr(aiTextureType ty)
 {
 	switch (ty)
