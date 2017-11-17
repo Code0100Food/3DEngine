@@ -403,10 +403,10 @@ int FileSystem::LoadFile(const char * path, char ** buffer_to_fill)
 
 void FileSystem::SaveFile(const char * file, const char* buffer, unsigned int size, const char* library_folder)
 {
-	usable_str_a = library_folder;
-	usable_str_a += file;
+	usable_str_c = library_folder;
+	usable_str_c += file;
 
-	std::ofstream outfile(usable_str_a.c_str(), std::ofstream::binary);
+	std::ofstream outfile(usable_str_c.c_str(), std::ofstream::binary);
 
 	if (outfile.good())
 	{
@@ -437,6 +437,7 @@ int FileSystem::CloneFile(const char * file, Directory * folder, std::string* n_
 	if (buffer == NULL)return -1;
 
 	//Get file name
+	usable_str_a.clear();
 	GetFileNameFromPath(file, &usable_str_a);
 
 

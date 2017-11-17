@@ -65,7 +65,8 @@ private:
 
 	mutable std::string usable_str_a;
 	mutable std::string usable_str_b;
-	
+	mutable std::string usable_str_c;
+
 public:
 
 	std::string data_folder = "DATA";

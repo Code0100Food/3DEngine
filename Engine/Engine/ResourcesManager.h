@@ -9,6 +9,9 @@
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 
+#include"Timer.h"
+#include <experimental/filesystem>
+
 class ResourcesManager : public Module
 {
 public:
@@ -18,8 +21,9 @@ public:
 
 public:
 
-	bool Start();
-	bool CleanUp();
+	bool			Start();
+	update_status	Update(float dt);
+	bool			CleanUp();
 
 private:
 
@@ -32,10 +36,16 @@ private:
 	ResourceMesh* cylinder_low_mesh = nullptr;
 	ResourceMesh* cylinder_hi_mesh = nullptr;
 
+	//Update resources
+	Timer metas_timer;
+	uint metas_update_rate = 0;
+	std::string exp_path;
+	std::experimental::filesystem::path sys_path;
+
 public:
 
 	//Resource management methods
-	Resource*		CreateResource(RESOURCE_TYPE type);
+	Resource*		CreateResource(RESOURCE_TYPE type, uint id = 0);
 	ResourceMesh*	GetPrimitiveResourceMesh(PRIMITIVE_TYPE type);
 
 	//Import methods
@@ -47,9 +57,10 @@ public:
 	Resource*	Find(uint id)const;
 	uint		FindMetaFile(const char* own_file_path)const;
 
-	//Load Methods
+	//Metas Methods
 	void		LoadMetaFiles();
-	
+	void		UpdateMetaFiles();
+
 	//UI
 	void		BlitConfigInfo();
 	Resource*	BlitResourceButtonsByType(RESOURCE_TYPE type);
