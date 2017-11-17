@@ -432,7 +432,7 @@ int FileSystem::CloneFile(const char * file, Directory * folder, std::string* n_
 	char* buffer = nullptr;
 	
 	//Load the file
-	LoadFile(file, &buffer);
+	uint size = LoadFile(file, &buffer);
 
 	if (buffer == NULL)return -1;
 
@@ -442,13 +442,15 @@ int FileSystem::CloneFile(const char * file, Directory * folder, std::string* n_
 
 
 	//Save the file
-	SaveFile(usable_str_a.c_str(), buffer, sizeof(buffer), usable_str_b.c_str());
+	SaveFile(usable_str_a.c_str(), buffer, size, usable_str_b.c_str());
 
 	if (n_path != nullptr)
 	{
 		*n_path = usable_str_b;
 		*n_path += usable_str_a;
 	}
+
+	RELEASE_ARRAY(buffer);
 
 	return 1;
 }
@@ -506,7 +508,7 @@ bool FileSystem::IsInAssets(const char * path) const
 	if (strlen(path) < size)return false;
 	
 	char cmp_part[150];
-	memcpy(cmp_part, user_dir, size);
+	memcpy(cmp_part, path, size);
 	cmp_part[size] = '\0';
 
 	return strcmp(cmp_part, user_dir) == 0;
