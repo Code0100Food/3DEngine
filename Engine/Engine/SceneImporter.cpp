@@ -96,17 +96,18 @@ void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject*
 
 	if (node->mMetaData != NULL)
 	{
-		if (node->mNumMeshes == 0)
-		{
-			//Generate game object
-			node_obj = App->scene->CreateGameObject();
-			node_obj->SetName(node->mName.C_Str());
-			node_obj->SetParent(parent);
+		//Generate game object
+		node_obj = App->scene->CreateGameObject();
+		node_obj->SetName(node->mName.C_Str());
+		node_obj->SetParent(parent);
 
-			//Set transformation component
-			ComponentTransform* node_comp = (ComponentTransform*)node_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-			node_comp->SetTransformation(node->mTransformation);
-		}
+		//Set transformation component
+		ComponentTransform* node_comp = (ComponentTransform*)node_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		node_comp->SetTransformation(inherited_trans);
+		
+		//Inherited is id to reset for the next branch
+		aiMatrix4x4 id;
+		inherited_trans = id;
 
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
@@ -117,11 +118,17 @@ void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject*
 			
 			//Set transformation component
 			ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			inherited_trans = node->mTransformation * inherited_trans;
 			comp->SetTransformation(node->mTransformation);
-
+			
 			//Import the mesh and the related materials
 			ImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, obj);
 		}
+	}
+	else
+	{
+		//Accumulate the parents transformations
+		inherited_trans = node->mTransformation * inherited_trans;
 	}
 
 	// then do the same for each of its children

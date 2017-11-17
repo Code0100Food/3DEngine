@@ -13,6 +13,7 @@ class	Resource;
 
 #include <map>
 #include "ComponentMesh.h"
+#include "Assimp/include/matrix4x4.h"
 
 class SceneImporter
 {
@@ -38,6 +39,8 @@ private:
 
 	mutable std::string usable_str_a;
 	mutable std::string usable_str_b;
+
+	mutable aiMatrix4x4 inherited_trans;
 
 public:
 
