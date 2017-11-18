@@ -102,6 +102,8 @@ private:
 
 	DockContext*	config_dock = nullptr;
 
+	bool			debug_mode = false;
+
 public:
 	
 	std::string		app_name;
@@ -115,6 +117,10 @@ public:
 	MODULE_ID	StrToModuleID(const char* str)const;
 
 	void SetQuit();
+
+	void SetDebugMode();
+	bool GetDebugMode()const;
+
 	void RequestBrowser(const char* link);
 	void ShowConfiguration();
 	bool GetConfigWindowState()const;

@@ -195,6 +195,11 @@ update_status ModuleInput::PreUpdate(float dt)
 				App->renderer3D->SetGizmo(GUIZMO_STATE::GUIZMO_SCALE);
 			}
 
+			if (event.key.keysym.scancode == SDL_SCANCODE_F1)
+			{
+				App->SetDebugMode();
+			}
+
 		case SDL_MOUSEWHEEL:
 			mouse_z = event.wheel.y;
 			break;

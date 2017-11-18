@@ -1037,11 +1037,14 @@ void ModuleRenderer3D::PrintSceneFrame(float dt)
 		print_gizmo->Draw();
 	}
 
-	glBegin(GL_LINES);
-	glLineWidth(3.0f);
-	glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
-	glLineWidth(1.0f);
-	glEnd();
+	if (App->GetDebugMode())
+	{
+		glBegin(GL_LINES);
+		glLineWidth(3.0f);
+		glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
+		glLineWidth(1.0f);
+		glEnd();
+	}
 }
 
 void ModuleRenderer3D::PrintGameFrame(float dt)
@@ -1054,10 +1057,11 @@ void ModuleRenderer3D::PrintGameFrame(float dt)
 	//Draw / update scene objects
 	App->scene->SceneUpdate(dt);
 
-
-	float frustum_color[4] = { 1.0f, 1.0f, 0.5f,  1.0f };
-	App->camera->editor_camera_frustrum.Draw(3.0f, frustum_color);
-
+	if (App->GetDebugMode())
+	{
+		float frustum_color[4] = { 1.0f, 1.0f, 0.5f,  1.0f };
+		App->camera->editor_camera_frustrum.Draw(3.0f, frustum_color);
+	}
 }
 
 void ModuleRenderer3D::HandleGizmoInput()
@@ -1135,4 +1139,12 @@ void ModuleRenderer3D::PrintPlayPauseButton() const
 	{
 		App->scene->NextGameFrame();
 	}
+
+	if (App->GetDebugMode())
+	{
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Debug Mode Active");
+	}
+	
+
 }

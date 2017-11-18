@@ -401,6 +401,16 @@ void Application::SetQuit()
 	want_to_quit = true;
 }
 
+void Application::SetDebugMode()
+{
+	debug_mode = !debug_mode;
+}
+
+bool Application::GetDebugMode() const
+{
+	return debug_mode;
+}
+
 void Application::RequestBrowser(const char* link)
 {
 	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWNORMAL);
