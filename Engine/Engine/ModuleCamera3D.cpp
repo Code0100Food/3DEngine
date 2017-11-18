@@ -333,11 +333,13 @@ void ModuleCamera3D::SaveConfigInfo(JSON_Object * data_root)
 void ModuleCamera3D::Look(const math::float3& look_here, bool RotateAroundLookingPoint)
 {
 	editor_camera_frustrum.front = (look_here - editor_camera_frustrum.pos).Normalized();
-	math::float3 tmp = math::Cross({ 0,1,0 }, editor_camera_frustrum.front).Normalized();
 
+	math::float3 tmp = math::Cross({ 0,1,0 }, editor_camera_frustrum.front).Normalized();
 	math::float3 res = math::Cross(editor_camera_frustrum.front, tmp).Normalized();
-	if (abs(editor_camera_frustrum.up.x) - abs(res.x) + abs(editor_camera_frustrum.up.y) - abs(res.y) + abs(editor_camera_frustrum.up.z) - abs(res.z) < 0.005f)return;
-	else editor_camera_frustrum.up = res;
+
+	math::Dot(editor_camera_frustrum.front, res);
+
+	editor_camera_frustrum.up = res;
 }
 
 void ModuleCamera3D::SetVerticalFovDeg(float angle_in_deg, float new_aspect_ratio)
@@ -366,11 +368,14 @@ void ModuleCamera3D::LookAtGameObject(GameObject * obj)
 		LOG("[error] Invalid focus Target!");
 		return;
 	}
-	else if (obj->GetBoundingBoxDiagonalSize() <= 0)
+	else 
 	{
-		focus_point = trans_cmp->GetPosition();
-		Look(focus_point, true);
-		return;
+		if (obj->GetBoundingBoxDiagonalSize() <= 0)
+		{
+			focus_point = trans_cmp->GetPosition();
+			Look(focus_point, true);
+			return;
+		}
 	}
 
 	focus_point = trans_cmp->GetInheritedTransform().Transposed().TranslatePart();
