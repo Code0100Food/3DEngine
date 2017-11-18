@@ -12,6 +12,7 @@
 #include "ModuleAudio.h"
 #include "ResourcesManager.h"
 
+
 // Constructors =================================
 ModuleScene::ModuleScene(const char* _name, MODULE_ID _id, bool _config_menu, bool _enabled) : Module(_name, _id, _config_menu, _enabled)
 {
@@ -626,6 +627,12 @@ void ModuleScene::PlayGame()
 		LOG("Game Ended!");
 		App->time_manager->SetGameTimeSinceStartup(0.0f);
 		App->textures->play_icon_id = App->textures->play_icon;
+
+		ImGuiStyle* lol = &ImGui::GetStyle();
+		lol->Colors[ImGuiCol_ChildWindowBg].x += 0.06f;
+		lol->Colors[ImGuiCol_ChildWindowBg].y += 0.06f;
+		lol->Colors[ImGuiCol_ChildWindowBg].z += 0.06f;
+
 	}
 	else
 	{
@@ -633,6 +640,12 @@ void ModuleScene::PlayGame()
 		App->scene->SerializeAndSaveCurrentScene();
 		App->scene->InitializeScene();
 		App->textures->play_icon_id = App->textures->play_click_icon;
+
+		ImGuiStyle* lol = &ImGui::GetStyle();
+		lol->Colors[ImGuiCol_ChildWindowBg].x -= 0.06f;
+		lol->Colors[ImGuiCol_ChildWindowBg].y -= 0.06f;
+		lol->Colors[ImGuiCol_ChildWindowBg].z -= 0.06f;
+
 		LOG("Game Started!");
 	}
 }
