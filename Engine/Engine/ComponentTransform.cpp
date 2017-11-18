@@ -66,7 +66,7 @@ void ComponentTransform::SetTransformation(aiMatrix4x4 trans)
 	if (!(parent->GetParent()->IsRoot()))
 	{
 		ComponentTransform* tmp = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION));
-		inherited_transform = tmp->inherited_transform * transform_matrix.Transposed();
+		inherited_transform = transform_matrix.Transposed() * tmp->inherited_transform;
 	}
 	else
 	{
@@ -85,7 +85,7 @@ void ComponentTransform::SetTransformation(math::float4x4 trans)
 	if (!(parent->GetParent()->IsRoot()))
 	{
 		ComponentTransform* tmp = ((ComponentTransform*)parent->GetParent()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION));
-		inherited_transform = tmp->inherited_transform * transform_matrix.Transposed();
+		inherited_transform = transform_matrix.Transposed() * tmp->inherited_transform;
 	}
 	else
 	{

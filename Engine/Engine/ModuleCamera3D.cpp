@@ -129,14 +129,12 @@ update_status ModuleCamera3D::Update(float dt)
 			}
 		}
 
-		
-
 		//Mouse picking
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
 		{
 			unsigned int gizmo_x = (App->input->GetMouseX() - (App->renderer3D->GetSceneImagePos().x - SCENE_BORDER_X));
 			unsigned int gizmo_y = (App->input->GetMouseY() - (App->renderer3D->GetSceneImagePos().y - SCENE_BORDER_Y));
-			if (App->renderer3D->GetGizmo() && App->renderer3D->GetGizmo()->OnMouseDown(gizmo_x, gizmo_y))
+			if (App->renderer3D->GetGizmo() && App->renderer3D->GetGizmo()->OnMouseDown(gizmo_x, gizmo_y) && App->scene->GetSelectedGameObject())
 			{
 				gizmo_pressed = true;
 				return UPDATE_CONTINUE;
@@ -150,7 +148,8 @@ update_status ModuleCamera3D::Update(float dt)
 			mouse_x_normalized = ((mouse_x_normalized * 2) - 1);
 			mouse_y_normalized = -((mouse_y_normalized * 2) - 1);
 
-			mouse_picking = editor_camera_frustrum.UnProjectFromNearPlane(mouse_x_normalized, mouse_y_normalized).ToLineSegment(editor_camera_frustrum.farPlaneDistance);
+			//Set the line segment
+			mouse_picking = editor_camera_frustrum.UnProjectLineSegment(mouse_x_normalized, mouse_y_normalized);
 
 			//Check the line segment against all aabb's
 			CheckAllAABB();

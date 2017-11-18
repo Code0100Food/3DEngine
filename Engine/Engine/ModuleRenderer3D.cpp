@@ -374,33 +374,17 @@ bool ModuleRenderer3D::Init()
 
 bool ModuleRenderer3D::Start()
 {
-	//Set the projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glLoadMatrixf(App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
-
-	ViewMatrix = App->camera->editor_camera_frustrum.ViewMatrix();
-	ViewMatrix.Transpose();
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(ViewMatrix.ptr());
-
 	return true;
 }
 
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
+	//Clean the buffers 
 	CleanCameraView();
 
-	ViewMatrix = App->camera->editor_camera_frustrum.ViewMatrix();
-	ViewMatrix.Transpose();
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(App->camera->editor_camera_frustrum.ProjectionMatrix().ptr());
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(ViewMatrix.ptr());
+	//Set the editor camera [Projection and view matrix]
+	SetEditorCameraView();
 	
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->GetPosition().x, App->camera->GetPosition().y, App->camera->GetPosition().z);
@@ -412,7 +396,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	if (print_gizmo)
 	{
-		print_gizmo->SetCameraMatrix(ViewMatrix.ptr(), App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
+		print_gizmo->SetCameraMatrix(camera_view_matrix.ptr(), App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
 	}
 
 	return UPDATE_CONTINUE;
@@ -443,9 +427,9 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	App->scene->SceneUpdate(dt);
 
 	glBegin(GL_LINES);
-
+	glLineWidth(3.0f);
 	glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
-
+	glLineWidth(1.0f);
 	glEnd();
 
 	//Focus render texture
@@ -457,9 +441,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		game_to_texture->Bind();
 		App->geometry->Draw();
 		App->scene->SceneUpdate(dt);
+		float lol2[4] = { 1.0f, 1.0f, 0.5f,  1.0f };
+		App->camera->editor_camera_frustrum.Draw(3.0f, lol2);
+		glBegin(GL_LINES);
+		glLineWidth(3.0f);
+		glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
+		glLineWidth(1.0f);
+		glEnd();
+
 		game_to_texture->UnBind();
 		CleanCameraView();
-		SetEditorCameraView();
+	//	SetEditorCameraView();
 	}
 
 	//Scene and Game Dock
@@ -496,10 +488,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	// Rendering GUI
 	App->imgui->RenderUI();
-
-	glBegin(GL_QUADS);
-
-	glEnd();
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -742,19 +730,6 @@ void ModuleRenderer3D::BlitConfigInfo()
 		}
 	}
 	// ----------------------
-
-	//Render distances ------
-	ImGui::Separator();
-	ImGui::Text("Render Distances");
-	if (ImGui::SliderFloat("Min Render Distance", &min_render_distance, 0.01, 999, "%.2f"))
-	{
-		SetMinRenderDistance(min_render_distance);
-	}
-	if (ImGui::SliderFloat("Max Render Distance", &max_render_distance, 0.01, 999, "%.2f"))
-	{
-		SetMaxRenderDistance(max_render_distance);
-	}
-	// ----------------------
 }
 
 void ModuleRenderer3D::SaveConfigInfo(JSON_Object * data_root)
@@ -823,29 +798,6 @@ void ModuleRenderer3D::CalculatePrespective(math::float4x4& target, float fovy, 
 }
 
 // Set Methods ==================================
-void ModuleRenderer3D::SetMinRenderDistance(float val)
-{
-	min_render_distance = val;
-	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	CalculatePrespective(ProjectionMatrix, 60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
-	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
-void ModuleRenderer3D::SetMaxRenderDistance(float val)
-{
-	max_render_distance = val;
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	CalculatePrespective(ProjectionMatrix, 60.0f, (float)render_to_texture->width / (float)render_to_texture->height, min_render_distance, max_render_distance);
-	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
 
 void ModuleRenderer3D::SetMainCamera(ComponentCamera* new_main_cam)
 {
@@ -986,13 +938,11 @@ void ModuleRenderer3D::OnSceneResize(int width, int height)
 	scale_gizmo->SetScreenDimension(width, height);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(ViewMatrix.ptr());
+	glLoadMatrixf(camera_view_matrix.ptr());
 }
 
 void ModuleRenderer3D::OnGameResize(int width, int height)
 {
-	//glViewport(0, 0, width, height);
-
 	game_to_texture->Destroy();
 	game_to_texture->Create(width, height);
 
@@ -1070,11 +1020,18 @@ void ModuleRenderer3D::RemoveGameCamera(ComponentCamera * removed_game_cam)
 
 void ModuleRenderer3D::SetGameCameraView()
 {
+	//Set projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf(main_camera->GetFrustum().ViewProjMatrix().Transposed().ptr());
+	glLoadMatrixf(main_camera->GetFrustum().ProjectionMatrix().Transposed().ptr());
+
+	//Set view matrix as a 4x4 matrix
+	game_view_matrix = main_camera->GetFrustum().ViewMatrix();
+	game_view_matrix.Transpose();
+
+	//Set the view matrix to the render
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	glLoadMatrixf(game_view_matrix.ptr());
 
 	lights[0].SetPos(main_camera->GetFrustum().pos.x, main_camera->GetFrustum().pos.y, main_camera->GetFrustum().pos.z);
 	lights[0].Render();
@@ -1082,11 +1039,18 @@ void ModuleRenderer3D::SetGameCameraView()
 
 void ModuleRenderer3D::SetEditorCameraView()
 {
+	//Set projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glLoadMatrixf(App->camera->editor_camera_frustrum.ProjectionMatrix().Transposed().ptr());
+
+	//Set view matrix as a 4x4 matrix
+	camera_view_matrix = App->camera->editor_camera_frustrum.ViewMatrix();
+	camera_view_matrix.Transpose();
+
+	//Set the view matrix to the render
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(ViewMatrix.ptr());
+	glLoadMatrixf(camera_view_matrix.ptr());
 }
 
 void ModuleRenderer3D::CleanCameraView()

@@ -99,8 +99,8 @@ private:
 
 	Light			lights[MAX_LIGHTS];
 	SDL_GLContext	context;
-	math::float3x3	NormalMatrix;
-	math::float4x4	ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	math::float4x4 camera_view_matrix, game_view_matrix;
 
 	unsigned int	quadVAO = 0, quadVBO = 0;
 
@@ -130,8 +130,6 @@ private:
 public:
 
 	//Set Methods -----------
-	void SetMinRenderDistance(float val);
-	void SetMaxRenderDistance(float val);
 	void SetMainCamera(ComponentCamera* new_main_cam);
 	void SetGizmo(GUIZMO_STATE state);
 
