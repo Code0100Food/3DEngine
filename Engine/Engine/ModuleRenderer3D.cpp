@@ -404,10 +404,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 update_status ModuleRenderer3D::Update(float dt)
 {
-	//Info Source
-	//http://www.pascalgamedevelopment.com/showthread.php?6617-drawing-3d-geometrical-shapes-using-opengl-but-without-glu
-
-	
+	HandleGizmoInput();
 	
 	return update_status::UPDATE_CONTINUE;
 }
@@ -415,43 +412,19 @@ update_status ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	//EDITOR CAMERA VIEW
-	//Focus viewport texture
+
+	//Focus scene texture
 	render_to_texture->Bind();
-
-	//Draw scene geometry
-	EnableGLRenderFlags();
-	App->geometry->Draw();
-	
-	//Draw / update scene objects
-	App->scene->SceneUpdate(dt);
-
-	glBegin(GL_LINES);
-	glLineWidth(3.0f);
-	glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
-	glLineWidth(1.0f);
-	glEnd();
-
-	//Focus render texture
+	PrintSceneFrame(dt);
 	render_to_texture->UnBind();
 
+	//Focus Game Texture
 	if (main_camera)
 	{
-		SetGameCameraView();
 		game_to_texture->Bind();
-		App->geometry->Draw();
-		App->scene->SceneUpdate(dt);
-		float lol2[4] = { 1.0f, 1.0f, 0.5f,  1.0f };
-		App->camera->editor_camera_frustrum.Draw(3.0f, lol2);
-		glBegin(GL_LINES);
-		glLineWidth(3.0f);
-		glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
-		glLineWidth(1.0f);
-		glEnd();
-
+		PrintGameFrame(dt);
 		game_to_texture->UnBind();
 		CleanCameraView();
-	//	SetEditorCameraView();
 	}
 
 	//Scene and Game Dock
@@ -473,18 +446,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	DisableGLRenderFlags();	
 
-	if (print_gizmo)
-	{
-		print_gizmo->OnMouseMove((App->input->GetMouseX() - (image_window_pos.x - SCENE_BORDER_X)), (App->input->GetMouseY() - (image_window_pos.y - SCENE_BORDER_Y)));
-
-
-		if (App->scene->GetSelectedGameObject() && App->camera->GetGizmoClicked())
-		{
-			ComponentTransform* tmp = (ComponentTransform*)App->scene->GetSelectedGameObject()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-			tmp->UpdateRotationPositionScale();
-		}
-
-	}
+	
 
 	// Rendering GUI
 	App->imgui->RenderUI();
@@ -1057,6 +1019,61 @@ void ModuleRenderer3D::CleanCameraView()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::PrintSceneFrame(float dt)
+{
+
+	//Draw scene geometry
+	EnableGLRenderFlags();
+	App->geometry->Draw();
+
+	//Draw / update scene objects
+	App->scene->SceneUpdate(dt);
+
+	//DrawGuizmo
+	if (print_gizmo && App->scene->GetSelectedGameObject())
+	{
+		print_gizmo->Draw();
+	}
+
+	glBegin(GL_LINES);
+	glLineWidth(3.0f);
+	glVertex3f(App->camera->mouse_picking.a.x, App->camera->mouse_picking.a.y, App->camera->mouse_picking.a.z); glVertex3f(App->camera->mouse_picking.b.x, App->camera->mouse_picking.b.y, App->camera->mouse_picking.b.z);
+	glLineWidth(1.0f);
+	glEnd();
+}
+
+void ModuleRenderer3D::PrintGameFrame(float dt)
+{
+	SetGameCameraView();
+
+	//Draw scene geometry
+	App->geometry->Draw();
+
+	//Draw / update scene objects
+	App->scene->SceneUpdate(dt);
+
+
+	float frustum_color[4] = { 1.0f, 1.0f, 0.5f,  1.0f };
+	App->camera->editor_camera_frustrum.Draw(3.0f, frustum_color);
+
+}
+
+void ModuleRenderer3D::HandleGizmoInput()
+{
+	if (print_gizmo)
+	{
+		print_gizmo->OnMouseMove((App->input->GetMouseX() - (image_window_pos.x - SCENE_BORDER_X)), (App->input->GetMouseY() - (image_window_pos.y - SCENE_BORDER_Y)));
+
+
+		if (App->scene->GetSelectedGameObject() && App->camera->GetGizmoClicked())
+		{
+			ComponentTransform* tmp = (ComponentTransform*)App->scene->GetSelectedGameObject()->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			tmp->UpdateRotationPositionScale();
+		}
+
+	}
 }
 
 void ModuleRenderer3D::PrintPlayPauseButton() const

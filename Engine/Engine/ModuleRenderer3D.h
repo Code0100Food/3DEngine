@@ -164,6 +164,10 @@ private:
 	void SetEditorCameraView();
 	void CleanCameraView();
 
+	void PrintSceneFrame(float dt);
+	void PrintGameFrame(float dt);
+	void HandleGizmoInput();
+
 	
 };
 #endif // !_MODULE_RENDER_3D_H_

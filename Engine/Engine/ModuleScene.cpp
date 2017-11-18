@@ -86,12 +86,6 @@ bool ModuleScene::SceneUpdate(float dt)
 	octree.Draw();
 	App->renderer3D->EnableGLRenderFlags();
 
-	//Draw Gizmo
-	if (App->renderer3D->GetGizmo() && selected_gameobject)
-	{
-		App->renderer3D->GetGizmo()->Draw();
-	}
-
 	return ret;
 }
 
