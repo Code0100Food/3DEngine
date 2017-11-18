@@ -118,6 +118,11 @@ void GameObject::SetActiveState(bool act)
 	actived = act;
 }
 
+void GameObject::SetHideState(bool new_hide_state)
+{
+	hide = new_hide_state;
+}
+
 void GameObject::SetStatic(bool st)
 {
 	static_ = st;
@@ -186,6 +191,11 @@ void GameObject::SetMesh(ResourceMesh * mesh)
 bool GameObject::GetActive() const
 {
 	return actived;
+}
+
+bool GameObject::GetHide() const
+{
+	return hide;
 }
 
 bool GameObject::GetStatic() const

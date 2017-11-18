@@ -32,7 +32,8 @@ ComponentMeshRenderer::~ComponentMeshRenderer()
 // Game Loop ====================================
 bool ComponentMeshRenderer::Update(float dt)
 {
-	if (target_mesh == nullptr || target_mesh->MeshResourceIsNull())return false;
+
+	if (target_mesh == nullptr || target_mesh->MeshResourceIsNull() || parent->GetHide())return false;
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEnableClientState(GL_VERTEX_ARRAY);

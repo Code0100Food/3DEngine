@@ -504,7 +504,7 @@ void ModuleScene::HideStaticObjects()
 	uint size = static_objects.size();
 	for (uint k = 0; k < size; k++)
 	{
-		static_objects[k]->SetActiveState(false);
+		static_objects[k]->SetHideState(true);
 	}
 }
 

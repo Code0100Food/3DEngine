@@ -128,13 +128,13 @@ void ComponentCamera::ApplyDinamicFrustum()
 		if (remaining_childs.front() != parent && remaining_childs.front()->GetParent() != nullptr && frustum.VertexOutside(*remaining_childs.front()->GetBoundingBox()))
 		{
 			//if it is we will ignore its childs and set him to false
-			remaining_childs.front()->SetActiveState(false);
+			remaining_childs.front()->SetHideState(true);
 			remaining_childs.pop();
 		}
 		else
 		{
 			//else we will print it and check his childs
-			remaining_childs.front()->SetActiveState(true);
+			remaining_childs.front()->SetHideState(false);
 
 			for (std::vector<GameObject*>::iterator item = remaining_childs.front()->GetChilds()->begin(); item != remaining_childs.front()->GetChilds()->end(); item++)
 			{
@@ -154,7 +154,7 @@ void ComponentCamera::ApplyStaticFrustum()
 	
 	while (!remaining_childs.empty())
 	{
-		remaining_childs.front()->SetActiveState(true);
+		remaining_childs.front()->SetHideState(false);
 		remaining_childs.pop();
 	}
 }
@@ -167,7 +167,7 @@ void ComponentCamera::UnApplyFrustum(GameObject * target)
 
 	while (!remaining_childs.empty())
 	{
-		remaining_childs.front()->SetActiveState(true);
+		remaining_childs.front()->SetHideState(false);
 		for (std::vector<GameObject*>::iterator item = remaining_childs.front()->GetChilds()->begin(); item != remaining_childs.front()->GetChilds()->end(); item++)
 		{
 			remaining_childs.push((*item));

@@ -35,6 +35,7 @@ private:
 
 	uint						id = 0;
 	bool						actived = true;
+	bool						hide = false;
 	bool						static_ = false;
 	std::string					name = "Unnamed";
 	GameObject*					parent = nullptr;
@@ -51,6 +52,7 @@ public:
 
 	//Set Methods -----------
 	void SetActiveState(bool act);
+	void SetHideState(bool new_hide_state);
 	void SetStatic(bool st);
 	void SetDrawSelectedBoundingBoxState(bool val);
 	void SetName(const char* str);
@@ -60,6 +62,7 @@ public:
 
 	//Get Methods -----------
 	bool				GetActive()const;
+	bool				GetHide()const;
 	bool				GetStatic()const;
 	float				GetBoundingBoxDiagonalSize()const;
 	uint				GetID()const;
