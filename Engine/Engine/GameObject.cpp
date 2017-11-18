@@ -722,11 +722,14 @@ void GameObject::UpdateBoundingBox()
 	{
 		for (std::vector<GameObject*>::iterator child = childs.begin(); child != childs.end(); child++)
 		{
-			math::float3 aabb_points[8];
-			(*child)->bounding_box.GetCornerPoints(aabb_points);
+			if ((*child)->bounding_box.IsFinite())
+			{
+				math::float3 aabb_points[8];
+				(*child)->bounding_box.GetCornerPoints(aabb_points);
 
-			for (int i = 0; i < 8; i++)
-				childs_aabb_points.push_back(aabb_points[i]);
+				for (int i = 0; i < 8; i++)
+					childs_aabb_points.push_back(aabb_points[i]);
+			}
 		}
 
 		if (FindComponent(COMPONENT_TYPE::COMP_MESH))
