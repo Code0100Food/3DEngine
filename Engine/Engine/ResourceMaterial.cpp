@@ -97,10 +97,7 @@ bool ResourceMaterial::Save()
 	meta_file.InsertString("original_file", original_file.c_str());
 	meta_file.InsertString("own_file", own_file.c_str());
 	//Modification time
-	std::experimental::filesystem::path path = original_file;
-	auto real_last_time = std::experimental::filesystem::last_write_time(path);
-	std::time_t last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
-	meta_file.InsertInt("last_edition_time", last_time);
+	meta_file.InsertInt("last_edition_time", last_edition_time);
 	
 	meta_file.InsertString("mat_type", mat_type.c_str());
 

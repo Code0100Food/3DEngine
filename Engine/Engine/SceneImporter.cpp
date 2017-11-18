@@ -96,18 +96,21 @@ void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject*
 
 	if (node->mMetaData != NULL)
 	{
-		//Generate game object
-		node_obj = App->scene->CreateGameObject();
-		node_obj->SetName(node->mName.C_Str());
-		node_obj->SetParent(parent);
+		if (node->mNumMeshes == 0)
+		{
+			//Generate game object
+			node_obj = App->scene->CreateGameObject();
+			node_obj->SetName(node->mName.C_Str());
+			node_obj->SetParent(parent);
 
-		//Set transformation component
-		ComponentTransform* node_comp = (ComponentTransform*)node_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-		node_comp->SetTransformation(inherited_trans);
-		
-		//Inherited is id to reset for the next branch
-		aiMatrix4x4 id;
-		inherited_trans = id;
+			//Set transformation component
+			ComponentTransform* node_comp = (ComponentTransform*)node_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			node_comp->SetTransformation(inherited_trans);
+
+			//Inherited is id to reset for the next branch
+			aiMatrix4x4 id;
+			inherited_trans = id;
+		}
 
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{

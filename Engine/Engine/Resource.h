@@ -42,6 +42,7 @@ public:
 	const char*		GetOriginalFile()const;
 	const char*		GetOwnFile()const;
 	bool			GetConstInMemory()const;
+	uint			GetLastEditionTime()const;
 
 	//Set Methods -----------
 	void SetID(uint n_id);
@@ -49,6 +50,7 @@ public:
 	void SetOriginalFile(const char* str);
 	void SetOwnFile(const char* str);
 	void SetConstInMemory();
+	void SetLastEditionTime(uint time);
 
 	//Functionality ---------
 	//References Methods
@@ -58,7 +60,6 @@ public:
 	//Save/Load Methods
 	virtual bool	Save();
 	virtual bool	Load(Serializer& data);
-	bool			CheckEditionTime();//Return true if the file has been modified
 
 	//UI
 	virtual void BlitUI()const;

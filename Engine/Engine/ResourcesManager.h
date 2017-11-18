@@ -12,6 +12,8 @@
 #include"Timer.h"
 #include <experimental/filesystem>
 
+#define METAS_UPDATE_RATE 5000
+
 class ResourcesManager : public Module
 {
 public:
@@ -38,9 +40,9 @@ private:
 
 	//Update resources
 	Timer metas_timer;
-	uint metas_update_rate = 0;
-	std::string exp_path;
-	std::experimental::filesystem::path sys_path;
+	std::experimental::filesystem::path path;
+	std::experimental::filesystem::v1::file_time_type real_last_time;
+	std::time_t last_time;
 
 public:
 

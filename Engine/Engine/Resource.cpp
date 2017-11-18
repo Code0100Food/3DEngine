@@ -55,6 +55,11 @@ bool Resource::GetConstInMemory() const
 	return const_in_memory;
 }
 
+uint Resource::GetLastEditionTime() const
+{
+	return last_edition_time;
+}
+
 void Resource::SetID(uint n_id)
 {
 	id = n_id;
@@ -78,6 +83,11 @@ void Resource::SetOwnFile(const char * str)
 void Resource::SetConstInMemory()
 {
 	const_in_memory = true;
+}
+
+void Resource::SetLastEditionTime(uint time)
+{
+	last_edition_time = time;
 }
 
 void Resource::AddReference()
@@ -108,10 +118,7 @@ bool Resource::Save()
 	meta_file.InsertString("original_file", original_file.c_str());
 	meta_file.InsertString("own_file", own_file.c_str());
 	//Modification time
-	std::experimental::filesystem::path path = original_file;
-	auto real_last_time = std::experimental::filesystem::last_write_time(path);
-	std::time_t last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
-	meta_file.InsertInt("last_edition_time", last_time);
+	meta_file.InsertInt("last_edition_time", last_edition_time);
 	
 	//Save the generated meta file
 	char* buffer = nullptr;
@@ -138,24 +145,6 @@ bool Resource::Load(Serializer & data)
 	last_edition_time = data.GetInt("last_edition_time");
 
 	return true;
-}
-
-bool Resource::CheckEditionTime()
-{
-	bool ret = false;
-
-	//Modification time
-	std::experimental::filesystem::path path = original_file;
-	auto real_last_time = std::experimental::filesystem::last_write_time(path);
-	std::time_t last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
-	
-	if (last_time != last_edition_time)
-	{
-		ret = true;
-		last_edition_time = last_time;
-	}
-
-	return ret;
 }
 
 void Resource::BlitUI() const

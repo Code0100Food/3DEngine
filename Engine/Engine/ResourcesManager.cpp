@@ -146,14 +146,12 @@ bool ResourcesManager::Start()
 	//Check the user assets ---------------------
 	LOG("Assets Updated with %i changes!", CheckAssetsResources());
 
-	metas_update_rate = 5000;
-
 	return true;
 }
 
 update_status ResourcesManager::Update(float dt)
 {
-	if (metas_timer.Read() > metas_update_rate)
+	if (metas_timer.Read() > METAS_UPDATE_RATE)
 	{
 		metas_timer.Start();
 		UpdateMetaFiles();
@@ -349,10 +347,24 @@ void ResourcesManager::UpdateMetaFiles()
 {
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
-		if (!res->second->GetConstInMemory() && res->second->CheckEditionTime())
+		if (!res->second->GetConstInMemory())
 		{
-			/*Here re import the resource*/
-			res->second->ReImport();
+			uint last_ed_time = res->second->GetLastEditionTime();
+			last_time = last_ed_time;
+			
+			//Modification time
+			path = res->second->GetOriginalFile();
+			real_last_time = std::experimental::filesystem::last_write_time(path);
+			last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
+			
+			if (last_time != last_ed_time)
+			{
+				res->second->SetLastEditionTime(last_time);
+				/*Here re import the resource*/
+				res->second->ReImport();
+			}
+
+			path.clear();
 		}
 	}
 }
