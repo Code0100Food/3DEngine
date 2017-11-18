@@ -268,7 +268,6 @@ void SceneImporter::ImportMesh(const char * name, aiMesh * mesh, const aiScene *
 	//Clear the used containers
 	vertices.clear();
 	indices.clear();
-	textures.clear();
 	vertices_pos.clear();
 }
 
@@ -289,55 +288,51 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType 
 			}
 			return;
 		}
+		item++;
 	}
 
-	n_textures.clear();
-	_textures.clear();
+	textures.clear();
 
 	for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
 	{
-		aiString str;
-		material->GetTexture(type, i, &str);
+		material->GetTexture(type, i, &material_str);
 		bool skip = false;
-		for (unsigned int j = 0; j < _textures.size(); j++)
+		for (unsigned int j = 0; j < textures.size(); j++)
 		{
-			if (std::strcmp(_textures[j].path.c_str(), str.C_Str()) == 0)
+			if (std::strcmp(textures[j].c_str(), material_str.C_Str()) == 0)
 			{
-				n_textures.push_back(_textures[j]);
 				skip = true;
 				break;
 			}
 		}
 		if (!skip)
 		{
-			// if texture hasn't been loaded already, load it
-			Texture texture;
-			texture.path = str.C_Str();
+			// if texture hasn't been loaded already, load it			
+			usable_str_b = material_str.C_Str();
+			textures.push_back(usable_str_b.c_str());
+			
+			App->fs->GetFileNameFromPath(material_str.C_Str(), &usable_str_b);
 
-			n_textures.push_back(texture);
-
-			// add to loaded textures
-			_textures.push_back(texture);
-
-			//Import material
-			usable_str_b = cur_path;
-			usable_str_b += texture.path.c_str();
-			bool imported_correctly = App->importer->ImportFile(usable_str_b.c_str());
-
-			if (imported_correctly)
+			if (App->fs->GetAssetsFolder()->FindFile(usable_str_b.c_str(), &usable_str_b, true))
 			{
-				//Find the loaded mat and add the id on the mesh materials
-				ResourceMaterial* mat = (ResourceMaterial*)App->res_manager->Find(usable_str_b.c_str(), RESOURCE_TYPE::MATERIAL_RESOURCE);
-				mat->SetMaterialType(AiTextureTypeToStr(type));
+				bool imported_correctly = App->importer->ImportFile(usable_str_b.c_str());
 
-				if (mat != nullptr)
+				if (imported_correctly)
 				{
-					container->AddTexture(mat, false);
-					//Track the loaded material
-					loaded_materials.insert(std::pair<uint, aiMaterial*>(mat->GetID(), material));
+					//Find the loaded mat and add the id on the mesh materials
+					ResourceMaterial* mat = (ResourceMaterial*)App->res_manager->Find(usable_str_b.c_str(), RESOURCE_TYPE::MATERIAL_RESOURCE);
+					mat->SetMaterialType(AiTextureTypeToStr(type));
+
+					if (mat != nullptr)
+					{
+						container->AddTexture(mat, false);
+						//Track the loaded material
+						loaded_materials.insert(std::pair<uint, aiMaterial*>(mat->GetID(), material));
+					}
 				}
 			}
 		}
+		material_str.Clear();
 	}
 
 	return;

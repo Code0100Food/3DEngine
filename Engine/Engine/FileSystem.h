@@ -39,7 +39,8 @@ public:
 	void		BlitDirectoryChilds(uint index);
 	void		BlitFilesInside()const;
 	uint		ImportAllFilesInside();
-	bool		FindFile(const char* file_name)const;
+	bool		FindFile(const char* file_name, bool search_in_childs = false)const;
+	bool		FindFile(const char* file_name, std::string* new_path, bool search_in_childs = false);
 
 };
 

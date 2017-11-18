@@ -14,6 +14,7 @@ class	Resource;
 #include <map>
 #include "ComponentMesh.h"
 #include "Assimp/include/matrix4x4.h"
+#include "Assimp/include/types.h"
 
 class SceneImporter
 {
@@ -28,11 +29,9 @@ private:
 	
 	std::vector<Vertex>			vertices;
 	std::vector<uint>			indices;
-	std::vector<Texture>		textures;
 	std::vector<math::float3>	vertices_pos;
 
-	std::vector<Texture> n_textures;
-	std::vector<Texture> _textures;
+	std::vector<std::string> textures;
 
 	std::map<uint, aiMesh*>		loaded_meshes;
 	std::map<uint, aiMaterial*>	loaded_materials;
@@ -41,7 +40,7 @@ private:
 	mutable std::string usable_str_b;
 
 	mutable aiMatrix4x4 inherited_trans;
-
+	mutable aiString	material_str;
 public:
 
 	uint Import(const char* path);

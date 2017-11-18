@@ -48,21 +48,6 @@ struct Vertex
 };
 // ----------------------------------------------
 
-// Texture --------------------------------------
-struct Texture
-{
-	uint		id = 0;
-	std::string type;
-	std::string path;
-
-	int			tex_width = 0;
-	int			tex_height = 0;
-
-	//Methods ---------------
-	void BlitUI()const;
-};
-// ----------------------------------------------
-
 class ComponentMaterial;
 
 class ComponentMesh : public Component

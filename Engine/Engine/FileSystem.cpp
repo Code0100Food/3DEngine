@@ -194,7 +194,7 @@ uint Directory::ImportAllFilesInside()
 
 	return updates;
 }
-bool Directory::FindFile(const char * file_name) const
+bool Directory::FindFile(const char * file_name, bool search_in_childs) const
 {
 	bool ret = false;
 
@@ -236,6 +236,78 @@ bool Directory::FindFile(const char * file_name) const
 	}
 
 	FindClose(file_handle);
+
+	if (search_in_childs && !ret)
+	{
+		//Iterate all the sub folders
+		uint size = childs.size();
+		for (uint k = 0; k < size; k++)
+		{
+			ret = childs[k]->FindFile(file_name, search_in_childs);
+			if (ret)break;
+		}
+	}
+
+	return ret;
+}
+
+bool Directory::FindFile(const char * file_name, std::string * new_path, bool search_in_childs)
+{
+	bool ret = false;
+
+	//Set String to look inside Parent folder
+	char str[150];
+	sprintf(str, "%s\\*.*", path.c_str());
+
+	//Will recieve all the files list
+	WIN32_FIND_DATA files_list;
+
+	//Will handle the list when changing the looked element
+	HANDLE file_handle = FindFirstFileA(LPCSTR(str), &files_list);
+
+	if (file_handle == INVALID_HANDLE_VALUE)
+	{
+		LOG("Error in path");
+	}
+
+	DWORD attribute;
+
+	bool still_elements = true;
+	while (still_elements)
+	{
+		attribute = GetFileAttributes(files_list.cFileName);
+
+		//Search for directories
+		if (strcmp(files_list.cFileName, file_name) == 0)
+		{
+			*new_path = path;
+			*new_path += "\\";
+			*new_path += files_list.cFileName;
+
+			ret = true;
+			break;
+		}
+
+		//Jump to the other element
+		if (!FindNextFile(file_handle, &files_list))
+		{
+			still_elements = false;
+		}
+
+	}
+
+	FindClose(file_handle);
+
+	if (search_in_childs && !ret)
+	{
+		//Iterate all the sub folders
+		uint size = childs.size();
+		for (uint k = 0; k < size; k++)
+		{
+			ret = childs[k]->FindFile(file_name, new_path, search_in_childs);
+			if (ret)break;
+		}
+	}
 
 	return ret;
 }

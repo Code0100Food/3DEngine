@@ -28,8 +28,6 @@ MaterialImporter::MaterialImporter()
 // Functionality ================================
 bool MaterialImporter::Load(const char * path, ComponentMaterial * target)
 {
-	Texture result;
-
 	//Uint where the texture id will be saved
 	ILuint textureID = 0;
 
@@ -90,10 +88,6 @@ bool MaterialImporter::Load(const char * path, ComponentMaterial * target)
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		//Texture sizes
-		result.tex_height = ilGetInteger(IL_IMAGE_HEIGHT);
-		result.tex_width = ilGetInteger(IL_IMAGE_WIDTH);
-
 		LOG("%i x %i", ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT));
 		LOG("Texture: %s correctly loaded!", path);
 	}
@@ -109,13 +103,6 @@ bool MaterialImporter::Load(const char * path, ComponentMaterial * target)
 	//Delete the image 
 	ilDeleteImages(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-	//Texture id and path
-	result.id = textureID;
-	result.path = path;
-
-	//Add the resulting texture to the component
-	//if (textureID != 0)target->AddTexture(result);
 
 	return (textureID != 0);
 }

@@ -21,15 +21,6 @@ Vertex::Vertex(math::float3 position, math::float3 normals, math::float2 tex_coo
 }
 // ----------------------------------------------
 
-// Texture --------------------------------------
-void Texture::BlitUI()const
-{
-	ImGui::Text("%s", type.c_str());
-	ImGui::Image((void*)id, ImVec2(100, 100));
-	ImGui::Text("Size: %ix%i", tex_width, tex_height);
-}
-// ----------------------------------------------
-
 // Constructors =================================
 ComponentMesh::ComponentMesh() :Component(COMP_MESH)
 {
