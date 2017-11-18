@@ -508,10 +508,7 @@ void GameObject::BlitGameObjectHierarchy(uint index)
 				App->scene->SetSelectedGameObject(this);
 				App->scene->SetGameObjectHierarchyWindowState(false);
 			}
-			if (is_sel && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
-			{
-				App->scene->SetGameObjectHierarchyWindowState(!App->scene->GetGameObjectHierarchyWindowState());
-			}
+			
 		}
 		else if (App->scene->GetGameObjectHierarchyWindowState() && is_sel)
 		{
@@ -523,6 +520,81 @@ void GameObject::BlitGameObjectHierarchy(uint index)
 		}
 	}
 
+
+	//Right click on the Gameobject hierarchy
+	if (ImGui::BeginPopupContextItem("item context menu"))
+	{
+		ImGui::Text("%s", this->name.c_str());
+		ImGui::Separator();
+
+		if (ImGui::Selectable("Remove"))
+		{
+			App->scene->SendGameObjectToRemoveVec(this);
+			App->scene->SetSelectedGameObject(nullptr);
+			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+		}
+
+		if (ImGui::Selectable("Add Empty"))
+		{
+			GameObject* new_child = new GameObject();
+			new_child->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			new_child->SetParent(this);
+		}
+
+
+		if (ImGui::BeginMenu("3D Objects"))
+		{
+			if (ImGui::Selectable("Cube"))
+			{
+				GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CUBE);
+				new_primitive->SetParent(this);
+			}
+
+			if (ImGui::BeginMenu("Sphere"))
+			{
+				if (ImGui::Selectable("Low Poly"))
+				{
+					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE);
+					new_primitive->SetParent(this);
+				}
+
+				if (ImGui::Selectable("High Poly"))
+				{
+					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE_HI);
+					new_primitive->SetParent(this);
+				}
+
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Cylinder"))
+			{
+				if (ImGui::Selectable("Low Poly"))
+				{
+					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER);
+					new_primitive->SetParent(this);
+				}
+
+				if (ImGui::Selectable("High Poly"))
+				{
+					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER_HI);
+					new_primitive->SetParent(this);
+				}
+
+
+				ImGui::EndMenu();
+			}
+
+		
+				
+				ImGui::EndMenu();
+		}
+		
+
+		ImGui::EndPopup();;
+	}
+
 	if(op)
 	{
 		uint size = childs.size();
@@ -530,9 +602,11 @@ void GameObject::BlitGameObjectHierarchy(uint index)
 		{
 			childs[k]->BlitGameObjectHierarchy(k);
 		}
+
 		ImGui::TreePop();
 	}
 
+	
 }
 
 void GameObject::BlitGameObjectInspector()
