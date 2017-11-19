@@ -62,7 +62,8 @@ private:
 	Directory* engine_root_dir = nullptr;
 	Directory* metas_dir = nullptr;
 
-	Directory* focus_dir = nullptr;
+	Directory*	focus_dir = nullptr;
+	std::string	focus_file_name;
 
 	mutable std::string usable_str_a;
 	mutable std::string usable_str_b;
@@ -76,11 +77,13 @@ public:
 
 	//Set Methods -----------
 	void SetFocusDir(const Directory* dir);
+	void SetFocusFileName(const char* str);
 
 	//Get Methods -----------
-	Directory* GetUserRootDir()const;
-	Directory* GetMetasDir()const;
-	Directory* GetFocusDir()const;
+	Directory*	GetUserRootDir()const;
+	Directory*	GetMetasDir()const;
+	Directory*	GetFocusDir()const;
+	const char*	GetFocusFileName()const;
 
 	//Functionality ---------
 	//Load/Save

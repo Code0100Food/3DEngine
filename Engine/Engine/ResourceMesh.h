@@ -53,6 +53,9 @@ public:
 	void	SetupMesh();
 	void	DeleteBuffers();
 
+	//UI 
+	void	BlitComplexUI();
+
 	//Load/Unload in memory
 	void	LoadInMemory();
 	void	UnloadInMemory();

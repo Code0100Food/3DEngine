@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Serializer.h"
 #include "ModuleInput.h"
+#include "ResourcesManager.h"
 
 //Directory -------------------------------------
 Directory::Directory()
@@ -123,7 +124,16 @@ void Directory::BlitFilesInside() const
 		//Search for directories
 		if (FILE_ATTRIBUTE_ARCHIVE & files_list.dwFileAttributes)
 		{
-			ImGui::Text(files_list.cFileName);
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Leaf;
+			if (strcmp(App->fs->GetFocusFileName(), files_list.cFileName) == 0)flags += ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Selected;
+			ImGui::TreeNodeEx(files_list.cFileName, flags);
+			
+			if (ImGui::IsItemHovered() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && strcmp(files_list.cFileName, App->fs->GetFocusFileName()) != 0)
+			{
+				App->fs->SetFocusFileName(files_list.cFileName);
+			}
+			
+			ImGui::TreePop();
 		}
 
 		//Jump to the other element
@@ -360,6 +370,13 @@ void FileSystem::SetFocusDir(const Directory* dir)
 	focus_dir = (Directory*)dir;
 }
 
+void FileSystem::SetFocusFileName(const char * str)
+{
+	focus_file_name = str;
+	focus_dir->FindFile(str, &usable_str_a, false);
+	App->res_manager->SetInspectedResources(usable_str_a.c_str());
+}
+
 // Get Methods ==================================
 Directory * FileSystem::GetUserRootDir() const
 {
@@ -374,6 +391,11 @@ Directory * FileSystem::GetMetasDir() const
 Directory * FileSystem::GetFocusDir() const
 {
 	return focus_dir;
+}
+
+const char * FileSystem::GetFocusFileName() const
+{
+	return focus_file_name.c_str();
 }
 
 // Functionality ================================

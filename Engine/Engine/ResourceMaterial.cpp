@@ -165,6 +165,24 @@ void ResourceMaterial::BlitUI() const
 	ImGui::Text("Size: %ix%i", width, height);
 }
 
+void ResourceMaterial::BlitComplexUI()
+{
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s", ResourceTypeToStr(type));
+	ImGui::Text("Original File:");
+	ImGui::Text("%s", original_file.c_str());
+	ImGui::Text("Own File:");
+	ImGui::Text("%s", own_file.c_str());
+	ImGui::Text("References: %i", references);
+	ImGui::Text("Last edition time: %i", last_edition_time);
+
+	if (references > 0)
+	{
+		ImGui::Image((ImTextureID)mat_id, ImVec2(100, 100));
+	}
+
+	ImGui::Separator();
+}
+
 const char * ColorFormatToStr(COLOR_FORMAT fmt)
 {
 	switch (fmt)

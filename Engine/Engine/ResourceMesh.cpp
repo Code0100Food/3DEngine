@@ -183,6 +183,25 @@ void ResourceMesh::DeleteBuffers()
 	}
 }
 
+void ResourceMesh::BlitComplexUI()
+{
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s", ResourceTypeToStr(type));
+	ImGui::Text("Original File:");
+	ImGui::Text("%s", original_file.c_str());
+	ImGui::Text("Own File:");
+	ImGui::Text("%s", own_file.c_str());
+	ImGui::Text("References: %i", references);
+	ImGui::Text("Last edition time: %i", last_edition_time);
+	
+	if (references > 0)
+	{
+		ImGui::Text("Num Tris: %i", num_tris);
+		ImGui::Text("Num Vertex: %i", num_vertex);
+	}
+
+	ImGui::Separator();
+}
+
 void ResourceMesh::LoadInMemory()
 {
 	App->importer->mesh_importer.Load(this);

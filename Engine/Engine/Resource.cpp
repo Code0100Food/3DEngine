@@ -155,6 +155,19 @@ void Resource::BlitUI() const
 
 }
 
+void Resource::BlitComplexUI()
+{
+	ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.0f, 1.0f), "%s", ResourceTypeToStr(type));
+	ImGui::Text("Original File:");
+	ImGui::Text("%s", original_file.c_str());
+	ImGui::Text("Own File:");
+	ImGui::Text("%s", own_file.c_str());
+	ImGui::Text("References: %i", references);
+	ImGui::Text("Last edition time: %i", last_edition_time);
+
+	ImGui::Separator();
+}
+
 void Resource::LoadInMemory()
 {
 

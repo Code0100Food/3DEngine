@@ -63,6 +63,7 @@ public:
 
 	//UI
 	virtual void BlitUI()const;
+	virtual void BlitComplexUI();
 
 	//Load/Unload in memory
 	virtual void LoadInMemory();

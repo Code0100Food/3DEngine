@@ -66,6 +66,7 @@ public:
 
 	//UI
 	void BlitUI()const;
+	void BlitComplexUI();
 };
 
 const char*		ColorFormatToStr(COLOR_FORMAT fmt);

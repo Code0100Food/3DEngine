@@ -38,6 +38,9 @@ private:
 	ResourceMesh* cylinder_low_mesh = nullptr;
 	ResourceMesh* cylinder_hi_mesh = nullptr;
 
+	//Inspected resources
+	std::vector<Resource*> inspected_resources;
+
 	//Update resources
 	Timer metas_timer;
 	std::experimental::filesystem::path path;
@@ -59,6 +62,7 @@ public:
 	Resource*	Find(uint id)const;
 	uint		FindMetaFile(const char* own_file_path)const;
 	void		FindRelatedResources(const char* path, list<Resource*>& resources);
+	void		SetInspectedResources(const char* path);
 
 	//Metas Methods
 	void		LoadMetaFiles();

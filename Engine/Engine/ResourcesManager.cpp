@@ -159,6 +159,11 @@ update_status ResourcesManager::Update(float dt)
 
 	App->imgui->GetWorkspace()->BeginDock("Resource Inspector", NULL, NULL);
 		
+	uint size = inspected_resources.size();
+	for (uint k = 0; k < size; k++)
+	{
+		inspected_resources[k]->BlitComplexUI();
+	}
 
 	App->imgui->GetWorkspace()->EndDock();
 
@@ -289,6 +294,21 @@ void ResourcesManager::FindRelatedResources(const char * path, list<Resource*>& 
 		if (strcmp(res->second->GetOriginalFile(),path) == 0)
 		{
 			_resources.push_back(res->second);
+		}
+	}
+}
+
+void ResourcesManager::SetInspectedResources(const char * path)
+{
+	inspected_resources.clear();
+
+	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
+	{
+		if (res->second->GetConstInMemory())continue;
+
+		if (strcmp(res->second->GetOriginalFile(), path) == 0)
+		{
+			inspected_resources.push_back(res->second);
 		}
 	}
 }
