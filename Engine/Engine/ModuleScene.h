@@ -71,6 +71,7 @@ public:
 	//UI Methods
 	void		BlitConfigInfo();
 	void		BlitHierarchy();
+	void		HierarchyWindowOptions();
 	bool		GetHierarchyWinState()const;
 	void		SwapHierarchyWinState();
 

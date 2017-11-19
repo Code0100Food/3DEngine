@@ -370,6 +370,14 @@ update_status ModuleImgui::Update(float dt)
 	{
 		father_dock->BeginDock("Hierarchy##Dock", 0, 0);
 		App->scene->BlitHierarchy();
+
+		if (ImGui::IsMouseHoveringWindow() && ImGui::IsMouseClicked(1) && !ImGui::IsAnyItemHovered())
+		{
+			ImGui::OpenPopup("Hierarchy Options");
+		}
+		App->scene->HierarchyWindowOptions();
+		
+
 		father_dock->EndDock();
 	}
 

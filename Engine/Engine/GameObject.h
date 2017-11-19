@@ -92,6 +92,7 @@ public:
 	//UI Methods
 	void		BlitGameObjectHierarchy(uint index);
 	void		BlitGameObjectInspector();
+	void		HandleRightClickInput();
 
 	//Bounding Box Methods
 	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);

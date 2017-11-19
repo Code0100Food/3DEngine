@@ -266,6 +266,64 @@ void ModuleScene::BlitHierarchy()
 	root_gameobject->BlitGameObjectHierarchy(0);
 }
 
+void ModuleScene::HierarchyWindowOptions()
+{
+	if (ImGui::BeginPopup("Hierarchy Options"))
+	{
+		ImGui::Text("Scene");
+		ImGui::Separator();
+
+
+		if (ImGui::Selectable("Add Empty"))
+		{
+			GameObject* empty_obj = CreateGameObject();
+			empty_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			App->scene->SetSelectedGameObject(empty_obj);
+		}
+
+		if (ImGui::BeginMenu("3D Objects"))
+		{
+			if (ImGui::Selectable("Cube"))
+			{
+				CreatePrimitive(PRIMITIVE_CUBE);
+			}
+
+			if (ImGui::BeginMenu("Sphere"))
+			{
+				if (ImGui::Selectable("Low Poly"))
+				{
+					App->scene->CreatePrimitive(PRIMITIVE_SPHERE);
+				}
+
+				if (ImGui::Selectable("High Poly"))
+				{
+					App->scene->CreatePrimitive(PRIMITIVE_SPHERE_HI);
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Cylinder"))
+			{
+				if (ImGui::Selectable("Low Poly"))
+				{
+					App->scene->CreatePrimitive(PRIMITIVE_CYLINDER);
+				}
+
+				if (ImGui::Selectable("High Poly"))
+				{
+					App->scene->CreatePrimitive(PRIMITIVE_CYLINDER_HI);
+				}
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
 bool ModuleScene::GetHierarchyWinState() const
 {
 	return hierarchy_win_state;

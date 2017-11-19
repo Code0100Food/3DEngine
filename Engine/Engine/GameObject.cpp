@@ -509,7 +509,7 @@ void GameObject::BlitGameObjectHierarchy(uint index)
 	{
 		bool is_sel = (App->scene->GetSelectedGameObject() == this);
 
-		
+
 		if (ImGui::IsItemHovered())
 		{
 			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
@@ -518,114 +518,19 @@ void GameObject::BlitGameObjectHierarchy(uint index)
 				App->scene->SetSelectedGameObject(this);
 				App->scene->SetGameObjectHierarchyWindowState(false);
 			}
-			
-		}
-		else if (App->scene->GetGameObjectHierarchyWindowState() && is_sel)
-		{
-			App->scene->BlitGameObjectHierarchyWindow(this);
-		}
-		else if (is_sel && (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN))
-		{
-			App->scene->SetGameObjectHierarchyWindowState(false);
 		}
 	}
 
+	//Right click
+	if (ImGui::IsMouseClicked(1) && ImGui::IsItemRectHovered())
+	{
+		char name[150];
+		sprintf(name, "GameObject Options##%i", id);
+		ImGui::OpenPopup(name);
+	}
 
 	//Right click on the Gameobject hierarchy
-	if (ImGui::BeginPopupContextItem("item context menu"))
-	{
-		ImGui::Text("%s", this->name.c_str());
-		ImGui::Separator();
-
-		if (ImGui::Selectable("Remove"))
-		{
-			App->scene->SendGameObjectToRemoveVec(this);
-			App->scene->SetSelectedGameObject(nullptr);
-			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
-		}
-
-		GameObject* selected = App->scene->GetSelectedGameObject();
-		if (selected != nullptr && selected != this)
-		{
-			if (ImGui::BeginMenu("Hierarchy"))
-			{
-				if (selected != this->parent)
-				{
-					if (ImGui::Selectable("Set Selected as Parent"))
-					{
-
-					}
-				}
-
-				if (ImGui::Selectable("Set Selected as Child"))
-				{
-
-				}
-
-				ImGui::EndMenu();
-			}
-		}
-
-		if (ImGui::Selectable("Add Empty"))
-		{
-			GameObject* new_child = new GameObject();
-			new_child->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-			new_child->SetParent(this);
-		}
-
-
-		if (ImGui::BeginMenu("3D Objects"))
-		{
-			if (ImGui::Selectable("Cube"))
-			{
-				GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CUBE);
-				new_primitive->SetParent(this);
-			}
-
-			if (ImGui::BeginMenu("Sphere"))
-			{
-				if (ImGui::Selectable("Low Poly"))
-				{
-					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE);
-					new_primitive->SetParent(this);
-				}
-
-				if (ImGui::Selectable("High Poly"))
-				{
-					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE_HI);
-					new_primitive->SetParent(this);
-				}
-
-
-				ImGui::EndMenu();
-			}
-
-			if (ImGui::BeginMenu("Cylinder"))
-			{
-				if (ImGui::Selectable("Low Poly"))
-				{
-					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER);
-					new_primitive->SetParent(this);
-				}
-
-				if (ImGui::Selectable("High Poly"))
-				{
-					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER_HI);
-					new_primitive->SetParent(this);
-				}
-
-
-				ImGui::EndMenu();
-			}
-
-		
-				
-				ImGui::EndMenu();
-		}
-		
-
-		ImGui::EndPopup();;
-	}
+	HandleRightClickInput();
 
 	if(op)
 	{
@@ -710,6 +615,79 @@ void GameObject::BlitGameObjectInspector()
 
 	//Add a margin to scroll
 	ImGui::NewLine();ImGui::NewLine();ImGui::NewLine();ImGui::NewLine();
+}
+
+void GameObject::HandleRightClickInput()
+{
+	char name[150];
+	sprintf(name, "GameObject Options##%i", id);
+
+	if (ImGui::BeginPopup(name))
+	{
+		ImGui::Text("%s", this->name.c_str());
+		ImGui::Separator();
+
+		if (ImGui::Selectable("Remove"))
+		{
+			App->scene->SendGameObjectToRemoveVec(this);
+			App->scene->SetSelectedGameObject(nullptr);
+			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+		}
+
+		if (ImGui::Selectable("Add Empty"))
+		{
+			GameObject* new_child = new GameObject();
+			new_child->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			new_child->SetParent(this);
+		}
+
+
+		if (ImGui::BeginMenu("3D Objects"))
+		{
+			if (ImGui::Selectable("Cube"))
+			{
+				GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CUBE);
+				new_primitive->SetParent(this);
+			}
+
+			if (ImGui::BeginMenu("Sphere"))
+			{
+				if (ImGui::Selectable("Low Poly"))
+				{
+					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE);
+					new_primitive->SetParent(this);
+				}
+
+				if (ImGui::Selectable("High Poly"))
+				{
+					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE_HI);
+					new_primitive->SetParent(this);
+				}
+
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Cylinder"))
+			{
+				if (ImGui::Selectable("Low Poly"))
+				{
+					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER);
+					new_primitive->SetParent(this);
+				}
+
+				if (ImGui::Selectable("High Poly"))
+				{
+					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER_HI);
+					new_primitive->SetParent(this);
+				}
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndPopup();
+	}
 }
 
 void GameObject::DrawBoundingBox()
