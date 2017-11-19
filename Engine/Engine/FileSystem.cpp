@@ -574,6 +574,11 @@ int FileSystem::CloneFile(const char * file, Directory * folder, std::string* n_
 	return 1;
 }
 
+void FileSystem::RemoveFile(const char * file)
+{
+	remove(file);
+}
+
 void FileSystem::GetUnformatedFileNameFromPath(const char * path, std::string * name)
 {
 	usable_str_a = (char*)path;
@@ -631,6 +636,11 @@ bool FileSystem::IsInAssets(const char * path) const
 	cmp_part[size] = '\0';
 
 	return strcmp(cmp_part, user_dir) == 0;
+}
+
+bool FileSystem::ExistInAssets(const char * path) const
+{
+	return user_root_dir->FindFile(path, true);
 }
 
 void FileSystem::BlitFileSystemInfo()

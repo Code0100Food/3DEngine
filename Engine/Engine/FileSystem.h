@@ -96,7 +96,8 @@ public:
 	int					LoadFile(const char* path, char** buffer_to_fill);
 	void				SaveFile(const char* file, const char* buffer, unsigned int size, const char* library_folder);
 	int					CloneFile(const char* file, Directory* folder, std::string* n_path = nullptr);
-	
+	void				RemoveFile(const char* file);
+
 	//Paths methods
 	void				GetUnformatedFileNameFromPath(const char* path, std::string* name);
 	void				GetFileNameFromPath(const char* path, std::string* name);
@@ -105,7 +106,8 @@ public:
 	Directory*			GetAssetsFolder()const;
 	void				ChangeFileFormat(const char* path,const char* new_format, std::string* new_path);
 	bool				IsInAssets(const char* path)const;
-	
+	bool				ExistInAssets(const char* path)const;
+
 	//UI
 	void				BlitFileSystemInfo();
 

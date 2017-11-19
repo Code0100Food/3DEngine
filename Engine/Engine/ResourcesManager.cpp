@@ -386,17 +386,25 @@ void ResourcesManager::UpdateMetaFiles()
 		{
 			uint last_ed_time = res->second->GetLastEditionTime();
 			last_time = last_ed_time;
-			
+
 			//Modification time
 			path = res->second->GetOriginalFile();
-			real_last_time = std::experimental::filesystem::last_write_time(path);
-			last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
-			
-			if (last_time != last_ed_time)
+			if (App->fs->ExistInAssets(res->second->GetOriginalFile()))
 			{
-				res->second->SetLastEditionTime(last_time);
-				/*Here re import the resource*/
-				res->second->ReImport();
+				real_last_time = std::experimental::filesystem::last_write_time(path);
+				last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
+
+				if (last_time != last_ed_time)
+				{
+					res->second->SetLastEditionTime(last_time);
+					/*Here re import the resource*/
+					res->second->ReImport();
+				}
+			}
+			else
+			{
+				/*Release the resource and the related lib files*/
+
 			}
 
 			path.clear();
@@ -416,13 +424,6 @@ uint ResourcesManager::GetLastEditionTime(const char * _path)
 
 void ResourcesManager::BlitConfigInfo()
 {
-	Resource* target = BlitResourceButtonsByType(RESOURCE_TYPE::SCENE_RESOURCE);
-	if (target != nullptr)
-	{
-		GameObject* obj = App->importer->scene_importer.Load(target);
-		obj->SetParent(App->scene->GetRoot());
-	}
-
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
 		ImGui::Text(res->second->GetOwnFile());
