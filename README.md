@@ -119,13 +119,21 @@ When Right click in the hierarchy window or a GameObject, a menu will appear and
 
 ### Scene
 
-We have placed two cameras in the scene. If you go to the inspector and select Main Camera in the Camera Component
+You can place two or more cameras in the scene. If you go to the inspector and select Main Camera in the Camera Component
 this will be the Camera that displays the Game view. You can also separate the Scene and Game view and move the 
 cameras to see the results in real time.
 
 ### Camera
 
 To modify Camera FOV or other settings go to "View" -> "Configuration" -> "Camera"
+
+### Octree
+
+To calculate the octree go to “View” -> “Configuration” -> “Scene” -> Recalculate
+
+Octree will be filled with static objects. To set a static objects check the inspector “Static” checkbox. The childs of a static object become static.
+
+
 
 ### Debug mode
 
