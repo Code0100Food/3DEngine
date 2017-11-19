@@ -156,7 +156,15 @@ bool SceneImporter::ReImport(const char* path)
 
 	scene_res->Save();
 
-
+	reimp_item = reimport_targets.begin();
+	while (reimp_item != reimport_targets.end())
+	{
+		if (reimp_item._Ptr->_Myval->GetReferences() > 0)
+		{
+			reimp_item._Ptr->_Myval->LoadInMemory();
+		}
+		reimp_item++;
+	}
 
 	loaded_meshes.clear();
 	loaded_materials.clear();
@@ -409,7 +417,7 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType 
 
 					if (mat != nullptr)
 					{
-						container->AddTexture(mat, false);
+						container->AddTexture(mat);
 						//Track the loaded material
 						loaded_materials.insert(std::pair<uint, aiMaterial*>(mat->GetID(), material));
 					}
@@ -500,7 +508,6 @@ void SceneImporter::ReImportMesh(const char * name, aiMesh * mesh, const aiScene
 			if (strcmp(reimp_item._Ptr->_Myval->GetOwnFile(), cmp_str) == 0)
 			{
 				resource_mesh = (ResourceMesh*)reimp_item._Ptr->_Myval;
-				reimport_targets.remove(resource_mesh);
 				break;
 			}
 
@@ -509,7 +516,7 @@ void SceneImporter::ReImportMesh(const char * name, aiMesh * mesh, const aiScene
 		if(resource_mesh == nullptr)resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
 	}
 
-	comp_mesh->SetResourceMesh(resource_mesh, false);
+	comp_mesh->SetResourceMesh(resource_mesh, true);
 
 	//Generate the container mesh renderer component
 	ComponentMeshRenderer* comp_mesh_renderer = (ComponentMeshRenderer*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
@@ -585,13 +592,13 @@ void SceneImporter::ReImportMesh(const char * name, aiMesh * mesh, const aiScene
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
 		//Load Normal data
-		ReImportMaterialTextures(material, aiTextureType_HEIGHT, comp_material);
+		ImportMaterialTextures(material, aiTextureType_HEIGHT, comp_material);
 
 		//Load diffuse data
-		ReImportMaterialTextures(material, aiTextureType_DIFFUSE, comp_material);
+		ImportMaterialTextures(material, aiTextureType_DIFFUSE, comp_material);
 
 		//Load Specular data
-		ReImportMaterialTextures(material, aiTextureType_SPECULAR, comp_material);
+		ImportMaterialTextures(material, aiTextureType_SPECULAR, comp_material);
 
 		LOG("- Material with index %i loaded!", mesh->mMaterialIndex);
 
@@ -615,19 +622,12 @@ void SceneImporter::ReImportMesh(const char * name, aiMesh * mesh, const aiScene
 
 		//Insert the loaded mesh 
 		loaded_meshes.insert(std::pair<uint, aiMesh*>(resource_mesh->GetID(), mesh));
-		
-		if (resource_mesh->GetReferences() > 0)resource_mesh->LoadInMemory();
 	}
 
 	//Clear the used containers
 	vertices.clear();
 	indices.clear();
 	vertices_pos.clear();
-}
-
-void SceneImporter::ReImportMaterialTextures(aiMaterial * mat, aiTextureType type, ComponentMaterial * container)
-{
-
 }
 
 const char* SceneImporter::AiTextureTypeToStr(aiTextureType ty)

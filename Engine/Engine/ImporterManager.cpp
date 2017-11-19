@@ -26,6 +26,10 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 	{
 	case MATERIAL_IMPORT:
 		res = App->res_manager->Find(path, RESOURCE_TYPE::MATERIAL_RESOURCE);
+		if (res != nullptr)
+		{
+			material_importer.ReImport((ResourceMaterial*)res);
+		}
 		break;
 	case MESH_IMPORT:
 		res = App->res_manager->Find(path, RESOURCE_TYPE::MESH_RESOURCE);

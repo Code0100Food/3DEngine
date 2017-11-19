@@ -58,8 +58,7 @@ private:
 	
 	void ReImportNode(aiNode *node, const aiScene *scene, GameObject* parent);
 	void ReImportMesh(const char* name, aiMesh *mesh, const aiScene *scene, GameObject* container);
-	void ReImportMaterialTextures(aiMaterial *mat, aiTextureType type, ComponentMaterial* container);
-
+	
 	const char* SceneImporter::AiTextureTypeToStr(aiTextureType ty);
 	aiTextureType SceneImporter::StrToAiTextureType(const char* str);
 };
