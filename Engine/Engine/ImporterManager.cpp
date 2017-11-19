@@ -117,13 +117,11 @@ bool ImporterManager::ReImportResource(Resource * target)
 	switch (target->GetResourceType())
 	{
 	case MESH_RESOURCE:
-		ret = mesh_importer.ReImport((ResourceMesh*)target);
+	case SCENE_RESOURCE:
+		ret = scene_importer.ReImport(target->GetOriginalFile());
 		break;
 	case MATERIAL_RESOURCE:
 		ret = material_importer.ReImport((ResourceMaterial*)target);
-		break;
-	case SCENE_RESOURCE:
-		ret = scene_importer.ReImport(target);
 		break;
 	}
 

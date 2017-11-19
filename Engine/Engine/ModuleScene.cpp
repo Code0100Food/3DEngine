@@ -117,11 +117,11 @@ SCENE_UPDATE_STATE ModuleScene::GetSceneState() const
 }
 
 // Functionality ================================
-GameObject * ModuleScene::CreateGameObject()
+GameObject * ModuleScene::CreateGameObject(bool link)
 {
 	GameObject * obj = new GameObject();
 	
-	obj->SetParent(root_gameobject);
+	if(link)obj->SetParent(root_gameobject);
 	
 	return obj;
 }
@@ -628,10 +628,10 @@ void ModuleScene::PlayGame()
 		App->time_manager->SetGameTimeSinceStartup(0.0f);
 		App->textures->play_icon_id = App->textures->play_icon;
 
-		ImGuiStyle* lol = &ImGui::GetStyle();
-		lol->Colors[ImGuiCol_ChildWindowBg].x += 0.06f;
-		lol->Colors[ImGuiCol_ChildWindowBg].y += 0.06f;
-		lol->Colors[ImGuiCol_ChildWindowBg].z += 0.06f;
+		ImGuiStyle* style = &ImGui::GetStyle();
+		style->Colors[ImGuiCol_ChildWindowBg].x += 0.06f;
+		style->Colors[ImGuiCol_ChildWindowBg].y += 0.06f;
+		style->Colors[ImGuiCol_ChildWindowBg].z += 0.06f;
 
 	}
 	else
@@ -641,10 +641,10 @@ void ModuleScene::PlayGame()
 		App->scene->InitializeScene();
 		App->textures->play_icon_id = App->textures->play_click_icon;
 
-		ImGuiStyle* lol = &ImGui::GetStyle();
-		lol->Colors[ImGuiCol_ChildWindowBg].x -= 0.06f;
-		lol->Colors[ImGuiCol_ChildWindowBg].y -= 0.06f;
-		lol->Colors[ImGuiCol_ChildWindowBg].z -= 0.06f;
+		ImGuiStyle* style = &ImGui::GetStyle();
+		style->Colors[ImGuiCol_ChildWindowBg].x -= 0.06f;
+		style->Colors[ImGuiCol_ChildWindowBg].y -= 0.06f;
+		style->Colors[ImGuiCol_ChildWindowBg].z -= 0.06f;
 
 		LOG("Game Started!");
 	}

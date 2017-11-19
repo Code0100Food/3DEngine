@@ -216,7 +216,7 @@ uint GameObject::GetID() const
 	return id;
 }
 
-const GameObject * GameObject::GetParent() const
+GameObject * GameObject::GetParent() const
 {
 	return parent;
 }
@@ -542,6 +542,28 @@ void GameObject::BlitGameObjectHierarchy(uint index)
 			App->scene->SendGameObjectToRemoveVec(this);
 			App->scene->SetSelectedGameObject(nullptr);
 			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+		}
+
+		GameObject* selected = App->scene->GetSelectedGameObject();
+		if (selected != nullptr && selected != this)
+		{
+			if (ImGui::BeginMenu("Hierarchy"))
+			{
+				if (selected != this->parent)
+				{
+					if (ImGui::Selectable("Set Selected as Parent"))
+					{
+
+					}
+				}
+
+				if (ImGui::Selectable("Set Selected as Child"))
+				{
+
+				}
+
+				ImGui::EndMenu();
+			}
 		}
 
 		if (ImGui::Selectable("Add Empty"))

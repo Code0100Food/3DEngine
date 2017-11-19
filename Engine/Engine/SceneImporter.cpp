@@ -45,11 +45,11 @@ uint SceneImporter::Import(const char * path)
 	LOG("Loading %i meshes...", scene->mNumMeshes);
 
 	//Generate load root game object
-	GameObject* root_obj = App->scene->CreateGameObject();
+	GameObject* root_obj = App->scene->CreateGameObject(false);
 	root_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 
 	//Generate real root obj
-	GameObject* obj = App->scene->CreateGameObject();
+	GameObject* obj = App->scene->CreateGameObject(false);
 	obj->SetParent(root_obj);
 	obj->SetName(usable_str_a.c_str());
 	//Set real root transformation
@@ -83,6 +83,87 @@ uint SceneImporter::Import(const char * path)
 	return scene_res->GetID();
 }
 
+bool SceneImporter::ReImport(const char* path)
+{
+	bool ret = false;
+
+	//Find the resources related with the file to reimport and unload them to be modified
+	App->res_manager->FindRelatedResources(path, reimport_targets);
+	std::list<Resource*>::const_iterator reimp_item = reimport_targets.begin();
+	while (reimp_item != reimport_targets.end())
+	{
+		if(reimp_item._Ptr->_Myval->GetReferences() > 0)reimp_item._Ptr->_Myval->UnloadInMemory();
+		reimp_item++;
+	}
+
+	//Get paths data
+	file_path = path;
+	App->fs->GetUnformatedFileNameFromPath(path, &usable_str_a);
+	App->fs->GetFolderFromPath(path, &cur_path);
+
+	Assimp::Importer import;
+	const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		LOG("[error] ASSIMP: %s", import.GetErrorString());
+		return 0;
+	}
+
+	LOG("Loading %s scene!", usable_str_a.c_str());
+
+	Serializer scene_structure;
+
+	//Load all the meshes & materials
+	LOG("Loading %i meshes...", scene->mNumMeshes);
+
+	//Generate load root game object
+	GameObject* root_obj = App->scene->CreateGameObject(false);
+	root_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+
+	//Generate real root obj
+	GameObject* obj = App->scene->CreateGameObject(false);
+	obj->SetParent(root_obj);
+	obj->SetName(usable_str_a.c_str());
+	//Set real root transformation
+	ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	comp->SetTransformation(scene->mRootNode->mTransformation);
+
+	//scene->mRootNode->mTransformation
+	ReImportNode(scene->mRootNode, scene, obj);
+
+	App->scene->SerializeScene(root_obj, scene_structure);
+	RELEASE(root_obj);
+
+	//Generate the scene resource & json structure file
+	Resource* scene_res = nullptr;
+	reimp_item = reimport_targets.begin();
+	while (reimp_item != reimport_targets.end())
+	{
+		if (reimp_item._Ptr->_Myval->GetResourceType() == RESOURCE_TYPE::SCENE_RESOURCE)
+		{
+			scene_res = reimp_item._Ptr->_Myval;
+			break;
+		}
+		reimp_item++;
+	}
+
+	//Save the generated structure file
+	char* buffer = nullptr;
+	uint size = scene_structure.Save(&buffer);
+	App->fs->SaveFile(scene_res->GetOwnFile(), buffer, size - 1, LIBRARY_SCENE_FOLDER);
+	RELEASE_ARRAY(buffer);
+
+	scene_res->Save();
+
+
+
+	loaded_meshes.clear();
+	loaded_materials.clear();
+	reimport_targets.clear();
+
+	return ret;
+}
 bool SceneImporter::Load(Resource * target)
 {
 	char str[150];
@@ -99,7 +180,7 @@ void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject*
 		if (node->mNumMeshes == 0)
 		{
 			//Generate game object
-			node_obj = App->scene->CreateGameObject();
+			node_obj = App->scene->CreateGameObject(false);
 			node_obj->SetName(node->mName.C_Str());
 			node_obj->SetParent(parent);
 
@@ -115,7 +196,7 @@ void SceneImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject*
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			//Generate game object
-			GameObject* obj = App->scene->CreateGameObject();
+			GameObject* obj = App->scene->CreateGameObject(false);
 			obj->SetName(node->mName.C_Str());
 			obj->SetParent(parent);
 			
@@ -341,11 +422,212 @@ void SceneImporter::ImportMaterialTextures(aiMaterial * material, aiTextureType 
 	return;
 }
 
-bool SceneImporter::ReImport(Resource * to_reload)
+void SceneImporter::ReImportNode(aiNode * node, const aiScene * scene, GameObject * parent)
 {
-	bool ret = false;
+	GameObject* node_obj = parent;
 
-	return ret;
+	if (node->mMetaData != NULL)
+	{
+		if (node->mNumMeshes == 0)
+		{
+			//Generate game object
+			node_obj = App->scene->CreateGameObject(false);
+			node_obj->SetName(node->mName.C_Str());
+			node_obj->SetParent(parent);
+
+			//Set transformation component
+			ComponentTransform* node_comp = (ComponentTransform*)node_obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			node_comp->SetTransformation(inherited_trans);
+
+			//Inherited is id to reset for the next branch
+			aiMatrix4x4 id;
+			inherited_trans = id;
+		}
+
+		for (unsigned int i = 0; i < node->mNumMeshes; i++)
+		{
+			//Generate game object
+			GameObject* obj = App->scene->CreateGameObject(false);
+			obj->SetName(node->mName.C_Str());
+			obj->SetParent(parent);
+
+			//Set transformation component
+			ComponentTransform* comp = (ComponentTransform*)obj->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+			inherited_trans = node->mTransformation * inherited_trans;
+			comp->SetTransformation(node->mTransformation);
+
+			//Import the mesh and the related materials
+			ReImportMesh(node->mName.C_Str(), scene->mMeshes[node->mMeshes[i]], scene, obj);
+		}
+	}
+	else
+	{
+		//Accumulate the parents transformations
+		inherited_trans = node->mTransformation * inherited_trans;
+	}
+
+	// then do the same for each of its children
+	for (unsigned int i = 0; i < node->mNumChildren; i++)
+	{
+		ReImportNode(node->mChildren[i], scene, node_obj);
+	}
+}
+
+void SceneImporter::ReImportMesh(const char * name, aiMesh * mesh, const aiScene * scene, GameObject * container)
+{
+	ResourceMesh* resource_mesh = nullptr;
+	ComponentMesh* comp_mesh = (ComponentMesh*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+	bool found = false;
+
+	std::map<uint, aiMesh*>::const_iterator item = loaded_meshes.begin();
+	while (item != loaded_meshes.end())
+	{
+		if (item._Ptr->_Myval.second == mesh)
+		{
+			resource_mesh = (ResourceMesh*)App->res_manager->Find(item._Ptr->_Myval.first);
+			found = true;
+		}
+
+		item++;
+	}
+	if (!found)
+	{
+		std::list<Resource*>::iterator reimp_item = reimport_targets.begin();
+		while (reimp_item != reimport_targets.end())
+		{
+			char cmp_str[100];
+			sprintf(cmp_str, "%s.fiesta", name);
+			if (strcmp(reimp_item._Ptr->_Myval->GetOwnFile(), cmp_str) == 0)
+			{
+				resource_mesh = (ResourceMesh*)reimp_item._Ptr->_Myval;
+				reimport_targets.remove(resource_mesh);
+				break;
+			}
+
+			reimp_item++;
+		}
+		if(resource_mesh == nullptr)resource_mesh = (ResourceMesh*)App->res_manager->CreateResource(RESOURCE_TYPE::MESH_RESOURCE);
+	}
+
+	comp_mesh->SetResourceMesh(resource_mesh, false);
+
+	//Generate the container mesh renderer component
+	ComponentMeshRenderer* comp_mesh_renderer = (ComponentMeshRenderer*)container->CreateComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+	comp_mesh_renderer->SetTargetMesh(comp_mesh);
+
+	if (!found)
+	{
+		LOG("Processing %s mesh!", name);
+
+		//Iterate all the mesh vertices and load all the data
+		for (uint i = 0; i < mesh->mNumVertices; i++)
+		{
+			Vertex			vertex;
+			math::float3	data;
+			math::float2	tex_color;
+			//Build vertex positions
+			if (mesh->HasPositions())
+			{
+				data.x = mesh->mVertices[i].x;
+				data.y = mesh->mVertices[i].y;
+				data.z = mesh->mVertices[i].z;
+				vertex.position = data;
+				vertices_pos.push_back(data);
+			}
+
+			//Build vertex normals
+			if (mesh->HasNormals())
+			{
+				data.x = mesh->mNormals[i].x;
+				data.y = mesh->mNormals[i].y;
+				data.z = mesh->mNormals[i].z;
+				vertex.normals = data;
+			}
+
+			//Build texture coordinates
+			if (mesh->HasTextureCoords(0))
+			{
+				tex_color.x = mesh->mTextureCoords[0][i].x;
+				tex_color.y = mesh->mTextureCoords[0][i].y;
+				vertex.tex_coords = tex_color;
+			}
+
+			//Add the built vertex to the vertex vector
+			vertices.push_back(vertex);
+		}
+
+		LOG("- %i Vertices loaded!", mesh->mNumVertices);
+
+		//Build the triangles with the index
+		if (mesh->HasFaces())
+		{
+			for (uint i = 0; i < mesh->mNumFaces; i++)
+			{
+				aiFace face = mesh->mFaces[i];
+
+				for (uint j = 0; j < face.mNumIndices; j++)
+				{
+					indices.push_back(face.mIndices[j]);
+				}
+			}
+		}
+
+		LOG("- %i Faces loaded!", mesh->mNumFaces);
+	}
+
+	//Build the different materials (textures)
+	if (mesh->mMaterialIndex >= 0)
+	{
+		//Generate the container material component (used by mesh too)
+		ComponentMaterial* comp_material = (ComponentMaterial*)container->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
+
+		//Get the material
+		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+
+		//Load Normal data
+		ReImportMaterialTextures(material, aiTextureType_HEIGHT, comp_material);
+
+		//Load diffuse data
+		ReImportMaterialTextures(material, aiTextureType_DIFFUSE, comp_material);
+
+		//Load Specular data
+		ReImportMaterialTextures(material, aiTextureType_SPECULAR, comp_material);
+
+		LOG("- Material with index %i loaded!", mesh->mMaterialIndex);
+
+		//Set mesh material
+		comp_mesh->SetDrawMaterial(comp_material);
+	}
+
+	if (!found)
+	{
+		//Import the mesh (own format)
+		App->importer->mesh_importer.Import(name, indices, vertices);
+
+		//Generate the mesh resource
+		resource_mesh->SetOriginalFile(file_path.c_str());
+		char f_name[100];
+		sprintf(f_name, "%s.fiesta", name);
+		resource_mesh->SetOwnFile(f_name);
+
+		//Save the meta file
+		resource_mesh->Save();
+
+		//Insert the loaded mesh 
+		loaded_meshes.insert(std::pair<uint, aiMesh*>(resource_mesh->GetID(), mesh));
+		
+		if (resource_mesh->GetReferences() > 0)resource_mesh->LoadInMemory();
+	}
+
+	//Clear the used containers
+	vertices.clear();
+	indices.clear();
+	vertices_pos.clear();
+}
+
+void SceneImporter::ReImportMaterialTextures(aiMaterial * mat, aiTextureType type, ComponentMaterial * container)
+{
+
 }
 
 const char* SceneImporter::AiTextureTypeToStr(aiTextureType ty)

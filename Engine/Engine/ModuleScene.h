@@ -62,7 +62,7 @@ public:
 
 	//Functionality ---------
 	//GameObject methods
-	GameObject* CreateGameObject();
+	GameObject* CreateGameObject(bool link = true);
 	bool		ReleaseGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
 	void		SendGameObjectToRemoveVec(const GameObject* target);
 	GameObject* FindGameObject(uint id)const;

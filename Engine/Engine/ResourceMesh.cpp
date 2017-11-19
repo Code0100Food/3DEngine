@@ -151,12 +151,36 @@ void ResourceMesh::SetupMesh()
 
 void ResourceMesh::DeleteBuffers()
 {
-	if (VertexArrayObject != NULL)	glDeleteBuffers(1, &VertexArrayObject);
-	if (VertexBufferObject != NULL)	glDeleteBuffers(1, &VertexBufferObject);
-	if (ElementBufferObject != NULL)glDeleteBuffers(1, &ElementBufferObject);
-	if (face_normalsID != NULL)		glDeleteBuffers(1, &face_normalsID);
-	if (vertex_normalsID != NULL)	glDeleteBuffers(1, &vertex_normalsID);
-	if (text_coordsID != NULL)		glDeleteBuffers(1, &text_coordsID);
+	if (VertexArrayObject != NULL)
+	{
+		glDeleteBuffers(1, &VertexArrayObject);
+		VertexArrayObject = 0;
+	}
+	if (VertexBufferObject != NULL)
+	{
+		glDeleteBuffers(1, &VertexBufferObject);
+		VertexBufferObject = 0;
+	}
+	if (ElementBufferObject != NULL)
+	{
+		glDeleteBuffers(1, &ElementBufferObject);
+		ElementBufferObject = 0;
+	}
+	if (face_normalsID != NULL)
+	{
+		glDeleteBuffers(1, &face_normalsID);
+		face_normalsID = 0;
+	}
+	if (vertex_normalsID != NULL)
+	{
+		glDeleteBuffers(1, &vertex_normalsID);
+		vertex_normalsID = 0;
+	}
+	if (text_coordsID != NULL)
+	{
+		glDeleteBuffers(1, &text_coordsID);
+		text_coordsID = 0;
+	}
 }
 
 void ResourceMesh::LoadInMemory()
@@ -176,9 +200,4 @@ void ResourceMesh::UnloadInMemory()
 	num_vertex = 0;
 
 	DeleteBuffers();
-}
-
-void ResourceMesh::ReImport()
-{
-
 }

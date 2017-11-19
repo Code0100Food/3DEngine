@@ -6,6 +6,7 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "FileSystem.h"
+#include "ResourcesManager.h"
 
 #include <experimental/filesystem>
 
@@ -97,6 +98,7 @@ bool ResourceMaterial::Save()
 	meta_file.InsertString("original_file", original_file.c_str());
 	meta_file.InsertString("own_file", own_file.c_str());
 	//Modification time
+	last_edition_time = App->res_manager->GetLastEditionTime(original_file.c_str());
 	meta_file.InsertInt("last_edition_time", last_edition_time);
 	
 	meta_file.InsertString("mat_type", mat_type.c_str());

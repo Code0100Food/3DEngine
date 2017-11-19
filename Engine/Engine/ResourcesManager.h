@@ -58,10 +58,12 @@ public:
 	Resource*	Find(const char* file_path, RESOURCE_TYPE type)const;
 	Resource*	Find(uint id)const;
 	uint		FindMetaFile(const char* own_file_path)const;
+	void		FindRelatedResources(const char* path, list<Resource*>& resources);
 
 	//Metas Methods
 	void		LoadMetaFiles();
 	void		UpdateMetaFiles();
+	uint		GetLastEditionTime(const char* path);
 
 	//UI
 	void		BlitConfigInfo();

@@ -3,6 +3,8 @@
 #include "Application.h"
 #include "Serializer.h"
 #include "FileSystem.h"
+#include "ImporterManager.h"
+#include "ResourcesManager.h"
 
 #include <experimental/filesystem>
 
@@ -118,6 +120,7 @@ bool Resource::Save()
 	meta_file.InsertString("original_file", original_file.c_str());
 	meta_file.InsertString("own_file", own_file.c_str());
 	//Modification time
+	last_edition_time = App->res_manager->GetLastEditionTime(original_file.c_str());
 	meta_file.InsertInt("last_edition_time", last_edition_time);
 	
 	//Save the generated meta file
@@ -164,7 +167,7 @@ void Resource::UnloadInMemory()
 
 void Resource::ReImport()
 {
-
+	App->importer->ReImportResource(this);
 }
 
 RESOURCE_TYPE StrToResourceType(const char * str)

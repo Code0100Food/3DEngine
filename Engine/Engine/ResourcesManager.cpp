@@ -280,6 +280,19 @@ uint ResourcesManager::FindMetaFile(const char * own_file_path) const
 	return 0;
 }
 
+void ResourcesManager::FindRelatedResources(const char * path, list<Resource*>& _resources)
+{
+	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
+	{
+		if (res->second->GetConstInMemory())continue;
+
+		if (strcmp(res->second->GetOriginalFile(),path) == 0)
+		{
+			_resources.push_back(res->second);
+		}
+	}
+}
+
 void ResourcesManager::LoadMetaFiles()
 {
 	//Set String to look inside Parent folder
@@ -367,6 +380,16 @@ void ResourcesManager::UpdateMetaFiles()
 			path.clear();
 		}
 	}
+}
+
+uint ResourcesManager::GetLastEditionTime(const char * _path)
+{
+	//Modification time
+	path = _path;
+	real_last_time = std::experimental::filesystem::last_write_time(path);
+	last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
+
+	return last_time;
 }
 
 void ResourcesManager::BlitConfigInfo()

@@ -12,6 +12,7 @@ class	ResourceMesh;
 class	Resource;
 
 #include <map>
+#include <list>
 #include "ComponentMesh.h"
 #include "Assimp/include/matrix4x4.h"
 #include "Assimp/include/types.h"
@@ -31,10 +32,12 @@ private:
 	std::vector<uint>			indices;
 	std::vector<math::float3>	vertices_pos;
 
-	std::vector<std::string> textures;
+	std::vector<std::string>	textures;
 
 	std::map<uint, aiMesh*>		loaded_meshes;
 	std::map<uint, aiMaterial*>	loaded_materials;
+
+	std::list<Resource*>		reimport_targets;
 
 	mutable std::string usable_str_a;
 	mutable std::string usable_str_b;
@@ -44,8 +47,8 @@ private:
 public:
 
 	uint Import(const char* path);
+	bool ReImport(const char* path);
 	bool Load(Resource* target);
-	bool ReImport(Resource* to_reload);
 
 private:
 	
@@ -53,6 +56,10 @@ private:
 	void ImportMesh(const char* name, aiMesh *mesh, const aiScene *scene, GameObject* container);
 	void ImportMaterialTextures(aiMaterial *mat, aiTextureType type, ComponentMaterial* container);
 	
+	void ReImportNode(aiNode *node, const aiScene *scene, GameObject* parent);
+	void ReImportMesh(const char* name, aiMesh *mesh, const aiScene *scene, GameObject* container);
+	void ReImportMaterialTextures(aiMaterial *mat, aiTextureType type, ComponentMaterial* container);
+
 	const char* SceneImporter::AiTextureTypeToStr(aiTextureType ty);
 	aiTextureType SceneImporter::StrToAiTextureType(const char* str);
 };

@@ -66,7 +66,7 @@ public:
 	bool				GetStatic()const;
 	float				GetBoundingBoxDiagonalSize()const;
 	uint				GetID()const;
-	const GameObject*	GetParent() const;
+	GameObject*			GetParent() const;
 	bool				IsRoot() const;
 	bool				IsSelectedObject() const;
 	
