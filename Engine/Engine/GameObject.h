@@ -99,7 +99,7 @@ public:
 	void		BlitClone();
 	void		BlitAddEmpty();
 	void		Blit3DObject();
-
+	void		BlitPrefabs();
 
 	//Bounding Box Methods
 	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);

@@ -14,6 +14,8 @@
 
 #define METAS_UPDATE_RATE 5000
 
+class GameObject;
+
 class ResourcesManager : public Module
 {
 public:
@@ -46,6 +48,9 @@ private:
 	std::experimental::filesystem::path path;
 	std::experimental::filesystem::v1::file_time_type real_last_time;
 	std::time_t last_time;
+	
+	mutable std::string usable_string_a;
+
 
 public:
 
@@ -72,5 +77,6 @@ public:
 	//UI
 	void		BlitConfigInfo();
 	Resource*	BlitResourceButtonsByType(RESOURCE_TYPE type);
+	void		BlitPrefabsMenu(GameObject* target);
 };
 #endif // !_RESOURCES_MANAGER_

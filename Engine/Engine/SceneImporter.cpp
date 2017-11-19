@@ -176,7 +176,7 @@ bool SceneImporter::ReImport(const char* path)
 
 	return ret;
 }
-bool SceneImporter::Load(Resource * target)
+GameObject* SceneImporter::Load(Resource * target)
 {
 	char str[150];
 	sprintf(str, "%s%s", LIBRARY_SCENE_FOLDER, target->GetOwnFile());

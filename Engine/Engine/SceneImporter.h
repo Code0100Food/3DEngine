@@ -48,7 +48,7 @@ public:
 
 	uint Import(const char* path);
 	bool ReImport(const char* path);
-	bool Load(Resource* target);
+	GameObject* Load(Resource* target);
 
 private:
 	

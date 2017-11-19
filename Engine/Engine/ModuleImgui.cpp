@@ -209,10 +209,10 @@ update_status ModuleImgui::Update(float dt)
 		}
 
 		//Create Frustum
-		if (ImGui::MenuItem("Frustum (InProcess)"))
+		/*if (ImGui::MenuItem("Frustum (InProcess)"))
 		{
 			App->scene->SetSelectedGameObject(App->scene->CreatePrimitive(PRIMITIVE_TYPE::PRIMITIVE_FRUSTUM));
-		}
+		}*/
 
 
 		ImGui::EndMenu();

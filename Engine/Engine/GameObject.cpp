@@ -14,6 +14,7 @@
 #include "ModuleInput.h"
 #include "ModuleScene.h"
 #include "Serializer.h"
+#include "ResourcesManager.h"
 
 // Constructors =================================
 GameObject::GameObject()
@@ -649,6 +650,9 @@ void GameObject::HandleRightClickInput()
 
 		//Add 3D object Selectable
 		Blit3DObject();
+		
+		//Add Prefabs Selectable
+		BlitPrefabs();
 
 		//Clone this Gameobject
 		BlitClone();
@@ -747,6 +751,11 @@ void GameObject::Blit3DObject()
 		}
 		ImGui::EndMenu();
 	}
+}
+
+void GameObject::BlitPrefabs()
+{
+	App->res_manager->BlitPrefabsMenu(this);
 }
 
 void GameObject::DrawBoundingBox()

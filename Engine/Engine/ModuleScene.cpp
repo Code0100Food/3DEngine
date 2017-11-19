@@ -605,7 +605,7 @@ void ModuleScene::SerializeAndSaveCurrentScene()
 	}
 }
 
-bool ModuleScene::LoadSerializedScene(const char * path)
+GameObject* ModuleScene::LoadSerializedScene(const char * path)
 {
 	bool ret = true;
 
@@ -652,6 +652,13 @@ bool ModuleScene::LoadSerializedScene(const char * path)
 		loaded_cmps[k]->RecalculateID();
 	}
 
+	GameObject* root_obj = nullptr;
+	size = loaded_objs.size();
+	for (uint k = 0;k < size; k++)
+	{
+		if (loaded_objs[k]->GetParent()->IsRoot())root_obj = loaded_objs[k];
+	}
+
 	loaded_cmps.clear();
 	loaded_objs.clear();
 	objects_links.clear();
@@ -659,7 +666,7 @@ bool ModuleScene::LoadSerializedScene(const char * path)
 
 	if (ret)LOG("Scene Correctly Loaded!");
 
-	return ret;
+	return root_obj;
 }
 
 bool ModuleScene::InitializeScene()

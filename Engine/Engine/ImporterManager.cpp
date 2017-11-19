@@ -102,7 +102,8 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 			{
 				if (res == nullptr)res = App->res_manager->Find(res_id);
 				//Place the imported scene in the 3D world
-				App->importer->scene_importer.Load(res);
+				GameObject* obj = App->importer->scene_importer.Load(res);
+				obj->SetParent(App->scene->GetRoot());
 			}
 			break;
 		}

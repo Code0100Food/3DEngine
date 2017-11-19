@@ -33,15 +33,32 @@ At the bottom of the window there are links to our github pages where you can se
 
 ## Engine
 
-The engine UI starts showing you the scene, the configuration and the scene models windows.
+The engine UI starts showing you the next elements:
 
-You can acceed to all the UI elements using the top bar menu that have four sub menus.
+- Hierarchy: Show the scene game objects hierarchy
+- Scene: Edit camera point of view
+- Game: Game camera point of view
+- Inspector: Show the selected game object components
+- Resource Inspector: Show the resources related with the selected file
+- Files: Show the files inside the selected folder
+- Directories: Show the folders inside assets
+- Play/Pause/Next buttons: Used to start/pause or loop one frame in the game mode. When the game mode starts game time is shown and you can change the time scale.
+
+You can acceed to all the UI elements using the top bar menu that have five sub menus.
 
 - File:
+		- Save: Serialize the current scene
+		- Load: Load the serialized scene
+		- Clean: Delete all the objects in the scene
 		- Exit: Close the engine
+
+- Game Objects:
+		- Empty: Create a empty object
+		- Cube,Sphere…: Create a primitive
+
 - View:
-		- Scene Objects: Show you the states of the objects loaded in the scene.
-		- Configuration: Show all the modules configuration  and let you modify it.
+		- Hierarchy: Show you the states of the objects loaded in the scene.
+		- Configuration: Show all the modules configuration and let you modify it.
 - Tools:
 		- Profiler: Show a simple time tracking of all the modules. You can modify the times to define when a module is exceeding his process time.
 		- UI Config: You can choose one of the two defined UI themes or edit your own.
@@ -67,7 +84,19 @@ Console shows information of the engine operations and can handle some basic inp
 
 To see all the console commands, you can open the console header in the configuration window or enter “help” in the console
 
+Resources Manager:
+
+Resources manager generate all the necessary files and folders to manage the user files. You can drop the file or place it inside the assets folder to import it.
+
 # Changelog
+	 -Release 0.3:
+		Resources Reimporation
+		Resources automatically update
+		GameObject hierarchy UI improved
+		Play/Pause/Next UI output
+		Gizmos working(alpha version)
+		Debug mode with F1
+
 	 -Release 0.2.7:
 		Scene Save/Load with resources
 		Scene Resource added

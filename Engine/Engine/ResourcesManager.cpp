@@ -11,6 +11,8 @@
 #include "ModuleTextures.h"
 #include "ModuleImgui.h"
 #include "imgui/imgui_dock.h"
+#include "GameObject.h"
+#include "ModuleScene.h"
 
 // Constructors =================================
 ResourcesManager::ResourcesManager(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
@@ -417,7 +419,8 @@ void ResourcesManager::BlitConfigInfo()
 	Resource* target = BlitResourceButtonsByType(RESOURCE_TYPE::SCENE_RESOURCE);
 	if (target != nullptr)
 	{
-		App->importer->scene_importer.Load(target);
+		GameObject* obj = App->importer->scene_importer.Load(target);
+		obj->SetParent(App->scene->GetRoot());
 	}
 
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
@@ -440,4 +443,25 @@ Resource * ResourcesManager::BlitResourceButtonsByType(RESOURCE_TYPE type)
 	}
 
 	return nullptr;
+}
+
+void ResourcesManager::BlitPrefabsMenu(GameObject* target)
+{
+	if (ImGui::BeginMenu("Prefabs"))
+	{
+		for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
+		{
+			if (res._Ptr->_Myval.second->GetResourceType() == RESOURCE_TYPE::SCENE_RESOURCE)
+			{
+				App->fs->GetUnformatedFileNameFromPath(res._Ptr->_Myval.second->GetOwnFile(), &usable_string_a);
+				
+				if (ImGui::Selectable(usable_string_a.c_str()))
+				{
+					GameObject* root = App->importer->scene_importer.Load(res._Ptr->_Myval.second);
+					root->SetParent(target);
+				}
+			}
+		}
+		ImGui::EndMenu();
+	}
 }
