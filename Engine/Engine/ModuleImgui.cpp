@@ -384,7 +384,7 @@ update_status ModuleImgui::Update(float dt)
 	//Inspector Window
 	if (App->scene->GetInspectorState())
 	{
-		father_dock->BeginDock("Inspector##Dock", 0, 0);
+		father_dock->BeginDock("Inspector##Dock", 0, ImGuiWindowFlags_::ImGuiWindowFlags_HorizontalScrollbar);
 		App->scene->BlitInspector();
 		father_dock->EndDock();
 	}

@@ -67,10 +67,10 @@ int main(int argc, char ** argv)
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 
-	/*LAUNCHER_STATE launch = (LAUNCHER_STATE)StartLauncher();
+	LAUNCHER_STATE launch = (LAUNCHER_STATE)StartLauncher();
 
 	if (launch == LAUNCHER_STATE::CLOSE_ENGINE)
-		return main_return;*/
+		return main_return;
 
 	while (state != MAIN_EXIT)
 	{

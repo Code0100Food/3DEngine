@@ -404,7 +404,17 @@ void ResourcesManager::UpdateMetaFiles()
 			else
 			{
 				/*Release the resource and the related lib files*/
+				/*std::list<Resource*> res_list;
+				FindRelatedResources(res->second->GetOriginalFile(), res_list);
+				std::list<Resource*>::iterator item = res_list.begin();
+				while(item != res_list.end())
+				{
+					char str[250];
+					sprintf(str, "%s\\%s", App->fs->GetUserRootDir()->GetPath(), item._Ptr->_Myval->GetOwnFile());
+					App->fs->RemoveFile(str);
 
+					item++;
+				}*/ //Will be implemented in the next assignment
 			}
 
 			path.clear();
