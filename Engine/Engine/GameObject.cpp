@@ -387,9 +387,21 @@ Component * GameObject::CloneComponent(const Component * target) const
 	case COMP_MESH:					new_c = new ComponentMesh(*(const ComponentMesh*)target);					break;
 	case COMP_MATERIAL:				new_c = new ComponentMaterial(*(const ComponentMaterial*)target);			break;
 	case COMP_MESH_RENDERER:		new_c = new ComponentMeshRenderer(*(const ComponentMeshRenderer*)target);	break;
+	case COMP_CAMERA:				new_c = new ComponentCamera(*(const ComponentCamera*)target);				break;
+	case COMP_CUBE_MESH:			new_c = new ComponentCubeMesh(*(const ComponentCubeMesh*)target);			break;
+	case COMP_SPHERE_MESH:			new_c = new ComponentSphereMesh(*(const ComponentSphereMesh*)target);		break;
+	case COMP_CYLINDER_MESH:		new_c = new ComponentCylinderMesh(*(const ComponentCylinderMesh*)target);	break;
 	}
 
 	return new_c;
+}
+
+void GameObject::CloneGameObject()
+{
+	GameObject lol = *this;
+
+	GameObject* new_gameobject = new GameObject(lol);
+	new_gameobject->parent->AddChild(new_gameobject);
 }
 
 void GameObject::AddChild(const GameObject * child)
@@ -627,66 +639,111 @@ void GameObject::HandleRightClickInput()
 		ImGui::Text("%s", this->name.c_str());
 		ImGui::Separator();
 
+		//Remove Selectable
+		BlitRemove();
+		
+		//Add empty selectable
+		BlitAddEmpty();
+
+		//Add 3D object Selectable
+		Blit3DObject();
+
+		//Clone this Gameobject
+		BlitClone();
+
+		ImGui::EndPopup();
+	}
+}
+
+void GameObject::BlitRemove()
+{
+	//If is root can't remove
+	if (!App->scene->IsRoot(this))
+	{
 		if (ImGui::Selectable("Remove"))
 		{
 			App->scene->SendGameObjectToRemoveVec(this);
 			App->scene->SetSelectedGameObject(nullptr);
 			App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 		}
+	}
+	else
+	{
+		ImGui::TextColored(ImVec4(0.3f, 0.3f, 0.3f, 1.0f), "Remove");
+	}
+}
 
-		if (ImGui::Selectable("Add Empty"))
+void GameObject::BlitClone()
+{
+	//If is root can't clone
+	if (!App->scene->IsRoot(this))
+	{
+		if (ImGui::Selectable("Clone"))
 		{
-			GameObject* new_child = new GameObject();
-			new_child->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-			new_child->SetParent(this);
+			CloneGameObject();
+		}
+	}
+	else
+	{
+		ImGui::TextColored(ImVec4(0.3f, 0.3f, 0.3f, 1.0f), "Clone");
+	}
+}
+
+void GameObject::BlitAddEmpty()
+{
+	if (ImGui::Selectable("Add Empty"))
+	{
+		GameObject* new_child = new GameObject();
+		new_child->CreateComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		new_child->SetParent(this);
+	}
+}
+
+void GameObject::Blit3DObject()
+{
+	if (ImGui::BeginMenu("3D Objects"))
+	{
+		if (ImGui::Selectable("Cube"))
+		{
+			GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CUBE);
+			new_primitive->SetParent(this);
 		}
 
-
-		if (ImGui::BeginMenu("3D Objects"))
+		if (ImGui::BeginMenu("Sphere"))
 		{
-			if (ImGui::Selectable("Cube"))
+			if (ImGui::Selectable("Low Poly"))
 			{
-				GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CUBE);
+				GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE);
 				new_primitive->SetParent(this);
 			}
 
-			if (ImGui::BeginMenu("Sphere"))
+			if (ImGui::Selectable("High Poly"))
 			{
-				if (ImGui::Selectable("Low Poly"))
-				{
-					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE);
-					new_primitive->SetParent(this);
-				}
-
-				if (ImGui::Selectable("High Poly"))
-				{
-					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE_HI);
-					new_primitive->SetParent(this);
-				}
-
-
-				ImGui::EndMenu();
+				GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_SPHERE_HI);
+				new_primitive->SetParent(this);
 			}
 
-			if (ImGui::BeginMenu("Cylinder"))
-			{
-				if (ImGui::Selectable("Low Poly"))
-				{
-					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER);
-					new_primitive->SetParent(this);
-				}
 
-				if (ImGui::Selectable("High Poly"))
-				{
-					GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER_HI);
-					new_primitive->SetParent(this);
-				}
-
-				ImGui::EndMenu();
-			}
 			ImGui::EndMenu();
 		}
-		ImGui::EndPopup();
+
+		if (ImGui::BeginMenu("Cylinder"))
+		{
+			if (ImGui::Selectable("Low Poly"))
+			{
+				GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER);
+				new_primitive->SetParent(this);
+			}
+
+			if (ImGui::Selectable("High Poly"))
+			{
+				GameObject* new_primitive = App->scene->CreatePrimitive(PRIMITIVE_CYLINDER_HI);
+				new_primitive->SetParent(this);
+			}
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenu();
 	}
 }
 

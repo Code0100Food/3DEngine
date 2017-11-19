@@ -13,7 +13,7 @@ ComponentTransform::ComponentTransform() : Component(COMP_TRANSFORMATION)
 {
 }
 
-ComponentTransform::ComponentTransform(const ComponentTransform & cpy) : Component(cpy), position(cpy.position), scale(cpy.scale), rotation_euler_angles(cpy.rotation_euler_angles), transform_matrix(cpy.transform_matrix)
+ComponentTransform::ComponentTransform(const ComponentTransform & cpy) : Component(cpy), position(cpy.position), scale(cpy.scale), rotation_euler_angles(cpy.rotation_euler_angles), transform_matrix(cpy.transform_matrix), inherited_transform(cpy.inherited_transform)
 {
 }
 

@@ -19,9 +19,9 @@ ComponentCamera::ComponentCamera() : Component(COMP_CAMERA)
 	
 }
 
-ComponentCamera::ComponentCamera(const ComponentCamera & cpy) : Component(cpy)
+ComponentCamera::ComponentCamera(const ComponentCamera & cpy) : Component(cpy), frustum(cpy.frustum)
 {
-
+	
 }
 
 // Destructors ==================================

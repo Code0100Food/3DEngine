@@ -79,6 +79,7 @@ public:
 	Component*		FindComponent(uint id)const;
 	ComponentMesh*	FindMeshComponent()const;
 	Component*		CloneComponent(const Component* target)const;
+	void			CloneGameObject();
 
 	//Childs Methods 
 	void							AddChild(const GameObject* child);
@@ -93,6 +94,12 @@ public:
 	void		BlitGameObjectHierarchy(uint index);
 	void		BlitGameObjectInspector();
 	void		HandleRightClickInput();
+
+	void		BlitRemove();
+	void		BlitClone();
+	void		BlitAddEmpty();
+	void		Blit3DObject();
+
 
 	//Bounding Box Methods
 	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);
