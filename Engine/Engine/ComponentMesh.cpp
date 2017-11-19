@@ -27,9 +27,13 @@ ComponentMesh::ComponentMesh() :Component(COMP_MESH)
 
 }
 
-ComponentMesh::ComponentMesh(const ComponentMesh & cpy) : Component(cpy), resource_mesh(cpy.resource_mesh), draw_material(cpy.draw_material)
+ComponentMesh::ComponentMesh(const ComponentMesh & cpy) : Component(cpy), draw_material(cpy.draw_material)
 {	
-
+	if (cpy.resource_mesh != nullptr)
+	{
+		resource_mesh = cpy.resource_mesh;
+		resource_mesh->AddReference();
+	}
 }
 
 // Destructors ==================================

@@ -32,14 +32,18 @@ GameObject::GameObject(const GameObject & cpy) :actived(cpy.actived), name(cpy.n
 	for (uint k = 0; k < size; k++)
 	{
 		components.push_back(CloneComponent(cpy.components[k]));
+		components[k]->SetParent(this);
 	}
 
 	//Clone all the childs
-	size = childs.size();
+	size = cpy.childs.size();
 	for (uint k = 0; k < size; k++)
 	{
-		childs.push_back(new GameObject(*cpy.childs[k]));
+		GameObject* clone = new GameObject(*cpy.childs[k]);
+		clone->SetParent(this);
 	}
+
+	AdjustBoundingBox();
 }
 
 // Destructors ==================================
@@ -398,9 +402,7 @@ Component * GameObject::CloneComponent(const Component * target) const
 
 void GameObject::CloneGameObject()
 {
-	GameObject lol = *this;
-
-	GameObject* new_gameobject = new GameObject(lol);
+	GameObject* new_gameobject = new GameObject(*this);
 	new_gameobject->parent->AddChild(new_gameobject);
 }
 

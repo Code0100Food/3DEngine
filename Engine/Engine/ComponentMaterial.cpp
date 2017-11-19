@@ -13,7 +13,12 @@ ComponentMaterial::ComponentMaterial() :Component(COMPONENT_TYPE::COMP_MATERIAL)
 
 ComponentMaterial::ComponentMaterial(const ComponentMaterial & cpy) : Component(cpy)
 {
-
+	uint size = cpy.textures.size();
+	for (uint k = 0; k < size; k++)
+	{
+		textures.push_back(cpy.textures[k]);
+		textures[k]->AddReference();
+	}
 }
 
 // Destructors ==================================
