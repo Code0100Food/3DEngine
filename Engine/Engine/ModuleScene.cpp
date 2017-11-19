@@ -79,7 +79,12 @@ bool ModuleScene::SceneUpdate(float dt)
 	//Update the scene game objects
 	float game_dt = App->time_manager->GetGameDT();
 	if (scene_update_state == SCENE_UPDATE_STATE::PAUSE_SCENE_STATE)game_dt = 0;
-	else if(scene_update_state != EDIT_SCENE_STATE)App->time_manager->AddGameTimeSinceStartup(game_dt);
+	if (scene_update_state == SCENE_UPDATE_STATE::NEXT_SCENE_STATE && !frame_passed)
+	{
+		scene_update_state = PAUSE_SCENE_STATE;
+		frame_passed = true;
+	}
+	if(scene_update_state != EDIT_SCENE_STATE)App->time_manager->AddGameTimeSinceStartup(game_dt);
 	ret = root_gameobject->Update(game_dt);
 
 	//Draw the octree
@@ -729,4 +734,5 @@ void ModuleScene::PauseGame()
 void ModuleScene::NextGameFrame()
 {
 	scene_update_state = NEXT_SCENE_STATE;
+	frame_passed = false;
 }

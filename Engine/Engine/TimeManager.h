@@ -39,6 +39,7 @@ public:
 
 	//Get Methods -----------
 	float GetGameTimeSinceStartup()const;
+	float GetGameTimeScale()const;
 	float GetGameDT();
 
 	//Set Methods -----------

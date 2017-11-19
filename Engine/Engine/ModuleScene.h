@@ -31,6 +31,7 @@ public:
 private:
 
 	SCENE_UPDATE_STATE		scene_update_state = EDIT_SCENE_STATE;
+	bool					frame_passed = false;
 
 	GameObject*					root_gameobject = nullptr;
 	GameObject*					selected_gameobject = nullptr;

@@ -18,6 +18,11 @@ float TimeManager::GetGameTimeSinceStartup() const
 	return game_time_since_startup;
 }
 
+float TimeManager::GetGameTimeScale() const
+{
+	return game_time_scale;
+}
+
 float TimeManager::GetGameDT()
 {
 	return game_dt = this->real_time_dt * game_time_scale;

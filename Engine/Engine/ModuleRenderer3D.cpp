@@ -15,6 +15,7 @@
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
 #include "ModuleInput.h"
+#include "TimeManager.h"
 
 #ifdef _DEBUG
 #pragma comment (lib, "Engine/imgui/lib/libgizmo.lib")
@@ -1128,14 +1129,13 @@ void ModuleRenderer3D::PrintPlayPauseButton() const
 				App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->active = true;
 				App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active = false;
 			}
-		
 		}
 
 		App->scene->PlayGame();
 	}
 	
 	ImGui::SameLine((ImGui::GetWindowContentRegionWidth() / 2) + 35);
-	if (ImGui::ImageButton((ImTextureID)App->textures->next_icon_id, ImVec2(15, 15)))
+	if (ImGui::ImageButton((ImTextureID)App->textures->next_icon_id, ImVec2(15, 15)) && App->scene->GetSceneState() == SCENE_UPDATE_STATE::PAUSE_SCENE_STATE)
 	{
 		App->scene->NextGameFrame();
 	}
@@ -1146,5 +1146,17 @@ void ModuleRenderer3D::PrintPlayPauseButton() const
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Debug Mode Active");
 	}
 	
+	if (App->scene->GetSceneState() != SCENE_UPDATE_STATE::EDIT_SCENE_STATE)
+	{
+		ImGui::SameLine();
+		float scale = App->time_manager->GetGameTimeScale();
+		ImGui::PushItemWidth(50);
+		if (ImGui::DragFloat("Time Scale", &scale, 0.005f, 0.00, 2.00f, "%.2f"))
+		{
+			App->time_manager->SetGameTimeScale(scale);
+		}
+		ImGui::SameLine();
+		ImGui::Text("%f", App->time_manager->GetGameTimeSinceStartup());
+	}
 
 }
