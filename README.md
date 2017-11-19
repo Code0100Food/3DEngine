@@ -68,14 +68,14 @@ You can acceed to all the UI elements using the top bar menu that have five sub 
 		- Report a bug: Links to the issues page of the github repository.
 		- About: Show basic information about the engine (Libraries, license, authors,...)
 
-Camera movement:
+### Camera movement:
 - Right click turns on “WASD” fps-like movement
 - Mouse wheel zoom in and out
 - Mouse wheel pressed moves camera up, down, left and right
 - Alt+Left click orbit the object
 - Pressing “f” focus the camera around the geometry
 
-Console:
+### Console:
 
 Console is initially closed.
 
@@ -84,38 +84,50 @@ Console shows information of the engine operations and can handle some basic inp
 
 To see all the console commands, you can open the console header in the configuration window or enter “help” in the console
 
-Resources Manager:
+### Resources Manager:
 
-Resources manager generate all the necessary files and folders to manage the user files. You can drop the file or place it inside the assets folder to import it.
+Resources manager generate all the necessary files and folders to manage the user files. When a file is imported the appropriated files are generated:
 
-Launcher:
+- Material: .meta & .dds
+- Mesh: .meta & .fiesta
+- Scene: .meta & .scn 
+
+To import a file drop it to the engine window or place it on assets before the start of the engine.
+
+If a file is removed from assets the imported resources aren’t deleted from the library so you can already use it in the engine.
+
+When you edit a file the resource manager updates the related resources and modify them.
+
+If a resource is not used in the scene it’s released from the memory till some gameobject use it.
+
+### Launcher:
 
 When openning the Engine, before the main loop, the launcher will be executed and will read the file updates.json from Github.
 If your update is different from the online update file, a Download button will appear and will send you to the Project Latest Release.
 If you click start the application will run with the current version.
 
-Gizmos
+### Gizmos
 
 When you click an object the gizmo will appear. To change between gizmos press Q,W,E,R 
 If you are focus in an object [pressing f], the gizmo works perfectly but if the object is far away from the center
 it will have a little gap between the gizmo and the mouse position.
 The Global/Local buttons on top of the screen will modify how the gizmo afects to the game object
 
-Hierarchy Window
+### Hierarchy Window
 
 When Right click in the hierarchy window or a GameObject, a menu will appear and will show some options.
 
-Scene
+### Scene
 
 We have placed two cameras in the scene. If you go to the inspector and select Main Camera in the Camera Component
 this will be the Camera that displays the Game view. You can also separate the Scene and Game view and move the 
 cameras to see the results in real time.
 
-Camera
+### Camera
 
 To modify Camera FOV or other settings go to "View" -> "Configuration" -> "Camera"
 
-Debug mode
+### Debug mode
 
 When Pressing F1 debug mode is active and you will see the mouse picking ray and the editor camera frustrum in the Game View
 
