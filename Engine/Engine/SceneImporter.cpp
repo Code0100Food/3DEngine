@@ -92,7 +92,7 @@ bool SceneImporter::ReImport(const char* path)
 	std::list<Resource*>::const_iterator reimp_item = reimport_targets.begin();
 	while (reimp_item != reimport_targets.end())
 	{
-		if(reimp_item._Ptr->_Myval->GetReferences() > 0)reimp_item._Ptr->_Myval->UnloadInMemory();
+		reimp_item._Ptr->_Myval->UnloadInMemory();
 		reimp_item++;
 	}
 
@@ -156,15 +156,19 @@ bool SceneImporter::ReImport(const char* path)
 
 	scene_res->Save();
 
+	bool scene_modified = false;
 	reimp_item = reimport_targets.begin();
 	while (reimp_item != reimport_targets.end())
 	{
 		if (reimp_item._Ptr->_Myval->GetReferences() > 0)
 		{
 			reimp_item._Ptr->_Myval->LoadInMemory();
+			scene_modified = true;
 		}
 		reimp_item++;
 	}
+
+	App->scene->GetRoot()->AdjustBoundingBox();
 
 	loaded_meshes.clear();
 	loaded_materials.clear();
