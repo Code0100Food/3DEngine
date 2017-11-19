@@ -88,6 +88,39 @@ Resources Manager:
 
 Resources manager generate all the necessary files and folders to manage the user files. You can drop the file or place it inside the assets folder to import it.
 
+Launcher:
+
+When openning the Engine, before the main loop, the launcher will be executed and will read the file updates.json from Github.
+If your update is different from the online update file, a Download button will appear and will send you to the Project Latest Release.
+If you click start the application will run with the current version.
+
+Gizmos
+
+When you click an object the gizmo will appear. To change between gizmos press Q,W,E,R 
+If you are focus in an object [pressing f], the gizmo works perfectly but if the object is far away from the center
+it will have a little gap between the gizmo and the mouse position.
+The Global/Local buttons on top of the screen will modify how the gizmo afects to the game object
+
+Hierarchy Window
+
+When Right click in the hierarchy window or a GameObject, a menu will appear and will show some options.
+
+Scene
+
+We have placed two cameras in the scene. If you go to the inspector and select Main Camera in the Camera Component
+this will be the Camera that displays the Game view. You can also separate the Scene and Game view and move the 
+cameras to see the results in real time.
+
+Camera
+
+To modify Camera FOV or other settings go to "View" -> "Configuration" -> "Camera"
+
+Debug mode
+
+When Pressing F1 debug mode is active and you will see the mouse picking ray and the editor camera frustrum in the Game View
+
+
+
 # Changelog
 	 -Release 0.3:
 		Resources Reimporation
@@ -96,6 +129,8 @@ Resources manager generate all the necessary files and folders to manage the use
 		Play/Pause/Next UI output
 		Gizmos working(alpha version)
 		Debug mode with F1
+		Huge Bug Fixing
+		
 
 	 -Release 0.2.7:
 		Scene Save/Load with resources
@@ -197,3 +232,7 @@ Resources manager generate all the necessary files and folders to manage the use
 # Owners
 Eric Solà
 Ferran Martín
+
+Github Repository: 	https://github.com/Code0100Food/3DEngine
+Assigment 2 Release:	https://github.com/Code0100Food/3DEngine/releases/tag/Assignment2	
+
