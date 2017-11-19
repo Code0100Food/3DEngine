@@ -190,8 +190,9 @@ void ComponentTransform::UpdateTransform()
 {
 	rotation_quaternion = math::Quat::FromEulerXYZ(rotation_euler_angles.x * DEGTORAD, rotation_euler_angles.y  * DEGTORAD, rotation_euler_angles.z  * DEGTORAD);
 
-	transform_matrix = math::float4x4::FromQuat(rotation_quaternion);
-	transform_matrix = math::float4x4::Scale(scale, math::float3(0, 0, 0)) * transform_matrix;
+	transform_matrix = math::float4x4::Scale(scale, math::float3(0, 0, 0));
+	transform_matrix = math::float4x4::FromQuat(rotation_quaternion)  * transform_matrix;
+	
 	transform_matrix.SetTranslatePart(position.x, position.y, position.z);
 	//If its parent is scene update inherited matrix
 
