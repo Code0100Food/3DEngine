@@ -432,17 +432,27 @@ void ResourcesManager::BlitConfigInfo()
 
 Resource * ResourcesManager::BlitResourceButtonsByType(RESOURCE_TYPE type)
 {
+	bool blit = false;
+	Resource* selected_res = nullptr;
+
 	for (map<uint, Resource*>::const_iterator res = resources.begin(); res != resources.end(); res++)
 	{
 		if (res->second->GetResourceType() != type)continue;
 
-		if (ImGui::Button(res->second->GetOwnFile()))
+		App->fs->GetUnformatedFileNameFromPath(res->second->GetOwnFile(), &usable_string_a);
+		if (ImGui::Selectable(usable_string_a.c_str()))
 		{
-			return (ResourceMesh*)res->second;
+			selected_res = (ResourceMesh*)res->second;
+			blit = true;
+			break;
 		}
+		blit = true;
+		
 	}
+	
+	ImGui::TreePop();
 
-	return nullptr;
+	return selected_res;
 }
 
 void ResourcesManager::BlitPrefabsMenu(GameObject* target)
