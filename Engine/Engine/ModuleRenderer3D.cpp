@@ -1122,7 +1122,7 @@ void ModuleRenderer3D::PrintPlayPauseButton() const
 				App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active = true;
 			}	
 		}
-		if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::PLAY_SCENE_STATE)
+		if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::PLAY_SCENE_STATE || App->scene->GetSceneState() == SCENE_UPDATE_STATE::PAUSE_SCENE_STATE)
 		{
 			if (App->imgui->GetWorkspace()->GetDockbyLabel("Scene##texture")->active == false)
 			{

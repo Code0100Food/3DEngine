@@ -696,7 +696,7 @@ void ModuleScene::CleanScene()
 
 void ModuleScene::PlayGame()
 {
-	if (scene_update_state == PLAY_SCENE_STATE)
+	if (scene_update_state == PLAY_SCENE_STATE || scene_update_state == PAUSE_SCENE_STATE)
 	{
 		scene_update_state = EDIT_SCENE_STATE;
 		App->scene->CleanScene();
@@ -705,7 +705,9 @@ void ModuleScene::PlayGame()
 		App->scene->LoadSerializedScene(str);
 		LOG("Game Ended!");
 		App->time_manager->SetGameTimeSinceStartup(0.0f);
+
 		App->textures->play_icon_id = App->textures->play_icon;
+		App->textures->pause_icon_id = App->textures->pause_icon;
 
 		ImGuiStyle* style = &ImGui::GetStyle();
 		style->Colors[ImGuiCol_ChildWindowBg].x += 0.06f;
