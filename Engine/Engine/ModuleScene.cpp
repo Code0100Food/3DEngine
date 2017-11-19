@@ -368,27 +368,33 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 	{
 		if (target->FindMeshComponent() == nullptr)
 		{
-			ImGui::Separator();
+			bool opened = ImGui::TreeNodeEx("Meshes", ImGuiTreeNodeFlags_OpenOnDoubleClick);
+			
+			if (opened)
+			{
+				ResourceMesh* n_mesh_resource = (ResourceMesh*)App->res_manager->BlitResourceButtonsByType(RESOURCE_TYPE::MESH_RESOURCE);
+				if (n_mesh_resource != nullptr)
+				{
+					//Create the cylinder mesh
+					ComponentMesh* n_mesh_component = (ComponentMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_MESH);
+					n_mesh_component->SetResourceMesh(n_mesh_resource);
+					target->AdjustBoundingBox();
 
-			ResourceMesh* n_mesh_resource = (ResourceMesh*)App->res_manager->BlitResourceButtonsByType(RESOURCE_TYPE::MESH_RESOURCE);
-			if (n_mesh_resource != nullptr)
-			{		
-				//Create the cylinder mesh
-				ComponentMesh* n_mesh_component = (ComponentMesh*)target->CreateComponent(COMPONENT_TYPE::COMP_MESH);
-				n_mesh_component->SetResourceMesh(n_mesh_resource);
-				target->AdjustBoundingBox();
+					ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
+					if (rend != nullptr)rend->SetTargetMesh(n_mesh_component);
 
-				ComponentMeshRenderer* rend = (ComponentMeshRenderer*)target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER);
-				if (rend != nullptr)rend->SetTargetMesh(n_mesh_component);
+					ComponentMaterial* mat = (ComponentMaterial*)target->FindComponent(COMPONENT_TYPE::COMP_MATERIAL);
+					if (mat != nullptr)n_mesh_component->SetDrawMaterial(mat);
 
-				show_components_window = false;
+					show_components_window = false;
+				}
 			}
 		}
 		if (target->FindComponent(COMPONENT_TYPE::COMP_MESH_RENDERER) == nullptr)
 		{
-			ImGui::Separator();
-
-			if (ImGui::Button("Mesh Renderer"))
+			bool selected = ImGui::Selectable("Mesh Renderer");
+			
+			if (selected)
 			{
 				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 
@@ -408,28 +414,31 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 		}
 		if (target->FindComponent(COMPONENT_TYPE::COMP_MATERIAL) == nullptr)
 		{
-			ImGui::Separator();
+			bool opened = ImGui::TreeNodeEx("Materials", ImGuiTreeNodeFlags_OpenOnDoubleClick);
 
-			ResourceMaterial* n_mat_resource = (ResourceMaterial*)App->res_manager->BlitResourceButtonsByType(RESOURCE_TYPE::MATERIAL_RESOURCE);
-			if (n_mat_resource != nullptr)
+			if (opened)
 			{
-				//Create the cylinder mesh
-				ComponentMaterial* n_material_component = (ComponentMaterial*)target->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
-				n_material_component->AddTexture(n_mat_resource);
-				target->AdjustBoundingBox();
+				ResourceMaterial* n_mat_resource = (ResourceMaterial*)App->res_manager->BlitResourceButtonsByType(RESOURCE_TYPE::MATERIAL_RESOURCE);
+				if (n_mat_resource != nullptr)
+				{
+					//Create the cylinder mesh
+					ComponentMaterial* n_material_component = (ComponentMaterial*)target->CreateComponent(COMPONENT_TYPE::COMP_MATERIAL);
+					n_material_component->AddTexture(n_mat_resource);
+					target->AdjustBoundingBox();
 
-				ComponentMesh* mesh = (ComponentMesh*)target->FindMeshComponent();
-				if (mesh != nullptr)mesh->SetDrawMaterial(n_material_component);
+					ComponentMesh* mesh = (ComponentMesh*)target->FindMeshComponent();
+					if (mesh != nullptr)mesh->SetDrawMaterial(n_material_component);
 
-				show_components_window = false;
+					show_components_window = false;
+				}
 			}
 		}
 
 		if (target->FindComponent(COMPONENT_TYPE::COMP_CAMERA) == nullptr)
 		{
-			ImGui::Separator();
+			bool selected = ImGui::Selectable("Camera");
 
-			if (ImGui::Button("Camera"))
+			if (selected)
 			{
 				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
 
