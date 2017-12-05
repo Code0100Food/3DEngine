@@ -441,13 +441,13 @@
     <ClInclude Include="Engine\SceneImporter.h">
       <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\TextEditor.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ScriptManager.h">
       <Filter>Sources\Modules\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ModuleScripting.h">
+      <Filter>Sources\Modules\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\TextEditor.h">
       <Filter>Sources\Modules\Scripting</Filter>
     </ClInclude>
   </ItemGroup>
@@ -725,13 +725,15 @@
     <ClCompile Include="Engine\SceneImporter.cpp">
       <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\TextEditor.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ScriptManager.cpp">
       <Filter>Sources\Modules\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ModuleScripting.cpp" />
+    <ClCompile Include="Engine\ModuleScripting.cpp">
+      <Filter>Sources\Modules\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\TextEditor.cpp">
+      <Filter>Sources\Modules\Scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">
