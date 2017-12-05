@@ -23,6 +23,7 @@
 #include "imgui/imgui_impl_sdl.h"
 #include "mmgr/mmgr.h"
 #include "imgui/imgui_dock.h"
+#include "ModuleScripting.h"
 
 // Constructors =================================
 Application::Application()
@@ -92,6 +93,10 @@ Application::Application()
 	profiler->CallProfBlock(M_RES_MANAGER, BUILD_STEP, prof_timer.ReadTicks());
 
 	START(m_prof_timer);
+	scripting = new ModuleScripting("Scripting", M_SCRIPTING, true);
+	profiler->CallProfBlock(M_SCRIPTING, BUILD_STEP, prof_timer.ReadTicks());
+
+	START(m_prof_timer);
 	scene = new ModuleScene("Scene", M_SCENE, true);
 	profiler->CallProfBlock(M_SCENE, BUILD_STEP, prof_timer.ReadTicks());
 
@@ -111,6 +116,7 @@ Application::Application()
 	AddModule(textures);
 	AddModule(geometry);
 	AddModule(res_manager);
+	AddModule(scripting);
 
 	// Scenes
 	AddModule(scene);

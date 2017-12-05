@@ -180,6 +180,7 @@
     <ClInclude Include="Engine\MeshImporter.h" />
     <ClInclude Include="Engine\mmgr\mmgr.h" />
     <ClInclude Include="Engine\mmgr\nommgr.h" />
+    <ClInclude Include="Engine\ModuleScripting.h" />
     <ClInclude Include="Engine\SceneImporter.h" />
     <ClInclude Include="Engine\Module.h" />
     <ClInclude Include="Engine\ModuleAudio.h" />
@@ -204,10 +205,12 @@
     <ClInclude Include="Engine\ResourceMaterial.h" />
     <ClInclude Include="Engine\ResourceMesh.h" />
     <ClInclude Include="Engine\ResourcesManager.h" />
+    <ClInclude Include="Engine\ScriptManager.h" />
     <ClInclude Include="Engine\Serializer.h" />
     <ClInclude Include="Engine\SphereGenerator.h" />
     <ClInclude Include="Engine\stb\stb.h" />
     <ClInclude Include="Engine\stb\stb_image.h" />
+    <ClInclude Include="Engine\TextEditor.h" />
     <ClInclude Include="Engine\TimeManager.h" />
     <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\Primitive_.h" />
@@ -279,6 +282,7 @@
     <ClCompile Include="Engine\MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="Engine\MeshImporter.cpp" />
     <ClCompile Include="Engine\mmgr\mmgr.cpp" />
+    <ClCompile Include="Engine\ModuleScripting.cpp" />
     <ClCompile Include="Engine\SceneImporter.cpp" />
     <ClCompile Include="Engine\ModuleAudio.cpp" />
     <ClCompile Include="Engine\ModuleCamera3D.cpp" />
@@ -299,8 +303,10 @@
     <ClCompile Include="Engine\ResourceMaterial.cpp" />
     <ClCompile Include="Engine\ResourceMesh.cpp" />
     <ClCompile Include="Engine\ResourcesManager.cpp" />
+    <ClCompile Include="Engine\ScriptManager.cpp" />
     <ClCompile Include="Engine\Serializer.cpp" />
     <ClCompile Include="Engine\SphereGenerator.cpp" />
+    <ClCompile Include="Engine\TextEditor.cpp" />
     <ClCompile Include="Engine\TimeManager.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\Primitive_.cpp" />
