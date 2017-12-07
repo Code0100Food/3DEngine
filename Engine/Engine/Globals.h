@@ -35,6 +35,7 @@ void log(const char file[], int line, const char* format, ...);
 
 #define LIBRARY_TEXTURES_FOLDER "Library\\Materials\\"
 #define LIBRARY_MESH_FOLDER "Library\\Meshes\\"
+#define LIBRARY_SCRIPTS_FOLDER "Library\\Scripts\\"
 #define LIBRARY_META_FOLDER "Library\\Metas\\"
 #define LIBRARY_SCENE_FOLDER "Library\\Scenes\\"
 #define LIBRARY_FOLDER "Library\\"

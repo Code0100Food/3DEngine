@@ -8,6 +8,7 @@
 #include "Resource.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
+#include "ResourceScript.h"
 
 #include"Timer.h"
 #include <experimental/filesystem>

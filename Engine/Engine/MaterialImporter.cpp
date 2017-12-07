@@ -241,12 +241,12 @@ uint MaterialImporter::Import(const char* path)
 				// Save with the ilSaveIL function
 				if (ilSaveL(IL_DDS, data, size) > 0) 
 				{
-					std::string name;
-					App->fs->GetFileNameFromPath(path, &name);
-					App->fs->ChangeFileFormat(name.c_str(), "dds", &name);
-					resource->SetOwnFile(name.c_str());
+					App->fs->GetFileNameFromPath(path, &usable_str);
+					App->fs->ChangeFileFormat(usable_str.c_str(), "dds", &usable_str);
+					resource->SetOwnFile(usable_str.c_str());
 					resource->SetOriginalFile(path);
-					App->fs->SaveFile(name.c_str(), (char*)data, size, LIBRARY_TEXTURES_FOLDER);
+					App->fs->SaveFile(usable_str.c_str(), (char*)data, size, LIBRARY_TEXTURES_FOLDER);
+					usable_str.clear();
 				}
 
 				RELEASE_ARRAY(data);
@@ -261,7 +261,6 @@ uint MaterialImporter::Import(const char* path)
 	else
 	{
 		LOG("Cannot load texture from path: %s", path);
-		return ret;
 	}
 
 	return ret;

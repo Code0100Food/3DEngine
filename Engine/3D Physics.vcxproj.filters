@@ -450,6 +450,12 @@
     <ClInclude Include="Engine\TextEditor.h">
       <Filter>Sources\Modules\Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ScriptImporter.h">
+      <Filter>Sources\Importers &amp; Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceScript.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -733,6 +739,12 @@
     </ClCompile>
     <ClCompile Include="Engine\TextEditor.cpp">
       <Filter>Sources\Modules\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ScriptImporter.cpp">
+      <Filter>Sources\Importers &amp; Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceScript.cpp">
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

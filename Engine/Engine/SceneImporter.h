@@ -44,6 +44,7 @@ private:
 
 	mutable aiMatrix4x4 inherited_trans;
 	mutable aiString	material_str;
+
 public:
 
 	uint Import(const char* path);

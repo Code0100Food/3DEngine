@@ -188,6 +188,7 @@ RESOURCE_TYPE StrToResourceType(const char * str)
 	if (strcmp(str, "mesh_resource") == 0)		return MESH_RESOURCE;
 	if (strcmp(str, "material_resource") == 0)	return MATERIAL_RESOURCE;
 	if (strcmp(str, "scene_resource") == 0)		return SCENE_RESOURCE;
+	if (strcmp(str, "script_resource") == 0)	return SCRIPT_RESOURCE;
 	return RESOURCE_TYPE::UNDEF_RESOURCE;
 }
 
@@ -198,6 +199,7 @@ const char * ResourceTypeToStr(RESOURCE_TYPE type)
 	case MESH_RESOURCE:		return "mesh_resource";
 	case MATERIAL_RESOURCE:	return "material_resource";
 	case SCENE_RESOURCE:	return "scene_resource";
+	case SCRIPT_RESOURCE:	return "script_resource";
 	}
 	return "undef_resource";
 }

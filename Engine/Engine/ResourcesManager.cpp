@@ -197,6 +197,7 @@ Resource * ResourcesManager::CreateResource(RESOURCE_TYPE type, uint id)
 	case MESH_RESOURCE:			new_res = (Resource*)new ResourceMesh();				break;
 	case MATERIAL_RESOURCE:		new_res = (Resource*)new ResourceMaterial();			break;
 	case SCENE_RESOURCE:		new_res = new Resource(RESOURCE_TYPE::SCENE_RESOURCE);	break;
+	case SCRIPT_RESOURCE:		new_res = (Resource*)new ResourceScript();				break;
 	}
 	
 	//Add it to the map
@@ -389,12 +390,13 @@ void ResourcesManager::UpdateMetaFiles()
 
 			//Modification time
 			path = res->second->GetOriginalFile();
-			if (App->fs->ExistInAssets(res->second->GetOriginalFile()))
+			App->fs->GetFileNameFromPath(res->second->GetOriginalFile() , &usable_string_a);
+			if (App->fs->ExistInAssets(usable_string_a.c_str()))
 			{
 				real_last_time = std::experimental::filesystem::last_write_time(path);
 				last_time = decltype(real_last_time)::clock::to_time_t(real_last_time);
 
-				if (last_time != last_ed_time)
+				if (last_time != res->second->GetLastEditionTime())
 				{
 					res->second->SetLastEditionTime(last_time);
 					/*Here re import the resource*/

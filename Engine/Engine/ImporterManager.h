@@ -7,6 +7,7 @@
 #include "MeshImporter.h"
 #include "MaterialImporter.h"
 #include "SceneImporter.h"
+#include "ScriptImporter.h"
 
 class Resource;
 
@@ -26,6 +27,7 @@ public:
 	MeshImporter		mesh_importer;
 	MaterialImporter	material_importer;
 	SceneImporter		scene_importer;
+	ScriptImporter		script_importer;
 
 public:
 

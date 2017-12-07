@@ -347,8 +347,9 @@ bool FileSystem::Start()
 	CreateDir("Meshes", true, engine_root_dir);
 	CreateDir("Materials", true, engine_root_dir);
 	CreateDir("Scenes", true, engine_root_dir);
+	CreateDir("Scripts", true, engine_root_dir);
 	metas_dir = CreateDir("Metas", true, engine_root_dir);
-
+	
 	file_system_dock = new DockContext();
 
 	return true;

@@ -37,6 +37,13 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 	case SCENE_IMPORT:
 		res = App->res_manager->Find(path, RESOURCE_TYPE::SCENE_RESOURCE);
 		break;
+	case SCRIPT_IMPORT:
+		res = App->res_manager->Find(path, RESOURCE_TYPE::SCRIPT_RESOURCE);
+		if (res != nullptr)
+		{
+			script_importer.ReImport((ResourceScript*)res);
+		}
+		break;
 	}
 	//Already imported resource case
 	uint res_id = 0;
@@ -66,6 +73,10 @@ bool ImporterManager::ImportFile(const char * path, bool place_on_scene)
 			break;
 		case SCENE_IMPORT:
 			res_id = scene_importer.Import(n_path.c_str());
+			b_ret = res_id != 0;
+			break;
+		case SCRIPT_IMPORT:
+			res_id = script_importer.Import(n_path.c_str());
 			b_ret = res_id != 0;
 			break;
 		}
@@ -128,6 +139,9 @@ bool ImporterManager::ReImportResource(Resource * target)
 	case MATERIAL_RESOURCE:
 		ret = material_importer.ReImport((ResourceMaterial*)target);
 		break;
+	case SCRIPT_RESOURCE:
+		ret = script_importer.ReImport((ResourceScript*)target);
+		break;
 	}
 
 	return ret;
@@ -147,5 +161,6 @@ IMPORT_TYPE ImporterManager::GetImportTypeFromFormat(const char * str) const
 	if (strcmp(str, "tga") == 0)return MATERIAL_IMPORT;
 	if (strcmp(str, "TGA") == 0)return MATERIAL_IMPORT;
 	if (strcmp(str, "fiesta") == 0)return MESH_IMPORT;
+	if (strcmp(str, "txt") == 0)return SCRIPT_IMPORT;
 	return UNDEF_IMPORT;
 }
