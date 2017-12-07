@@ -4,6 +4,7 @@
 #include "ScriptManager.h"
 #include "TextEditor.h"
 #include "ModuleInput.h"
+#include "ResourceScript.h"
 
 ModuleScripting::ModuleScripting(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
@@ -23,6 +24,12 @@ update_status ModuleScripting::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_STATE::KEY_DOWN)
 	{
 		show_text_editor = !show_text_editor;
+		if (!show_text_editor)
+		{
+			text_editor->SetSelection({ 0,0 }, { 999,999 });
+			text_editor->Delete();
+			focused_script_resource = nullptr;
+		}
 	}
 
 	if (show_text_editor)
@@ -70,4 +77,29 @@ update_status ModuleScripting::Update(float dt)
 	}
 	
 	return update_status::UPDATE_CONTINUE;
+}
+
+void ModuleScripting::SetFocusedScriptResource(const ResourceScript * res)
+{
+	focused_script_resource = (ResourceScript*)res;
+}
+
+ResourceScript * ModuleScripting::GetFocusedScriptResource() const
+{
+	return focused_script_resource;
+}
+
+void ModuleScripting::PlaceFocusedScriptOnEditor()
+{
+	if (focused_script_resource == nullptr)return;
+
+	//Open the scripting console
+	if (!show_text_editor)show_text_editor = true;
+	
+	//Delete the current text
+	text_editor->SetSelection({ 0,0 }, { 999,999 });
+	text_editor->Delete();
+	
+	//Insert the script text
+	text_editor->InsertText(focused_script_resource->GetBuffer());
 }
