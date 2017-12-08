@@ -20,6 +20,7 @@ public:
 
 	uint Import(const char* path);
 	bool ReImport(ResourceScript* to_reload);
+	bool NewImport(ResourceScript* to_import);
 
 };
 #endif // !_SCRIPT_IMPORTER_H_

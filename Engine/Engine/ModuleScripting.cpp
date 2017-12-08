@@ -5,6 +5,7 @@
 #include "TextEditor.h"
 #include "ModuleInput.h"
 #include "ResourceScript.h"
+#include "ImporterManager.h"
 
 ModuleScripting::ModuleScripting(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
@@ -36,6 +37,24 @@ update_status ModuleScripting::Update(float dt)
 	{
 		//Blit text editor
 		ImGui::Begin("Script Console");
+		if (ImGui::Button("Load Last"))
+		{
+			PlaceFocusedScriptOnEditor();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Save"))
+		{
+			if (focused_script_resource != nullptr)
+			{
+				usable_str = text_editor->GetText();
+				uint size = strlen(usable_str.c_str());
+				char* real_str = new char[size + 1];
+				memcpy(real_str, usable_str.c_str(), size);
+				real_str[size] = '\0';
+				focused_script_resource->SetBuffer(real_str);
+				App->importer->script_importer.NewImport(focused_script_resource);
+			}
+		}
 		text_editor->Render("Script Console", ImVec2(600, 400));
 		ImGui::End();
 

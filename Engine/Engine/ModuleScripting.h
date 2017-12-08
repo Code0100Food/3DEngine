@@ -20,12 +20,14 @@ public:
 
 private:
 
-	ScriptManager*	script_manager = nullptr;
+	ScriptManager*			script_manager = nullptr;
 	
-	ResourceScript* focused_script_resource = nullptr;
+	ResourceScript*			focused_script_resource = nullptr;
 
-	TextEditor*		text_editor = nullptr;
-	bool			show_text_editor = false;
+	TextEditor*				text_editor = nullptr;
+	bool					show_text_editor = false;
+
+	mutable std::string		usable_str;
 
 public:
 

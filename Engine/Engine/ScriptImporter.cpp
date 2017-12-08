@@ -5,6 +5,7 @@
 #include "ResourcesManager.h"
 
 #include "Globals.h"
+#include <string.h>
 
 ScriptImporter::ScriptImporter()
 {
@@ -29,9 +30,15 @@ uint ScriptImporter::Import(const char * path)
 		resource->SetOwnFile(usable_str.c_str());
 		resource->SetOriginalFile(path);
 		App->fs->SaveFile(usable_str.c_str(), (char*)buffer, lenght, LIBRARY_SCRIPTS_FOLDER);
-		resource->SetBuffer(buffer);
 		usable_str.clear();
 
+		char* real_str = new char[lenght + 1];
+		memcpy(real_str, buffer, lenght);
+		real_str[lenght] = '\0';
+		RELEASE_ARRAY(buffer);
+
+		resource->SetBuffer(real_str);
+		
 		//Generate a meta file to link the generated resource with the file data
 		resource->Save();
 	}
@@ -53,12 +60,29 @@ bool ScriptImporter::ReImport(ResourceScript * to_reload)
 
 	if (buffer && lenght)
 	{
-		to_reload->SetBuffer(buffer);
+		char* real_str = new char[lenght + 1];
+		memcpy(real_str, buffer, lenght);
+		real_str[lenght] = '\0';
+		RELEASE(buffer);
 
+		to_reload->SetBuffer(real_str);
+		
 		to_reload->Save();
 
 		ret = true;
 	}
 
 	return ret;
+}
+
+bool ScriptImporter::NewImport(ResourceScript * to_import)
+{
+	char* buffer = to_import->GetBuffer();
+
+	if (buffer == nullptr)return false;
+	uint size = strlen(buffer);
+	App->fs->SaveFile(to_import->GetOwnFile(), buffer, size, LIBRARY_SCRIPTS_FOLDER);
+	App->fs->SaveFile("", buffer, size,to_import->GetOriginalFile());
+
+	return true;
 }

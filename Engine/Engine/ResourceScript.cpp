@@ -16,7 +16,7 @@ ResourceScript::~ResourceScript()
 
 void ResourceScript::SetBuffer(const char * bf)
 {
-	if (buffer != nullptr)RELEASE(buffer);
+	if (buffer != nullptr)RELEASE_ARRAY(buffer);
 	buffer = (char*)bf;
 }
 
