@@ -456,6 +456,9 @@
     <ClInclude Include="Engine\ResourceScript.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ComponentScript.h">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Color.cpp">
@@ -746,6 +749,7 @@
     <ClCompile Include="Engine\ResourceScript.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ComponentScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

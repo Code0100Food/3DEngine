@@ -84,5 +84,7 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 	App->fs->SaveFile(to_import->GetOwnFile(), buffer, size, LIBRARY_SCRIPTS_FOLDER);
 	App->fs->SaveFile("", buffer, size,to_import->GetOriginalFile());
 
+	to_import->Save();
+
 	return true;
 }

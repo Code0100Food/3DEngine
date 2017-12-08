@@ -11,6 +11,7 @@
 #include "TimeManager.h"
 #include "ModuleAudio.h"
 #include "ResourcesManager.h"
+#include "ModuleScripting.h"
 
 
 // Constructors =================================
@@ -446,6 +447,29 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 				target->CreateComponent(COMPONENT_TYPE::COMP_CAMERA);
 				show_components_window = false;
 			}
+		}
+
+		bool opened = ImGui::TreeNodeEx("Scripts", ImGuiTreeNodeFlags_OpenOnDoubleClick);
+
+		if (opened)
+		{
+			if (ImGui::Selectable("New Script"))
+			{
+				App->scripting->EnableScripCreationWindow(target);
+				show_components_window = false;
+			}
+
+			ResourceScript* n_script_resource = (ResourceScript*)App->res_manager->BlitResourceButtonsByType(RESOURCE_TYPE::SCRIPT_RESOURCE);
+			if (n_script_resource != nullptr)
+			{
+				App->audio->PlayFxForInput(FX_ID::CHECKBOX_FX);
+
+				ComponentScript* scr_cmp = (ComponentScript*)target->CreateComponent(COMPONENT_TYPE::COMP_SCRIPT);
+				scr_cmp->SetResourceScript(n_script_resource);
+
+				show_components_window = false;
+			}
+
 		}
 	}
 }

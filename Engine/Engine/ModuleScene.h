@@ -37,11 +37,11 @@ private:
 	GameObject*					selected_gameobject = nullptr;
 	std::vector<GameObject*>	objects_to_delete;
 
-	uint					play_tex_id = 0, stop_tex_id = 0, next_tex_id = 0;
-	bool					hierarchy_win_state = true;
-	bool					inspector_state = true;
-	bool					show_components_window = false;
-	bool					show_gameobject_hierarchy_window = false;
+	uint						play_tex_id = 0, stop_tex_id = 0, next_tex_id = 0;
+	bool						hierarchy_win_state = true;
+	bool						inspector_state = true;
+	bool						show_components_window = false;
+	bool						show_gameobject_hierarchy_window = false;
 
 	Octree<GameObject*>			octree;
 	std::vector<GameObject*>	static_objects;

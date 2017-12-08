@@ -13,6 +13,7 @@
 #include "ComponentMeshRenderer.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "ComponentScript.h"
 
 class Serializer;
 class ResourceMaterial;

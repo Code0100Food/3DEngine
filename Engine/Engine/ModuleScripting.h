@@ -6,6 +6,7 @@
 class ScriptManager;
 class TextEditor;
 class ResourceScript;
+class GameObject;
 
 class ModuleScripting : public Module
 {
@@ -23,10 +24,14 @@ private:
 	ScriptManager*			script_manager = nullptr;
 	
 	ResourceScript*			focused_script_resource = nullptr;
+	GameObject*				focused_gameobject = nullptr;
 
 	TextEditor*				text_editor = nullptr;
 	bool					show_text_editor = false;
 
+	bool					show_script_creation_win = false;
+	char					name_buffer[200];
+	
 	mutable std::string		usable_str;
 
 public:
@@ -39,6 +44,7 @@ public:
 
 	//Functionality ---------
 	void PlaceFocusedScriptOnEditor();
+	void EnableScripCreationWindow(const GameObject* target = nullptr);
 
 };
 #endif // !_MODULE_SCRIPTING_

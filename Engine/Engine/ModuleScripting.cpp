@@ -6,6 +6,9 @@
 #include "ModuleInput.h"
 #include "ResourceScript.h"
 #include "ImporterManager.h"
+#include "ResourcesManager.h"
+#include "FileSystem.h"
+#include "GameObject.h"
 
 ModuleScripting::ModuleScripting(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
@@ -36,7 +39,7 @@ update_status ModuleScripting::Update(float dt)
 	if (show_text_editor)
 	{
 		//Blit text editor
-		ImGui::Begin("Script Console");
+		ImGui::Begin("Script Console", &show_text_editor);
 		if (ImGui::Button("Load Last"))
 		{
 			PlaceFocusedScriptOnEditor();
@@ -55,6 +58,12 @@ update_status ModuleScripting::Update(float dt)
 				App->importer->script_importer.NewImport(focused_script_resource);
 			}
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("New Script"))
+		{
+			EnableScripCreationWindow();
+		}
+
 		text_editor->Render("Script Console", ImVec2(600, 400));
 		ImGui::End();
 
@@ -95,6 +104,43 @@ update_status ModuleScripting::Update(float dt)
 		}
 	}
 	
+	if (show_script_creation_win)
+	{
+		ImGui::Begin("Script Console", &show_script_creation_win);
+		
+		ImGui::InputText("Name", name_buffer, 200);
+
+		if (ImGui::Button("Create"))
+		{
+			ResourceScript* new_script = (ResourceScript*)App->res_manager->CreateResource(RESOURCE_TYPE::SCRIPT_RESOURCE);
+			char* str = new char[13];
+			str = "Empty Script\0";
+			new_script->SetBuffer(str);
+			char name[210];
+			sprintf(name, "%s.txt", name_buffer);
+			new_script->SetOwnFile(name);
+			char original_name[250];
+			sprintf(original_name, "%s\\%s", App->fs->GetAssetsFolder()->GetPath(), name);
+			new_script->SetOriginalFile(original_name);
+			App->importer->script_importer.NewImport(new_script);
+
+			if (focused_gameobject != nullptr)
+			{
+				ComponentScript* scr_cmp = (ComponentScript*)focused_gameobject->CreateComponent(COMPONENT_TYPE::COMP_SCRIPT);
+				scr_cmp->SetResourceScript(new_script);
+
+				focused_gameobject = nullptr;
+			}
+
+			focused_script_resource = new_script;
+			PlaceFocusedScriptOnEditor();
+
+			show_script_creation_win = false;
+		}
+
+		ImGui::End();
+	}
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -121,4 +167,12 @@ void ModuleScripting::PlaceFocusedScriptOnEditor()
 	
 	//Insert the script text
 	text_editor->InsertText(focused_script_resource->GetBuffer());
+}
+
+void ModuleScripting::EnableScripCreationWindow(const GameObject* target)
+{
+	focused_gameobject = (GameObject*)target;
+
+	memset(name_buffer, '\0', 200);
+	show_script_creation_win = true;
 }
