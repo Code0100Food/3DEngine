@@ -1,0 +1,14 @@
+using System;
+ 
+namespace MonoScript
+{
+	public class HelloWorld
+	{
+		bool whatthehellman()
+		{
+			Console.WriteLine("What the hell man");
+			return true;
+		}
+	}
+
+}
