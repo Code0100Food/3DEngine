@@ -2,17 +2,32 @@
 
 #include "test.h"
 
+#include <direct.h>
+#include <string>
+
+#include <mono/jit/jit.h>
+#include <mono/metadata/mono-config.h>
+#include <mono/metadata/assembly.h>
+#include <mono/metadata/debug-helpers.h>
+#include <mono/metadata/mono-gc.h>
+
+#pragma comment(lib, "mono-2.0-sgen.lib")
+
+//Global variables
+MonoDomain*	main_domain = nullptr;
+std::string	dll_path;
+
 namespace MonoScripting
 {
 	bool MonoScripting::InitMono()
 	{
+		char my_path[FILENAME_MAX];
 		_getcwd(my_path, FILENAME_MAX);
+		dll_path = my_path;
 
-		std::string lib_path = my_path;
-		lib_path += "/DATA/lib";
+		std::string lib_path = dll_path + "/DATA/Scripting/lib";
 
-		std::string etc_path = my_path;
-		etc_path += "/DATA/etc";
+		std::string etc_path = dll_path + "/DATA/Scripting/etc";
 
 		mono_set_dirs(lib_path.c_str(), etc_path.c_str());
 
@@ -24,10 +39,59 @@ namespace MonoScripting
 
 		return main_domain != nullptr;
 	}
+
+	const char* MonoScripting::CompileFile(const char* input_file, const char* output_file)
+	{
+		//Set the compiler path
+		std::string compiler_path = dll_path;
+		compiler_path += "/DATA/Scripting/compiler.dll";
+
+		//Load the compiler.dll
+		MonoAssembly* compile_assembly = nullptr;
+		compile_assembly = mono_domain_assembly_open(main_domain, compiler_path.c_str());
+
+		if (!compile_assembly)
+		{
+			return "[error] Compiler not load";
+		}
+
+		//Load the compiler class and method
+		MonoImage* image = mono_assembly_get_image(compile_assembly);
+		MonoClass* _class = mono_class_from_name(image, "MonoScripting", "Compiler");
+		MonoMethod* compile_dll = mono_class_get_method_from_name(_class, "CompileDll", 2);
+
+		//Create the arguments
+		void* arguments[2];
+		MonoString* cs_path = mono_string_new(main_domain, input_file);
+		MonoString* cs_name = mono_string_new(main_domain, output_file);
+
+		arguments[0] = cs_path;
+		arguments[1] = cs_name;
+
+		//Instantiate the compiler class
+		MonoObject* compiler = mono_object_new(main_domain, _class);
+
+		//Execute compiler
+		MonoString* handle = (MonoString*)mono_runtime_invoke(compile_dll, compiler, arguments, NULL);
+		const char* returned_message = mono_string_to_utf8(handle);
+
+		if (strlen(returned_message) == 0)
+		{
+			return nullptr;
+		}
+
+		return returned_message;
+	}
+
+	const char* MonoScripting::GetDLLPath()
+	{
+		return dll_path.c_str();
+	}
+
 }
 
 
-int main(int argc, char *argv[])
+/*int main(int argc, char *argv[])
 {
 
 	char my_path[FILENAME_MAX];
@@ -53,13 +117,12 @@ int main(int argc, char *argv[])
 	MonoAssembly* assembler = nullptr;
 	assembler = mono_domain_assembly_open(dom, compiler_path.c_str());
 
+	printf("Error");
+
 	if (!assembler)
 	{
 		printf("Error");
 	}
-
-	//Execute a file
-	//mono_jit_exec(dom, assembler, argc, argv);
 
 	MonoImage* image = mono_assembly_get_image(assembler);
 	MonoClass* _class = mono_class_from_name(image, "MonoScripting", "Compiler");
@@ -82,7 +145,6 @@ int main(int argc, char *argv[])
 
 	arguments[0] = cs_path;
 	arguments[1] = cs_name;
-	//arguments[2] = cs_return;
 
 	MonoObject* my_class_instance = mono_object_new(dom, _class);
 	MonoObject* exception = NULL;
@@ -114,4 +176,4 @@ int main(int argc, char *argv[])
 	
 	getchar();
 	return 0;
-}
+}*/
