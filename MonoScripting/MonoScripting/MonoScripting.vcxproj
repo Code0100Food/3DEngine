@@ -72,6 +72,10 @@
     <IncludePath>C:\Program Files %28x86%29\Mono\include\mono-2.0;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Mono\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\ferra\Desktop\3DEngine\MonoScripting\MonoScripting\DATA\include\mono-2.0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\ferra\Desktop\3DEngine\MonoScripting\MonoScripting\DATA\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>

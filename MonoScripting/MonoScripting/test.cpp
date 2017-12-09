@@ -29,10 +29,18 @@ int main(int argc, char *argv[])
 
 	char my_path[FILENAME_MAX];
 	_getcwd(my_path, FILENAME_MAX);
-	printf(my_path);
+	
+	std::string lib_path = my_path;
+	lib_path += "/DATA/lib";
 
-	mono_set_dirs("C:/Program Files (x86)/Mono/lib", "C:/Program Files (x86)/Mono/etc");
+	std::string etc_path = my_path;
+	etc_path += "/DATA/etc";
 
+	std::string compiler_path = my_path;
+	compiler_path += "/DATA/compiler.dll";
+
+	mono_set_dirs(lib_path.c_str(), etc_path.c_str());
+	
 	mono_config_parse(nullptr);
 
 	const char domain_name[] = "MonoScripting";
@@ -40,7 +48,7 @@ int main(int argc, char *argv[])
 	MonoDomain* dom = mono_jit_init(domain_name);
 
 	MonoAssembly* assembler = nullptr;
-	assembler = mono_domain_assembly_open(dom, "C:/Users/Usuari/Desktop/compiler.dll");
+	assembler = mono_domain_assembly_open(dom, compiler_path.c_str());
 
 	if (!assembler)
 	{
@@ -54,11 +62,19 @@ int main(int argc, char *argv[])
 	MonoClass* _class = mono_class_from_name(image, "MonoScripting", "Compiler");
 
 	MonoMethod* hellman = mono_class_get_method_from_name(_class, "CompileDll", 2);
-
+	
 	void* arguments[2];
 
-	MonoString* cs_path = mono_string_new(dom, "C:/Users/Usuari/Desktop/HelloWorld.txt");
-	MonoString* cs_name = mono_string_new(dom, "C:/Users/Usuari/Desktop/HelloWorld.dll");
+	std::string data_path = my_path;
+	data_path += "/DATA/";
+
+	std::string source_file = data_path;
+	source_file += "HelloWorld.txt";
+	std::string result_file = data_path;
+	result_file+= "HelloWorld.dll";
+
+	MonoString* cs_path = mono_string_new(dom, source_file.c_str());
+	MonoString* cs_name = mono_string_new(dom, result_file.c_str());
 	MonoString* cs_return = mono_string_empty_wrapper();
 
 	arguments[0] = cs_path;
@@ -75,7 +91,7 @@ int main(int argc, char *argv[])
 	char* handle_errors = mono_string_to_utf8(handle);
 	
 	MonoAssembly* hello_world_assembler = nullptr;
-	hello_world_assembler = mono_domain_assembly_open(dom, "C:/Users/Usuari/Desktop/HelloWorld.dll");
+	hello_world_assembler = mono_domain_assembly_open(dom, result_file.c_str());
 
 	if (!hello_world_assembler)
 	{
@@ -92,7 +108,7 @@ int main(int argc, char *argv[])
 
 	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
 	MonoObject* hello_world_handle = mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
-
+	
 	getchar();
 	return 0;
 }
