@@ -2,26 +2,29 @@
 
 #include "test.h"
 
-#include <direct.h>
-#include <string>
-
-#include <mono/jit/jit.h>
-#include <mono/metadata/mono-config.h>
-#include <mono/metadata/assembly.h>
-#include <mono/metadata/debug-helpers.h>
-#include <mono/metadata/mono-gc.h>
-
-#pragma comment(lib, "mono-2.0-boehm.lib")
-#pragma comment(lib, "mono-2.0-sgen.lib")
-
-/*namespace MonoScripting
+namespace MonoScripting
 {
 	bool MonoScripting::InitMono()
 	{
-		char my_path[FILENAME_MAX];
 		_getcwd(my_path, FILENAME_MAX);
+
+		std::string lib_path = my_path;
+		lib_path += "/DATA/lib";
+
+		std::string etc_path = my_path;
+		etc_path += "/DATA/etc";
+
+		mono_set_dirs(lib_path.c_str(), etc_path.c_str());
+
+		mono_config_parse(nullptr);
+
+		const char domain_name[] = "MonoScripting";
+
+		main_domain = mono_jit_init(domain_name);
+
+		return main_domain != nullptr;
 	}
-}*/
+}
 
 
 int main(int argc, char *argv[])
