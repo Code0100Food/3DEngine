@@ -73,8 +73,13 @@
     <LibraryPath>C:\Program Files %28x86%29\Mono\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\ferra\Desktop\3DEngine\MonoScripting\MonoScripting\DATA\include\mono-2.0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ferra\Desktop\3DEngine\MonoScripting\MonoScripting\DATA\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Th_Sola\Documents\GitHub\3DEngine\MonoScripting\MonoScripting\DATA\include\mono-2.0;C:\Users\ferra\Desktop\3DEngine\MonoScripting\MonoScripting\DATA\include\mono-2.0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Th_Sola\Documents\GitHub\3DEngine\MonoScripting\MonoScripting\DATA\lib;C:\Users\ferra\Desktop\3DEngine\MonoScripting\MonoScripting\DATA\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>C:\Users\Th_Sola\Documents\GitHub\3DEngine\MonoScripting\MonoScripting\DATA\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Th_Sola\Documents\GitHub\3DEngine\MonoScripting\MonoScripting\DATA\include\mono-2.0;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
