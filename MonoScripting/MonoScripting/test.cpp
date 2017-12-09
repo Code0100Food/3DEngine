@@ -19,6 +19,12 @@ std::string	dll_path;
 
 namespace MonoScripting
 {
+
+	const char* MonoScripting::GetDLLPath()
+	{
+		return dll_path.c_str();
+	}
+
 	bool MonoScripting::InitMono()
 	{
 		char my_path[FILENAME_MAX];
@@ -83,11 +89,16 @@ namespace MonoScripting
 		return returned_message;
 	}
 
-	const char* MonoScripting::GetDLLPath()
+	bool MonoScripting::CleanUpMono()
 	{
-		return dll_path.c_str();
-	}
+		if (main_domain)
+		{
+			mono_jit_cleanup(main_domain);
+			return true;
+		}	
 
+		return false;
+	}
 }
 
 

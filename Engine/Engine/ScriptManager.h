@@ -15,7 +15,7 @@ private:
 public:
 
 	/*Methods*/
-	const char* lol = nullptr;
+	const char* dll_path = nullptr;
 	const char* Compile(const char* path, const char* output);
 
 };

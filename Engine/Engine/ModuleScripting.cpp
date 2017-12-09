@@ -43,10 +43,10 @@ update_status ModuleScripting::Update(float dt)
 		char path[256];
 		char output_path[256];
 
-		sprintf(path, "%s\\%s%s",script_manager->lol, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.txt");
-		sprintf(output_path, "%s\\%s%s", script_manager->lol, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.dll");
+		sprintf(path, "%s\\%s%s",script_manager->dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.txt");
+		sprintf(output_path, "%s\\%s%s", script_manager->dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.dll");
 
-		const char* result = script_manager->Compile("C:/Users/Th_Sola/Documents/GitHub/3DEngine/Engine/Data/Library/Scripts/HelloWorld.txt", "C:/Users/Th_Sola/Documents/GitHub/3DEngine/Engine/Data/Library/Scripts/HelloWorld.dll");
+		const char* result = script_manager->Compile(path, output_path);
 
 		if (result)
 		{
@@ -54,7 +54,8 @@ update_status ModuleScripting::Update(float dt)
 		}
 		else
 		{
-			LOG("Compilation Success");
+			App->fs->GetFileNameFromPath(output_path, &usable_str);
+			LOG("Compilation Success: %s", usable_str.c_str());
 		}
 
 	}

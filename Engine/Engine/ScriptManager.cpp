@@ -7,11 +7,12 @@ ScriptManager::ScriptManager()
 {
 
 	MonoScripting::InitMono();
-	lol = MonoScripting::GetDLLPath();
+	dll_path = MonoScripting::GetDLLPath();
 }
 
 ScriptManager::~ScriptManager()
 {
+	MonoScripting::CleanUpMono();
 }
 
 const char* ScriptManager::Compile(const char * path, const char * output)
