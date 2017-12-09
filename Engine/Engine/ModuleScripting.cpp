@@ -10,6 +10,8 @@
 #include "FileSystem.h"
 #include "GameObject.h"
 
+
+
 ModuleScripting::ModuleScripting(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
 	script_manager = new ScriptManager();
@@ -34,6 +36,27 @@ update_status ModuleScripting::Update(float dt)
 			text_editor->Delete();
 			focused_script_resource = nullptr;
 		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_STATE::KEY_DOWN)
+	{
+		char path[256];
+		char output_path[256];
+
+		sprintf(path, "%s\\%s%s",script_manager->lol, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.txt");
+		sprintf(output_path, "%s\\%s%s", script_manager->lol, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.dll");
+
+		const char* result = script_manager->Compile("C:/Users/Th_Sola/Documents/GitHub/3DEngine/Engine/Data/Library/Scripts/HelloWorld.txt", "C:/Users/Th_Sola/Documents/GitHub/3DEngine/Engine/Data/Library/Scripts/HelloWorld.dll");
+
+		if (result)
+		{
+			LOG(result);
+		}
+		else
+		{
+			LOG("Compilation Success");
+		}
+
 	}
 
 	if (show_text_editor)

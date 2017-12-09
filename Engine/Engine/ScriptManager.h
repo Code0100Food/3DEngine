@@ -15,6 +15,8 @@ private:
 public:
 
 	/*Methods*/
+	const char* lol = nullptr;
+	const char* Compile(const char* path, const char* output);
 
 };
 #endif // !_SCRIPT_MANAGER_H_
