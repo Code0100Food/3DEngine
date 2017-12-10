@@ -142,6 +142,14 @@ When Pressing F1 debug mode is active and you will see the mouse picking ray and
 
 
 # Changelog
+
+	 -Release 0.3.1:
+		Scripting Console Added
+		Scrip Resource Added
+		Scripts Manager Added
+		Mono Scripting Added
+		Mono Scripting linked with resources
+	
 	 -Release 0.3:
 		Resources Reimporation
 		Resources automatically update
