@@ -46,7 +46,7 @@ namespace MonoScripting
 		return main_domain != nullptr;
 	}
 
-	const char* MonoScripting::CompileFile(const char* input_file, const char* output_file)
+	const char* MonoScripting::CompileFile(const char* input_file, const char* output_file, const char* name, MonoObject** returned_obj)
 	{
 		//Set the compiler path
 		std::string compiler_path = dll_path;
@@ -86,7 +86,55 @@ namespace MonoScripting
 			return nullptr;
 		}
 
+		//Load the compiled script assembly
+		MonoAssembly* new_script_assembly = nullptr;
+		new_script_assembly = mono_domain_assembly_open(main_domain, output_file);
+
+		if (!new_script_assembly)
+		{
+			return "[error] Script assembly not load";
+		}
+
+		
+
+		//Load the compiled script class and method
+		MonoImage* compiled_script_image = mono_assembly_get_image(new_script_assembly);
+		MonoClass* compiled_script_class = mono_class_from_name(image, "", name);
+
+		*returned_obj = mono_object_new(main_domain, compiled_script_class);
+
 		return returned_message;
+	}
+
+	bool MonoScripting::ExecuteMethod(MonoObject* script, const char* name)// unsigned int num_args, ...)
+	{
+		MonoClass* script_class = mono_object_get_class(script);
+
+		MonoMethod* method_to_execute = nullptr;
+		void* iterator = nullptr;
+
+		//Find the method to invoke
+		do
+		{
+			method_to_execute = mono_class_get_methods(script_class, &iterator);
+
+			if (strcmp(mono_method_get_name(method_to_execute), name) == 0)
+			{
+				MonoMethodSignature* method_info = mono_method_signature(method_to_execute);
+				break;			
+			}
+
+		} while (method_to_execute);
+
+		//Didn't find the method name return
+		if (!method_to_execute)
+		{
+			return false;
+		}
+
+		
+		mono_runtime_invoke(method_to_execute, script, NULL, NULL);
+		return true;
 	}
 
 	bool MonoScripting::CleanUpMono()
@@ -140,34 +188,37 @@ namespace MonoScripting
 
 	MonoMethod* hellman = mono_class_get_method_from_name(_class, "CompileDll", 2);
 	
-	void* arguments[2];
+	int lol = 8;
+	int* arguments = new int[lol];
 
 	std::string data_path = my_path;
 	data_path += "/DATA/";
 
 	std::string source_file = data_path;
-	source_file += "HelloWorld.txt";
+	source_file += "HelloWorld_child.txt";
 	std::string result_file = data_path;
-	result_file+= "HelloWorld.dll";
+	result_file+= "HelloWorld_child.dll";
 
 	MonoString* cs_path = mono_string_new(dom, source_file.c_str());
 	MonoString* cs_name = mono_string_new(dom, result_file.c_str());
 	MonoString* cs_return = mono_string_empty_wrapper();
 
-	arguments[0] = cs_path;
-	arguments[1] = cs_name;
+	arguments[0] = (int)cs_path;
+	arguments[1] = (int)cs_name;
 
 	MonoObject* my_class_instance = mono_object_new(dom, _class);
 	MonoObject* exception = NULL;
 
 	char* mega_lol = mono_string_to_utf8(cs_path);
 
-	MonoString* handle = (MonoString*)mono_runtime_invoke(hellman, my_class_instance, arguments, NULL);
+	MonoString* handle = (MonoString*)mono_runtime_invoke(hellman, my_class_instance, (void**)arguments, NULL);
 	//bool tmp = *(bool*)mono_object_unbox(handle);
 	char* handle_errors = mono_string_to_utf8(handle);
 	
 	MonoAssembly* hello_world_assembler = nullptr;
+	MonoAssembly* hello_world_assembler1 = nullptr;
 	hello_world_assembler = mono_domain_assembly_open(dom, result_file.c_str());
+	hello_world_assembler1 = mono_domain_assembly_open(dom, result_file.c_str());
 
 	if (!hello_world_assembler)
 	{
@@ -178,9 +229,9 @@ namespace MonoScripting
 	//mono_jit_exec(dom, assembler, argc, argv);
 
 	MonoImage* hello_world_image = mono_assembly_get_image(hello_world_assembler);
-	MonoClass* hello_world_class = mono_class_from_name(hello_world_image, "MonoScript", "HelloWorld");
+	MonoClass* hello_world_class = mono_class_from_name(hello_world_image, "", "HelloWorldchild");
 
-	MonoMethod* hello_world_hellman = mono_class_get_method_from_name(hello_world_class, "whatthehellman", 0);
+	MonoMethod* hello_world_hellman = mono_class_get_method_from_name(hello_world_class, "mega_lol", 0);
 
 	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
 	MonoObject* hello_world_handle = mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
