@@ -1,7 +1,6 @@
 #include "ModuleScripting.h"
 
 #include "Application.h"
-#include "ScriptManager.h"
 #include "TextEditor.h"
 #include "ModuleInput.h"
 #include "ResourceScript.h"
@@ -10,17 +9,21 @@
 #include "FileSystem.h"
 #include "GameObject.h"
 
-
+#include "Mono_Scripting/test.h"
+#pragma comment(lib, "Engine/Mono_Scripting/MonoScripting.lib")
 
 ModuleScripting::ModuleScripting(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
-	script_manager = new ScriptManager();
+	MonoScripting::InitMono();
+	dll_path = MonoScripting::GetDLLPath();
+
 	text_editor = new TextEditor();
 }
 
 ModuleScripting::~ModuleScripting()
 {
-	RELEASE(script_manager);
+	MonoScripting::CleanUpMono();
+
 	RELEASE(text_editor);
 }
 
@@ -43,10 +46,10 @@ update_status ModuleScripting::Update(float dt)
 		char path[256];
 		char output_path[256];
 
-		sprintf(path, "%s\\%s%s",script_manager->dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.txt");
-		sprintf(output_path, "%s\\%s%s", script_manager->dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.dll");
+		sprintf(path, "%s\\%s%s",dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.txt");
+		sprintf(output_path, "%s\\%s%s", dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.dll");
 
-		const char* result = script_manager->Compile(path, output_path);
+		const char* result = Compile(path, output_path);
 
 		if (result)
 		{
@@ -178,6 +181,11 @@ ResourceScript * ModuleScripting::GetFocusedScriptResource() const
 	return focused_script_resource;
 }
 
+const char * ModuleScripting::GetDLLPath() const
+{
+	return MonoScripting::GetDLLPath();
+}
+
 void ModuleScripting::PlaceFocusedScriptOnEditor()
 {
 	if (focused_script_resource == nullptr)return;
@@ -199,4 +207,9 @@ void ModuleScripting::EnableScripCreationWindow(const GameObject* target)
 
 	memset(name_buffer, '\0', 200);
 	show_script_creation_win = true;
+}
+
+const char * ModuleScripting::Compile(const char * path, const char * output)
+{
+	return MonoScripting::CompileFile(path, output);
 }

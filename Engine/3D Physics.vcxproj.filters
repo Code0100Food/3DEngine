@@ -441,9 +441,6 @@
     <ClInclude Include="Engine\SceneImporter.h">
       <Filter>Sources\Importers &amp; Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ScriptManager.h">
-      <Filter>Sources\Modules\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ModuleScripting.h">
       <Filter>Sources\Modules\Scripting</Filter>
     </ClInclude>
@@ -733,9 +730,6 @@
     </ClCompile>
     <ClCompile Include="Engine\SceneImporter.cpp">
       <Filter>Sources\Importers &amp; Serializer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ScriptManager.cpp">
-      <Filter>Sources\Modules\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ModuleScripting.cpp">
       <Filter>Sources\Modules\Scripting</Filter>

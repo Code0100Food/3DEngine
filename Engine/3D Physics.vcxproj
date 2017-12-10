@@ -208,7 +208,6 @@
     <ClInclude Include="Engine\ResourceMesh.h" />
     <ClInclude Include="Engine\ResourcesManager.h" />
     <ClInclude Include="Engine\ScriptImporter.h" />
-    <ClInclude Include="Engine\ScriptManager.h" />
     <ClInclude Include="Engine\Serializer.h" />
     <ClInclude Include="Engine\SphereGenerator.h" />
     <ClInclude Include="Engine\stb\stb.h" />
@@ -309,7 +308,6 @@
     <ClCompile Include="Engine\ResourceMesh.cpp" />
     <ClCompile Include="Engine\ResourcesManager.cpp" />
     <ClCompile Include="Engine\ScriptImporter.cpp" />
-    <ClCompile Include="Engine\ScriptManager.cpp" />
     <ClCompile Include="Engine\Serializer.cpp" />
     <ClCompile Include="Engine\SphereGenerator.cpp" />
     <ClCompile Include="Engine\TextEditor.cpp" />

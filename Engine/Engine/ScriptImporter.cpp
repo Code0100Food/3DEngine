@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "FileSystem.h"
 #include "ResourcesManager.h"
+#include "ModuleScripting.h"
 
 #include "Globals.h"
 #include <string.h>
@@ -26,10 +27,25 @@ uint ScriptImporter::Import(const char * path)
 		ret = resource->GetID();
 
 		//Set resource data
-		App->fs->GetFileNameFromPath(path, &usable_str);
-		resource->SetOwnFile(usable_str.c_str());
+		App->fs->GetUnformatedFileNameFromPath(path, &usable_str);
+		char own_file_name[150];
+		sprintf(own_file_name, "%s.dll", usable_str.c_str());
+		resource->SetOwnFile(own_file_name);
 		resource->SetOriginalFile(path);
-		App->fs->SaveFile(usable_str.c_str(), (char*)buffer, lenght, LIBRARY_SCRIPTS_FOLDER);
+
+		char out_path[250];
+		sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, resource->GetOwnFile());
+		
+		const char* str = App->scripting->Compile(resource->GetOriginalFile(), out_path);
+		if (str != NULL)
+		{
+			LOG("%s", str);
+		}
+		else
+		{
+			LOG("%s Compile Succes!", own_file_name);
+		}
+
 		usable_str.clear();
 
 		char* real_str = new char[lenght + 1];
@@ -81,8 +97,29 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 
 	if (buffer == nullptr)return false;
 	uint size = strlen(buffer);
-	App->fs->SaveFile(to_import->GetOwnFile(), buffer, size, LIBRARY_SCRIPTS_FOLDER);
-	App->fs->SaveFile("", buffer, size,to_import->GetOriginalFile());
+	
+	App->fs->SaveFile("", buffer, size, to_import->GetOriginalFile());
+
+	//Set resource data
+	App->fs->GetUnformatedFileNameFromPath(to_import->GetOriginalFile(), &usable_str);
+	char own_file_name[150];
+	sprintf(own_file_name, "%s.dll", usable_str.c_str());
+	to_import->SetOwnFile(own_file_name);
+	
+	char out_path[250];
+	sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_import->GetOwnFile());
+
+	const char* str = App->scripting->Compile(to_import->GetOriginalFile(), out_path);
+	if (str != NULL)
+	{
+		LOG("%s", str);
+	}
+	else
+	{
+		LOG("%s Compile Succes!", own_file_name);
+	}
+
+	usable_str.clear();
 
 	to_import->Save();
 

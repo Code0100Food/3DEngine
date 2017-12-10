@@ -21,8 +21,6 @@ public:
 
 private:
 
-	ScriptManager*			script_manager = nullptr;
-	
 	ResourceScript*			focused_script_resource = nullptr;
 	GameObject*				focused_gameobject = nullptr;
 
@@ -33,6 +31,8 @@ private:
 	char					name_buffer[200];
 	
 	mutable std::string		usable_str;
+	
+	const char*				dll_path = nullptr;
 
 public:
 
@@ -41,10 +41,12 @@ public:
 
 	//Get Methods -----------
 	ResourceScript* GetFocusedScriptResource()const;
+	const char*		GetDLLPath()const;
 
 	//Functionality ---------
-	void PlaceFocusedScriptOnEditor();
-	void EnableScripCreationWindow(const GameObject* target = nullptr);
+	void		PlaceFocusedScriptOnEditor();
+	void		EnableScripCreationWindow(const GameObject* target = nullptr);
+	const char* Compile(const char* path, const char* output);
 
 };
 #endif // !_MODULE_SCRIPTING_
