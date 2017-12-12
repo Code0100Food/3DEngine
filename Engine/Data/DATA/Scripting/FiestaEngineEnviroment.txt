@@ -1,0 +1,24 @@
+using System;
+using System.Reflection;
+using System.Collections.Generic;
+ 
+namespace FiestaEngine
+{
+	public class Festejo
+	{
+		string[] GetPublicProperties()
+   		{
+        		List<string> property_names = new List<string>();
+
+        		foreach (PropertyInfo info in GetType().GetProperties())
+       			{
+          			property_names.Add(info.Name);
+        		}
+
+        		return property_names.ToArray();
+
+    		}
+		
+	}
+
+}

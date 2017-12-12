@@ -46,8 +46,8 @@ update_status ModuleScripting::Update(float dt)
 		char path[256];
 		char output_path[256];
 
-		sprintf(path, "%s\\%s%s",dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.txt");
-		sprintf(output_path, "%s\\%s%s", dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.dll");
+		sprintf(path, "%s\\%s%s",dll_path, SCRIPTING_FOLDER, "FiestaEngineEnviroment.txt");
+		sprintf(output_path, "%s\\%s%s", dll_path, SCRIPTING_FOLDER, "FiestaEngineEnviroment.dll");
 
 		const char* result = Compile(path, output_path);
 
@@ -58,6 +58,25 @@ update_status ModuleScripting::Update(float dt)
 		else
 		{
 			App->fs->GetFileNameFromPath(output_path, &usable_str);
+			LOG("Compilation Success: %s", usable_str.c_str());
+		}
+
+		//Fiesta engine system
+		char path1[256];
+		char output_path1[256];
+
+		sprintf(path1, "%s\\%s%s", dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.txt");
+		sprintf(output_path1, "%s\\%s%s", dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.dll");
+
+		const char* result1 = Compile(path1, output_path1);
+
+		if (result1)
+		{
+			LOG(result1);
+		}
+		else
+		{
+			App->fs->GetFileNameFromPath(output_path1, &usable_str);
 			LOG("Compilation Success: %s", usable_str.c_str());
 		}
 
