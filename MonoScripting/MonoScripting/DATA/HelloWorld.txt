@@ -1,14 +1,28 @@
 using System;
- 
-namespace MonoScript
-{
-	public class HelloWorld
-	{
-		bool whatthehellman()
-		{
-			Console.WriteLine("What the hell man");
-			return true;
-		}
-	}
 
+using FiestaEngine;
+
+public class HelloWorld
+ : Festejo
+{
+
+		public int Hello = 0;
+		public float world = 1.0f;
+		private bool lol = false;
+
+		bool whatthehellman()
+	
+		{
+
+			if(lol)
+			{	
+				Hello = world;
+			}
+			
+			Console.WriteLine("What the hell man");
+
+			return true;		
+		}
+	
 }
+

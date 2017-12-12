@@ -14,12 +14,11 @@
 #pragma comment(lib, "mono-2.0-sgen.lib")
 
 //Global variables
-MonoDomain*	main_domain = nullptr;
+/*MonoDomain*	main_domain = nullptr;
 std::string	dll_path;
 
 namespace MonoScripting
 {
-
 	const char* MonoScripting::GetDLLPath()
 	{
 		return dll_path.c_str();
@@ -44,6 +43,9 @@ namespace MonoScripting
 		main_domain = mono_jit_init(domain_name);
 
 		return main_domain != nullptr;
+
+
+		
 	}
 
 	const char* MonoScripting::CompileFile(const char* input_file, const char* output_file, const char* name, MonoObject** returned_obj)
@@ -147,10 +149,10 @@ namespace MonoScripting
 
 		return false;
 	}
-}
+}*/
 
 
-/*int main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 
 	char my_path[FILENAME_MAX];
@@ -174,7 +176,7 @@ namespace MonoScripting
 	MonoDomain* dom = mono_jit_init(domain_name);
 
 	MonoAssembly* assembler = nullptr;
-	assembler = mono_domain_assembly_open(dom, compiler_path.c_str());
+	assembler = mono_domain_assembly_open(dom, "C:/Users/Th_Sola/Documents/GitHub/3DEngine/MonoScripting/MonoScripting/DATA/FiestaEngineEnviroment.dll");
 
 	printf("Error");
 
@@ -183,42 +185,22 @@ namespace MonoScripting
 		printf("Error");
 	}
 
-	MonoImage* image = mono_assembly_get_image(assembler);
+	/*MonoImage* image = mono_assembly_get_image(assembler);
 	MonoClass* _class = mono_class_from_name(image, "MonoScripting", "Compiler");
 
-	MonoMethod* hellman = mono_class_get_method_from_name(_class, "CompileDll", 2);
+	MonoMethod* hellman = mono_class_get_method_from_name(_class, "CompileDll", 2);*/
 	
 	int lol = 8;
-	int* arguments = new int[lol];
+
 
 	std::string data_path = my_path;
 	data_path += "/DATA/";
 
-	std::string source_file = data_path;
-	source_file += "HelloWorld_child.txt";
 	std::string result_file = data_path;
-	result_file+= "HelloWorld_child.dll";
+	result_file+= "HelloWorld.dll";
 
-	MonoString* cs_path = mono_string_new(dom, source_file.c_str());
-	MonoString* cs_name = mono_string_new(dom, result_file.c_str());
-	MonoString* cs_return = mono_string_empty_wrapper();
-
-	arguments[0] = (int)cs_path;
-	arguments[1] = (int)cs_name;
-
-	MonoObject* my_class_instance = mono_object_new(dom, _class);
-	MonoObject* exception = NULL;
-
-	char* mega_lol = mono_string_to_utf8(cs_path);
-
-	MonoString* handle = (MonoString*)mono_runtime_invoke(hellman, my_class_instance, (void**)arguments, NULL);
-	//bool tmp = *(bool*)mono_object_unbox(handle);
-	char* handle_errors = mono_string_to_utf8(handle);
-	
 	MonoAssembly* hello_world_assembler = nullptr;
-	MonoAssembly* hello_world_assembler1 = nullptr;
 	hello_world_assembler = mono_domain_assembly_open(dom, result_file.c_str());
-	hello_world_assembler1 = mono_domain_assembly_open(dom, result_file.c_str());
 
 	if (!hello_world_assembler)
 	{
@@ -226,16 +208,34 @@ namespace MonoScripting
 	}
 
 	//Execute a file
-	//mono_jit_exec(dom, assembler, argc, argv);
+	
 
 	MonoImage* hello_world_image = mono_assembly_get_image(hello_world_assembler);
-	MonoClass* hello_world_class = mono_class_from_name(hello_world_image, "", "HelloWorldchild");
+	MonoClass* hello_world_class = mono_class_from_name(hello_world_image, "", "HelloWorld");
+	MonoClass* parent = mono_class_get_parent(hello_world_class);
 
-	MonoMethod* hello_world_hellman = mono_class_get_method_from_name(hello_world_class, "mega_lol", 0);
+	void* iter = nullptr;
+	MonoProperty* proporto = nullptr;
 
-	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
-	MonoObject* hello_world_handle = mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
+	int a = mono_class_num_methods(hello_world_class);
+	MonoMethod* m = nullptr;
+	const char* tuputamadre;
 	
+
+	MonoMethod* hello_world_hellman = mono_class_get_method_from_name(parent, "GetPublicProperties", 0);
+
+	MonoObject* hello_world_instance = mono_object_new(dom, parent);
+	MonoString* hello_world_handle = (MonoString*)mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
+	
+	//int e = *(int*)mono_object_unbox(hello_world_handle);
+
+
+	//MonoArray* array_ = (MonoArray*)mono_object_unbox(hello_world_handle);
+
+	//MonoString* omg = mono_array_get(array_, MonoString*, 0);
+
+	tuputamadre = mono_string_to_utf8(hello_world_handle);
+
 	getchar();
 	return 0;
-}*/
+}

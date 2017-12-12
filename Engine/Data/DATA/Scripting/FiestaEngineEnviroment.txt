@@ -6,8 +6,12 @@ namespace FiestaEngine
 {
 	public class Festejo
 	{
-		string[] GetPublicProperties()
+
+		public int estonova = 0;
+
+		public string GetPublicProperties()
    		{
+			estonova = 1;
         		List<string> property_names = new List<string>();
 
         		foreach (PropertyInfo info in GetType().GetProperties())
@@ -15,7 +19,7 @@ namespace FiestaEngine
           			property_names.Add(info.Name);
         		}
 
-        		return property_names.ToArray();
+        		return "matadme";
 
     		}
 		
