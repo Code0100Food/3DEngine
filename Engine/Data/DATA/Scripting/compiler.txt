@@ -2,6 +2,7 @@
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System;
+using System.IO;
 
 namespace MonoScripting
 {
@@ -22,6 +23,7 @@ class Compiler
             	comp_parameters.OutputAssembly = name; // Compilation name
 
 		//Add libraries
+		comp_parameters.ReferencedAssemblies.Add(Directory.GetCurrentDirectory() + "/DATA/Scripting/FiestaEngineEnviroment.dll");
 		comp_parameters.ReferencedAssemblies.Add("System.dll");
 		comp_parameters.ReferencedAssemblies.Add("System.Windows.Forms.dll");
 		comp_parameters.ReferencedAssemblies.Add("Microsoft.VisualBasic.dll");
