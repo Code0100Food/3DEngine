@@ -1,25 +1,32 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
- 
+using System.Reflection;
+
 namespace FiestaEngine
 {
 	public class Festejo
 	{
 
 		public int estonova = 0;
+		public int estoSIva = 0;
 
-		public string GetPublicProperties()
+		public string[] GetPublicProperties()
    		{
 			estonova = 1;
+			estoSIva = 2;
+
         		List<string> property_names = new List<string>();
 
-        		foreach (PropertyInfo info in GetType().GetProperties())
-       			{
-          			property_names.Add(info.Name);
+        		const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+
+        		FieldInfo[] fields = GetType().GetFields(flags);
+        		foreach (FieldInfo fieldInfo in fields)
+        		{
+				property_names.Add(fieldInfo.Name);
         		}
 
-        		return "matadme";
+        		return property_names.ToArray();
 
     		}
 		

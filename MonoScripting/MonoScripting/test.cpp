@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
 	MonoDomain* dom = mono_jit_init(domain_name);
 
 	MonoAssembly* assembler = nullptr;
-	assembler = mono_domain_assembly_open(dom, "C:/Users/Th_Sola/Documents/GitHub/3DEngine/MonoScripting/MonoScripting/DATA/FiestaEngineEnviroment.dll");
+	assembler = mono_domain_assembly_open(dom, "C:/Users/ferra/Desktop/3DEngine/Engine/Data/DATA/Scripting/FiestaEngineEnviroment.dll");
 
 	printf("Error");
 
@@ -224,8 +224,8 @@ int main(int argc, char *argv[])
 
 	MonoMethod* hello_world_hellman = mono_class_get_method_from_name(parent, "GetPublicProperties", 0);
 
-	MonoObject* hello_world_instance = mono_object_new(dom, parent);
-	MonoString* hello_world_handle = (MonoString*)mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
+	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
+	MonoArray* hello_world_handle = (MonoArray*)mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
 	
 	//int e = *(int*)mono_object_unbox(hello_world_handle);
 
@@ -233,8 +233,14 @@ int main(int argc, char *argv[])
 	//MonoArray* array_ = (MonoArray*)mono_object_unbox(hello_world_handle);
 
 	//MonoString* omg = mono_array_get(array_, MonoString*, 0);
-
-	tuputamadre = mono_string_to_utf8(hello_world_handle);
+	int k = mono_array_length(hello_world_handle);
+	MonoString* val;
+	for (int g = 0; g < k; g++)
+	{
+		val = mono_array_get(hello_world_handle, MonoString*, g);
+		tuputamadre = mono_string_to_utf8(val);
+	}
+	
 
 	getchar();
 	return 0;
