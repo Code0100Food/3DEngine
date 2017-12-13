@@ -1,15 +1,14 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace FiestaEngine
 {
 	public class Festejo
 	{
 
-		public int estonova = 0;
-		public int estoSIva = 0;
+		public int estonova = 3;
+		public int estoSIva = 3;
 
 		public string[] GetPublicProperties()
    		{
@@ -29,7 +28,11 @@ namespace FiestaEngine
         		return property_names.ToArray();
 
     		}
-		
+
+		public void ChangeInt(ref int val)
+    		{
+        		val = val + 1;
+    		}	
 	}
 
 }

@@ -223,10 +223,44 @@ int main(int argc, char *argv[])
 	
 
 	MonoMethod* hello_world_hellman = mono_class_get_method_from_name(parent, "GetPublicProperties", 0);
-
-	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
-	MonoArray* hello_world_handle = (MonoArray*)mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
+	MonoMethod* constructor_method = mono_class_get_method_from_name(parent, ".ctor", 0);
+	MonoMethod* change_int_method = mono_class_get_method_from_name(parent, "ChangeInt", 1);
 	
+	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
+	MonoObject* parent_instance = mono_object_new(dom, parent);
+
+	mono_runtime_invoke(constructor_method, hello_world_instance, NULL, NULL);
+
+	MonoArray* hello_world_handle = nullptr;// = (MonoArray*)mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
+	//mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
+	
+	void* ptr = nullptr;
+
+	MonoClassField* field;
+	
+	field = mono_class_get_fields(parent, &ptr);
+	const char* name = mono_field_get_name(field);
+	MonoType* type = mono_field_get_type(field);
+	const char* ty_str = mono_type_get_name(type);
+	//mono_field_get_data(field);
+	
+	void* args_[1];
+	int value;
+	mono_field_get_value(hello_world_instance, field, &value);
+	
+	//int t = *(int*)args_;
+
+	void* args[1];
+	args[0] = &value;
+
+	mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
+
+	value = 2;
+
+	mono_field_set_value(hello_world_instance, field, &value);
+	
+	mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
+
 	//int e = *(int*)mono_object_unbox(hello_world_handle);
 
 
