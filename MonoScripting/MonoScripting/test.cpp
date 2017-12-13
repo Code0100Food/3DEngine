@@ -16,12 +16,18 @@
 //Global variables
 MonoDomain*	main_domain = nullptr;
 std::string	dll_path;
+std::string	last_error;
 
 namespace MonoScripting
 {
 	const char* MonoScripting::GetDLLPath()
 	{
 		return dll_path.c_str();
+	}
+
+	const char*  MonoScripting::GetLastError()
+	{
+		return last_error.c_str();
 	}
 
 	bool MonoScripting::InitMono()
@@ -42,10 +48,16 @@ namespace MonoScripting
 
 		main_domain = mono_jit_init(domain_name);
 
-		return main_domain != nullptr;		
+		if (!main_domain)
+		{
+			last_error = "[ERROR] InitMono: Could not load the domain";
+			return false;
+		}
+	
+		return true;
 	}
 
-	const char* MonoScripting::CompileFile(const char* input_file, const char* output_file, const char* name, MonoObject** returned_obj)
+	const char* MonoScripting::CompileFile(const char* input_file, const char* output_file)
 	{
 		//Set the compiler path
 		std::string compiler_path = dll_path;
@@ -84,28 +96,55 @@ namespace MonoScripting
 		{
 			return nullptr;
 		}
+	}
+
+	MonoAssemblyName*  MonoScripting::LoadScriptAssembly(const char* assembly_path)
+	{
+		MonoAssemblyName* ret = nullptr;
 
 		//Load the compiled script assembly
 		MonoAssembly* new_script_assembly = nullptr;
-		new_script_assembly = mono_domain_assembly_open(main_domain, output_file);
+		new_script_assembly = mono_domain_assembly_open(main_domain, assembly_path);
 
 		if (!new_script_assembly)
 		{
-			return "[error] Script assembly not load";
+			last_error = "[ERROR] LoadScriptAssembly: Could not load Assembly, check if the path is correct";
+			return nullptr;
 		}
 
-		
-
-		//Load the compiled script class and method
-		MonoImage* compiled_script_image = mono_assembly_get_image(new_script_assembly);
-		MonoClass* compiled_script_class = mono_class_from_name(image, "", name);
-
-		*returned_obj = mono_object_new(main_domain, compiled_script_class);
-
-		return returned_message;
+		ret = mono_assembly_get_name(new_script_assembly);
+		return ret;
 	}
 
-	bool MonoScripting::ExecuteMethod(MonoObject* script, const char* name)// unsigned int num_args, ...)
+	MonoObject*  MonoScripting::CreateMonoObject(MonoAssemblyName* assembly, const char* class_name, const char* name_space)
+	{
+		//Returned value
+		MonoObject* ret = nullptr;
+
+		//Look if assembly is loaded
+		MonoAssembly* tmp = mono_assembly_loaded(assembly);
+
+		if (!tmp)
+		{
+			last_error = "[ERROR] CreateMonoObject: Assembly not Loaded, call LoadScriptAssembly() to get a correct MonoassemblyName";
+			return ret;
+		}
+
+		//Load the compiled script class and method
+		MonoImage* script_image = mono_assembly_get_image(tmp);
+		MonoClass* script_class = mono_class_from_name(script_image, name_space, class_name);
+
+		if (!script_class)
+		{
+			last_error = "[ERROR] CreateMonoObject: Namespace or Class name not Found";
+			return ret;
+		}
+
+		ret = mono_object_new(main_domain, script_class);
+		return ret;
+	}
+
+	bool MonoScripting::ExecuteMethod(MonoObject* script, const char* method_name)// unsigned int num_args, ...)
 	{
 		MonoClass* script_class = mono_object_get_class(script);
 
@@ -117,9 +156,8 @@ namespace MonoScripting
 		{
 			method_to_execute = mono_class_get_methods(script_class, &iterator);
 
-			if (strcmp(mono_method_get_name(method_to_execute), name) == 0)
+			if (strcmp(mono_method_get_name(method_to_execute), method_name) == 0)
 			{
-				MonoMethodSignature* method_info = mono_method_signature(method_to_execute);
 				break;			
 			}
 
@@ -128,6 +166,7 @@ namespace MonoScripting
 		//Didn't find the method name return
 		if (!method_to_execute)
 		{
+			last_error = "[ERROR] ExecuteMethod: Method not Found check if method_name is correct";
 			return false;
 		}
 
@@ -155,6 +194,13 @@ namespace MonoScripting
 		//Class
 		void* iterator = nullptr;
 		MonoClass* _class = mono_object_get_class(script);
+
+		if (!_class)
+		{
+			last_error = "[ERROR] GetFieldsNameAndType: Class didn't Loaded check if MonoObject is correct";
+			return ret;
+		}
+
 		MonoClassField* field = nullptr;
 		
 		//Loop for all fields, returned value will be Name/Type example -> num_gameobjects/int
@@ -185,7 +231,20 @@ namespace MonoScripting
 	{
 		//Get class and field
 		MonoClass* _class = mono_object_get_class(script);
+
+		if (!_class)
+		{
+			last_error = "[ERROR] GetFieldValue: Class didn't Loaded check if MonoObject is correct";
+			return false;
+		}
+
 		MonoClassField* field = mono_class_get_field_from_name(_class, field_name);
+
+		if (!field)
+		{
+			last_error = "[ERROR] GetFieldValue: Field didn't Loaded check if the field name is correct";
+			return false;
+		}
 
 		//Get the value and store it
 		mono_field_get_value(script, field, &output_value);
@@ -193,13 +252,26 @@ namespace MonoScripting
 		return true;
 	}
 
-	bool SetFieldValue(MonoObject* script, const char* field_name, void* input_value)
+	bool  MonoScripting::SetFieldValue(MonoObject* script, const char* field_name, void* input_value)
 	{
 		//Get class and field
 		MonoClass* _class = mono_object_get_class(script);
+
+		if (!_class)
+		{
+			last_error = "[ERROR] SetFieldValue: Class didn't Loaded check if MonoObject is correct";
+			return false;
+		}
+
 		MonoClassField* field = mono_class_get_field_from_name(_class, field_name);
 
-		//
+		if (!field)
+		{
+			last_error = "[ERROR] SetFieldValue: Field didn't Loaded check if the field name is correct";
+			return false;
+		}
+
+		//Set field
 		mono_field_set_value(script, field, input_value);
 
 		return true;
@@ -208,7 +280,7 @@ namespace MonoScripting
 }
 
 
-///*int main(int argc, char *argv[])
+//int main(int argc, char *argv[])
 //{
 //
 //	char my_path[FILENAME_MAX];
@@ -243,10 +315,9 @@ namespace MonoScripting
 //
 //	/*MonoImage* image = mono_assembly_get_image(assembler);
 //	MonoClass* _class = mono_class_from_name(image, "MonoScripting", "Compiler");
-//
 //	MonoMethod* hellman = mono_class_get_method_from_name(_class, "CompileDll", 2);*/
 //	
-//	/*int lol = 8;
+//	int lol = 8;
 //
 //
 //	std::string data_path = my_path;
@@ -257,6 +328,10 @@ namespace MonoScripting
 //
 //	MonoAssembly* hello_world_assembler = nullptr;
 //	hello_world_assembler = mono_domain_assembly_open(dom, result_file.c_str());
+//
+//	MonoAssemblyName* nameofnamesis = mono_assembly_get_name(hello_world_assembler);
+//
+//
 //
 //	if (!hello_world_assembler)
 //	{
@@ -337,4 +412,4 @@ namespace MonoScripting
 //
 //	getchar();
 //	return 0;
-//}*/
+//}
