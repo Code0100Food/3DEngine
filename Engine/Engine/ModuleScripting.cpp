@@ -271,8 +271,8 @@ std::vector<std::pair<const char*, FIELD_TYPE>>* ModuleScripting::GetFieldsNameA
 	/*AKA_ERIC*/
 	void* iterator = nullptr;
 	do {
-		const char* field_str = MonoScripting::GetFieldsNameAndType(script, iterator);
-		LOG("%s", field_str);
+		const char* field_str = MonoScripting::GetFieldsNameAndType(script, &iterator);
+		//LOG(field_str);
 	} while (iterator != nullptr);
 
 	{

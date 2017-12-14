@@ -193,7 +193,7 @@ namespace MonoScripting
 		return false;
 	}
 
-	const char* MonoScripting::GetFieldsNameAndType(MonoObject* script, void* iterator)
+	const char* MonoScripting::GetFieldsNameAndType(MonoObject* script, void** iterator)
 	{
 		//Class
 		MonoClass* _class = mono_object_get_class(script);
@@ -207,7 +207,9 @@ namespace MonoScripting
 		MonoClassField* field = nullptr;
 		
 		//Loop for all fields, returned value will be Name/Type example -> num_gameobjects/int
-		while ((field = mono_class_get_fields(_class, &iterator)))
+		field = mono_class_get_fields(_class, iterator);
+
+		if(field)
 		{
 			//Get the Name
 			const char* name = mono_field_get_name(field);
@@ -222,7 +224,10 @@ namespace MonoScripting
 			return final_str;
 		}
 
+		(*iterator) = nullptr;
 		return NULL;
+
+		
 	}
 
 	bool MonoScripting::GetFieldValue(MonoObject* script, const char* field_name, void* output_value)

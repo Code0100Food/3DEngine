@@ -27,7 +27,7 @@ namespace MonoScripting
 	EXPORT_THIS bool							ExecuteMethod(MonoObject* script, const char* name);
 
 	//Fields [attributes] methods
-	EXPORT_THIS const char*						GetFieldsNameAndType(MonoObject* script,void* iterator);
+	EXPORT_THIS const char*						GetFieldsNameAndType(MonoObject* script,void** iterator);
 	EXPORT_THIS bool							GetFieldValue(MonoObject* script, const char* field_name, void* output_value);
 	EXPORT_THIS bool							SetFieldValue(MonoObject* script, const char* field_name, void* input_value);
 }
