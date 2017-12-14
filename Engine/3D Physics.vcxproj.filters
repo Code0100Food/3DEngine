@@ -743,7 +743,9 @@
     <ClCompile Include="Engine\ResourceScript.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ComponentScript.cpp" />
+    <ClCompile Include="Engine\ComponentScript.cpp">
+      <Filter>Sources\GameObject &amp; Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Snippets\CodeShortcuts.snippet">

@@ -7,6 +7,9 @@ class ScriptManager;
 class TextEditor;
 class ResourceScript;
 class GameObject;
+typedef struct _MonoObject MonoObject;
+typedef struct _MonoAssemblyName MonoAssemblyName;
+enum FIELD_TYPE;
 
 class ModuleScripting : public Module
 {
@@ -17,7 +20,7 @@ public:
 	
 public:
 
-	update_status Update(float dt);
+	update_status	Update(float dt);
 
 private:
 
@@ -30,8 +33,10 @@ private:
 	bool					show_script_creation_win = false;
 	char					name_buffer[200];
 	
-	mutable std::string		usable_str;
-	
+	mutable std::string								usable_str;
+	std::vector<std::string>						fields_str_vec;
+	std::vector<std::pair<const char*, FIELD_TYPE>> fields_vec;
+
 	const char*				dll_path = nullptr;
 
 public:
@@ -44,9 +49,16 @@ public:
 	const char*		GetDLLPath()const;
 
 	//Functionality ---------
-	void		PlaceFocusedScriptOnEditor();
-	void		EnableScripCreationWindow(const GameObject* target = nullptr);
-	const char* Compile(const char* path, const char* output);
+	//UI
+	void												PlaceFocusedScriptOnEditor();
+	void												EnableScripCreationWindow(const GameObject* target = nullptr);
+	void												BlitScriptingError();
+	//Mono & Data
+	bool												Compile(const char* path, const char* output);
+	MonoAssemblyName*									LoadScriptAssembly(const char* assembly_path);
+	MonoObject*											CreateMonoObject(MonoAssemblyName* assembly, const char* class_name, const char* name_space);
+	std::vector<std::pair<const char*, FIELD_TYPE>>*	GetFieldsNameAndType(MonoObject* script);
+	FIELD_TYPE											StrToFieldType(const char* str)const;
 
 };
 #endif // !_MODULE_SCRIPTING_

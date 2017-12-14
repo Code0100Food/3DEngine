@@ -36,15 +36,33 @@ uint ScriptImporter::Import(const char * path)
 		char out_path[250];
 		sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, resource->GetOwnFile());
 		
-		const char* str = App->scripting->Compile(resource->GetOriginalFile(), out_path);
-		if (str != NULL)
+		//Compile the script!
+		if (!App->scripting->Compile(resource->GetOriginalFile(), out_path))
 		{
-			LOG("%s", str);
+			App->scripting->BlitScriptingError();
 		}
 		else
 		{
-			LOG("%s Compile Succes!", own_file_name);
+			LOG("%s Compile Success!", own_file_name);
+
+			//Import the class fields if the dll has been generated correctly!
+			MonoAssemblyName* assembly = App->scripting->LoadScriptAssembly(out_path);
+			if (assembly == nullptr)App->scripting->BlitScriptingError();
+			else
+			{
+				resource->SetAssembly(assembly);
+				usable_str = resource->GetOwnFile();
+				App->fs->GetUnformatedFileNameFromPath(resource->GetOwnFile(), &usable_str);
+				MonoObject* obj = App->scripting->CreateMonoObject(assembly, usable_str.c_str(), "");
+				if (obj == nullptr)App->scripting->BlitScriptingError();
+				else
+				{
+					std::vector<std::pair<const char*, FIELD_TYPE>>* fields = App->scripting->GetFieldsNameAndType(obj);
+
+				}
+			}
 		}
+
 
 		usable_str.clear();
 
@@ -109,14 +127,13 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 	char out_path[250];
 	sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_import->GetOwnFile());
 
-	const char* str = App->scripting->Compile(to_import->GetOriginalFile(), out_path);
-	if (str != NULL)
+	if (!App->scripting->Compile(to_import->GetOriginalFile(), out_path))
 	{
-		LOG("%s", str);
+		App->scripting->BlitScriptingError();
 	}
 	else
 	{
-		LOG("%s Compile Succes!", own_file_name);
+		LOG("%s Compile Success!", own_file_name);
 	}
 
 	usable_str.clear();

@@ -15,9 +15,22 @@
 ModuleScripting::ModuleScripting(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
 	MonoScripting::InitMono();
+
 	dll_path = MonoScripting::GetDLLPath();
 
 	text_editor = new TextEditor();
+
+	char environment_path[250];
+	sprintf(environment_path, "%s/%s%s", dll_path, SCRIPTING_FOLDER, "FiestaEngineEnviroment.dll");
+	
+	if (MonoScripting::LoadScriptAssembly(environment_path) != nullptr)
+	{
+		LOG("Fiesta Engine Environment Correctly Loaded!");
+	}
+	else
+	{
+		LOG("[error] Error on Environment Load!");
+	}
 }
 
 ModuleScripting::~ModuleScripting()
@@ -43,36 +56,32 @@ update_status ModuleScripting::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_STATE::KEY_DOWN)
 	{
-		char path[256];
+		/*char path[256];
 		char output_path[256];
 
 		sprintf(path, "%s\\%s%s",dll_path, SCRIPTING_FOLDER, "FiestaEngineEnviroment.txt");
 		sprintf(output_path, "%s\\%s%s", dll_path, SCRIPTING_FOLDER, "FiestaEngineEnviroment.dll");
 
-		const char* result = Compile(path, output_path);
-
-		if (result)
+		if (!Compile(path, output_path))
 		{
-			LOG(result);
+			BlitScriptingError();
 		}
 		else
 		{
 			App->fs->GetFileNameFromPath(output_path, &usable_str);
 			LOG("Compilation Success: %s", usable_str.c_str());
-		}
+		}*/
 
 		//Fiesta engine system
 		char path1[256];
 		char output_path1[256];
-
+		
 		sprintf(path1, "%s\\%s%s", dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.txt");
-		sprintf(output_path1, "%s\\%s%s", dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.dll");
+		sprintf(output_path1, "%s\\%s%s", dll_path, LIBRARY_SCRIPTS_FOLDER, "HelloWorld.dll");		
 
-		const char* result1 = Compile(path1, output_path1);
-
-		if (result1)
+		if (!Compile(path1, output_path1))
 		{
-			LOG(result1);
+			BlitScriptingError();
 		}
 		else
 		{
@@ -228,7 +237,64 @@ void ModuleScripting::EnableScripCreationWindow(const GameObject* target)
 	show_script_creation_win = true;
 }
 
-const char * ModuleScripting::Compile(const char * path, const char * output)
+void ModuleScripting::BlitScriptingError()
+{
+	const char* str = MonoScripting::GetLastError();
+	if (str != NULL)
+	{
+		LOG("%s", str);
+	}
+}
+
+bool ModuleScripting::Compile(const char * path, const char * output)
 {
 	return MonoScripting::CompileFile(path, output);
+}
+
+MonoAssemblyName * ModuleScripting::LoadScriptAssembly(const char * assembly_path)
+{
+	return MonoScripting::LoadScriptAssembly(assembly_path);
+}
+
+MonoObject * ModuleScripting::CreateMonoObject(MonoAssemblyName * assembly, const char * class_name, const char * name_space)
+{
+	return MonoScripting::CreateMonoObject(assembly, class_name, name_space);
+}
+
+std::vector<std::pair<const char*, FIELD_TYPE>>* ModuleScripting::GetFieldsNameAndType(MonoObject * script)
+{
+	//Reset fields
+	fields_vec.clear();
+	fields_str_vec.clear();
+
+	//Collect all the fields str data
+	/*AKA_ERIC*/
+	void* iterator = nullptr;
+	do {
+		const char* field_str = MonoScripting::GetFieldsNameAndType(script, iterator);
+		LOG("%s", field_str);
+	} while (iterator != nullptr);
+
+	{
+		App->scripting->BlitScriptingError();
+	}
+	
+	uint size = fields_str_vec.size();
+	for (uint k = 0; k < size; k++)
+	{
+		const char* str = strtok((char*)fields_str_vec[k].c_str(), "/");
+		const char* t_str = strtok(NULL, "/");
+
+		std::pair<const char*, FIELD_TYPE> pair;
+		pair.first = str;
+		pair.second = StrToFieldType(t_str);
+
+	}
+	return &fields_vec;
+}
+
+FIELD_TYPE ModuleScripting::StrToFieldType(const char * str) const
+{
+	if (strcmp(str, "...") == 0)return FIELD_TYPE::CHAR_FIELD;
+	return FIELD_TYPE::UNDEF_FIELD_TYPE;
 }

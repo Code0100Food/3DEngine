@@ -3,7 +3,6 @@
 #include "test.h"
 
 #include <direct.h>
-#include <string>
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/mono-config.h>
@@ -14,9 +13,9 @@
 #pragma comment(lib, "mono-2.0-sgen.lib")
 
 //Global variables
-MonoDomain*	main_domain = nullptr;
-std::string	dll_path;
-std::string	last_error;
+MonoDomain*					main_domain = nullptr;
+std::string					dll_path;
+std::string					last_error;
 
 namespace MonoScripting
 {
@@ -50,14 +49,14 @@ namespace MonoScripting
 
 		if (!main_domain)
 		{
-			last_error = "[ERROR] InitMono: Could not load the domain";
+			last_error = "[error] InitMono: Could not load the domain";
 			return false;
 		}
 	
 		return true;
 	}
 
-	const char* MonoScripting::CompileFile(const char* input_file, const char* output_file)
+	bool MonoScripting::CompileFile(const char* input_file, const char* output_file)
 	{
 		//Set the compiler path
 		std::string compiler_path = dll_path;
@@ -69,7 +68,8 @@ namespace MonoScripting
 
 		if (!compile_assembly)
 		{
-			return "[error] Compiler not load";
+			last_error = "[error] Compiler not load";
+			return false;
 		}
 
 		//Load the compiler class and method
@@ -94,7 +94,14 @@ namespace MonoScripting
 
 		if (strlen(returned_message) == 0)
 		{
-			return nullptr;
+			return true;
+		}
+		else
+		{
+			char alert[300];
+			sprintf(alert, "[error] %s", returned_message);
+			last_error = alert;
+			return false;
 		}
 	}
 
@@ -108,7 +115,7 @@ namespace MonoScripting
 
 		if (!new_script_assembly)
 		{
-			last_error = "[ERROR] LoadScriptAssembly: Could not load Assembly, check if the path is correct";
+			last_error = "[error] LoadScriptAssembly: Could not load Assembly, check if the path is correct";
 			return nullptr;
 		}
 
@@ -126,7 +133,7 @@ namespace MonoScripting
 
 		if (!tmp)
 		{
-			last_error = "[ERROR] CreateMonoObject: Assembly not Loaded, call LoadScriptAssembly() to get a correct MonoassemblyName";
+			last_error = "[error] CreateMonoObject: Assembly not Loaded, call LoadScriptAssembly() to get a correct MonoassemblyName";
 			return ret;
 		}
 
@@ -136,7 +143,7 @@ namespace MonoScripting
 
 		if (!script_class)
 		{
-			last_error = "[ERROR] CreateMonoObject: Namespace or Class name not Found";
+			last_error = "[error] CreateMonoObject: Namespace or Class name not Found";
 			return ret;
 		}
 
@@ -166,7 +173,7 @@ namespace MonoScripting
 		//Didn't find the method name return
 		if (!method_to_execute)
 		{
-			last_error = "[ERROR] ExecuteMethod: Method not Found check if method_name is correct";
+			last_error = "[error] ExecuteMethod: Method not Found check if method_name is correct";
 			return false;
 		}
 
@@ -186,25 +193,20 @@ namespace MonoScripting
 		return false;
 	}
 
-	std::vector<const char*> MonoScripting::GetFieldsNameAndType(MonoObject* script)
+	const char* MonoScripting::GetFieldsNameAndType(MonoObject* script, void* iterator)
 	{
-		//returnd value
-		std::vector<const char*> ret;
-
 		//Class
-		void* iterator = nullptr;
 		MonoClass* _class = mono_object_get_class(script);
 
 		if (!_class)
 		{
-			last_error = "[ERROR] GetFieldsNameAndType: Class didn't Loaded check if MonoObject is correct";
-			return ret;
+			last_error = "[error] GetFieldsNameAndType: Class didn't Loaded check if MonoObject is correct";
+			return NULL;
 		}
 
 		MonoClassField* field = nullptr;
 		
 		//Loop for all fields, returned value will be Name/Type example -> num_gameobjects/int
-		std::string name_and_type;
 		while ((field = mono_class_get_fields(_class, &iterator)))
 		{
 			//Get the Name
@@ -215,16 +217,12 @@ namespace MonoScripting
 			const char* type_name = mono_type_get_name(type);
 
 			//Set String and fill vector
-			name_and_type += name;
-			name_and_type += "/";
-			name_and_type += type_name;
-			ret.push_back(name_and_type.c_str());
-
-			//Reset the string
-			name_and_type.clear();
+			char final_str[250];
+			sprintf(final_str,"%s/%s", name, type_name);
+			return final_str;
 		}
 
-		return ret;
+		return NULL;
 	}
 
 	bool MonoScripting::GetFieldValue(MonoObject* script, const char* field_name, void* output_value)
@@ -234,7 +232,7 @@ namespace MonoScripting
 
 		if (!_class)
 		{
-			last_error = "[ERROR] GetFieldValue: Class didn't Loaded check if MonoObject is correct";
+			last_error = "[error] GetFieldValue: Class didn't Loaded check if MonoObject is correct";
 			return false;
 		}
 
@@ -242,7 +240,7 @@ namespace MonoScripting
 
 		if (!field)
 		{
-			last_error = "[ERROR] GetFieldValue: Field didn't Loaded check if the field name is correct";
+			last_error = "[error] GetFieldValue: Field didn't Loaded check if the field name is correct";
 			return false;
 		}
 
@@ -259,7 +257,7 @@ namespace MonoScripting
 
 		if (!_class)
 		{
-			last_error = "[ERROR] SetFieldValue: Class didn't Loaded check if MonoObject is correct";
+			last_error = "[error] SetFieldValue: Class didn't Loaded check if MonoObject is correct";
 			return false;
 		}
 
@@ -267,7 +265,7 @@ namespace MonoScripting
 
 		if (!field)
 		{
-			last_error = "[ERROR] SetFieldValue: Field didn't Loaded check if the field name is correct";
+			last_error = "[error] SetFieldValue: Field didn't Loaded check if the field name is correct";
 			return false;
 		}
 
@@ -279,137 +277,171 @@ namespace MonoScripting
 
 }
 
+/*
+int main(int argc, char *argv[])
+{
 
-//int main(int argc, char *argv[])
-//{
-//
-//	char my_path[FILENAME_MAX];
-//	_getcwd(my_path, FILENAME_MAX);
-//	
-//	std::string lib_path = my_path;
-//	lib_path += "/DATA/lib";
-//
-//	std::string etc_path = my_path;
-//	etc_path += "/DATA/etc";
-//
-//	std::string compiler_path = my_path;
-//	compiler_path += "/DATA/compiler.dll";
-//
-//	mono_set_dirs(lib_path.c_str(), etc_path.c_str());
-//	
-//	mono_config_parse(nullptr);
-//
-//	const char domain_name[] = "MonoScripting";
-//
-//	MonoDomain* dom = mono_jit_init(domain_name);
-//
-//	MonoAssembly* assembler = nullptr;
-//	assembler = mono_domain_assembly_open(dom, "C:/Users/Th_Sola/Documents/GitHub/3DEngine/Engine/Data/DATA/Scripting/FiestaEngineEnviroment.dll");
-//
-//	printf("Error");
-//
-//	if (!assembler)
-//	{
-//		printf("Error");
-//	}
-//
-//	/*MonoImage* image = mono_assembly_get_image(assembler);
-//	MonoClass* _class = mono_class_from_name(image, "MonoScripting", "Compiler");
-//	MonoMethod* hellman = mono_class_get_method_from_name(_class, "CompileDll", 2);*/
-//	
-//	int lol = 8;
-//
-//
-//	std::string data_path = my_path;
-//	data_path += "/DATA/";
-//
-//	std::string result_file = data_path;
-//	result_file+= "HelloWorld.dll";
-//
-//	MonoAssembly* hello_world_assembler = nullptr;
-//	hello_world_assembler = mono_domain_assembly_open(dom, result_file.c_str());
-//
-//	MonoAssemblyName* nameofnamesis = mono_assembly_get_name(hello_world_assembler);
-//
-//
-//
-//	if (!hello_world_assembler)
-//	{
-//		printf("Error");
-//	}
-//
-//	//Execute a file
-//	
-//
-//	MonoImage* hello_world_image = mono_assembly_get_image(hello_world_assembler);
-//	MonoClass* hello_world_class = mono_class_from_name(hello_world_image, "", "HelloWorld");
-//	MonoClass* parent = mono_class_get_parent(hello_world_class);
-//
-//	void* iter = nullptr;
-//	MonoProperty* proporto = nullptr;
-//
-//	int a = mono_class_num_methods(hello_world_class);
-//	MonoMethod* m = nullptr;
-//	const char* tuputamadre;
-//	
-//
-//	MonoMethod* hello_world_hellman = mono_class_get_method_from_name(parent, "GetPublicProperties", 0);
-//	MonoMethod* constructor_method = mono_class_get_method_from_name(parent, ".ctor", 0);
-//	MonoMethod* change_int_method = mono_class_get_method_from_name(parent, "ChangeInt", 1);
-//	
-//	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
-//	MonoObject* parent_instance = mono_object_new(dom, parent);
-//
-//	mono_runtime_invoke(constructor_method, hello_world_instance, NULL, NULL);
-//
-//	MonoArray* hello_world_handle = nullptr;// = (MonoArray*)mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
-//	//mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
-//	
-//	void* ptr = nullptr;
-//
-//	MonoClassField* field;
-//	
-//	field = mono_class_get_fields(parent, &ptr);
-//	const char* name = mono_field_get_name(field);
-//	MonoType* type = mono_field_get_type(field);
-//	const char* ty_str = mono_type_get_name(type);
-//	//mono_field_get_data(field);
-//	
-//	//void* args_[1];
-//	void* value[1];
-//	mono_field_get_value(hello_world_instance, field, &value);
-//	int lololololol = (int)(value[0]);
-//
-//	
-//
-//	//int t = *(int*)args_;
-//
-//	void* args[1];
-//	args[0] = &value;
-//
-//	mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
-//
-//	//*value[0] = 2;
-//
-//	mono_field_set_value(hello_world_instance, field, &value);
-//	
-//	mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
-//
-//	//int e = *(int*)mono_object_unbox(hello_world_handle);
-//
-//
-//	//MonoArray* array_ = (MonoArray*)mono_object_unbox(hello_world_handle);
-//
-//	//MonoString* omg = mono_array_get(array_, MonoString*, 0);
-//	int k = mono_array_length(hello_world_handle);
-//	MonoString* val;
-//	for (int g = 0; g < k; g++)
-//	{
-//		val = mono_array_get(hello_world_handle, MonoString*, g);
-//		tuputamadre = mono_string_to_utf8(val);
-//	}
-//	
-//
-//	getchar();
-//	return 0;
-//}
+	char my_path[FILENAME_MAX];
+	_getcwd(my_path, FILENAME_MAX);
+	
+	std::string lib_path = my_path;
+	lib_path += "/DATA/lib";
+
+	std::string etc_path = my_path;
+	etc_path += "/DATA/etc";
+
+	std::string compiler_path = my_path;
+	compiler_path += "/DATA/compiler.dll";
+
+	mono_set_dirs(lib_path.c_str(), etc_path.c_str());
+	
+	mono_config_parse(nullptr);
+
+	const char domain_name[] = "MonoScripting";
+
+	MonoDomain* dom = mono_jit_init(domain_name);
+
+	MonoAssembly* assembler = nullptr;
+	assembler = mono_domain_assembly_open(dom, "C:/Users/ferra/Desktop/3DEngine/Engine/Data/DATA/Scripting/FiestaEngineEnviroment.dll");
+
+	printf("Error");
+
+	if (!assembler)
+	{
+		printf("Error");
+	}
+
+	//MonoImage* image = mono_assembly_get_image(assembler);
+	//MonoClass* _class = mono_class_from_name(image, "MonoScripting", "Compiler");
+	//MonoMethod* hellman = mono_class_get_method_from_name(_class, "CompileDll", 2);
+	
+	int lol = 8;
+
+
+	std::string data_path = my_path;
+	data_path += "/DATA/";
+
+	std::string result_file = data_path;
+	result_file+= "HelloWorld.dll";
+
+	MonoAssembly* hello_world_assembler = nullptr;
+	hello_world_assembler = mono_domain_assembly_open(dom, result_file.c_str());
+
+	MonoAssemblyName* nameofnamesis = mono_assembly_get_name(hello_world_assembler);
+
+
+
+	if (!hello_world_assembler)
+	{
+		printf("Error");
+	}
+
+	//Execute a file
+	
+
+	MonoImage* hello_world_image = mono_assembly_get_image(hello_world_assembler);
+	MonoClass* hello_world_class = mono_class_from_name(hello_world_image, "", "HelloWorld");
+	MonoClass* parent = mono_class_get_parent(hello_world_class);
+
+	void* iter = nullptr;
+	MonoProperty* proporto = nullptr;
+
+	int a = mono_class_num_methods(hello_world_class);
+	MonoMethod* m = nullptr;
+	const char* tuputamadre;
+	
+
+	MonoMethod* hello_world_hellman = mono_class_get_method_from_name(parent, "GetPublicProperties", 0);
+	MonoMethod* constructor_method = mono_class_get_method_from_name(parent, ".ctor", 0);
+	MonoMethod* change_int_method = mono_class_get_method_from_name(parent, "ChangeInt", 1);
+	
+	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
+	MonoObject* parent_instance = mono_object_new(dom, parent);
+
+	mono_runtime_invoke(constructor_method, hello_world_instance, NULL, NULL);
+
+	MonoArray* hello_world_handle = nullptr;// = (MonoArray*)mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
+	mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
+	
+	void* ptr = nullptr;
+
+	MonoClassField* field;
+	
+
+	while ((field = mono_class_get_fields(parent, &ptr)))
+	{
+		const char* name = mono_field_get_name(field);
+		MonoType* type = mono_field_get_type(field);
+		const char* ty_str = mono_type_get_name(type);
+		mono_field_get_data(field);
+	}
+
+	std::vector<const char*> ret;
+
+	//Class
+	void* iterator = nullptr;
+	MonoClass* _class = mono_object_get_class(hello_world_instance);
+
+
+	field = nullptr;
+
+	//Loop for all fields, returned value will be Name/Type example -> num_gameobjects/int
+	std::string name_and_type;
+	while ((field = mono_class_get_fields(_class, &iterator)))
+	{
+		//Get the Name
+		const char* name = mono_field_get_name(field);
+
+		//Get Type
+		MonoType* type = mono_field_get_type(field);
+		const char* type_name = mono_type_get_name(type);
+
+		//Set String and fill vector
+		name_and_type += name;
+		name_and_type += "/";
+		name_and_type += type_name;
+		ret.push_back(name_and_type.c_str());
+
+		//Reset the string
+		//name_and_type.clear();
+	}
+
+	/*void* args_[1];
+	void* value[1];
+	mono_field_get_value(hello_world_instance, field, &value);
+	int lololololol = (int)(value[0]);
+
+	
+
+	int t = *(int*)args_;
+
+	void* args[1];
+	args[0] = &value;
+
+	mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
+
+	//*value[0] = 2;
+
+	mono_field_set_value(hello_world_instance, field, &value);
+	
+	mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
+
+	int e = *(int*)mono_object_unbox(hello_world_handle);
+
+
+	MonoArray* array_ = (MonoArray*)mono_object_unbox(hello_world_handle);
+
+	MonoString* omg = mono_array_get(array_, MonoString*, 0);
+	int k = mono_array_length(hello_world_handle);
+	MonoString* val;
+	for (int g = 0; g < k; g++)
+	{
+		val = mono_array_get(hello_world_handle, MonoString*, g);
+		tuputamadre = mono_string_to_utf8(val);
+	}
+	
+	
+	//getchar();
+	return 0;
+}
+*/

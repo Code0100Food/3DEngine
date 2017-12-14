@@ -2,8 +2,7 @@
 #define _COMPONENT_SCRIPT_H_
 
 #include "Component.h"
-
-class ResourceScript;
+#include "ResourceScript.h"
 
 class ComponentScript : public Component
 {
@@ -15,7 +14,8 @@ public:
 
 private:
 
-	ResourceScript*	resource_script = nullptr;
+	ResourceScript*				resource_script = nullptr;
+	std::vector<ScriptField>	fields;
 
 public:
 
@@ -24,7 +24,6 @@ public:
 
 	//Get Methods -----------
 	
-
 	//UI Methods
 	void BlitComponentInspector();
 

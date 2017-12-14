@@ -4,9 +4,13 @@ using System.Collections.Generic;
 
 namespace FiestaEngine
 {
+public class Tessto
+{
+
+}
 	public class Festejo
 	{
-
+		public Tessto fest = null;
 		public int estonova = 3;
 		public int estoSIva = 3;
 
@@ -14,6 +18,7 @@ namespace FiestaEngine
    		{
 			estonova = 1;
 			estoSIva = 2;
+			fest = null;
 
         		List<string> property_names = new List<string>();
 

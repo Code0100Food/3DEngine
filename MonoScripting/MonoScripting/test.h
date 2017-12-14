@@ -11,15 +11,15 @@ typedef struct _MonoAssemblyName MonoAssemblyName;
 namespace MonoScripting
 {
 	//Functionality
-	EXPORT_THIS const char*		GetDLLPath();
-	EXPORT_THIS const char*		GetLastError();
+	EXPORT_THIS const char*					GetDLLPath();
+	EXPORT_THIS const char*					GetLastError();
 
 	//Mono basics 
 	EXPORT_THIS bool							InitMono();
 	EXPORT_THIS bool							CleanUpMono();
 
 	//Compile Function
-	EXPORT_THIS const char*						CompileFile(const char* input_file, const char* output_file);
+	EXPORT_THIS bool							CompileFile(const char* input_file, const char* output_file);
 	EXPORT_THIS MonoAssemblyName*				LoadScriptAssembly(const char* assembly_path);
 	EXPORT_THIS MonoObject*						CreateMonoObject(MonoAssemblyName* assembly, const char* class_name, const char* name_space = "");
 
@@ -27,7 +27,7 @@ namespace MonoScripting
 	EXPORT_THIS bool							ExecuteMethod(MonoObject* script, const char* name);
 
 	//Fields [attributes] methods
-	EXPORT_THIS std::vector<const char*>		GetFieldsNameAndType(MonoObject* script);
+	EXPORT_THIS const char*						GetFieldsNameAndType(MonoObject* script,void* iterator);
 	EXPORT_THIS bool							GetFieldValue(MonoObject* script, const char* field_name, void* output_value);
 	EXPORT_THIS bool							SetFieldValue(MonoObject* script, const char* field_name, void* input_value);
 }

@@ -4,25 +4,64 @@
 #include "Application.h"
 #include "ModuleScripting.h"
 
+/// ScriptField -------------------------------------------
+// Constructors =================================
+ScriptField::ScriptField()
+{
+
+}
+
+// Destructors ==================================
+ScriptField::~ScriptField()
+{
+
+}
+/// -------------------------------------------------------
+
+/// ResourceScript ----------------------------------------
+// Constructors =================================
 ResourceScript::ResourceScript():Resource(SCRIPT_RESOURCE)
 {
 
 }
 
+// Destructors ==================================
 ResourceScript::~ResourceScript()
 {
 
 }
-
+// Set Methods ==================================
 void ResourceScript::SetBuffer(const char * bf)
 {
 	if (buffer != nullptr)RELEASE_ARRAY(buffer);
 	buffer = (char*)bf;
 }
 
+void ResourceScript::SetAssembly(const MonoAssemblyName * asm_)
+{
+	assembly = (MonoAssemblyName*)asm_;
+}
+
+// Get Methods ==================================
 char * ResourceScript::GetBuffer() const
 {
 	return buffer;
+}
+
+std::vector<ScriptField>* ResourceScript::GetFields()
+{
+	return &fields;
+}
+
+// Functionality ================================
+void ResourceScript::ClearFields()
+{
+
+}
+
+void ResourceScript::AddField(const char * name, FIELD_TYPE type)
+{
+
 }
 
 void ResourceScript::BlitUI() const
