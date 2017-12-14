@@ -34,8 +34,7 @@ private:
 	char					name_buffer[200];
 	
 	mutable std::string								usable_str;
-	std::vector<std::string>						fields_str_vec;
-	std::vector<std::pair<const char*, FIELD_TYPE>> fields_vec;
+	std::vector<std::pair<std::string, FIELD_TYPE>> fields_vec;
 
 	const char*				dll_path = nullptr;
 
@@ -57,8 +56,9 @@ public:
 	bool												Compile(const char* path, const char* output);
 	MonoAssemblyName*									LoadScriptAssembly(const char* assembly_path);
 	MonoObject*											CreateMonoObject(MonoAssemblyName* assembly, const char* class_name, const char* name_space);
-	std::vector<std::pair<const char*, FIELD_TYPE>>*	GetFieldsNameAndType(MonoObject* script);
+	std::vector<std::pair<std::string, FIELD_TYPE>>*	GetFieldsNameAndType(MonoObject* script);
 	FIELD_TYPE											StrToFieldType(const char* str)const;
+	const char*											FieldTypeToStr(FIELD_TYPE type)const;
 
 };
 #endif // !_MODULE_SCRIPTING_

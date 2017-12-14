@@ -61,7 +61,12 @@ void ResourceScript::ClearFields()
 
 void ResourceScript::AddField(const char * name, FIELD_TYPE type)
 {
+	ScriptField new_field;
+	
+	new_field.name = name;
+	new_field.type = type;
 
+	fields.push_back(new_field);
 }
 
 void ResourceScript::BlitUI() const
@@ -86,6 +91,15 @@ void ResourceScript::BlitComplexUI()
 	ImGui::Text("References: %i", references);
 	ImGui::Text("Last edition time: %i", last_edition_time);
 	
+	ImGui::NewLine();
+
+	ImGui::Text("Fields:");
+	uint size = fields.size();
+	for (uint k = 0; k < size; k++)
+	{
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.2f, 1.0f), "%s [%s]", fields[k].name.c_str(),App->scripting->FieldTypeToStr(fields[k].type));
+	}
+
 	ImGui::NewLine();
 	
 	ImGui::TextWrapped(buffer);

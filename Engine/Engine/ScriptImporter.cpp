@@ -57,8 +57,12 @@ uint ScriptImporter::Import(const char * path)
 				if (obj == nullptr)App->scripting->BlitScriptingError();
 				else
 				{
-					std::vector<std::pair<const char*, FIELD_TYPE>>* fields = App->scripting->GetFieldsNameAndType(obj);
-
+					std::vector<std::pair<std::string, FIELD_TYPE>>* fields = App->scripting->GetFieldsNameAndType(obj);
+					uint size = fields->size();
+					for (uint k = 0; k < size; k++)
+					{
+						resource->AddField(fields->at(k).first.c_str(), fields->at(k).second);
+					}
 				}
 			}
 		}

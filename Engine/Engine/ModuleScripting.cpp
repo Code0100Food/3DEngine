@@ -261,40 +261,71 @@ MonoObject * ModuleScripting::CreateMonoObject(MonoAssemblyName * assembly, cons
 	return MonoScripting::CreateMonoObject(assembly, class_name, name_space);
 }
 
-std::vector<std::pair<const char*, FIELD_TYPE>>* ModuleScripting::GetFieldsNameAndType(MonoObject * script)
+std::vector<std::pair<std::string, FIELD_TYPE>>* ModuleScripting::GetFieldsNameAndType(MonoObject * script)
 {
 	//Reset fields
 	fields_vec.clear();
-	fields_str_vec.clear();
 
 	//Collect all the fields str data
-	/*AKA_ERIC*/
 	void* iterator = nullptr;
 	do {
+
 		const char* field_str = MonoScripting::GetFieldsNameAndType(script, &iterator);
-		//LOG(field_str);
+		if (field_str != NULL)
+		{
+			char cpy_fld_str[200];
+			strcpy(cpy_fld_str, field_str);
+			usable_str = cpy_fld_str;
+
+			const char* str = strtok((char*)usable_str.c_str(), "/");
+			const char* t_str = strtok(NULL, "/");
+
+			std::pair<std::string, FIELD_TYPE> pair;
+			pair.first = str;
+			pair.second = StrToFieldType(t_str);
+
+			fields_vec.push_back(pair);
+		}
+		
 	} while (iterator != nullptr);
 
-	{
-		App->scripting->BlitScriptingError();
-	}
-	
-	uint size = fields_str_vec.size();
-	for (uint k = 0; k < size; k++)
-	{
-		const char* str = strtok((char*)fields_str_vec[k].c_str(), "/");
-		const char* t_str = strtok(NULL, "/");
 
-		std::pair<const char*, FIELD_TYPE> pair;
-		pair.first = str;
-		pair.second = StrToFieldType(t_str);
-
-	}
 	return &fields_vec;
 }
 
 FIELD_TYPE ModuleScripting::StrToFieldType(const char * str) const
 {
-	if (strcmp(str, "...") == 0)return FIELD_TYPE::CHAR_FIELD;
+	if (strcmp(str, "System.Int32") == 0)return FIELD_TYPE::INT32_FIELD;
+	if (strcmp(str, "System.Single") == 0)return FIELD_TYPE::FLOAT_FIELD;
 	return FIELD_TYPE::UNDEF_FIELD_TYPE;
+}
+
+const char * ModuleScripting::FieldTypeToStr(FIELD_TYPE type) const
+{
+	switch (type)
+	{
+	case CHAR_FIELD:
+		break;
+	case STRING_FIELD:
+		break;
+	case INT8_FIELD:
+		break;
+	case INT16_FIELD:
+		break;
+	case INT32_FIELD: return "System.Int32";	break;
+	case INT64_FIELD:
+		break;
+	case UINT8_FIELD:
+		break;
+	case UINT16_FIELD:
+		break;
+	case UINT32_FIELD:
+		break;
+	case UINT64_FIELD:
+		break;
+	case FLOAT_FIELD: return "System.Single";	break;
+	case CLASS_FIELD:
+		break;
+	}
+	return "undef_field_type";
 }
