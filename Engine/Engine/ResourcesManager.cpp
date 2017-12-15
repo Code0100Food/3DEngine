@@ -232,6 +232,19 @@ ResourceMesh * ResourcesManager::GetPrimitiveResourceMesh(PRIMITIVE_TYPE type)
 	return nullptr;
 }
 
+std::vector<Resource*>* ResourcesManager::GetResourcesVectorByType(RESOURCE_TYPE type)
+{
+	temp_res_vector.clear();
+
+	uint size = resources.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (resources[k]->GetResourceType() == type)temp_res_vector.push_back(resources[k]);
+	}
+
+	return &temp_res_vector;
+}
+
 uint ResourcesManager::CheckAssetsResources()
 {
 	return App->fs->GetUserRootDir()->ImportAllFilesInside();

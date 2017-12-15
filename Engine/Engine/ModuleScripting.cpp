@@ -271,6 +271,20 @@ void ModuleScripting::ReloadEngineEnvironment()
 	}
 }
 
+void ModuleScripting::ReloadScripts(const ResourceScript * res)
+{
+	/*vector<Resource*>* scripts_res_vec = App->res_manager->GetResourcesVectorByType(RESOURCE_TYPE::SCRIPT_RESOURCE);
+	
+	uint size = scripts_res_vec->size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (scripts_res_vec->at(k) != res)
+		{
+			//Reload assembly and objects for the components!
+		}
+	}*/
+}
+
 void ModuleScripting::UnLoadAppDomain()
 {
 	MonoScripting::UnLoadAppDomain();

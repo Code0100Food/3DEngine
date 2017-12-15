@@ -50,15 +50,16 @@ private:
 	std::experimental::filesystem::v1::file_time_type real_last_time;
 	std::time_t last_time;
 	
-	mutable std::string usable_string_a;
-
-
+	mutable std::string		usable_string_a;
+	std::vector<Resource*>	temp_res_vector;
+	
 public:
 
 	//Resource management methods
-	Resource*		CreateResource(RESOURCE_TYPE type, uint id = 0);
-	ResourceMesh*	GetPrimitiveResourceMesh(PRIMITIVE_TYPE type);
-	
+	Resource*					CreateResource(RESOURCE_TYPE type, uint id = 0);
+	ResourceMesh*				GetPrimitiveResourceMesh(PRIMITIVE_TYPE type);
+	std::vector<Resource*>*		GetResourcesVectorByType(RESOURCE_TYPE type);
+
 	//Import methods
 	uint	CheckAssetsResources();
 	bool	CheckIfFileIsImported(const char* path)const;

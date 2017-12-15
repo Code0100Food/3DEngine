@@ -55,6 +55,7 @@ public:
 	//Mono & Data
 	void												LoadAppDomain();
 	void												ReloadEngineEnvironment();
+	void												ReloadScripts(const ResourceScript* res);
 	void												UnLoadAppDomain();
 	bool												Compile(const char* path, const char* output);
 	MonoAssemblyName*									LoadScriptAssembly(const char* assembly_path);

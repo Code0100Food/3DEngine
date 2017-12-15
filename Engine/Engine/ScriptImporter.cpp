@@ -99,6 +99,27 @@ uint ScriptImporter::Import(const char * path)
 
 bool ScriptImporter::ReImport(ResourceScript * to_reload)
 {
+	if (to_reload->GetAssembly() != nullptr)
+	{
+		//Script buffer
+		char* buffer = nullptr;
+		int	  lenght = App->fs->LoadFile(to_reload->GetOriginalFile(), &buffer);
+
+		if (buffer && lenght)
+		{
+			char* real_str = new char[lenght + 1];
+			memcpy(real_str, buffer, lenght);
+			real_str[lenght] = '\0';
+			RELEASE(buffer);
+
+			to_reload->SetBuffer(real_str);
+
+			return NewImport(to_reload);
+		}
+
+		return false;
+	}
+	
 	bool ret = false;
 
 	//Script buffer
@@ -111,8 +132,6 @@ bool ScriptImporter::ReImport(ResourceScript * to_reload)
 		char out_path[250];
 		sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_reload->GetOwnFile());
 		
-		if (to_reload->GetAssembly() != nullptr)MonoScripting::UnLoadScriptAssembly(to_reload->GetAssembly());
-
 		MonoAssemblyName* assembly = App->scripting->LoadScriptAssembly(out_path);
 		
 		if (assembly == nullptr)App->scripting->BlitScriptingError();
@@ -179,6 +198,7 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 	App->scripting->UnLoadAppDomain();
 	App->scripting->LoadAppDomain();
 	App->scripting->ReloadEngineEnvironment();
+	App->scripting->ReloadScripts(to_import);
 
 	if (!App->scripting->Compile(to_import->GetOriginalFile(), out_path))
 	{
