@@ -315,8 +315,9 @@ bool ModuleScripting::GetFieldValue(MonoObject * script, const char * field_name
 
 FIELD_TYPE ModuleScripting::StrToFieldType(const char * str) const
 {
-	if (strcmp(str, "System.Int32") == 0)return FIELD_TYPE::INT32_FIELD;
-	if (strcmp(str, "System.Single") == 0)return FIELD_TYPE::FLOAT_FIELD;
+	if (strcmp(str, "System.Int32") == 0)	return FIELD_TYPE::INT32_FIELD;
+	if (strcmp(str, "System.Single") == 0)	return FIELD_TYPE::FLOAT_FIELD;
+	if (strcmp(str, "System.Boolean") == 0)	return FIELD_TYPE::BOOL_FIELD;
 	return FIELD_TYPE::UNDEF_FIELD_TYPE;
 }
 
@@ -332,7 +333,7 @@ const char * ModuleScripting::FieldTypeToStr(FIELD_TYPE type) const
 		break;
 	case INT16_FIELD:
 		break;
-	case INT32_FIELD: return "System.Int32";	break;
+	case INT32_FIELD:	return "System.Int32";	break;
 	case INT64_FIELD:
 		break;
 	case UINT8_FIELD:
@@ -343,7 +344,8 @@ const char * ModuleScripting::FieldTypeToStr(FIELD_TYPE type) const
 		break;
 	case UINT64_FIELD:
 		break;
-	case FLOAT_FIELD: return "System.Single";	break;
+	case FLOAT_FIELD:	return "System.Single";	break;
+	case BOOL_FIELD:	return "System.Boolean";break;
 	case CLASS_FIELD:
 		break;
 	}

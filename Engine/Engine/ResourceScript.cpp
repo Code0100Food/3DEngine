@@ -69,7 +69,8 @@ void ResourceScript::ClearFields()
 	uint size = fields.size();
 	for (uint k = 0; k < size; k++)
 	{
-		if (fields[k].data != nullptr)RELEASE(fields[k].data);
+		//if (fields[k].data != nullptr)RELEASE(fields[k].data);
+		fields[k].data = nullptr;
 		fields[k].name.clear();
 	}
 	fields.clear();
@@ -147,6 +148,17 @@ void ResourceScript::BlitComplexUI()
 
 			case FLOAT_FIELD:
 				ImGui::TextColored(ImVec4(1.0f, 0.24f, 0.6f, 1.0f), "%.3f", *(float*)fields[k].data);
+				break;
+
+			case BOOL_FIELD:
+				if (*(bool*)fields[k].data)
+				{
+					ImGui::TextColored(ImVec4(1.0f, 0.24f, 0.6f, 1.0f), "true");
+				}
+				else
+				{
+					ImGui::TextColored(ImVec4(1.0f, 0.24f, 0.6f, 1.0f), "false");
+				}
 				break;
 
 			case CLASS_FIELD:

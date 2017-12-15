@@ -80,6 +80,10 @@ void ComponentScript::BlitComponentInspector()
 			ImGui::InputFloat(fields[k].name.c_str(), (float*)fields[k].data);
 			break;
 
+		case BOOL_FIELD:
+			ImGui::Checkbox(fields[k].name.c_str(), (bool*)fields[k].data);
+			break;
+
 		case CLASS_FIELD:
 			break;
 		}
