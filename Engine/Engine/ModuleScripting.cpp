@@ -15,6 +15,8 @@
 ModuleScripting::ModuleScripting(const char * _name, MODULE_ID _id, bool _config_menu, bool _enabled) :Module(_name, _id, _config_menu, _enabled)
 {
 	MonoScripting::InitMono();
+	
+	MonoScripting::LoadAppDomain();
 
 	dll_path = MonoScripting::GetDLLPath();
 
@@ -247,6 +249,31 @@ void ModuleScripting::BlitScriptingError()
 	{
 		LOG("%s", str);
 	}
+}
+
+void ModuleScripting::LoadAppDomain()
+{
+	MonoScripting::LoadAppDomain();
+}
+
+void ModuleScripting::ReloadEngineEnvironment()
+{
+	char environment_path[250];
+	sprintf(environment_path, "%s/%s%s", dll_path, SCRIPTING_FOLDER, "FiestaEngineEnviroment.dll");
+
+	if (MonoScripting::LoadScriptAssembly(environment_path) != nullptr)
+	{
+		LOG("Fiesta Engine Environment Correctly Loaded!");
+	}
+	else
+	{
+		LOG("[error] Error on Environment Load!");
+	}
+}
+
+void ModuleScripting::UnLoadAppDomain()
+{
+	MonoScripting::UnLoadAppDomain();
 }
 
 bool ModuleScripting::Compile(const char * path, const char * output)

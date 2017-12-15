@@ -38,8 +38,6 @@ uint ScriptImporter::Import(const char * path)
 
 		char out_path[250];
 		sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, resource->GetOwnFile());
-		
-		if (resource->GetAssembly() != nullptr)MonoScripting::UnLoadScriptAssembly(resource->GetAssembly());
 
 		//Compile the script!
 		if (!App->scripting->Compile(resource->GetOriginalFile(), out_path))
@@ -177,8 +175,10 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 	
 	char out_path[250];
 	sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_import->GetOwnFile());
-	
-	//if (to_import->GetAssembly() != nullptr)MonoScripting::UnLoadScriptAssembly(to_import->GetAssembly());
+
+	App->scripting->UnLoadAppDomain();
+	App->scripting->LoadAppDomain();
+	App->scripting->ReloadEngineEnvironment();
 
 	if (!App->scripting->Compile(to_import->GetOriginalFile(), out_path))
 	{
@@ -189,6 +189,7 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 		LOG("%s Compile Success!", own_file_name);
 
 		//Import the class fields if the dll has been generated correctly!
+		//if (to_import->GetAssembly() != nullptr)MonoScripting::UnLoadScriptAssembly(to_import->GetAssembly());
 		MonoAssemblyName* assembly = App->scripting->LoadScriptAssembly(out_path);
 		if (assembly == nullptr)App->scripting->BlitScriptingError();
 		else

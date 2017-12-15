@@ -53,6 +53,9 @@ public:
 	void												EnableScripCreationWindow(const GameObject* target = nullptr);
 	void												BlitScriptingError();
 	//Mono & Data
+	void												LoadAppDomain();
+	void												ReloadEngineEnvironment();
+	void												UnLoadAppDomain();
 	bool												Compile(const char* path, const char* output);
 	MonoAssemblyName*									LoadScriptAssembly(const char* assembly_path);
 	MonoObject*											CreateMonoObject(MonoAssemblyName* assembly, const char* class_name, const char* name_space);

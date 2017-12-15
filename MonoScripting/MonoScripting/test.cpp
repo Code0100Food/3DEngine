@@ -56,6 +56,55 @@ namespace MonoScripting
 		return true;
 	}
 
+	bool MonoScripting::CleanUpMono()
+	{
+		if (main_domain)
+		{
+			mono_jit_cleanup(main_domain);
+			return true;
+		}
+
+		return false;
+	}
+
+	MonoDomain * LoadAppDomain()
+	{
+		MonoDomain* newDomain = mono_domain_create_appdomain("CCubed Child Domain", NULL);
+		if (!newDomain) 
+		{
+			last_error = "Error creating domain";
+			return nullptr;
+		}
+		
+		//mono_thread_push_appdomain_ref(newDomain);
+
+		if (!mono_domain_set(newDomain, false)) 
+		{
+			last_error = "Error setting domain";
+			return nullptr;
+		}
+
+		return mono_domain_get();
+	}
+
+	void UnLoadAppDomain()
+	{
+		MonoDomain* old_domain = mono_domain_get();
+		if (old_domain && old_domain != mono_get_root_domain())
+		{
+			if (!mono_domain_set(mono_get_root_domain(), false))
+			{
+				last_error = "Error setting domain";
+			}
+
+			//mono_thread_pop_appdomain_ref();
+			mono_domain_unload(old_domain);
+		}
+
+		//unloading the domain
+		mono_gc_collect(mono_gc_max_generation());
+	}
+
 	bool MonoScripting::CompileFile(const char* input_file, const char* output_file)
 	{
 		//Set the compiler path
@@ -111,14 +160,14 @@ namespace MonoScripting
 
 		//Load the compiled script assembly
 		MonoAssembly* new_script_assembly = nullptr;
-		new_script_assembly = mono_domain_assembly_open(main_domain, assembly_path);
+		new_script_assembly = mono_domain_assembly_open(mono_domain_get(), assembly_path);
 
 		if (!new_script_assembly)
 		{
 			last_error = "[error] LoadScriptAssembly: Could not load Assembly, check if the path is correct";
 			return nullptr;
 		}
-
+		
 		ret = mono_assembly_get_name(new_script_assembly);
 		return ret;
 	}
@@ -161,7 +210,7 @@ namespace MonoScripting
 			return ret;
 		}
 
-		ret = mono_object_new(main_domain, script_class);
+		ret = mono_object_new(mono_domain_get(), script_class);
 		return ret;
 	}
 
@@ -194,17 +243,6 @@ namespace MonoScripting
 
 		mono_runtime_invoke(method_to_execute, script, NULL, NULL);
 		return true;
-	}
-
-	bool MonoScripting::CleanUpMono()
-	{
-		if (main_domain)
-		{
-			mono_jit_cleanup(main_domain);
-			return true;
-		}
-
-		return false;
 	}
 
 	const char* MonoScripting::GetFieldsNameAndType(MonoObject* script, void** iterator)
@@ -299,6 +337,7 @@ namespace MonoScripting
 
 }
 
+
 /*
 int main(int argc, char *argv[])
 {
@@ -338,7 +377,14 @@ int main(int argc, char *argv[])
 	//MonoMethod* hellman = mono_class_get_method_from_name(_class, "CompileDll", 2);
 	
 	int lol = 8;
-
+	
+	//system("gacutil -u FiestaEngineEnviroment.dll");
+	mono_domain_unload(dom);
+	/*mono_assembly_close(assembler);
+	mono_jit_cleanup(dom);
+	//dom = mono_jit_init(domain_name);
+	
+	assembler = mono_domain_assembly_open(dom, "C:/Users/ferra/Desktop/3DEngine/Engine/Data/DATA/Scripting/FiestaEngineEnviroment.dll");
 
 	std::string data_path = my_path;
 	data_path += "/DATA/";
@@ -399,7 +445,7 @@ int main(int argc, char *argv[])
 	}
 
 	std::vector<const char*> ret;
-
+	
 	//Class
 	void* iterator = nullptr;
 	MonoClass* _class = mono_object_get_class(hello_world_instance);
@@ -433,7 +479,7 @@ int main(int argc, char *argv[])
 
 	return 0;
 
-	/*
+	
 
 	int t = *(int*)args_;
 
