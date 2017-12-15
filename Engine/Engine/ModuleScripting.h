@@ -56,7 +56,9 @@ public:
 	bool												Compile(const char* path, const char* output);
 	MonoAssemblyName*									LoadScriptAssembly(const char* assembly_path);
 	MonoObject*											CreateMonoObject(MonoAssemblyName* assembly, const char* class_name, const char* name_space);
+	bool												ExecuteMethod(MonoObject* script, const char* name);
 	std::vector<std::pair<std::string, FIELD_TYPE>>*	GetFieldsNameAndType(MonoObject* script);
+	bool												GetFieldValue(MonoObject* script, const char* field_name, void** output_value);
 	FIELD_TYPE											StrToFieldType(const char* str)const;
 	const char*											FieldTypeToStr(FIELD_TYPE type)const;
 

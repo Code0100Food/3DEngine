@@ -1,14 +1,15 @@
 using System;
-using FiestaEngine;
 
-public class HelloWorld : Festejo
+public class HelloWorld
 {
 
-	public int Hello = 0;
-	public float world = 1.0f;
-	private bool lol = false;
+	public float world = 1.5f;	
+	public bool lol = true;
+	public int Hello = 55;
+	
 
-		bool whatthehellman()
+
+	bool whatthehellman()
 	{
 		return true;		
 	}

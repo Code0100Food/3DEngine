@@ -68,12 +68,13 @@ public:
 
 	//Get Methods -----------
 	char*						GetBuffer()const;
+	MonoAssemblyName*			GetAssembly()const;
 	std::vector<ScriptField>*	GetFields();
 
 	//Functionality ---------
 	//Fields
 	void ClearFields();
-	void AddField(const char* name, FIELD_TYPE type);
+	void AddField(const char* name, FIELD_TYPE type, void* value);
 	//UI
 	void BlitUI()const;
 	void BlitComplexUI();

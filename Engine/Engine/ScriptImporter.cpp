@@ -8,6 +8,9 @@
 #include "Globals.h"
 #include <string.h>
 
+#include "Mono_Scripting/test.h"
+#pragma comment(lib, "Engine/Mono_Scripting/MonoScripting.lib")
+
 ScriptImporter::ScriptImporter()
 {
 
@@ -36,6 +39,8 @@ uint ScriptImporter::Import(const char * path)
 		char out_path[250];
 		sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, resource->GetOwnFile());
 		
+		if (resource->GetAssembly() != nullptr)MonoScripting::UnLoadScriptAssembly(resource->GetAssembly());
+
 		//Compile the script!
 		if (!App->scripting->Compile(resource->GetOriginalFile(), out_path))
 		{
@@ -51,17 +56,23 @@ uint ScriptImporter::Import(const char * path)
 			else
 			{
 				resource->SetAssembly(assembly);
-				usable_str = resource->GetOwnFile();
 				App->fs->GetUnformatedFileNameFromPath(resource->GetOwnFile(), &usable_str);
 				MonoObject* obj = App->scripting->CreateMonoObject(assembly, usable_str.c_str(), "");
 				if (obj == nullptr)App->scripting->BlitScriptingError();
 				else
 				{
-					std::vector<std::pair<std::string, FIELD_TYPE>>* fields = App->scripting->GetFieldsNameAndType(obj);
-					uint size = fields->size();
-					for (uint k = 0; k < size; k++)
+					bool ret = App->scripting->ExecuteMethod(obj, ".ctor");
+					if (!ret)App->scripting->BlitScriptingError();
+					else
 					{
-						resource->AddField(fields->at(k).first.c_str(), fields->at(k).second);
+						std::vector<std::pair<std::string, FIELD_TYPE>>* fields = App->scripting->GetFieldsNameAndType(obj);
+						uint size = fields->size();
+						for (uint k = 0; k < size; k++)
+						{
+							void* val = nullptr;
+							App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
+							resource->AddField(fields->at(k).first.c_str(), fields->at(k).second, val);
+						}
 					}
 				}
 			}
@@ -98,6 +109,42 @@ bool ScriptImporter::ReImport(ResourceScript * to_reload)
 
 	if (buffer && lenght)
 	{
+		//Import the class fields if the dll has been generated correctly!
+		char out_path[250];
+		sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_reload->GetOwnFile());
+		
+		if (to_reload->GetAssembly() != nullptr)MonoScripting::UnLoadScriptAssembly(to_reload->GetAssembly());
+
+		MonoAssemblyName* assembly = App->scripting->LoadScriptAssembly(out_path);
+		
+		if (assembly == nullptr)App->scripting->BlitScriptingError();
+		else
+		{
+			to_reload->SetAssembly(assembly);
+			App->fs->GetUnformatedFileNameFromPath(to_reload->GetOwnFile(), &usable_str);
+			MonoObject* obj = App->scripting->CreateMonoObject(assembly, usable_str.c_str(), "");
+			if (obj == nullptr)App->scripting->BlitScriptingError();
+			else
+			{
+				bool ret = App->scripting->ExecuteMethod(obj, ".ctor");
+				if (!ret)App->scripting->BlitScriptingError();
+				else
+				{
+					to_reload->ClearFields();
+					std::vector<std::pair<std::string, FIELD_TYPE>>* fields = App->scripting->GetFieldsNameAndType(obj);
+					uint size = fields->size();
+					for (uint k = 0; k < size; k++)
+					{
+						void* val = nullptr;
+						App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
+						to_reload->AddField(fields->at(k).first.c_str(), fields->at(k).second, val);
+					}
+				}
+			}
+		}
+
+		usable_str.clear();
+
 		char* real_str = new char[lenght + 1];
 		memcpy(real_str, buffer, lenght);
 		real_str[lenght] = '\0';
@@ -130,6 +177,8 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 	
 	char out_path[250];
 	sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_import->GetOwnFile());
+	
+	//if (to_import->GetAssembly() != nullptr)MonoScripting::UnLoadScriptAssembly(to_import->GetAssembly());
 
 	if (!App->scripting->Compile(to_import->GetOriginalFile(), out_path))
 	{
@@ -138,6 +187,34 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 	else
 	{
 		LOG("%s Compile Success!", own_file_name);
+
+		//Import the class fields if the dll has been generated correctly!
+		MonoAssemblyName* assembly = App->scripting->LoadScriptAssembly(out_path);
+		if (assembly == nullptr)App->scripting->BlitScriptingError();
+		else
+		{
+			to_import->SetAssembly(assembly);
+			App->fs->GetUnformatedFileNameFromPath(to_import->GetOwnFile(), &usable_str);
+			MonoObject* obj = App->scripting->CreateMonoObject(assembly, usable_str.c_str(), "");
+			if (obj == nullptr)App->scripting->BlitScriptingError();
+			else
+			{
+				bool ret = App->scripting->ExecuteMethod(obj, ".ctor");
+				if (!ret)App->scripting->BlitScriptingError();
+				else
+				{
+					to_import->ClearFields();
+					std::vector<std::pair<std::string, FIELD_TYPE>>* fields = App->scripting->GetFieldsNameAndType(obj);
+					uint size = fields->size();
+					for (uint k = 0; k < size; k++)
+					{
+						void* val = nullptr;
+						App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
+						to_import->AddField(fields->at(k).first.c_str(), fields->at(k).second, val);
+					}
+				}
+			}
+		}
 	}
 
 	usable_str.clear();

@@ -52,7 +52,7 @@ namespace MonoScripting
 			last_error = "[error] InitMono: Could not load the domain";
 			return false;
 		}
-	
+
 		return true;
 	}
 
@@ -123,6 +123,20 @@ namespace MonoScripting
 		return ret;
 	}
 
+	bool MonoScripting::UnLoadScriptAssembly(MonoAssemblyName * asm_)
+	{
+		if (asm_ == nullptr)
+		{
+			last_error = "[error] Null Assembly on UnLoad!";
+			return false;
+		}
+
+		MonoAssembly* tmp = mono_assembly_loaded(asm_);
+		mono_assembly_close(tmp);
+
+		return true;
+	}
+
 	MonoObject*  MonoScripting::CreateMonoObject(MonoAssemblyName* assembly, const char* class_name, const char* name_space)
 	{
 		//Returned value
@@ -165,7 +179,7 @@ namespace MonoScripting
 
 			if (strcmp(mono_method_get_name(method_to_execute), method_name) == 0)
 			{
-				break;			
+				break;
 			}
 
 		} while (method_to_execute);
@@ -177,7 +191,7 @@ namespace MonoScripting
 			return false;
 		}
 
-		
+
 		mono_runtime_invoke(method_to_execute, script, NULL, NULL);
 		return true;
 	}
@@ -188,7 +202,7 @@ namespace MonoScripting
 		{
 			mono_jit_cleanup(main_domain);
 			return true;
-		}	
+		}
 
 		return false;
 	}
@@ -205,11 +219,11 @@ namespace MonoScripting
 		}
 
 		MonoClassField* field = nullptr;
-		
+
 		//Loop for all fields, returned value will be Name/Type example -> num_gameobjects/int
 		field = mono_class_get_fields(_class, iterator);
 
-		if(field)
+		if (field)
 		{
 			//Get the Name
 			const char* name = mono_field_get_name(field);
@@ -220,17 +234,17 @@ namespace MonoScripting
 
 			//Set String and fill vector
 			char final_str[250];
-			sprintf(final_str,"%s/%s", name, type_name);
+			sprintf(final_str, "%s/%s", name, type_name);
 			return final_str;
 		}
 
 		(*iterator) = nullptr;
 		return NULL;
 
-		
+
 	}
 
-	bool MonoScripting::GetFieldValue(MonoObject* script, const char* field_name, void* output_value)
+	bool MonoScripting::GetFieldValue(MonoObject* script, const char* field_name, void** output_value)
 	{
 		//Get class and field
 		MonoClass* _class = mono_object_get_class(script);
@@ -250,7 +264,10 @@ namespace MonoScripting
 		}
 
 		//Get the value and store it
-		mono_field_get_value(script, field, &output_value);
+		MonoType* type = mono_field_get_type(field);
+		void* data = new char[mono_type_stack_size(type, NULL)];
+		mono_field_get_value(script, field, data);
+		*output_value = data;
 
 		return true;
 	}
@@ -356,8 +373,8 @@ int main(int argc, char *argv[])
 	const char* tuputamadre;
 	
 
-	MonoMethod* hello_world_hellman = mono_class_get_method_from_name(parent, "GetPublicProperties", 0);
-	MonoMethod* constructor_method = mono_class_get_method_from_name(parent, ".ctor", 0);
+	//MonoMethod* hello_world_hellman = mono_class_get_method_from_name(parent, "GetPublicProperties", 0);
+	MonoMethod* constructor_method = mono_class_get_method_from_name(hello_world_class, ".ctor", 0);
 	MonoMethod* change_int_method = mono_class_get_method_from_name(parent, "ChangeInt", 1);
 	
 	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
@@ -366,7 +383,7 @@ int main(int argc, char *argv[])
 	mono_runtime_invoke(constructor_method, hello_world_instance, NULL, NULL);
 
 	MonoArray* hello_world_handle = nullptr;// = (MonoArray*)mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
-	mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
+	//mono_runtime_invoke(hello_world_hellman, hello_world_instance, NULL, NULL);
 	
 	void* ptr = nullptr;
 
@@ -392,31 +409,31 @@ int main(int argc, char *argv[])
 
 	//Loop for all fields, returned value will be Name/Type example -> num_gameobjects/int
 	std::string name_and_type;
-	while ((field = mono_class_get_fields(_class, &iterator)))
-	{
-		//Get the Name
-		const char* name = mono_field_get_name(field);
-
-		//Get Type
-		MonoType* type = mono_field_get_type(field);
-		const char* type_name = mono_type_get_name(type);
-
-		//Set String and fill vector
-		name_and_type += name;
-		name_and_type += "/";
-		name_and_type += type_name;
-		ret.push_back(name_and_type.c_str());
-
-		//Reset the string
-		//name_and_type.clear();
-	}
-
-	/*void* args_[1];
-	void* value[1];
-	mono_field_get_value(hello_world_instance, field, &value);
-	int lololololol = (int)(value[0]);
-
+	field = mono_class_get_fields(_class, &iterator);
 	
+	//Get the Name
+	const char* name = mono_field_get_name(field);
+
+	//Get Type
+	MonoType* type = mono_field_get_type(field);
+	const char* type_name = mono_type_get_name(type);
+
+	//Set String and fill vector
+	name_and_type += name;
+	name_and_type += "/";
+	name_and_type += type_name;
+	ret.push_back(name_and_type.c_str());
+
+	//Reset the string
+	//name_and_type.clear();
+	
+	void* data = new char[mono_type_stack_size(type, NULL)];
+	mono_field_get_value(hello_world_instance, field, data);
+	float lololololol = *(float*)data;	
+
+	return 0;
+
+	/*
 
 	int t = *(int*)args_;
 
@@ -446,7 +463,6 @@ int main(int argc, char *argv[])
 	}
 	
 	
-	//getchar();
-	return 0;
-}
-*/
+	getchar();
+
+}*/

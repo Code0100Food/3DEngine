@@ -168,12 +168,15 @@ update_status ModuleScripting::Update(float dt)
 		if (ImGui::Button("Create"))
 		{
 			ResourceScript* new_script = (ResourceScript*)App->res_manager->CreateResource(RESOURCE_TYPE::SCRIPT_RESOURCE);
-			char* str = new char[13];
+			
+			/*char* str = new char[14];
 			str = "Empty Script\0";
-			new_script->SetBuffer(str);
+			new_script->SetBuffer(str);*/
+			
 			char name[210];
 			sprintf(name, "%s.txt", name_buffer);
 			new_script->SetOwnFile(name);
+			
 			char original_name[250];
 			sprintf(original_name, "%s\\%s", App->fs->GetAssetsFolder()->GetPath(), name);
 			new_script->SetOriginalFile(original_name);
@@ -261,6 +264,11 @@ MonoObject * ModuleScripting::CreateMonoObject(MonoAssemblyName * assembly, cons
 	return MonoScripting::CreateMonoObject(assembly, class_name, name_space);
 }
 
+bool ModuleScripting::ExecuteMethod(MonoObject * script, const char * name)
+{
+	return MonoScripting::ExecuteMethod(script, name);
+}
+
 std::vector<std::pair<std::string, FIELD_TYPE>>* ModuleScripting::GetFieldsNameAndType(MonoObject * script)
 {
 	//Reset fields
@@ -291,6 +299,11 @@ std::vector<std::pair<std::string, FIELD_TYPE>>* ModuleScripting::GetFieldsNameA
 
 
 	return &fields_vec;
+}
+
+bool ModuleScripting::GetFieldValue(MonoObject * script, const char * field_name, void** output_value)
+{
+	return MonoScripting::GetFieldValue(script, field_name, output_value);
 }
 
 FIELD_TYPE ModuleScripting::StrToFieldType(const char * str) const

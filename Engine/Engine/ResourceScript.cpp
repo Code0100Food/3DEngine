@@ -48,6 +48,11 @@ char * ResourceScript::GetBuffer() const
 	return buffer;
 }
 
+MonoAssemblyName * ResourceScript::GetAssembly() const
+{
+	return assembly;
+}
+
 std::vector<ScriptField>* ResourceScript::GetFields()
 {
 	return &fields;
@@ -56,15 +61,22 @@ std::vector<ScriptField>* ResourceScript::GetFields()
 // Functionality ================================
 void ResourceScript::ClearFields()
 {
-
+	uint size = fields.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (fields[k].data != nullptr)RELEASE(fields[k].data);
+		fields[k].name.clear();
+	}
+	fields.clear();
 }
 
-void ResourceScript::AddField(const char * name, FIELD_TYPE type)
+void ResourceScript::AddField(const char * name, FIELD_TYPE type, void* value)
 {
 	ScriptField new_field;
 	
 	new_field.name = name;
 	new_field.type = type;
+	new_field.data = value;
 
 	fields.push_back(new_field);
 }
@@ -97,7 +109,45 @@ void ResourceScript::BlitComplexUI()
 	uint size = fields.size();
 	for (uint k = 0; k < size; k++)
 	{
-		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.2f, 1.0f), "%s [%s]", fields[k].name.c_str(),App->scripting->FieldTypeToStr(fields[k].type));
+		ImGui::TextColored(ImVec4(1.0f, 0.64f, 0.2f, 1.0f), "%s [%s] = ", fields[k].name.c_str(),App->scripting->FieldTypeToStr(fields[k].type));
+		
+		ImGui::SameLine();
+		
+		if (fields[k].data == nullptr)
+		{
+			ImGui::Text("null");
+		}
+		else
+		{
+			switch (fields[k].type)
+			{
+			case CHAR_FIELD:
+				break;
+
+			case STRING_FIELD:
+				break;
+
+			case INT8_FIELD:
+			case INT16_FIELD:
+			case INT32_FIELD:
+			case INT64_FIELD:
+				ImGui::TextColored(ImVec4(1.0f, 0.24f, 0.6f, 1.0f), "%i", *(int*)fields[k].data);
+				break;
+
+			case UINT8_FIELD:
+			case UINT16_FIELD:
+			case UINT32_FIELD:
+			case UINT64_FIELD:
+				break;
+
+			case FLOAT_FIELD:
+				ImGui::TextColored(ImVec4(1.0f, 0.24f, 0.6f, 1.0f), "%.3f", *(float*)fields[k].data);
+				break;
+
+			case CLASS_FIELD:
+				break;
+			}
+		}
 	}
 
 	ImGui::NewLine();
