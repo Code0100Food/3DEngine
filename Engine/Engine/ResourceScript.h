@@ -30,6 +30,7 @@ class ScriptField
 public:
 
 	ScriptField();
+	ScriptField(const ScriptField& cpy);
 	~ScriptField();
 
 public:

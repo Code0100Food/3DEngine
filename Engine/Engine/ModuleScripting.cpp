@@ -264,6 +264,13 @@ MonoObject * ModuleScripting::CreateMonoObject(MonoAssemblyName * assembly, cons
 	return MonoScripting::CreateMonoObject(assembly, class_name, name_space);
 }
 
+MonoObject * ModuleScripting::CreateMonoObjectFromScriptResource(ResourceScript * res)
+{
+	App->fs->GetUnformatedFileNameFromPath(res->GetOwnFile(), &usable_str);
+
+	return MonoScripting::CreateMonoObject(res->GetAssembly(), usable_str.c_str(), "");
+}
+
 bool ModuleScripting::ExecuteMethod(MonoObject * script, const char * name)
 {
 	return MonoScripting::ExecuteMethod(script, name);

@@ -11,6 +11,11 @@ ScriptField::ScriptField()
 
 }
 
+ScriptField::ScriptField(const ScriptField & cpy) :name(cpy.name), type(cpy.type)
+{
+	data = cpy.data; /*This can/t work*/
+}
+
 // Destructors ==================================
 ScriptField::~ScriptField()
 {

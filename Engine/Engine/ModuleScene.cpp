@@ -466,7 +466,7 @@ void ModuleScene::BlitComponentsWindow(GameObject* target)
 
 				ComponentScript* scr_cmp = (ComponentScript*)target->CreateComponent(COMPONENT_TYPE::COMP_SCRIPT);
 				scr_cmp->SetResourceScript(n_script_resource);
-
+				
 				show_components_window = false;
 			}
 

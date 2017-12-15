@@ -15,15 +15,20 @@ public:
 private:
 
 	ResourceScript*				resource_script = nullptr;
+	
+	MonoObject*					script_object = nullptr;
+
 	std::vector<ScriptField>	fields;
 
 public:
 
 	//Set Methods -----------
 	void SetResourceScript(ResourceScript* script);
+	void SetMonoObject(const MonoObject* obj);
 
 	//Get Methods -----------
-	
+	MonoObject*	GetMonoObject()const;
+
 	//UI Methods
 	void BlitComponentInspector();
 
