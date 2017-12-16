@@ -1,16 +1,33 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace FiestaEngine
 {
-public class Tessto
-{
 
-}
+	//Console Display
+	public class FiestaConsole
+	{
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern void Log(string message);
+	}
+
+	//Input Detection
+	public class FiestaInput
+	{
+		public enum FiestaKeyCode
+		{
+			W = 26,
+			UP_ARROW = 82
+		}
+		
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern bool GetKeyDown(FiestaKeyCode key);
+	}
+
 	public class Festejo
 	{
-		public Tessto fest = null;
 		public int estonova = 3;
 		public int estoSIva = 3;
 
@@ -18,7 +35,6 @@ public class Tessto
    		{
 			estonova = 1;
 			estoSIva = 2;
-			fest = null;
 
         		List<string> property_names = new List<string>();
 
