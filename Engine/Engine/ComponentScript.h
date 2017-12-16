@@ -35,11 +35,14 @@ public:
 	ResourceScript* GetResourceScript()const;
 
 	//Functionality ---------
-	//Fields
+	//Fields Methods
 	void UpdateFieldsFromResource();
 	void SendFieldsValuesToScript();
-	//UI 
+	//UI Methods
 	void BlitComponentInspector();
+	//Save/Load Methods -----
+	bool Save(Serializer& array_root)const;
+	bool Load(Serializer& data, std::vector<std::pair<Component*, uint>>& links);
 
 };
 #endif // !_COMPONENT_SCRIPT_H_

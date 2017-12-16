@@ -141,6 +141,7 @@ COMPONENT_TYPE StrToComponentType(const char * str)
 	if (strcmp(str, "mesh_renderer") == 0)	return COMP_MESH_RENDERER;
 	if (strcmp(str, "material") == 0)		return COMP_MATERIAL;
 	if (strcmp(str, "camera") == 0)			return COMP_CAMERA;
+	if (strcmp(str, "script") == 0)			return COMP_SCRIPT;
 	return COMP_NONE;
 }
 
@@ -158,6 +159,7 @@ const char * ComponentTypeToStr(COMPONENT_TYPE type)
 	case COMP_MESH_RENDERER:	return "mesh_renderer";
 	case COMP_MATERIAL:			return "material";
 	case COMP_CAMERA:			return "camera";
+	case COMP_SCRIPT:			return "script";
 	}
 	return "none";
 }
