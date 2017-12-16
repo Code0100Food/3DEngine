@@ -30,6 +30,7 @@ void ComponentScript::SetResourceScript(ResourceScript * script)
 	for (uint k = 0; k < size; k++)
 	{
 		fields.push_back(fields_vec->at(k));
+		fields.back().CloneData();
 	}
 	script->AddReference();
 }
@@ -103,6 +104,7 @@ void ComponentScript::UpdateFieldsFromResource()
 		if (!found)
 		{
 			fields.push_back(res_fields->at(k));
+			fields.back().CloneData();
 			fields_size += 1;
 		}
 	}
@@ -130,7 +132,7 @@ void ComponentScript::BlitComponentInspector()
 		case INT16_FIELD:
 		case INT32_FIELD:
 		case INT64_FIELD:
-			ImGui::InputInt(fields[k].name.c_str(),(int*)fields[k].data);
+			ImGui::InputInt(fields[k].name.c_str(), (int*)fields[k].data);
 			break;
 
 		case UINT8_FIELD:

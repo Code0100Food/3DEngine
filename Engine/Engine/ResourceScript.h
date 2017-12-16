@@ -38,7 +38,12 @@ public:
 
 	std::string	name = "undef_field";
 	void*		data = nullptr;
+	uint		data_size = 0;
 	FIELD_TYPE	type = UNDEF_FIELD_TYPE;
+	
+public:
+
+	void CloneData();
 
 };
 /// -------------------------------------------------------
@@ -78,7 +83,7 @@ public:
 	void ReloadRelatedComponents();
 	//Fields
 	void ClearFields();
-	void AddField(const char* name, FIELD_TYPE type, void* value);
+	void AddField(const char* name, FIELD_TYPE type, void* value, uint size);
 	//UI
 	void BlitUI()const;
 	void BlitComplexUI();

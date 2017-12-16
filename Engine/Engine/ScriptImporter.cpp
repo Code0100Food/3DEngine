@@ -68,8 +68,8 @@ uint ScriptImporter::Import(const char * path)
 						for (uint k = 0; k < size; k++)
 						{
 							void* val = nullptr;
-							App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
-							resource->AddField(fields->at(k).first.c_str(), fields->at(k).second, val);
+							uint d_size = App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
+							resource->AddField(fields->at(k).first.c_str(), fields->at(k).second, val, d_size);
 						}
 					}
 				}
@@ -153,8 +153,8 @@ bool ScriptImporter::ReImport(ResourceScript * to_reload)
 					for (uint k = 0; k < size; k++)
 					{
 						void* val = nullptr;
-						App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
-						to_reload->AddField(fields->at(k).first.c_str(), fields->at(k).second, val);
+						uint d_size = App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
+						to_reload->AddField(fields->at(k).first.c_str(), fields->at(k).second, val, d_size);
 					}
 				}
 			}
@@ -230,8 +230,8 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 					for (uint k = 0; k < size; k++)
 					{
 						void* val = nullptr;
-						App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
-						to_import->AddField(fields->at(k).first.c_str(), fields->at(k).second, val);
+						uint d_size = App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
+						to_import->AddField(fields->at(k).first.c_str(), fields->at(k).second, val,d_size);
 					}
 
 					to_import->ReloadRelatedComponents();

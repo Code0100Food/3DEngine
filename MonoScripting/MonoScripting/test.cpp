@@ -292,7 +292,7 @@ namespace MonoScripting
 
 	}
 
-	bool MonoScripting::GetFieldValue(MonoObject* script, const char* field_name, void** output_value)
+	unsigned int MonoScripting::GetFieldValue(MonoObject* script, const char* field_name, void** output_value)
 	{
 		//Get class and field
 		MonoClass* _class = mono_object_get_class(script);
@@ -300,7 +300,7 @@ namespace MonoScripting
 		if (!_class)
 		{
 			last_error = "[error] GetFieldValue: Class didn't Loaded check if MonoObject is correct";
-			return false;
+			return 0;
 		}
 
 		MonoClassField* field = mono_class_get_field_from_name(_class, field_name);
@@ -308,16 +308,17 @@ namespace MonoScripting
 		if (!field)
 		{
 			last_error = "[error] GetFieldValue: Field didn't Loaded check if the field name is correct";
-			return false;
+			return 0;
 		}
 
 		//Get the value and store it
 		MonoType* type = mono_field_get_type(field);
-		void* data = new char[mono_type_stack_size(type, NULL)];
+		unsigned int size = mono_type_stack_size(type, NULL);
+		void* data = new char[size];
 		mono_field_get_value(script, field, data);
 		*output_value = data;
 
-		return true;
+		return size;
 	}
 
 	bool  MonoScripting::SetFieldValue(MonoObject* script, const char* field_name, void* input_value)

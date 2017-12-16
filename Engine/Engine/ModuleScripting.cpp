@@ -381,9 +381,14 @@ std::vector<std::pair<std::string, FIELD_TYPE>>* ModuleScripting::GetFieldsNameA
 	return &fields_vec;
 }
 
-bool ModuleScripting::GetFieldValue(MonoObject * script, const char * field_name, void** output_value)
+unsigned int ModuleScripting::GetFieldValue(MonoObject * script, const char * field_name, void** output_value)
 {
 	return MonoScripting::GetFieldValue(script, field_name, output_value);
+}
+
+bool ModuleScripting::SetFieldValue(MonoObject * script, const char * field_name, void * input_value)
+{
+	return MonoScripting::SetFieldValue(script, field_name, input_value);
 }
 
 FIELD_TYPE ModuleScripting::StrToFieldType(const char * str) const

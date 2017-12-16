@@ -12,7 +12,7 @@ ScriptField::ScriptField()
 
 }
 
-ScriptField::ScriptField(const ScriptField & cpy) :name(cpy.name), type(cpy.type)
+ScriptField::ScriptField(const ScriptField & cpy) :name(cpy.name), type(cpy.type), data_size(cpy.data_size)
 {
 	data = cpy.data; /*This can/t work*/
 }
@@ -20,7 +20,16 @@ ScriptField::ScriptField(const ScriptField & cpy) :name(cpy.name), type(cpy.type
 // Destructors ==================================
 ScriptField::~ScriptField()
 {
-
+	/*if (data != nullptr)
+	{
+		_Deallocate(data, data_size, 1);
+	}*/
+}
+void ScriptField::CloneData()
+{
+	void* new_cpy = new char[data_size];
+	memcpy(new_cpy, data, data_size);
+	data = new_cpy;
 }
 /// -------------------------------------------------------
 
@@ -92,20 +101,20 @@ void ResourceScript::ClearFields()
 	uint size = fields.size();
 	for (uint k = 0; k < size; k++)
 	{
-		//if (fields[k].data != nullptr)RELEASE(fields[k].data);
 		fields[k].data = nullptr;
 		fields[k].name.clear();
 	}
 	fields.clear();
 }
 
-void ResourceScript::AddField(const char * name, FIELD_TYPE type, void* value)
+void ResourceScript::AddField(const char * name, FIELD_TYPE type, void* value, uint size)
 {
 	ScriptField new_field;
 	
 	new_field.name = name;
 	new_field.type = type;
 	new_field.data = value;
+	new_field.data_size = size;
 
 	fields.push_back(new_field);
 }
