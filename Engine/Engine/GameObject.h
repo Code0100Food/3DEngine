@@ -77,6 +77,7 @@ public:
 	bool			RemoveComponent(Component* cmp);
 	bool			FindComponent(Component* cmp)const;
 	Component*		FindComponent(COMPONENT_TYPE type)const;
+	void			FindComponents(COMPONENT_TYPE type, std::vector<Component*>* vec);
 	Component*		FindComponent(uint id)const;
 	ComponentMesh*	FindMeshComponent()const;
 	Component*		CloneComponent(const Component* target)const;

@@ -74,6 +74,8 @@ public:
 	std::vector<ScriptField>*	GetFields();
 
 	//Functionality ---------
+	//Scene
+	void ReloadRelatedComponents();
 	//Fields
 	void ClearFields();
 	void AddField(const char* name, FIELD_TYPE type, void* value);

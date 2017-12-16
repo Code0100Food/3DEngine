@@ -152,6 +152,15 @@ GameObject * ModuleScene::FindGameObject(uint id) const
 	return root_gameobject->FindChild(id);
 }
 
+std::vector<Component*>* ModuleScene::FindComponentsByType(COMPONENT_TYPE cmp_type)
+{
+	found_cmps.clear();
+
+	root_gameobject->FindComponents(cmp_type, &found_cmps);
+
+	return &found_cmps;
+}
+
 GameObject * ModuleScene::CreatePrimitive(PRIMITIVE_TYPE type)
 {
 	GameObject* new_prim = nullptr;

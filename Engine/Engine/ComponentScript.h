@@ -27,9 +27,13 @@ public:
 	void SetMonoObject(const MonoObject* obj);
 
 	//Get Methods -----------
-	MonoObject*	GetMonoObject()const;
+	MonoObject*		GetMonoObject()const;
+	ResourceScript* GetResourceScript()const;
 
-	//UI Methods
+	//Functionality ---------
+	//Fields
+	void UpdateFieldsFromResource();
+	//UI 
 	void BlitComponentInspector();
 
 };

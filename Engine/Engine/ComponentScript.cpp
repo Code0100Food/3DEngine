@@ -44,7 +44,70 @@ MonoObject * ComponentScript::GetMonoObject() const
 	return script_object;
 }
 
+ResourceScript * ComponentScript::GetResourceScript() const
+{
+	return resource_script;
+}
+
 // Functionality ================================
+void ComponentScript::UpdateFieldsFromResource()
+{
+	std::vector<ScriptField>* res_fields = resource_script->GetFields();
+	uint res_fields_size = res_fields->size();
+
+	//Deleted fields check
+	//Iterate all the fields of this component
+	uint size = fields.size();
+	for (uint k = 0; k < size; k++)
+	{
+		bool found = false;
+		
+		//Iterate all the fields of the resource and compare them whit the component fields
+		for (uint j = 0; j < res_fields_size; j++)
+		{
+			if (fields[k].type == res_fields->at(j).type && strcmp(fields[k].name.c_str(), res_fields->at(j).name.c_str()) == 0)
+			{
+				found = true;
+				break;
+			}
+		}
+
+		//If a field exists in the component but not in the resource we delete it
+		if (!found)
+		{
+			if (k < size - 1)fields[k] = fields[k + 1]; 
+			fields.pop_back();
+			size -= 1;
+		}
+	}
+
+	//Added fields check
+	//Iterate all the fields of the resource
+	size = res_fields_size;
+	uint fields_size = fields.size();
+	
+	if (res_fields_size == fields_size)return;
+
+	for (uint k = 0; k < size; k++)
+	{
+		bool found = false;
+		for (uint j = 0; j < fields_size; j++)
+		{
+			if (res_fields->at(k).type == fields[j].type && strcmp(res_fields->at(k).name.c_str(), fields[j].name.c_str()))
+			{
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			fields.push_back(res_fields->at(k));
+			fields_size += 1;
+		}
+	}
+}
+
 void ComponentScript::BlitComponentInspector()
 {
 	ImGui::Separator();

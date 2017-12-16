@@ -51,6 +51,8 @@ private:
 	std::vector<std::pair<Component*, uint>>	components_links;
 	std::vector<GameObject*>					loaded_objs;
 	std::vector<Component*>						loaded_cmps;
+	
+	std::vector<Component*>						found_cmps;
 
 public:
 
@@ -63,11 +65,12 @@ public:
 
 	//Functionality ---------
 	//GameObject methods
-	GameObject* CreateGameObject(bool link = true);
-	bool		ReleaseGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
-	void		SendGameObjectToRemoveVec(const GameObject* target);
-	GameObject* FindGameObject(uint id)const;
-	GameObject* CreatePrimitive(PRIMITIVE_TYPE type);
+	GameObject*					CreateGameObject(bool link = true);
+	bool						ReleaseGameObject(GameObject* target, const GameObject* parent, bool search_in = true);
+	void						SendGameObjectToRemoveVec(const GameObject* target);
+	GameObject*					FindGameObject(uint id)const;
+	std::vector<Component*>*	FindComponentsByType(COMPONENT_TYPE cmp_type);
+	GameObject*					CreatePrimitive(PRIMITIVE_TYPE type);
 	
 	//UI Methods
 	void		BlitConfigInfo();

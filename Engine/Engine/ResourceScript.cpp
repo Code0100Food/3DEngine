@@ -3,6 +3,7 @@
 #include "imgui/imgui.h"
 #include "Application.h"
 #include "ModuleScripting.h"
+#include "ModuleScene.h"
 
 /// ScriptField -------------------------------------------
 // Constructors =================================
@@ -64,6 +65,28 @@ std::vector<ScriptField>* ResourceScript::GetFields()
 }
 
 // Functionality ================================
+void ResourceScript::ReloadRelatedComponents()
+{
+	//Collect all the script components
+	std::vector<Component*>* components_vec = App->scene->FindComponentsByType(COMPONENT_TYPE::COMP_SCRIPT);
+
+	uint size = components_vec->size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (((ComponentScript*)components_vec->at(k))->GetResourceScript()->GetID() == id)
+		{
+			const char* class_name = strtok((char*)GetOwnFile(), ".");
+			MonoObject* obj = App->scripting->CreateMonoObject(assembly, class_name, "");
+			if (obj == nullptr)App->scripting->BlitScriptingError();
+			else
+			{
+				((ComponentScript*)components_vec->at(k))->SetMonoObject(obj);
+				((ComponentScript*)components_vec->at(k))->UpdateFieldsFromResource();
+			}
+		}
+	}
+}
+
 void ResourceScript::ClearFields()
 {
 	uint size = fields.size();

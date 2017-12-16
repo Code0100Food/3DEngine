@@ -233,6 +233,8 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 						App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
 						to_import->AddField(fields->at(k).first.c_str(), fields->at(k).second, val);
 					}
+
+					to_import->ReloadRelatedComponents();
 				}
 			}
 		}

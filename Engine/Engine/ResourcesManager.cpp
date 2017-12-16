@@ -236,10 +236,15 @@ std::vector<Resource*>* ResourcesManager::GetResourcesVectorByType(RESOURCE_TYPE
 {
 	temp_res_vector.clear();
 
-	uint size = resources.size();
-	for (uint k = 0; k < size; k++)
+	std::map<uint, Resource*>::const_iterator item = resources.begin();
+	while (item != resources.end())
 	{
-		if (resources[k]->GetResourceType() == type)temp_res_vector.push_back(resources[k]);
+		if (!item._Ptr->_Myval.second->GetConstInMemory() && item._Ptr->_Myval.second->GetResourceType() == type)
+		{
+			temp_res_vector.push_back(item._Ptr->_Myval.second);
+		}
+
+		item++;
 	}
 
 	return &temp_res_vector;

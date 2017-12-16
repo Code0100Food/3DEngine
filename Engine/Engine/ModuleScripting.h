@@ -9,6 +9,7 @@ class ResourceScript;
 class GameObject;
 typedef struct _MonoObject MonoObject;
 typedef struct _MonoAssemblyName MonoAssemblyName;
+typedef struct _MonoString MonoString;
 enum FIELD_TYPE;
 
 class ModuleScripting : public Module
@@ -66,6 +67,7 @@ public:
 	bool												GetFieldValue(MonoObject* script, const char* field_name, void** output_value);
 	FIELD_TYPE											StrToFieldType(const char* str)const;
 	const char*											FieldTypeToStr(FIELD_TYPE type)const;
-
+	void												AddInternalCall(const char*  cs_path, const void*  method);
+	const char *										MonoStringToChar(MonoString* string);
 };
 #endif // !_MODULE_SCRIPTING_

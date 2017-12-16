@@ -8,6 +8,7 @@
 #include "ResourcesManager.h"
 #include "FileSystem.h"
 #include "GameObject.h"
+#include "ModuleScene.h"
 
 #include "Mono_Scripting/test.h"
 #pragma comment(lib, "Engine/Mono_Scripting/MonoScripting.lib")
@@ -273,16 +274,47 @@ void ModuleScripting::ReloadEngineEnvironment()
 
 void ModuleScripting::ReloadScripts(const ResourceScript * res)
 {
-	/*vector<Resource*>* scripts_res_vec = App->res_manager->GetResourcesVectorByType(RESOURCE_TYPE::SCRIPT_RESOURCE);
-	
+	//Collect all the script resources
+	vector<Resource*>* scripts_res_vec = App->res_manager->GetResourcesVectorByType(RESOURCE_TYPE::SCRIPT_RESOURCE);
+	//Collect all the script components
+	std::vector<Component*>* components_vec = App->scene->FindComponentsByType(COMPONENT_TYPE::COMP_SCRIPT);
+
 	uint size = scripts_res_vec->size();
 	for (uint k = 0; k < size; k++)
 	{
 		if (scripts_res_vec->at(k) != res)
 		{
 			//Reload assembly and objects for the components!
+			char out_path[250];
+			sprintf(out_path, "%s/%s/%s", GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, scripts_res_vec->at(k)->GetOwnFile());
+
+			MonoAssemblyName* asm_ = LoadScriptAssembly(out_path);
+			if (asm_ == nullptr)BlitScriptingError();
+			else
+			{
+				//Reload resource assembly
+				((ResourceScript*)scripts_res_vec->at(k))->SetAssembly(asm_);
+				
+				//Iterate all the components
+				uint size = components_vec->size();
+				for (uint g = 0; g < size; g++)
+				{
+					//Only the comps related with the actual resource are updated
+					if (((ComponentScript*)components_vec->at(g))->GetResourceScript()->GetID() == scripts_res_vec->at(k)->GetID())
+					{
+						//Create the objects
+						App->fs->GetUnformatedFileNameFromPath(scripts_res_vec->at(k)->GetOwnFile(), &usable_str);
+						MonoObject* obj = App->scripting->CreateMonoObject(asm_, usable_str.c_str(), "");
+						if (obj == nullptr)BlitScriptingError();
+						else
+						{
+							((ComponentScript*)components_vec->at(g))->SetMonoObject(obj);
+						}
+					}
+				}
+			}
 		}
-	}*/
+	}
 }
 
 void ModuleScripting::UnLoadAppDomain()
@@ -391,4 +423,14 @@ const char * ModuleScripting::FieldTypeToStr(FIELD_TYPE type) const
 		break;
 	}
 	return "undef_field_type";
+}
+
+void ModuleScripting::AddInternalCall(const char*  cs_path, const void*  method)
+{
+	MonoScripting::AddMethodInternalCall(cs_path, method);
+}
+
+const char * ModuleScripting::MonoStringToChar(MonoString* string)
+{
+	return MonoScripting::MonoStringToConstChar(string);
 }

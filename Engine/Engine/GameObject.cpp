@@ -347,6 +347,24 @@ Component * GameObject::FindComponent(COMPONENT_TYPE type) const
 	return cmp;
 }
 
+void GameObject::FindComponents(COMPONENT_TYPE type, std::vector<Component*>* vec)
+{
+	uint size = components.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (components[k]->GetType() == type)
+		{
+			vec->push_back(components[k]);
+		}
+	}
+
+	size = childs.size();
+	for (uint k = 0; k < size; k++)
+	{
+		childs[k]->FindComponents(type, vec);
+	}
+}
+
 Component * GameObject::FindComponent(uint id) const
 {
 	Component* cmp = nullptr;
