@@ -21,6 +21,13 @@ ComponentScript::~ComponentScript()
 	if (resource_script != nullptr)resource_script->RestReference();
 }
 
+bool ComponentScript::Start()
+{
+	SendFieldsValuesToScript();
+	
+	return true;
+}
+
 void ComponentScript::SetResourceScript(ResourceScript * script)
 {
 	resource_script = script;
@@ -106,6 +113,18 @@ void ComponentScript::UpdateFieldsFromResource()
 			fields.push_back(res_fields->at(k));
 			fields.back().CloneData();
 			fields_size += 1;
+		}
+	}
+}
+
+void ComponentScript::SendFieldsValuesToScript()
+{
+	uint size = fields.size();
+	for (uint k = 0; k < size; k++)
+	{
+		if (!App->scripting->SetFieldValue(script_object, fields[k].name.c_str(), fields[k].data))
+		{
+			App->scripting->BlitScriptingError();
 		}
 	}
 }

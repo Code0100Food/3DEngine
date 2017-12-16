@@ -12,6 +12,10 @@ public:
 	ComponentScript(const ComponentScript& cpy);
 	~ComponentScript();
 
+public:
+
+	bool Start();
+
 private:
 
 	ResourceScript*				resource_script = nullptr;
@@ -33,6 +37,7 @@ public:
 	//Functionality ---------
 	//Fields
 	void UpdateFieldsFromResource();
+	void SendFieldsValuesToScript();
 	//UI 
 	void BlitComponentInspector();
 

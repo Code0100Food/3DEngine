@@ -77,13 +77,23 @@ bool GameObject::Start()
 
 	bounding_box.SetNegativeInfinity();
 
-	uint size = childs.size();
+	uint size = components.size();
 	for (uint k = 0; k < size; k++)
 	{
-		ret = childs[k]->Start();
+		ret = components[k]->Start();
 		if (!ret)break;
 	}
-		
+
+	if (ret)
+	{
+		uint size = childs.size();
+		for (uint k = 0; k < size; k++)
+		{
+			ret = childs[k]->Start();
+			if (!ret)break;
+		}
+	}
+
 	return ret;
 }
 
