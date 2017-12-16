@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "BasicConsole.h"
 
+typedef struct _MonoString MonoString;
+
 class ModuleConsole : public Module
 {
 public:
@@ -32,6 +34,9 @@ public:
 	// Functionality --------
 	void SwapConsoleState();
 	void AddLabel(const char* str);
+
+	//Mono Internal Call
+	static void DebugLog(MonoString* string);
 
 };
 #endif // !_CONSOLE_H_

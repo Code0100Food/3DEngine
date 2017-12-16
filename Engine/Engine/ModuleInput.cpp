@@ -16,6 +16,7 @@
 #include "ModuleScene.h"
 #include "FileSystem.h"
 #include "imgui/IGizmo.h"
+#include "ModuleScripting.h"
 
 #define MAX_KEYS 300
 
@@ -61,6 +62,8 @@ bool ModuleInput::Start()
 			if (gamecontroller == nullptr)LOG("Gamepad not opened %s", SDL_GetError());
 		}
 	}
+
+	App->scripting->AddInternalCall("FiestaEngine.FiestaInput::GetKeyDown", GetKeyDown);
 
 	return true;
 }
@@ -375,6 +378,11 @@ int ModuleInput::GetMouseXMotion() const
 int ModuleInput::GetMouseYMotion() const
 {
 	return mouse_motion_y;
+}
+
+bool ModuleInput::GetKeyDown(int id)
+{
+	return (App->input->keyboard[id] == KEY_DOWN);
 }
 
 void ModuleInput::ResetInputMaps()

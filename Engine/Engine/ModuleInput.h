@@ -79,6 +79,9 @@ public:
 	int			GetMouseXMotion()const;
 	int			GetMouseYMotion()const;
 
+	//Scripting internal calls
+	static bool	GetKeyDown(int id);
+
 	// Reset all input states
 	void		ResetInputMaps();
 
