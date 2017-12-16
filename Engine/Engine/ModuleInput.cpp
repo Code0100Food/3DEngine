@@ -63,7 +63,10 @@ bool ModuleInput::Start()
 		}
 	}
 
+	//Set the calls from mono
 	App->scripting->AddInternalCall("FiestaEngine.FiestaInput::GetKeyDown", GetKeyDown);
+	App->scripting->AddInternalCall("FiestaEngine.FiestaInput::GetKeyUp", GetKeyUp);
+	App->scripting->AddInternalCall("FiestaEngine.FiestaInput::GetKeyRepeat", GetKeyRepeat);
 
 	return true;
 }
@@ -383,6 +386,16 @@ int ModuleInput::GetMouseYMotion() const
 bool ModuleInput::GetKeyDown(int id)
 {
 	return (App->input->keyboard[id] == KEY_DOWN);
+}
+
+bool ModuleInput::GetKeyUp(int id)
+{
+	return (App->input->keyboard[id] == KEY_UP);
+}
+
+bool ModuleInput::GetKeyRepeat(int id)
+{
+	return (App->input->keyboard[id] == KEY_REPEAT);
 }
 
 void ModuleInput::ResetInputMaps()

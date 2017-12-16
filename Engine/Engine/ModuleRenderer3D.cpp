@@ -420,7 +420,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	render_to_texture->UnBind();
 
 	//Focus Game Texture
-	if (main_camera)
+	if (main_camera && App->imgui->GetWorkspace()->GetDockbyLabel("Game##texture")->active == true)
 	{
 		game_to_texture->Bind();
 		PrintGameFrame(dt);

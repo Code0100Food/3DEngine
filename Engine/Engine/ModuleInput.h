@@ -81,6 +81,8 @@ public:
 
 	//Scripting internal calls
 	static bool	GetKeyDown(int id);
+	static bool	GetKeyUp(int id);
+	static bool	GetKeyRepeat(int id);
 
 	// Reset all input states
 	void		ResetInputMaps();
