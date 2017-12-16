@@ -6,6 +6,8 @@
 
 typedef struct _MonoDomain MonoDomain;
 typedef struct _MonoObject MonoObject;
+typedef struct _MonoString MonoString;
+typedef struct _MonoArray MonoArray;
 typedef struct _MonoAssemblyName MonoAssemblyName;
 
 namespace MonoScripting
@@ -28,11 +30,15 @@ namespace MonoScripting
 
 	//Method's Functions
 	EXPORT_THIS bool						ExecuteMethod(MonoObject* script, const char* name);
+	EXPORT_THIS void						AddMethodInternalCall(const char* cs_path, const void* method);
+	EXPORT_THIS const char*					MonoStringToConstChar(MonoString* string);
 
 	//Fields [attributes] methods
 	EXPORT_THIS const char*					GetFieldsNameAndType(MonoObject* script,void** iterator);
 	EXPORT_THIS bool						GetFieldValue(MonoObject* script, const char* field_name, void** output_value);
 	EXPORT_THIS bool						SetFieldValue(MonoObject* script, const char* field_name, void* input_value);
+
+
 }
 
 
