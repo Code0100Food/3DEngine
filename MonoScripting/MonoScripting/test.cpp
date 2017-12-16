@@ -214,6 +214,11 @@ namespace MonoScripting
 		return ret;
 	}
 
+	MonoImage * LoadMonoImage(MonoAssembly * asm_)
+	{
+		return mono_assembly_get_image(asm_);
+	}
+
 	bool MonoScripting::ExecuteMethod(MonoObject* script, const char* method_name)// unsigned int num_args, ...)
 	{
 		MonoClass* script_class = mono_object_get_class(script);
@@ -321,6 +326,27 @@ namespace MonoScripting
 		return size;
 	}
 
+	MonoClassField * GetFieldValue(MonoImage * image, const char * namespace_, const char * class_name, const char * field_name)
+	{
+		MonoClass* new_class = mono_class_from_name(image, namespace_, class_name);
+
+		if (new_class == nullptr)
+		{
+			last_error = "[error] Error getting class in GetFieldValue!";
+			return nullptr;
+		}
+
+		MonoClassField* field = mono_class_get_field_from_name(new_class, field_name);
+		
+		if (field == nullptr)
+		{
+			last_error = "[error] Error getting field in GetFieldValue!";
+			return nullptr;
+		}
+
+		return field;
+	}
+
 	bool  MonoScripting::SetFieldValue(MonoObject* script, const char* field_name, void* input_value)
 	{
 		//Get class and field
@@ -344,6 +370,11 @@ namespace MonoScripting
 		mono_field_set_value(script, field, input_value);
 
 		return true;
+	}
+	
+	void SetFieldValue(MonoObject * script, MonoClassField * field, void * input_value)
+	{
+		mono_field_set_value(script, field, input_value);
 	}
 }
 
