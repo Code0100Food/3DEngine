@@ -10,6 +10,8 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 
+#include "ComponentScript.h"
+
 #include "Mono_Scripting/test.h"
 #pragma comment(lib, "Engine/Mono_Scripting/MonoScripting.lib")
 
@@ -26,8 +28,11 @@ ModuleScripting::ModuleScripting(const char * _name, MODULE_ID _id, bool _config
 	char environment_path[250];
 	sprintf(environment_path, "%s/%s%s", dll_path, SCRIPTING_FOLDER, "FiestaEngineEnviroment.dll");
 	
-	if (MonoScripting::LoadScriptAssembly(environment_path) != nullptr)
+	enviroment_assembly = MonoScripting::LoadScriptAssembly(environment_path);
+
+	if (enviroment_assembly != nullptr)
 	{
+		enviroment_image = MonoScripting::LoadMonoImage(enviroment_assembly);
 		LOG("Fiesta Engine Environment Correctly Loaded!");
 	}
 	else
@@ -41,6 +46,19 @@ ModuleScripting::~ModuleScripting()
 	MonoScripting::CleanUpMono();
 
 	RELEASE(text_editor);
+}
+
+bool ModuleScripting::Start()
+{
+	active_script = nullptr;
+
+	//Add Internal all methods
+
+	//Transform
+	AddInternalCall("FiestaEngine.Transform::GetLocalPosition", GetLocalPosition);
+	AddInternalCall("FiestaEngine.Transform::SetPosition", SetLocalPosition);
+
+	return true;
 }
 
 update_status ModuleScripting::Update(float dt)
@@ -220,6 +238,16 @@ const char * ModuleScripting::GetDLLPath() const
 	return MonoScripting::GetDLLPath();
 }
 
+MonoAssemblyName * ModuleScripting::GetEnviromentAssembly() const
+{
+	return enviroment_assembly;
+}
+
+MonoImage * ModuleScripting::GetEnviromentImage() const
+{
+	return enviroment_image;
+}
+
 void ModuleScripting::PlaceFocusedScriptOnEditor()
 {
 	if (focused_script_resource == nullptr)return;
@@ -252,6 +280,11 @@ void ModuleScripting::BlitScriptingError()
 	}
 }
 
+void ModuleScripting::SetCurrentScript(ComponentScript * script)
+{
+	active_script = script;
+}
+
 void ModuleScripting::LoadAppDomain()
 {
 	MonoScripting::LoadAppDomain();
@@ -262,14 +295,18 @@ void ModuleScripting::ReloadEngineEnvironment()
 	char environment_path[250];
 	sprintf(environment_path, "%s/%s%s", dll_path, SCRIPTING_FOLDER, "FiestaEngineEnviroment.dll");
 
-	if (MonoScripting::LoadScriptAssembly(environment_path) != nullptr)
+	enviroment_assembly = MonoScripting::LoadScriptAssembly(environment_path);
+
+	if (enviroment_assembly != nullptr)
 	{
+		enviroment_image = MonoScripting::LoadMonoImage(enviroment_assembly);
 		LOG("Fiesta Engine Environment Correctly Loaded!");
 	}
 	else
 	{
 		LOG("[error] Error on Environment Load!");
 	}
+
 }
 
 void ModuleScripting::ReloadScripts(const ResourceScript * res)
@@ -391,6 +428,12 @@ bool ModuleScripting::SetFieldValue(MonoObject * script, const char * field_name
 	return MonoScripting::SetFieldValue(script, field_name, input_value);
 }
 
+bool ModuleScripting::SetFieldValue(MonoObject * script, MonoClassField* field, void * input_value)
+{
+	MonoScripting::SetFieldValue(script, field, input_value);
+	return true;
+}
+
 FIELD_TYPE ModuleScripting::StrToFieldType(const char * str) const
 {
 	if (strcmp(str, "System.Int32") == 0)	return FIELD_TYPE::INT32_FIELD;
@@ -438,4 +481,27 @@ void ModuleScripting::AddInternalCall(const char*  cs_path, const void*  method)
 const char * ModuleScripting::MonoStringToChar(MonoString* string)
 {
 	return MonoScripting::MonoStringToConstChar(string);
+}
+
+MonoImage * ModuleScripting::LoadMonoImage(MonoAssemblyName* assembly)
+{
+	return MonoScripting::LoadMonoImage(assembly);
+}
+
+MonoClassField* ModuleScripting::GetFieldFromImage(MonoImage * image, const char * name_space, const char * name, const char * field_name)
+{
+	return MonoScripting::GetFieldValue(image, name_space, name, field_name);
+}
+
+//MONO METHODS
+
+//Transform
+MonoObject* ModuleScripting::GetLocalPosition()
+{
+	return App->scripting->active_script->GetLocalPosition();
+}
+
+void ModuleScripting::SetLocalPosition(MonoObject* vector)
+{
+	App->scripting->active_script->SetPosition(vector);
 }

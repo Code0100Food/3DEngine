@@ -130,7 +130,7 @@ bool ScriptImporter::ReImport(ResourceScript * to_reload)
 	{
 		//Import the class fields if the dll has been generated correctly!
 		char out_path[250];
-		sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_reload->GetOwnFile());
+		sprintf(out_path, "%s/%s%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_reload->GetOwnFile());
 		
 		MonoAssemblyName* assembly = App->scripting->LoadScriptAssembly(out_path);
 		
@@ -193,7 +193,7 @@ bool ScriptImporter::NewImport(ResourceScript * to_import)
 	to_import->SetOwnFile(own_file_name);
 	
 	char out_path[250];
-	sprintf(out_path, "%s/%s/%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_import->GetOwnFile());
+	sprintf(out_path, "%s/%s%s", App->scripting->GetDLLPath(), LIBRARY_SCRIPTS_FOLDER, to_import->GetOwnFile());
 
 	App->scripting->UnLoadAppDomain();
 	App->scripting->LoadAppDomain();

@@ -7,9 +7,12 @@ class ScriptManager;
 class TextEditor;
 class ResourceScript;
 class GameObject;
+class ComponentScript;
 typedef struct _MonoObject MonoObject;
+typedef struct _MonoImage MonoImage;
 typedef struct _MonoAssemblyName MonoAssemblyName;
 typedef struct _MonoString MonoString;
+typedef struct _MonoClassField MonoClassField;
 enum FIELD_TYPE;
 
 class ModuleScripting : public Module
@@ -21,10 +24,12 @@ public:
 	
 public:
 
+	bool			Start();
 	update_status	Update(float dt);
 
 private:
-
+	MonoAssemblyName*		enviroment_assembly = nullptr;
+	MonoImage*				enviroment_image = nullptr;
 	ResourceScript*			focused_script_resource = nullptr;
 	GameObject*				focused_gameobject = nullptr;
 	
@@ -39,20 +44,27 @@ private:
 
 	const char*				dll_path = nullptr;
 
+	//Current Executing Script
+	ComponentScript* active_script;
+
 public:
 
 	//Set Methods -----------
 	void SetFocusedScriptResource(const ResourceScript* res);
 
 	//Get Methods -----------
-	ResourceScript* GetFocusedScriptResource()const;
-	const char*		GetDLLPath()const;
+	ResourceScript*		GetFocusedScriptResource()const;
+	const char*			GetDLLPath()const;
+	MonoAssemblyName*	GetEnviromentAssembly()const;
+	MonoImage*			GetEnviromentImage()const;
 
 	//Functionality ---------
 	//UI
 	void												PlaceFocusedScriptOnEditor();
 	void												EnableScripCreationWindow(const GameObject* target = nullptr);
 	void												BlitScriptingError();
+	void												SetCurrentScript(ComponentScript* script);
+
 	//Mono & Data
 	void												LoadAppDomain();
 	void												ReloadEngineEnvironment();
@@ -66,9 +78,21 @@ public:
 	std::vector<std::pair<std::string, FIELD_TYPE>>*	GetFieldsNameAndType(MonoObject* script);
 	unsigned int										GetFieldValue(MonoObject* script, const char* field_name, void** output_value);
 	bool												SetFieldValue(MonoObject* script, const char* field_name, void* input_value);
+	bool												SetFieldValue(MonoObject* script, MonoClassField* field_name, void* input_value);
 	FIELD_TYPE											StrToFieldType(const char* str)const;
 	const char*											FieldTypeToStr(FIELD_TYPE type)const;
 	void												AddInternalCall(const char*  cs_path, const void*  method);
 	const char *										MonoStringToChar(MonoString* string);
+
+	MonoImage*											LoadMonoImage(MonoAssemblyName* assembly);
+	MonoClassField*										GetFieldFromImage(MonoImage* image, const char* name_space, const char* name, const char* field_name);
+
+	//Mono Methods
+
+	//Transform
+	static MonoObject*											GetLocalPosition();
+	static void													SetLocalPosition(MonoObject* vector);
+
+
 };
 #endif // !_MODULE_SCRIPTING_
