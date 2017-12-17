@@ -9,6 +9,7 @@ This code is under the MIT License
    Sdl -> http://www.libsdl.org/
    Glew -> https://github.com/nigels-com/glew
    cURL -> https://curl.haxx.se/
+   Mono -> http://www.mono-project.com/download/
 
 Bullet and sdl are suggested to zlib license. -> http://www.zlib.net/zlib_license.html
 ImGui is suggested to MIT License
@@ -17,13 +18,13 @@ All those Libraries are not created by us.
 
 # Instructions
 
-To start the engine, execute the Party Engine.exe, if you execute the Launcher.exe it will only execute the launcher not the engine. 
+To start the engine, execute the Fiesta Engine.exe, if you execute the Launcher.exe it will only execute the launcher not the engine. 
 
 The engine executable calls the launcher executable and then starts the engine.
 
 ## Launcher
 
-When you start the program the launcher will be executed. 
+When you start the program, the launcher will be executed. 
 If you dont have the last engine version a download button and a message of the new version will appear on the top of the window.
 The download button links the new release page where you can download it.
 
@@ -83,6 +84,9 @@ To open/close the console pulse the grave key.
 Console shows information of the engine operations and can handle some basic input.(help,quit,clear).
 
 To see all the console commands, you can open the console header in the configuration window or enter “help” in the console
+
+Console Will display the Compile Errors in red with it's line and the error it self.
+Also, if the Script compiles it will show Compile Suceed
 
 ### Resources Manager:
 
@@ -157,6 +161,9 @@ All the scripts imported or created can be used in the scene. To attach a script
 If you select “New Script” the script editor opens and you can start writing the new script. If you select an existent script a ComponentScript will be added to the current GameObject with the correct ScriptResource. 
 When the script is added the fields values can be changed and that values will be the initial stats of the ComponentScript when the game starts. The initial value will be set again when the game mode ends.
 
+#### MonoEmbedding DLL
+We have created a .dll which is the responsible to compile and execute the scripts in runtime.
+The .dll have a bunch of methods to use the Mono functionality such as load assemblies, invoke methods, fill c# fields, attach c++ methods to c# methods and more.
 
 # Changelog
 
