@@ -350,9 +350,6 @@ bool ComponentScript::Load(Serializer & data, std::vector<std::pair<Component*, 
 //Transform
 MonoObject* ComponentScript::GetLocalPosition()
 {
-	GameObject* tar = target_object;
-	if (tar == nullptr)tar = parent;
-
 	//Returned value to the c# script
 	MonoObject* ret = App->scripting->CreateMonoObject(App->scripting->GetEnviromentAssembly(), "FiestaVector3", "FiestaEngine");
 
@@ -364,8 +361,8 @@ MonoObject* ComponentScript::GetLocalPosition()
 	if (ret)
 	{
 		//Get the transform and set the values
-		ComponentTransform* trans = (ComponentTransform*)tar->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-		math::float3 position = trans->GetPosition();
+		ComponentTransform* trans = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		math::float3 position = trans->GetInheritedTransform().Transposed().TranslatePart();
 
 		App->scripting->SetFieldValue(ret, x_value, &position.x);
 		App->scripting->SetFieldValue(ret, y_value, &position.y);
@@ -379,8 +376,6 @@ MonoObject* ComponentScript::GetLocalPosition()
 
 void ComponentScript::SetPosition(MonoObject* vector)
 {
-	GameObject* tar = target_object;
-	if (tar == nullptr)tar = parent;
 
 	void* x_value = nullptr;
 	App->scripting->GetFieldValue(vector, "x", &x_value);
@@ -395,7 +390,78 @@ void ComponentScript::SetPosition(MonoObject* vector)
 	float y = *(float*)y_value;
 	float z = *(float*)z_value;
 
-	ComponentTransform* trans = (ComponentTransform*)tar->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	ComponentTransform* trans = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 	trans->SetPosition(x, y, z);
 
+}
+
+void ComponentScript::RotateFromEulerAngles(MonoObject* e_angles)
+{
+	void* x_value = nullptr;
+	App->scripting->GetFieldValue(e_angles, "x", &x_value);
+
+	void* y_value = nullptr;
+	App->scripting->GetFieldValue(e_angles, "y", &y_value);
+
+	void* z_value = nullptr;
+	App->scripting->GetFieldValue(e_angles, "z", &z_value);
+
+	float x = *(float*)x_value;
+	float y = *(float*)y_value;
+	float z = *(float*)z_value;
+
+	ComponentTransform* trans = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	trans->RotateFromEulerAngles(x, y, z);
+}
+
+MonoObject * ComponentScript::GetForwardDirection()
+{
+	//Returned value to the c# script
+	MonoObject* ret = App->scripting->CreateMonoObject(App->scripting->GetEnviromentAssembly(), "FiestaVector3", "FiestaEngine");
+
+	//Get the fields of this MonoObject Type
+	MonoClassField* x_value = App->scripting->GetFieldFromImage(App->scripting->GetEnviromentImage(), "FiestaEngine", "FiestaVector3", "x");
+	MonoClassField* y_value = App->scripting->GetFieldFromImage(App->scripting->GetEnviromentImage(), "FiestaEngine", "FiestaVector3", "y");
+	MonoClassField* z_value = App->scripting->GetFieldFromImage(App->scripting->GetEnviromentImage(), "FiestaEngine", "FiestaVector3", "z");
+
+	if (ret)
+	{
+		//Get the transform and set the values
+		ComponentTransform* trans = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		math::float3 position = trans->GetInheritedTransform().Transposed().Col3(2);
+
+		App->scripting->SetFieldValue(ret, x_value, &position.x);
+		App->scripting->SetFieldValue(ret, y_value, &position.y);
+		App->scripting->SetFieldValue(ret, z_value, &position.z);
+
+		return ret;
+	}
+
+	return nullptr;;
+}
+
+MonoObject * ComponentScript::GetRightDirection()
+{
+	//Returned value to the c# script
+	MonoObject* ret = App->scripting->CreateMonoObject(App->scripting->GetEnviromentAssembly(), "FiestaVector3", "FiestaEngine");
+
+	//Get the fields of this MonoObject Type
+	MonoClassField* x_value = App->scripting->GetFieldFromImage(App->scripting->GetEnviromentImage(), "FiestaEngine", "FiestaVector3", "x");
+	MonoClassField* y_value = App->scripting->GetFieldFromImage(App->scripting->GetEnviromentImage(), "FiestaEngine", "FiestaVector3", "y");
+	MonoClassField* z_value = App->scripting->GetFieldFromImage(App->scripting->GetEnviromentImage(), "FiestaEngine", "FiestaVector3", "z");
+
+	if (ret)
+	{
+		//Get the transform and set the values
+		ComponentTransform* trans = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		math::float3 position = trans->GetInheritedTransform().Transposed().Col3(0);
+
+		App->scripting->SetFieldValue(ret, x_value, &position.x);
+		App->scripting->SetFieldValue(ret, y_value, &position.y);
+		App->scripting->SetFieldValue(ret, z_value, &position.z);
+
+		return ret;
+	}
+
+	return nullptr;
 }

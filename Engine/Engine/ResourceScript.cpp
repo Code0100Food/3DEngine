@@ -188,7 +188,7 @@ void ResourceScript::BlitComplexUI()
 				break;
 
 			case OBJECT_FIELD:
-				ImGui::Text((*(GameObject*)fields[k].data).GetName());
+				ImGui::Text("null");
 				break;
 			}
 		}

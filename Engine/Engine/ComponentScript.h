@@ -54,8 +54,14 @@ public:
 	//MONO METHODS
 
 	//Transform
-	MonoObject* ComponentScript::GetLocalPosition();
-	void ComponentScript::SetPosition(MonoObject* vector);
+	MonoObject* GetLocalPosition();
+	void SetPosition(MonoObject* vector);
+	void RotateFromEulerAngles(MonoObject* e_angles);
 
+	MonoObject* GetForwardDirection();
+	void SetForwardDirection(MonoObject* vector);
+
+	MonoObject* GetRightDirection();
+	void SetRightDirection(MonoObject* vector);
 };
 #endif // !_COMPONENT_SCRIPT_H_
