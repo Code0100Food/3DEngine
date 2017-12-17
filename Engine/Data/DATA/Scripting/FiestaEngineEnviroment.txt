@@ -6,96 +6,170 @@ using System.Runtime.CompilerServices;
 namespace FiestaEngine
 {
 
+	//GameObject
+	public class GameObject
+	{
+			
+	}
+
+	//Vector3
+	public class FiestaVector3
+	{
+		//Vector values
+		public float x;
+		public float y;
+		public float z;
+
+		public FiestaVector3()
+		{
+			x = 0.0f;
+			y = 0.0f;
+			z = 0.0f;
+		}
+
+		public FiestaVector3(float _x, float _y, float _z)
+		{
+			x = _x;
+			y = _y;
+			z = _z;
+		}
+
+		public void Set(float _x, float _y, float _z)
+		{
+			x = _x;
+			y = _y;
+			z = _z;
+		}
+
+	}
+
+//Transform
+	public class Transform
+	{
+
+		public FiestaVector3 local_position
+		{
+			get
+			{
+				return GetLocalPosition();
+			}
+			set
+			{
+				SetPosition(value);
+			}
+
+		}
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+        	public static extern FiestaVector3 GetLocalPosition();
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+	     public static extern void SetPosition(FiestaVector3 value);
+	}
+
+
 	//Console Display
 	public class FiestaConsole
 	{
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern void Log(string message);
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern void LogInt(int message);
+
+[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern void LogFloat(float message);
+
+
+
+
 	}
 
 	//Input Detection
 	public class FiestaInput
-	{
-		public enum FiestaKeyCode
-		{
-			A = 4,
-			B = 5,
-			C = 6,
-			D = 7,
-E = 8,
-F = 9,
-G = 10,
-H = 11,
-I = 12,
-J = 13,
-K = 14,
-L = 15,
-M = 16,
-N = 17,
-O = 18,
-P = 19,
-Q = 20,
-R = 21,
-S = 22,
-T = 23,
-U = 24,
-V = 25,
-W = 26,
-X = 27,
-Y = 28,
-Z = 29,
+	{	
 
-KEY_1 = 30,
-KEY_2 = 31,
-KEY_3 = 32,
-KEY_4 = 33,
-KEY_5 = 34,
-KEY_6 = 35,
-KEY_7 = 36,
-KEY_8 = 37,
-KEY_9 = 38,
-			KEY_0 = 39,
+	public enum FiestaKeyCode
+        {
+            A = 4,
+            B = 5,
+            C = 6,
+            D = 7,
+            E = 8,
+            F = 9,
+            G = 10,
+            H = 11,
+            I = 12,
+            J = 13,
+            K = 14,
+            L = 15,
+            M = 16,
+            N = 17,
+            O = 18,
+            P = 19,
+            Q = 20,
+            R = 21,
+            S = 22,
+            T = 23,
+            U = 24,
+            V = 25,
+            W = 26,
+            X = 27,
+            Y = 28,
+            Z = 29,
 
-RETURN = 40,
-ESCAPE = 41,
-BACKSPACE = 42,
-TAB = 43,
-SPACE = 44,
+            KEY_1 = 30,
+            KEY_2 = 31,
+            KEY_3 = 32,
+            KEY_4 = 33,
+            KEY_5 = 34,
+            KEY_6 = 35,
+            KEY_7 = 36,
+            KEY_8 = 37,
+            KEY_9 = 38,
+            KEY_0 = 39,
 
-MINUS = 45,
-EQUALS = 46,
-LEFTBRACKET = 47,
-RIGHTBRACKET = 48,
-BACKSLASH = 49, 
+            RETURN = 40,
+            ESCAPE = 41,
+            BACKSPACE = 42,
+            TAB = 43,
+            SPACE = 44,
 
-SLASH = 56,
-CAPSLOCK = 57,
-F1 = 58,
-F2 = 59,
-F3 = 60,
-F4 = 61,
-F5 = 62,
-F6 = 63,
-F7 = 64,
-F8 = 65,
-F9 = 66,
-F10 = 67,
-F11 = 68,
-F12 = 69,
+            MINUS = 45,
+            EQUALS = 46,
+            LEFTBRACKET = 47,
+            RIGHTBRACKET = 48,
+            BACKSLASH = 49,
 
-RIGHT_ARROW = 79,
-LEFT_ARROW = 80,
-DOWN_ARROW = 81,
-UP_ARROW = 82,
+            SLASH = 56,
+            CAPSLOCK = 57,
+            F1 = 58,
+            F2 = 59,
+            F3 = 60,
+            F4 = 61,
+            F5 = 62,
+            F6 = 63,
+            F7 = 64,
+            F8 = 65,
+            F9 = 66,
+            F10 = 67,
+            F11 = 68,
+            F12 = 69,
 
-LCTRL = 224,
-LSHIFT = 225,
-LALT = 226, 
-RCTRL = 228,
-RSHIFT = 229,
-RALT = 230 
-			
-		}
+            RIGHT_ARROW = 79,
+            LEFT_ARROW = 80,
+            DOWN_ARROW = 81,
+            UP_ARROW = 82,
+
+            LCTRL = 224,
+            LSHIFT = 225,
+            LALT = 226,
+            RCTRL = 228,
+            RSHIFT = 229,
+            RALT = 230
+
+        }
+
 		
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool GetKeyDown(FiestaKeyCode key);
@@ -109,28 +183,7 @@ RALT = 230
 
 	public class Festejo
 	{
-		public int estonova = 3;
-		public int estoSIva = 3;
-
-		public string[] GetPublicProperties()
-   		{
-			estonova = 1;
-			estoSIva = 2;
-
-        		List<string> property_names = new List<string>();
-
-        		const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-
-        		FieldInfo[] fields = GetType().GetFields(flags);
-        		foreach (FieldInfo fieldInfo in fields)
-        		{
-				property_names.Add(fieldInfo.Name);
-        		}
-
-        		return property_names.ToArray();
-
-    		}
-
+		
 		public void ChangeInt(ref int val)
     		{
         		val = val + 1;
