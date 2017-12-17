@@ -123,8 +123,6 @@ bool ComponentMaterial::Save(Serializer & array_root) const
 
 bool ComponentMaterial::Load(Serializer & data, std::vector<std::pair<Component*, uint>>& links)
 {
-	bool ret = false;
-
 	//Get component id
 	id = data.GetInt("id");
 	//Get actived
@@ -140,5 +138,5 @@ bool ComponentMaterial::Load(Serializer & data, std::vector<std::pair<Component*
 		if (mat != nullptr)AddTexture(mat);
 	}
 
-	return ret;
+	return true;
 }

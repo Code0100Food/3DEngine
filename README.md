@@ -127,6 +127,15 @@ You can place two or more cameras in the scene. If you go to the inspector and s
 this will be the Camera that displays the Game view. You can also separate the Scene and Game view and move the 
 cameras to see the results in real time.
 
+We have placed a tank into the scene, this has 3 scripts, one to move and two to rotate. The controls are:
+
+ -"W" to move forward.
+ -"S" to move backwards.
+ -"A" & "D" to rotate the tank.
+ -Mouse to rotate the Turret of the tank. 
+
+"W,A,S,D" are fully reprogramable you just have to change the FiestaInput.FiestaKeyCode."W" in the script. Not all keys are binded so check the DATA/Scripting/FiestaEngineEnviroment.txt to be sure not to use a wrong key.
+
 ### Camera
 
 To modify Camera FOV or other settings go to "View" -> "Configuration" -> "Camera"
