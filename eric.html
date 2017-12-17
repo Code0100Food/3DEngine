@@ -180,35 +180,44 @@
                 <div class="row">
 
                     <div class="col-lg-12">
-                        <p class="lead">Transformations</p>
-                        <p class="lead-header">Every GameObject has a world and local transformation that is manager by the ComponentTransformation that is automatically generated when a GameObject is created to locate it in the scene. Transformations respect the GameObjects hierarchy so when the hierarchy is modified the related GameObjects need to update his transformations.</p>
+                        <p class="page-header">Transformations</p>
+                        <p class="lead">Every GameObject has a world and local transformation that is manager by the ComponentTransformation that is automatically generated when a GameObject is created to locate it in the scene. Transformations respect the GameObjects hierarchy so when the hierarchy is modified the related GameObjects need to update his transformations.</p>
 
-                        <p class="lead">Camera</p>
-                        <p class="lead-header">You can swap between two cameras, the Game camera and the Scene camera. The Game camera is automatically turned on when the PLAY button is pressed and show the scene from the point of view of the main CameraComponent.</p>
+                        <p class="page-header">Camera</p>
+                        <p class="lead">You can swap between two cameras, the Game camera and the Scene camera. The Game camera is automatically turned on when the PLAY button is pressed and show the scene from the point of view of the main CameraComponent.</p>
                         
-                        <p class="lead">Mouse Picking</p>
-                        <p class="lead-header">Mouse picking system sends a 3D ray-cast from the 2D world where the mouse moves to find if there's a GameObject that collides with it. If there's collision the GameObject is set as selected.</p>
+                        <p class="page-header">Mouse Picking</p>
+                        <p class="lead">Mouse picking system sends a 3D ray-cast from the 2D world where the mouse moves to find if there's a GameObject that collides with it. If there's collision the GameObject is set as selected.To detect collection first collides with the bounding boxes of the game objects and then iterate the collided elements to check if theres a collision with a mesh.</p>
                         
-                        <p class="lead">Docking</p>
-                        <p class="lead-header">Fiesta Engine have a docking system to manage the different windows that provides a more optimal way to place all the UI and let the user configure if freely.</p>
+                        <p class="page-header">Docking</p>
+                        <p class="lead">Fiesta Engine have a docking system to manage the different windows that provides a more optimal way to place all the UI and let the user configure if freely.</p>
                         
-                        <p class="lead">Gizmos</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="page-header">Gizmos</p>
+                        <p class="lead">Gizmos are UI element that let you modify a GameObject position, rotation and scale with simple input like click and drag that UI elements placed in the object position.</p>
 
-                        <p class="lead">Launcher</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="page-header">Launcher</p>
+                        <p class="lead">Engine Launcher is a program that checks if the used engine version is the latest. If not you can pulse the download button that appears to download the last one. This program is executed before the engine and is shown in a small window that let you choose between close or open the engine or update if your version is deprecated.</p>
 
-                        <p class="lead">Bounding Boxes</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="page-header">Bounding Boxes</p>
+                        <p class="lead">Every GameObject have his bounding box adjusted to the mesh component in case it have one. Bounding boxes system is an optimization for the mouse picking, so the ray-cast send by the mouse picking system collides first with the bounding boxes.</p>
 
-                        <p class="lead">File System</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="page-header">File System</p>
+                        <p class="lead">File system basically manages all the folders used during the engine execution and save the paths in Direction classes to let the rest of modules use them to load/save or simply access files. Also provides a bunch of methods to modify strings useful to tract with paths and file names and formats.</p>
 
-                        <p class="lead">UI Art</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="page-header">UI Art</p>
+                        <div>
+                            <img class="img-responsive center-block" src="img/garbage_icon.png" align="left" width="25" height="25">
+                            <img class="img-responsive center-block" src="img/next_click_icon.png" align="left" width="25" height="25">
+                            <img class="img-responsive center-block" src="img/pause_click_icon.png" align="left" width="25" height="25">
+                            <img class="img-responsive center-block" src="img/play_icon.png" align="left" width="25" height="25">
+                            <img class="img-responsive center-block" src="img/transform_icon.png" align="left" width="25" height="25">
+                            <img class="img-responsive center-block" src="img/up_arrow_icon.png" align="left" width="25" height="25">
+                        </div>
+                        <p class="lead">. </p>
+                        <p class="lead">Simple UI icons to guide the user around the engine elements. This icons are used for the GameObjects and the PLAY/PAUSE system.</p>
 
-                        <p class="lead">Scripting Compiler</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="page-header">Scripting Compiler</p>
+                        <p class="lead">Meet the team members!</p>
                         
                         <p class="page-header" align="left">
 

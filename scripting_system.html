@@ -166,7 +166,7 @@
 
                         <h1 class="page-header">
 
-                            <p align="center">Fiesta Engine</p>
+                            <p align="center">Scripting Sub-System</p>
 
                         </h1>
 
@@ -182,44 +182,19 @@
 
                     <div class="col-lg-12">
 
-                        <p class="lead">Learn all about the Fiesta Engine and join the party!</p>
+                        <p class="lead">Scripting Sub-System uses mono to compile and link C# scripts with the engine environment.</p>
 
-                        <ul style="list-style-type:circle">
-
-                            <li> <a href="main_core_subsystems.html"><i class="fa fa-database" aria-hidden="true"></i> Main Core Sub-Systems</a> </li>
-                            <li> <a href="scripting_system.html"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Scripting Sub-System</a> </li>
-
-                        </ul>
-
-                        <p class="page-header" align="center">
-
-                            MIT License
-
-                        </p>
-
-                        <p class="page">Copyright (c) 2017 Code0100Food</p>
-                        <p class="page">
-                            Permission is hereby granted, free of charge, to any person obtaining a copy
-                            of this software and associated documentation files (the "Software"), to deal
-                            in the Software without restriction, including without limitation the rights
-                            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-                            copies of the Software, and to permit persons to whom the Software is
-                            furnished to do so, subject to the following conditions:
-                        </p>
-                        <p class="page">
-                            The above copyright notice and this permission notice shall be included in all
-                            copies or substantial portions of the Software.
-                        </p>
-                        <p class="page">
-                            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-                            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-                            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-                            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-                            SOFTWARE.
-                        </p>
-
+                        <p class="page-header">Scripting Resources:</p>
+                        <p class="lead">All the scripts placed in the assets folder or dropped on the engine window are imported. To import a script the resource manager generates a script resource and call the module scripting to compile it and get all the necessary data, like the fields and the compilation result. The compilation result is a DLL that is saved in the library, so on the next engine start the already imported scripts don’t need to be compiled, only linked with the correct script resources with the meta files.</p>
+                        <p class="lead">When the script is imported you can see it in the resource inspector and edit it with the scripting console pressing the “Edit” button. When you edit a script and save, the script will be reimported so all the related data will be updated if the compilation is successfully completed.</p>
+                        <p class="page-header">Script Editor:</p>
+                        <p class="lead">As we mention before there’s a scripts editor that let you modify and create new scripts during the engine execution. To open the scripts editor, you can press F2 or “Edit” button on the resources inspector when a script resource is selected.</p>
+                        <p class="lead">When you create a new script from the editor a .txt will be placed on the Assets folder and the script will be imported generating the related files.</p>
+                        <p class="page-header">Scripts Inspector:</p>
+                        <p class="lead">All the scripts imported or created can be used in the scene. To attach a script to a game object check the game object inspector and press de button “Add Component”. In the add component menu you can try to add any available script or create a new one.</p>
+                        <p class="lead">If you select “New Script” the script editor opens and you can start writing the new script. If you select an existent script a ComponentScript will be added to the current GameObject with the correct ScriptResource.</p>
+                        <p class="lead">When the script is added the fields values can be changed and that values will be the initial stats of the ComponentScript when the game starts. The initial value will be set again when the game mode ends.</p>
+                        
                         <p class="page-header" align="left">
 
                             Find us on:
