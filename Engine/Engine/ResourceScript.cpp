@@ -159,12 +159,6 @@ void ResourceScript::BlitComplexUI()
 		{
 			switch (fields[k].type)
 			{
-			case CHAR_FIELD:
-				break;
-
-			case STRING_FIELD:
-				break;
-
 			case INT8_FIELD:
 			case INT16_FIELD:
 			case INT32_FIELD:
@@ -193,7 +187,8 @@ void ResourceScript::BlitComplexUI()
 				}
 				break;
 
-			case CLASS_FIELD:
+			case OBJECT_FIELD:
+				ImGui::Text((*(GameObject*)fields[k].data).GetName());
 				break;
 			}
 		}

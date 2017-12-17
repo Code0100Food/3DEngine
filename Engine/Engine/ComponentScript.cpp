@@ -71,6 +71,11 @@ void ComponentScript::SetMonoObject(const MonoObject * obj)
 	script_object = (MonoObject*)obj;
 }
 
+void ComponentScript::SetTargetObject(const GameObject * target)
+{
+	target_object = (GameObject*)target;
+}
+
 MonoObject * ComponentScript::GetMonoObject() const
 {
 	return script_object;
@@ -79,6 +84,11 @@ MonoObject * ComponentScript::GetMonoObject() const
 ResourceScript * ComponentScript::GetResourceScript() const
 {
 	return resource_script;
+}
+
+GameObject * ComponentScript::GetTargetObject() const
+{
+	return target_object;
 }
 
 // Functionality ================================
@@ -165,12 +175,6 @@ void ComponentScript::BlitComponentInspector()
 	{
 		switch (fields[k].type)
 		{
-		case CHAR_FIELD:
-			break;
-
-		case STRING_FIELD:
-			break;
-
 		case INT8_FIELD:
 		case INT16_FIELD:
 		case INT32_FIELD:
@@ -192,7 +196,33 @@ void ComponentScript::BlitComponentInspector()
 			ImGui::Checkbox(fields[k].name.c_str(), (bool*)fields[k].data);
 			break;
 
-		case CLASS_FIELD:
+		case OBJECT_FIELD:
+			if (fields[k].data != nullptr && fields[k].setted)
+			{
+				ImGui::Text(fields[k].name.c_str());
+				ImGui::SameLine();
+				ImGui::Text(((GameObject*)fields[k].data)->GetName());
+				if (ImGui::Button("Clean Object"))
+				{
+					fields[k].data = nullptr;
+					target_object = nullptr;
+				}
+			}
+			else
+			{
+				if (ImGui::TreeNodeEx("GameObjects"))
+				{
+					GameObject* tar = App->scene->BlitGameObjectsAsSelectables();
+					if (tar != nullptr)
+					{
+						fields[k].data = tar;
+						fields[k].setted = true;
+						target_object = (GameObject*)fields[k].data;
+					}
+					ImGui::TreePop();
+				}
+
+			}
 			break;
 		}
 	}
@@ -244,12 +274,6 @@ bool ComponentScript::Save(Serializer & array_root) const
 		//Field value
 		switch (fields[k].type)
 		{
-		case CHAR_FIELD:
-			break;
-
-		case STRING_FIELD:
-			break;
-
 		case INT8_FIELD:
 		case INT16_FIELD:
 		case INT32_FIELD:
@@ -262,8 +286,7 @@ bool ComponentScript::Save(Serializer & array_root) const
 		case FLOAT_FIELD:	field_data.InsertFloat("value", *(float*)fields[k].data);	break;
 		case BOOL_FIELD:	field_data.InsertBool("value", *(bool*)fields[k].data);		break;
 
-		case CLASS_FIELD:
-			break;
+		case OBJECT_FIELD:	field_data.InsertInt("value", ((GameObject*)fields[k].data)->GetID());	break;
 		}
 		
 		//Insert the generated field serialization
@@ -302,12 +325,6 @@ bool ComponentScript::Load(Serializer & data, std::vector<std::pair<Component*, 
 		{
 			switch (fields[k].type)
 			{
-			case CHAR_FIELD:
-				break;
-
-			case STRING_FIELD:
-				break;
-
 			case INT8_FIELD:
 			case INT16_FIELD:
 			case INT32_FIELD:
@@ -320,8 +337,7 @@ bool ComponentScript::Load(Serializer & data, std::vector<std::pair<Component*, 
 			case FLOAT_FIELD:	*(float*)fields[k].data = field_data.GetFloat("value");	break;
 			case BOOL_FIELD:	*(bool*)fields[k].data = field_data.GetBool("value");	break;
 
-			case CLASS_FIELD:
-				break;
+			case OBJECT_FIELD:	fields[k].data = App->scene->FindGameObject(field_data.GetInt("value")); fields[k].setted = true; target_object = (GameObject*)fields[k].data;	break;
 			} 
 		}
 	}
@@ -334,6 +350,9 @@ bool ComponentScript::Load(Serializer & data, std::vector<std::pair<Component*, 
 //Transform
 MonoObject* ComponentScript::GetLocalPosition()
 {
+	GameObject* tar = target_object;
+	if (tar == nullptr)tar = parent;
+
 	//Returned value to the c# script
 	MonoObject* ret = App->scripting->CreateMonoObject(App->scripting->GetEnviromentAssembly(), "FiestaVector3", "FiestaEngine");
 
@@ -345,7 +364,7 @@ MonoObject* ComponentScript::GetLocalPosition()
 	if (ret)
 	{
 		//Get the transform and set the values
-		ComponentTransform* trans = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		ComponentTransform* trans = (ComponentTransform*)tar->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 		math::float3 position = trans->GetPosition();
 
 		App->scripting->SetFieldValue(ret, x_value, &position.x);
@@ -355,12 +374,13 @@ MonoObject* ComponentScript::GetLocalPosition()
 		return ret;
 	}
 	
-
 	return nullptr;
 }
 
 void ComponentScript::SetPosition(MonoObject* vector)
 {
+	GameObject* tar = target_object;
+	if (tar == nullptr)tar = parent;
 
 	void* x_value = nullptr;
 	App->scripting->GetFieldValue(vector, "x", &x_value);
@@ -375,7 +395,7 @@ void ComponentScript::SetPosition(MonoObject* vector)
 	float y = *(float*)y_value;
 	float z = *(float*)z_value;
 
-	ComponentTransform* trans = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	ComponentTransform* trans = (ComponentTransform*)tar->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 	trans->SetPosition(x, y, z);
 
 }

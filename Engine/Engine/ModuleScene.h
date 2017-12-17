@@ -92,6 +92,8 @@ public:
 	bool		GetGameObjectHierarchyWindowState()const;
 	void		SetGameObjectHierarchyWindowState(bool val);
 
+	GameObject*	BlitGameObjectsAsSelectables();
+
 	//Hierarchy methods
 	bool		IsRoot(const GameObject* target)const;
 	GameObject* GetRoot()const;

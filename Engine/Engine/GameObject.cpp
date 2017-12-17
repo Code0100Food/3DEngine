@@ -246,6 +246,11 @@ bool GameObject::IsSelectedObject() const
 	return (this == App->scene->GetSelectedGameObject());
 }
 
+const char * GameObject::GetName() const
+{
+	return name.c_str();
+}
+
 // Functionality ================================
 Component * GameObject::CreateComponent(COMPONENT_TYPE c_type)
 {
@@ -785,6 +790,26 @@ void GameObject::Blit3DObject()
 void GameObject::BlitPrefabs()
 {
 	App->res_manager->BlitPrefabsMenu(this);
+}
+
+GameObject * GameObject::BlitAsSelectable(bool included)
+{
+	if (included)
+	{
+		if (ImGui::Selectable(name.c_str()))
+		{
+			return this;
+		}
+	}
+
+	uint size = childs.size();
+	for(uint k = 0; k < size; k++)
+	{
+		GameObject* ret = childs[k]->BlitAsSelectable();
+		if (ret != nullptr)return ret;
+	}
+
+	return nullptr;
 }
 
 void GameObject::DrawBoundingBox()

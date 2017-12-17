@@ -24,6 +24,8 @@ private:
 	ResourceScript*				resource_script = nullptr;
 	
 	MonoObject*					script_object = nullptr;
+	
+	GameObject*					target_object = nullptr;
 
 	std::vector<ScriptField>	fields;
 
@@ -32,10 +34,12 @@ public:
 	//Set Methods -----------
 	void SetResourceScript(ResourceScript* script);
 	void SetMonoObject(const MonoObject* obj);
+	void SetTargetObject(const GameObject* target);
 
 	//Get Methods -----------
 	MonoObject*		GetMonoObject()const;
 	ResourceScript* GetResourceScript()const;
+	GameObject*		GetTargetObject()const;
 
 	//Functionality ---------
 	//Fields Methods

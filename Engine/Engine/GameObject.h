@@ -70,7 +70,8 @@ public:
 	GameObject*			GetParent() const;
 	bool				IsRoot() const;
 	bool				IsSelectedObject() const;
-	
+	const char*			GetName()const;
+
 	//Functionality ---------
 	//Components Methods 
 	Component*		CreateComponent(COMPONENT_TYPE c_type);
@@ -102,6 +103,7 @@ public:
 	void		BlitAddEmpty();
 	void		Blit3DObject();
 	void		BlitPrefabs();
+	GameObject* BlitAsSelectable(bool included = true);
 
 	//Bounding Box Methods
 	std::pair<math::float3, math::float3>	AdjustBoundingBox(bool all_childs = true);

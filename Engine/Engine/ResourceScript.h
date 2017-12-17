@@ -10,8 +10,6 @@ typedef struct _MonoAssemblyName MonoAssemblyName;
 enum FIELD_TYPE
 {
 	UNDEF_FIELD_TYPE = 0,
-	CHAR_FIELD,
-	STRING_FIELD,
 	INT8_FIELD,
 	INT16_FIELD,
 	INT32_FIELD,
@@ -22,7 +20,7 @@ enum FIELD_TYPE
 	UINT64_FIELD,
 	FLOAT_FIELD,
 	BOOL_FIELD,
-	CLASS_FIELD
+	OBJECT_FIELD
 };
 
 /// ScriptField -------------------------------------------
@@ -40,7 +38,8 @@ public:
 	void*		data = nullptr;
 	uint		data_size = 0;
 	FIELD_TYPE	type = UNDEF_FIELD_TYPE;
-	
+	bool		setted = false;
+
 public:
 
 	void CloneData();

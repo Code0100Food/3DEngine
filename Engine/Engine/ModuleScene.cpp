@@ -522,6 +522,11 @@ void ModuleScene::SetGameObjectHierarchyWindowState(bool val)
 	show_gameobject_hierarchy_window = val;
 }
 
+GameObject* ModuleScene::BlitGameObjectsAsSelectables()
+{
+	return root_gameobject->BlitAsSelectable(false);
+}
+
 bool ModuleScene::IsRoot(const GameObject * target) const
 {
 	return (target == root_gameobject);

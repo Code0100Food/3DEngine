@@ -153,7 +153,8 @@ bool ScriptImporter::ReImport(ResourceScript * to_reload)
 					for (uint k = 0; k < size; k++)
 					{
 						void* val = nullptr;
-						uint d_size = App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
+						uint d_size = 0;
+						if (fields->at(k).second != OBJECT_FIELD)App->scripting->GetFieldValue(obj, fields->at(k).first.c_str(), &val);
 						to_reload->AddField(fields->at(k).first.c_str(), fields->at(k).second, val, d_size);
 					}
 				}
