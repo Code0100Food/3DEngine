@@ -193,25 +193,29 @@
                         <p class="lead-header">Some basic primitives[Cube,Sphere,Cylinder] that can be freely placed and modified in the game scene.</p>
 
                         <p class="lead">GameObject</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="lead-header">GameObjects are the containers that the engine uses to manage all the component in the scene. So a game object is basically a components manager that let the user change the linked components and the game object situation in hierarchy.</p>
 
-                        <p class="lead">Component</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="lead">Components</p>
+                        <p class="lead-header">Mesh Component: Component linked to a mesh resource and link the mesh to a gameobject.</p>
+                        <p class="lead-header">Primitives Components: This components are a group of predefined resources that the engine generates to use as primitive meshes.</p>
+                        <p class="lead-header">Material Component: Component linked to a material resource. This component interact with the mesh component and blit his texture on it.</p>
+                        <p class="lead-header">MeshRender Component: This component render the mesh component with the material(if there's one) so it don't contain anything, just a graphical functionality.</p>                        
                         
+
                         <p class="lead">Scene Serialization</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="lead-header">Scene serialization system serializes all the game objects and components respecting the hierarchy in a JSON file to load it when is required. Is principally used on PLAY/STOP to reset the scene on stop.</p>
 
                         <p class="lead">Time Manager</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="lead-header">This tool manages all the engine timing. Manages the app loop timing and the Game mode loop timing. </p>
 
                         <p class="lead">Resources Manager</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="lead-header">This sub-system import all the files placed in Assets folder or dropped on the engine window. The imported files generate resources like meshes,materials,scripts and scenes that can be used to built the game. When a file placed in assets is modified the resources manager update the content of the related resources automatically.</p>
 
-                        <p class="lead">Adaptative Octree</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="lead">Adaptive Octree</p>
+                        <p class="lead-header">An octree is a way to optimize the collection of elements in space by defining cube areas where the elements can be placed so the search logically uses a tree to find them.In this case we are talking of an adaptive octree so the search area is limited to the minimum according to the elements in the space.</p>
 
                         <p class="lead">Scripting Console</p>
-                        <p class="lead-header">Meet the team members!</p>
+                        <p class="lead-header">The scripting console is a tool that let the user modify the script resources or create new ones that can be placed in scene to execute it's functionality.</p>
 
                         <p class="page-header" align="left">
 
