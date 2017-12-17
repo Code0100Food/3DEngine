@@ -50,6 +50,14 @@ bool ComponentScript::Update(float dt)
 	{
 		App->scripting->SetCurrentScript(this);
 		App->scripting->ExecuteMethod(script_object, "Update");
+		uint size = fields.size();
+		for (uint k = 0; k < size; k++)
+		{
+			if (fields[k].type != OBJECT_FIELD && fields[k].type != TRANS_FIELD)
+			{
+				App->scripting->GetFieldValue(script_object, fields[k].name.c_str(), &fields[k].data);
+			}
+		}
 	}
 
 	return true;
@@ -57,7 +65,6 @@ bool ComponentScript::Update(float dt)
 
 bool ComponentScript::ScriptUpdate()
 {
-	App->scripting->ExecuteMethod(script_object, "whatthehellman");
 	return true;
 }
 
