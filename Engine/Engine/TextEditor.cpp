@@ -432,8 +432,8 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 			Copy();
 		else if (ctrl && !shift && !alt && ImGui::IsKeyPressed('C'))
 			Copy();
-		else if (!IsReadOnly() && !ctrl && shift && !alt && ImGui::IsKeyPressed(45))
-			Paste();
+		//else if (!IsReadOnly() && !ctrl && shift && !alt && ImGui::IsKeyPressed(45))
+			//Paste();
 		else if (!IsReadOnly() && ctrl && !shift && !alt && ImGui::IsKeyPressed('V'))
 			Paste();
 		else if (ctrl && !shift && !alt && ImGui::IsKeyPressed('X'))

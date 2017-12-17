@@ -140,8 +140,31 @@ Octree will be filled with static objects. To set a static objects check the ins
 When Pressing F1 debug mode is active and you will see the mouse picking ray and the editor camera frustrum in the Game View
 
 
+### Scripting System
+
+Scripting System uses mono to compile and link C# scripts with the engine environment. 
+
+#### Scripting Resources:
+All the scripts placed in the assets folder or dropped on the engine window are imported. To import a script the resource manager generates a script resource and call the module scripting to compile it and get all the necessary data, like the fields and the compilation result. The compilation result is a DLL that is saved in the library, so on the next engine start the already imported scripts don’t need to be compiled, only linked with the correct script resources with the meta files.
+When the script is imported you can see it in the resource inspector and edit it with the scripting console pressing the “Edit” button. When you edit a script and save, the script will be reimported so all the related data will be updated if the compilation is successfully completed.
+
+#### Script Editor:
+As we mention before there’s a scripts editor that let you modify and create new scripts during the engine execution. To open the scripts editor, you can press F2 or “Edit” button on the resources inspector when a script resource is selected.
+When you create a new script from the editor a .txt will be placed on the Assets folder and the script will be imported generating the related files.
+
+#### Scripts Inspector:
+All the scripts imported or created can be used in the scene. To attach a script to a game object check the inspector and press de button “Add Component”. In the add component menu you can try to add any available script or create a new one.
+If you select “New Script” the script editor opens and you can start writing the new script. If you select an existent script a ComponentScript will be added to the current GameObject with the correct ScriptResource. 
+When the script is added the fields values can be changed and that values will be the initial stats of the ComponentScript when the game starts. The initial value will be set again when the game mode ends.
+
 
 # Changelog
+
+	 -Release 0.5:
+		Scripting Console Updated
+		Script Resource track fields
+		ScriptComponent Added
+		Engine environment for scripting defined
 
 	 -Release 0.3.1:
 		Scripting Console Added
