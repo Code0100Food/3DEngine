@@ -29,20 +29,6 @@ public class MoveScript : Festejo
       
 			}
 
-            if(FiestaInput.GetKeyRepeat(FiestaInput.FiestaKeyCode.A))
-			{
-				
-                trans.local_position =   trans.local_position + (trans.right.Normalized * speed * Time.delta_time);
-      
-			}
-
-            if(FiestaInput.GetKeyRepeat(FiestaInput.FiestaKeyCode.D))
-			{
-				
-                trans.local_position =   trans.local_position + (trans.right.Normalized * -speed * Time.delta_time);
-      
-			}
-
             return true;
         }
 }

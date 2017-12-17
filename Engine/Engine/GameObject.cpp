@@ -423,6 +423,7 @@ Component * GameObject::CloneComponent(const Component * target) const
 	switch (target->GetType())
 	{
 	case COMP_TRANSFORMATION:		new_c = new ComponentTransform(*(const ComponentTransform*)target);			break;
+	case COMP_SCRIPT:				new_c = new ComponentScript(*(const ComponentScript*)target);				break;
 	case COMP_MESH:					new_c = new ComponentMesh(*(const ComponentMesh*)target);					break;
 	case COMP_MATERIAL:				new_c = new ComponentMaterial(*(const ComponentMaterial*)target);			break;
 	case COMP_MESH_RENDERER:		new_c = new ComponentMeshRenderer(*(const ComponentMeshRenderer*)target);	break;

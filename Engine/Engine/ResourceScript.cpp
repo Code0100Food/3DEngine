@@ -40,6 +40,15 @@ ResourceScript::ResourceScript():Resource(SCRIPT_RESOURCE)
 
 }
 
+ResourceScript::ResourceScript(const ResourceScript & cpy) : buffer(cpy.buffer), assembly(cpy.assembly)
+{
+	uint size = cpy.fields.size();
+	for (uint k = 0; k < size; k++)
+	{
+		fields.push_back(cpy.fields[k]);
+	}
+}
+
 // Destructors ==================================
 ResourceScript::~ResourceScript()
 {
@@ -188,6 +197,10 @@ void ResourceScript::BlitComplexUI()
 				break;
 
 			case OBJECT_FIELD:
+				ImGui::Text("null");
+				break;
+
+			case TRANS_FIELD:
 				ImGui::Text("null");
 				break;
 			}

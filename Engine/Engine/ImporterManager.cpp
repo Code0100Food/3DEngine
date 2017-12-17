@@ -162,5 +162,6 @@ IMPORT_TYPE ImporterManager::GetImportTypeFromFormat(const char * str) const
 	if (strcmp(str, "TGA") == 0)return MATERIAL_IMPORT;
 	if (strcmp(str, "fiesta") == 0)return MESH_IMPORT;
 	if (strcmp(str, "txt") == 0)return SCRIPT_IMPORT;
+	if (strcmp(str, "cs") == 0)return SCRIPT_IMPORT;
 	return UNDEF_IMPORT;
 }

@@ -22,7 +22,7 @@ public class RotateScript : Festejo
     {
 
         FiestaVector3 tmp = new FiestaVector3(x, y, z);
-        angle = (rotation_speed_x * -FiestaInput.GetMouseXAxis());
+        angle = (rotation_speed_x * -FiestaInput.GetMouseXAxis() * Time.delta_time);
         trans.euler_angles = new FiestaVector3(tmp.Normalized.x * angle, tmp.Normalized.y * angle, tmp.Normalized.z * angle);      
 
         return true;

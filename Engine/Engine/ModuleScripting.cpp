@@ -449,17 +449,18 @@ bool ModuleScripting::SetFieldValue(MonoObject * script, MonoClassField* field, 
 
 FIELD_TYPE ModuleScripting::StrToFieldType(const char * str) const
 {
-	if (strcmp(str, "System.Int8") == 0)	return FIELD_TYPE::INT8_FIELD;
-	if (strcmp(str, "System.Int16") == 0)	return FIELD_TYPE::INT16_FIELD;
-	if (strcmp(str, "System.Int32") == 0)	return FIELD_TYPE::INT32_FIELD;
-	if (strcmp(str, "System.Int64") == 0)	return FIELD_TYPE::INT64_FIELD;
-	if (strcmp(str, "System.UInt8") == 0)	return FIELD_TYPE::UINT8_FIELD;
-	if (strcmp(str, "System.UInt16") == 0)	return FIELD_TYPE::UINT16_FIELD;
-	if (strcmp(str, "System.UInt32") == 0)	return FIELD_TYPE::UINT32_FIELD;
-	if (strcmp(str, "System.UInt64") == 0)	return FIELD_TYPE::UINT64_FIELD;
-	if (strcmp(str, "System.Single") == 0)	return FIELD_TYPE::FLOAT_FIELD;
-	if (strcmp(str, "System.Boolean") == 0)	return FIELD_TYPE::BOOL_FIELD;
+	if (strcmp(str, "System.Int8") == 0)				return FIELD_TYPE::INT8_FIELD;
+	if (strcmp(str, "System.Int16") == 0)				return FIELD_TYPE::INT16_FIELD;
+	if (strcmp(str, "System.Int32") == 0)				return FIELD_TYPE::INT32_FIELD;
+	if (strcmp(str, "System.Int64") == 0)				return FIELD_TYPE::INT64_FIELD;
+	if (strcmp(str, "System.UInt8") == 0)				return FIELD_TYPE::UINT8_FIELD;
+	if (strcmp(str, "System.UInt16") == 0)				return FIELD_TYPE::UINT16_FIELD;
+	if (strcmp(str, "System.UInt32") == 0)				return FIELD_TYPE::UINT32_FIELD;
+	if (strcmp(str, "System.UInt64") == 0)				return FIELD_TYPE::UINT64_FIELD;
+	if (strcmp(str, "System.Single") == 0)				return FIELD_TYPE::FLOAT_FIELD;
+	if (strcmp(str, "System.Boolean") == 0)				return FIELD_TYPE::BOOL_FIELD;
 	if (strcmp(str, "FiestaEngine.GameObject") == 0)	return FIELD_TYPE::OBJECT_FIELD;
+	if (strcmp(str, "FiestaEngine.Transform") == 0)		return FIELD_TYPE::TRANS_FIELD;
 	return FIELD_TYPE::UNDEF_FIELD_TYPE;
 }
 
@@ -478,6 +479,7 @@ const char * ModuleScripting::FieldTypeToStr(FIELD_TYPE type) const
 	case FLOAT_FIELD:	return "System.Single";				break;
 	case BOOL_FIELD:	return "System.Boolean";			break;
 	case OBJECT_FIELD:	return "FiestaEngine.GameObject";	break;
+	case TRANS_FIELD:	return "FiestaEngine.Transform";	break;
 	}
 	return "undef_field_type";
 }

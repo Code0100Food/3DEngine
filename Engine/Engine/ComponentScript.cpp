@@ -14,9 +14,14 @@ ComponentScript::ComponentScript() :Component(COMP_SCRIPT)
 
 }
 
-ComponentScript::ComponentScript(const ComponentScript & cpy)
+ComponentScript::ComponentScript(const ComponentScript & cpy): resource_script(cpy.resource_script)
 {
-
+	uint size = cpy.fields.size();
+	for (uint k = 0; k < size; k++)
+	{
+		fields.push_back(cpy.fields[k]);
+		fields.back().CloneData();
+	}
 }
 
 // Destructors ==================================
@@ -185,27 +190,40 @@ void ComponentScript::BlitComponentInspector()
 		case INT16_FIELD:
 		case INT32_FIELD:
 		case INT64_FIELD:
-			ImGui::InputInt(fields[k].name.c_str(), (int*)fields[k].data);
-			break;
-
 		case UINT8_FIELD:
 		case UINT16_FIELD:
 		case UINT32_FIELD:
 		case UINT64_FIELD:
+		{
+			char str[150];
+			sprintf(str, "%s##%i", fields[k].name.c_str(), this->id);
+			ImGui::InputInt(str, (int*)fields[k].data);
+		}
 			break;
 
 		case FLOAT_FIELD:
-			ImGui::InputFloat(fields[k].name.c_str(), (float*)fields[k].data);
+		{
+			char str[150];
+			sprintf(str, "%s##%i", fields[k].name.c_str(), this->id);
+			ImGui::InputFloat(str, (float*)fields[k].data);
+		}
 			break;
 
 		case BOOL_FIELD:
-			ImGui::Checkbox(fields[k].name.c_str(), (bool*)fields[k].data);
+		{
+			char str[150];
+			sprintf(str, "%s##%i", fields[k].name.c_str(), this->id);
+			ImGui::Checkbox(str, (bool*)fields[k].data);
+		}
 			break;
 
 		case OBJECT_FIELD:
+		{
 			if (fields[k].data != nullptr && fields[k].setted)
 			{
-				ImGui::Text(fields[k].name.c_str());
+				char str[150];
+				sprintf(str, "%s##%i", fields[k].name.c_str(), this->id);
+				ImGui::Text(str);
 				ImGui::SameLine();
 				ImGui::Text(((GameObject*)fields[k].data)->GetName());
 				if (ImGui::Button("Clean Object"))
@@ -229,6 +247,7 @@ void ComponentScript::BlitComponentInspector()
 				}
 
 			}
+		}
 			break;
 		}
 	}
@@ -322,6 +341,8 @@ bool ComponentScript::Load(Serializer & data, std::vector<std::pair<Component*, 
 	//Get the fields array
 	Serializer fields_array = data.GetArray("Fields");
 	uint size = fields_array.GetArraySize();
+
+	if (fields.size() != size)return false;
 
 	for(uint k = 0; k < size; k++)
 	{

@@ -20,7 +20,8 @@ enum FIELD_TYPE
 	UINT64_FIELD,
 	FLOAT_FIELD,
 	BOOL_FIELD,
-	OBJECT_FIELD
+	OBJECT_FIELD,
+	TRANS_FIELD
 };
 
 /// ScriptField -------------------------------------------
@@ -53,6 +54,7 @@ class ResourceScript : public Resource
 public:
 
 	ResourceScript();
+	ResourceScript(const ResourceScript& cpy);
 	~ResourceScript();
 
 private:
