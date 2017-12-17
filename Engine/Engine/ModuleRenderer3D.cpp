@@ -1027,6 +1027,9 @@ void ModuleRenderer3D::PrintSceneFrame(float dt)
 
 	//Draw scene geometry
 	EnableGLRenderFlags();
+
+	main_camera->SetDrawFrustrum(true);
+
 	App->geometry->Draw();
 
 	//Draw / update scene objects
@@ -1051,6 +1054,8 @@ void ModuleRenderer3D::PrintSceneFrame(float dt)
 void ModuleRenderer3D::PrintGameFrame(float dt)
 {
 	SetGameCameraView();
+
+	main_camera->SetDrawFrustrum(false);
 
 	//Draw scene geometry
 	App->geometry->Draw();

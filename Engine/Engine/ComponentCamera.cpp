@@ -5,7 +5,7 @@
 
 #include "GameObject.h"
 #include "ComponentTransform.h"
-
+#include "ModuleImgui.h"
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
@@ -56,8 +56,12 @@ bool ComponentCamera::Start()
 bool ComponentCamera::Update(float dt)
 {
 	UpdateFrustumTransform();
-	DrawFrustum();
 
+	if (draw_frustrum)
+	{
+		DrawFrustum();
+	}
+	
 	if (frustum_culling)
 	{
 		ApplyDinamicFrustum();
@@ -81,6 +85,11 @@ void ComponentCamera::SetVerticalFov(float angle_in_deg, float aspect_ratio)
 {
 	frustum.verticalFov = angle_in_deg * DEGTORAD;
 	frustum.horizontalFov = (2 * math::Atan(math::Tan(frustum.verticalFov / 2) * aspect_ratio));
+}
+
+void ComponentCamera::SetDrawFrustrum(bool active)
+{
+	draw_frustrum = active;
 }
 
 // Functionality ================================

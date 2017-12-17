@@ -25,6 +25,7 @@ private:
 	math::Frustum	frustum;
 	bool			frustum_culling = false;
 	bool			is_main = false;
+	bool			draw_frustrum = true;
 
 	//Queue to apply frustum culling to all childs
 	std::queue<GameObject*>	remaining_childs;
@@ -37,6 +38,7 @@ public:
 	//Set Methods -----------
 	void SetIsMain(bool value);
 	void SetVerticalFov(float angle_in_deg, float aspect_ratio);
+	void SetDrawFrustrum(bool active);
 
 	//Functionality ---------
 	void SetTransform(const ComponentTransform* trans);
