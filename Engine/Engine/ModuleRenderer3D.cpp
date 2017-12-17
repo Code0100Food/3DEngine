@@ -975,6 +975,23 @@ void ModuleRenderer3D::RemoveGameCamera(ComponentCamera * removed_game_cam)
 	{
 		if ((*item) == removed_game_cam)
 		{
+			//Look if the item erased is the main_camera
+			if ((*item) == main_camera)
+			{
+				item = game_cameras.erase(item);
+
+				if (game_cameras.size() > 0 && item != game_cameras.end())
+				{
+					main_camera = (*item);
+				}
+				else
+				{
+					main_camera = nullptr;
+				}
+				break;
+			}
+			
+
 			item = game_cameras.erase(item);
 			break;
 		}
@@ -1028,7 +1045,10 @@ void ModuleRenderer3D::PrintSceneFrame(float dt)
 	//Draw scene geometry
 	EnableGLRenderFlags();
 
-	main_camera->SetDrawFrustrum(true);
+	if (main_camera)
+	{
+		main_camera->SetDrawFrustrum(true);
+	}
 
 	App->geometry->Draw();
 
