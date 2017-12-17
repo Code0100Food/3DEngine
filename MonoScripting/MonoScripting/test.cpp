@@ -214,9 +214,17 @@ namespace MonoScripting
 		return ret;
 	}
 
-	MonoImage * LoadMonoImage(MonoAssembly * asm_)
+	MonoImage * LoadMonoImage(MonoAssemblyName * asm_)
 	{
-		return mono_assembly_get_image(asm_);
+		MonoAssembly* tmp = mono_assembly_loaded(asm_);
+
+		if (!tmp)
+		{
+			last_error = "[error] LoadMonoImage can't load assembly";
+			return nullptr;
+		}
+
+		return mono_assembly_get_image(tmp);
 	}
 
 	bool MonoScripting::ExecuteMethod(MonoObject* script, const char* method_name)// unsigned int num_args, ...)
@@ -380,91 +388,91 @@ namespace MonoScripting
 
 
 
-//int main(int argc, char *argv[])
-//{
-//
-//	char my_path[FILENAME_MAX];
-//	_getcwd(my_path, FILENAME_MAX);
-//	
-//	std::string lib_path = my_path;
-//	lib_path += "/DATA/lib";
-//
-//	std::string etc_path = my_path;
-//	etc_path += "/DATA/etc";
-//
-//	std::string compiler_path = my_path;
-//	compiler_path += "/DATA/compiler.dll";
-//
-//	mono_set_dirs(lib_path.c_str(), etc_path.c_str());
-//	
-//	mono_config_parse(nullptr);
-//
-//	const char domain_name[] = "MonoScripting";
-//
-//	//Load fiesta engine dll
-//	MonoDomain* dom = mono_jit_init(domain_name);
-//	MonoAssembly* assembler = nullptr;
-//	assembler = mono_domain_assembly_open(dom, "C:/Users/Th_Sola/Documents/GitHub/3DEngine/Engine/Data/DATA/Scripting/FiestaEngineEnviroment.dll");
-//
-//
-//	std::string data_path = my_path;
-//	data_path += "/DATA/";
-//
-//	std::string result_file = data_path;
-//	result_file+= "HelloWorld.dll";
-//
-//	MonoAssembly* hello_world_assembler = nullptr;
-//	hello_world_assembler = mono_domain_assembly_open(dom, result_file.c_str());
-//
-//	if (!hello_world_assembler)
-//	{
-//		printf("Error");
-//	}
-//
-//	//Execute a file
-//	MonoImage* hello_world_image = mono_assembly_get_image(hello_world_assembler);
-//	MonoClass* hello_world_class = mono_class_from_name(hello_world_image, "", "HelloWorld");
-//	
-//
-//	//MonoMethod* hello_world_hellman = mono_class_get_method_from_name(parent, "GetPublicProperties", 0);
-//	MonoMethod* constructor_method = mono_class_get_method_from_name(hello_world_class, ".ctor", 0);
-//	MonoMethod* change_int_method = mono_class_get_method_from_name(hello_world_class, "whatthehellman", 0);
-//	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
-//	mono_runtime_invoke(constructor_method, hello_world_instance, NULL, NULL);
-//
-//	mono_add_internal_call("FiestaEngine.FiestaInput::TestMethod", TestMethod);
-//	mono_runtime_invoke(change_int_method, hello_world_instance, NULL, NULL);
-//
-//	getchar();
-//
-//	//int t = *(int*)args_;
-//
-//	//void* args[1];
-//	//args[0] = &value;
-//
-//	//mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
-//
-//	////*value[0] = 2;
-//
-//	//mono_field_set_value(hello_world_instance, field, &value);
-//	//
-//	//mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
-//
-//	//int e = *(int*)mono_object_unbox(hello_world_handle);
-//
-//
-//	//MonoArray* array_ = (MonoArray*)mono_object_unbox(hello_world_handle);
-//
-//	//MonoString* omg = mono_array_get(array_, MonoString*, 0);
-//	//int k = mono_array_length(hello_world_handle);
-//	//MonoString* val;
-//	//for (int g = 0; g < k; g++)
-//	//{
-//	//	val = mono_array_get(hello_world_handle, MonoString*, g);
-//	//	tuputamadre = mono_string_to_utf8(val);
-//	//}
-//	//
-//	//
-//	//getchar();
-//
-//}
+int main(int argc, char *argv[])
+{
+
+	char my_path[FILENAME_MAX];
+	_getcwd(my_path, FILENAME_MAX);
+	
+	std::string lib_path = my_path;
+	lib_path += "/DATA/lib";
+
+	std::string etc_path = my_path;
+	etc_path += "/DATA/etc";
+
+	std::string compiler_path = my_path;
+	compiler_path += "/DATA/compiler.dll";
+
+	mono_set_dirs(lib_path.c_str(), etc_path.c_str());
+	
+	mono_config_parse(nullptr);
+
+	const char domain_name[] = "MonoScripting";
+
+	//Load fiesta engine dll
+	MonoDomain* dom = mono_jit_init(domain_name);
+	MonoAssembly* assembler = nullptr;
+	assembler = mono_domain_assembly_open(dom, "C:/Users/Th_Sola/Documents/GitHub/3DEngine/Engine/Data/DATA/Scripting/FiestaEngineEnviroment.dll");
+
+
+	std::string data_path = my_path;
+	data_path += "/DATA/";
+
+	std::string result_file = data_path;
+	result_file+= "HelloWorld.dll";
+
+	MonoAssembly* hello_world_assembler = nullptr;
+	hello_world_assembler = mono_domain_assembly_open(dom, result_file.c_str());
+
+	if (!hello_world_assembler)
+	{
+		printf("Error");
+	}
+
+	//Execute a file
+	MonoImage* hello_world_image = mono_assembly_get_image(hello_world_assembler);
+	MonoClass* hello_world_class = mono_class_from_name(hello_world_image, "", "HelloWorld");
+	
+
+	//MonoMethod* hello_world_hellman = mono_class_get_method_from_name(parent, "GetPublicProperties", 0);
+	MonoMethod* constructor_method = mono_class_get_method_from_name(hello_world_class, ".ctor", 0);
+	MonoMethod* change_int_method = mono_class_get_method_from_name(hello_world_class, "whatthehellman", 0);
+	MonoObject* hello_world_instance = mono_object_new(dom, hello_world_class);
+	mono_runtime_invoke(constructor_method, hello_world_instance, NULL, NULL);
+
+	//mono_add_internal_call("FiestaEngine.FiestaInput::TestMethod", TestMethod);
+	mono_runtime_invoke(change_int_method, hello_world_instance, NULL, NULL);
+
+	getchar();
+
+	//int t = *(int*)args_;
+
+	//void* args[1];
+	//args[0] = &value;
+
+	//mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
+
+	////*value[0] = 2;
+
+	//mono_field_set_value(hello_world_instance, field, &value);
+	//
+	//mono_runtime_invoke(change_int_method, hello_world_instance, args, NULL);
+
+	//int e = *(int*)mono_object_unbox(hello_world_handle);
+
+
+	//MonoArray* array_ = (MonoArray*)mono_object_unbox(hello_world_handle);
+
+	//MonoString* omg = mono_array_get(array_, MonoString*, 0);
+	//int k = mono_array_length(hello_world_handle);
+	//MonoString* val;
+	//for (int g = 0; g < k; g++)
+	//{
+	//	val = mono_array_get(hello_world_handle, MonoString*, g);
+	//	tuputamadre = mono_string_to_utf8(val);
+	//}
+	//
+	//
+	//getchar();
+
+}

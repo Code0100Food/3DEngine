@@ -30,7 +30,7 @@ namespace MonoScripting
 	EXPORT_THIS MonoAssemblyName*			LoadScriptAssembly(const char* assembly_path);
 	EXPORT_THIS bool						UnLoadScriptAssembly(MonoAssemblyName* asm_);
 	EXPORT_THIS MonoObject*					CreateMonoObject(MonoAssemblyName* assembly, const char* class_name, const char* name_space = "");
-	EXPORT_THIS MonoImage*					LoasdMonoImage(MonoAssembly* asm_);
+	EXPORT_THIS MonoImage*					LoadMonoImage(MonoAssemblyName* asm_);
 
 	//Method's Functions
 	EXPORT_THIS bool						ExecuteMethod(MonoObject* script, const char* name);
