@@ -1,0 +1,48 @@
+using System;
+using FiestaEngine;
+
+public class MoveScript : Festejo
+{
+		public float speed;		
+        public Transform trans;
+        
+
+        bool Start()
+        {
+            return true;
+        }
+
+		bool Update()
+	    {
+
+			if(FiestaInput.GetKeyRepeat(FiestaInput.FiestaKeyCode.W))
+			{
+				
+                trans.local_position =   trans.local_position + (trans.forward.Normalized * speed * Time.delta_time);
+      
+			}
+
+            if(FiestaInput.GetKeyRepeat(FiestaInput.FiestaKeyCode.S))
+			{
+				
+                trans.local_position =   trans.local_position + (trans.forward.Normalized * -speed * Time.delta_time);
+      
+			}
+
+            if(FiestaInput.GetKeyRepeat(FiestaInput.FiestaKeyCode.A))
+			{
+				
+                trans.local_position =   trans.local_position + (trans.right.Normalized * speed * Time.delta_time);
+      
+			}
+
+            if(FiestaInput.GetKeyRepeat(FiestaInput.FiestaKeyCode.D))
+			{
+				
+                trans.local_position =   trans.local_position + (trans.right.Normalized * -speed * Time.delta_time);
+      
+			}
+
+            return true;
+        }
+}

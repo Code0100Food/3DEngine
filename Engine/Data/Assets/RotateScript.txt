@@ -1,0 +1,31 @@
+using System;
+using FiestaEngine;
+
+public class RotateScript : Festejo
+{
+
+     private float angle;
+     public float rotation_speed_x;
+
+     public float x,y,z;
+
+     public Transform trans;
+
+    public bool Start()
+    {
+       
+
+        return true;
+    }
+
+    public bool Update()
+    {
+
+        FiestaVector3 tmp = new FiestaVector3(x, y, z);
+        angle = (rotation_speed_x * -FiestaInput.GetMouseXAxis());
+        trans.euler_angles = new FiestaVector3(tmp.Normalized.x * angle, tmp.Normalized.y * angle, tmp.Normalized.z * angle);      
+
+        return true;
+    }
+
+}
