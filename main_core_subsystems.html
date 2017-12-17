@@ -170,7 +170,7 @@
 
                         <h1 class="page-header">
 
-                            <p align="center">Fiesta Engine</p>
+                            <p align="center">Main Core Sub-Systems</p>
 
                         </h1>
 
@@ -186,44 +186,22 @@
 
                     <div class="col-lg-12">
 
-                        <p class="lead">Learn all about the Fiesta Engine and join the party!</p>
-
-                        <ul style="list-style-type:circle">
-
-                            <li> <a href="main_core_subsystems.html"><i class="fa fa-database" aria-hidden="true"></i> Main Core Sub-Systems</a> </li>
-                            <li> <a href="scripting_system.html"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Scripting Sub-System</a> </li>
-
-                        </ul>
-
-                        <p class="page-header" align="center">
-
-                            MIT License
-
-                        </p>
-
-                        <p class="page">Copyright (c) 2017 Code0100Food</p>
-                        <p class="page">
-                            Permission is hereby granted, free of charge, to any person obtaining a copy
-                            of this software and associated documentation files (the "Software"), to deal
-                            in the Software without restriction, including without limitation the rights
-                            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-                            copies of the Software, and to permit persons to whom the Software is
-                            furnished to do so, subject to the following conditions:
-                        </p>
-                        <p class="page">
-                            The above copyright notice and this permission notice shall be included in all
-                            copies or substantial portions of the Software.
-                        </p>
-                        <p class="page">
-                            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-                            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-                            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-                            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-                            SOFTWARE.
-                        </p>
-
+                        <p class="page-header" align="left">Module Scene</p>
+                        <p class="lead">Manages all the game objects in the scene and the components attached to them. Also serializes the elements in scene to load them when is required.</p>
+                        <p class="page-header" align="left">File System</p>
+                        <p class="lead">File system basically manages all the folders used during the engine execution and save the paths in Direction classes to let the rest of modules use them to load/save or simply access files. Also provides a bunch of methods to modify strings useful to tract with paths and file names and formats.</p>
+                        <p class="page-header" align="left">Importer Manager</p>
+                        <p class="lead">This module manages all the import processes that other module request to generate new resources and add them on the library. This sub-system in combination with the file system also updates the already imported resources.</p>
+                        <p class="page-header" align="left">Input Manager</p>
+                        <p class="lead">Sub-system that manages all the input send to the engine. The input events can be programmed from the config file inside the settings folder. The input in play mode is managed by the scripting sub-system.</p>
+                        <p class="page-header" align="left">Profiler</p>
+                        <p class="lead">Profiler is a simple tool to individually track the time used by a module during the engine loop. The tracked data is shown in a window that you can access by the tools menu at the left top of the window.</p>
+                        <p class="page-header" align="left">Time Manager</p>
+                        <p class="lead">This tool manages all the engine timing. Manages the app loop timing and the Game mode loop timing.</p>
+                        <p class="page-header" align="left">Resources Manager</p>
+                        <p class="lead">This sub-system import all the files placed in Assets folder or dropped on the engine window. The imported files generate resources like meshes,materials,scripts and scenes that can be used to built the game. When a file placed in assets is modified the resources manager update the content of the related resources automatically.</p>
+                        
+                        
                         <p class="page-header" align="left">
 
                             Find us on:
