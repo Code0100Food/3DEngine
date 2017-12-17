@@ -20,7 +20,9 @@ bool ModuleConsole::Start()
 	config_menu = true;
 
 	App->scripting->AddInternalCall("FiestaEngine.FiestaConsole::Log", DebugLog);
-
+	App->scripting->AddInternalCall("FiestaEngine.FiestaConsole::LogInt", DebugLogInt);
+	App->scripting->AddInternalCall("FiestaEngine.FiestaConsole::LogFloat", DebugLogFloat);
+	
 	return true;
 }
 
@@ -62,5 +64,18 @@ void ModuleConsole::AddLabel(const char * str)
 void ModuleConsole::DebugLog(MonoString * string)
 {
 	const char* tmp = App->scripting->MonoStringToChar(string);
+	LOG(tmp);
+}
+
+void ModuleConsole::DebugLogInt(int number)
+{
+	char tmp[50];
+	LOG(itoa(number, tmp, 10));
+}
+
+void ModuleConsole::DebugLogFloat(float number)
+{
+	char tmp[50];
+	sprintf(tmp, "%.5f", number);
 	LOG(tmp);
 }

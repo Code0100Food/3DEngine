@@ -1,9 +1,11 @@
 #include "ComponentScript.h"
-
+#include "ModuleScene.h"
 #include "ResourceScript.h"
 #include "Application.h"
 #include "ModuleScripting.h"
 #include "Serializer.h"
+#include "ComponentTransform.h"
+#include "GameObject.h"
 #include "ResourcesManager.h"
 
 // Constructors =================================
@@ -27,6 +29,24 @@ bool ComponentScript::Start()
 {
 	SendFieldsValuesToScript();
 	
+	return true;
+}
+
+bool ComponentScript::Update(float dt)
+{
+
+	if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::PLAY_SCENE_STATE)
+	{
+		App->scripting->SetCurrentScript(this);
+		App->scripting->ExecuteMethod(script_object, "whatthehellman");
+	}
+
+	return true;
+}
+
+bool ComponentScript::ScriptUpdate()
+{
+	App->scripting->ExecuteMethod(script_object, "whatthehellman");
 	return true;
 }
 
@@ -307,4 +327,55 @@ bool ComponentScript::Load(Serializer & data, std::vector<std::pair<Component*, 
 	}
 	
 	return ret;
+}
+
+//MONO METHODS
+
+//Transform
+MonoObject* ComponentScript::GetLocalPosition()
+{
+	//Returned value to the c# script
+	MonoObject* ret = App->scripting->CreateMonoObject(App->scripting->GetEnviromentAssembly(), "FiestaVector3", "FiestaEngine");
+
+	//Get the fields of this MonoObject Type
+	MonoClassField* x_value = App->scripting->GetFieldFromImage(App->scripting->GetEnviromentImage(), "FiestaEngine", "FiestaVector3", "x");
+	MonoClassField* y_value = App->scripting->GetFieldFromImage(App->scripting->GetEnviromentImage(), "FiestaEngine", "FiestaVector3", "y");
+	MonoClassField* z_value = App->scripting->GetFieldFromImage(App->scripting->GetEnviromentImage(), "FiestaEngine", "FiestaVector3", "z");
+
+	if (ret)
+	{
+		//Get the transform and set the values
+		ComponentTransform* trans = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+		math::float3 position = trans->GetPosition();
+
+		App->scripting->SetFieldValue(ret, x_value, &position.x);
+		App->scripting->SetFieldValue(ret, y_value, &position.y);
+		App->scripting->SetFieldValue(ret, z_value, &position.z);
+
+		return ret;
+	}
+	
+
+	return nullptr;
+}
+
+void ComponentScript::SetPosition(MonoObject* vector)
+{
+
+	void* x_value = nullptr;
+	App->scripting->GetFieldValue(vector, "x", &x_value);
+
+	void* y_value = nullptr;
+	App->scripting->GetFieldValue(vector, "y", &y_value);
+
+	void* z_value = nullptr;
+	App->scripting->GetFieldValue(vector, "z", &z_value);
+
+	float x = *(float*)x_value;
+	float y = *(float*)y_value;
+	float z = *(float*)z_value;
+
+	ComponentTransform* trans = (ComponentTransform*)parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+	trans->SetPosition(x, y, z);
+
 }

@@ -93,6 +93,12 @@ void ComponentTransform::SetTransformation(math::float4x4 trans)
 	}
 }
 
+void ComponentTransform::SetPosition(float x, float y, float z)
+{
+	transform_matrix.SetTranslatePart(x, y, z);
+	position.Set(x, y, z);
+}
+
 // Get Methods ==================================
 math::float3 ComponentTransform::GetPosition() const
 {

@@ -46,6 +46,8 @@ public:
 	//Set Methods -----------
 	void SetTransformation(aiMatrix4x4 trans);
 	void SetTransformation(math::float4x4 trans);
+	void SetPosition(float x, float y, float z);
+	
 
 	//Get Methods -----------
 	math::float3	GetPosition()const;

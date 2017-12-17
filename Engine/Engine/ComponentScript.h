@@ -15,6 +15,9 @@ public:
 public:
 
 	bool Start();
+	bool Update(float dt);
+
+	bool ScriptUpdate();
 
 private:
 
@@ -43,6 +46,12 @@ public:
 	//Save/Load Methods -----
 	bool Save(Serializer& array_root)const;
 	bool Load(Serializer& data, std::vector<std::pair<Component*, uint>>& links);
+
+	//MONO METHODS
+
+	//Transform
+	MonoObject* ComponentScript::GetLocalPosition();
+	void ComponentScript::SetPosition(MonoObject* vector);
 
 };
 #endif // !_COMPONENT_SCRIPT_H_

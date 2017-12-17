@@ -37,6 +37,8 @@ public:
 
 	//Mono Internal Call
 	static void DebugLog(MonoString* string);
+	static void DebugLogInt(int number);
+	static void DebugLogFloat(float number);
 
 };
 #endif // !_CONSOLE_H_
