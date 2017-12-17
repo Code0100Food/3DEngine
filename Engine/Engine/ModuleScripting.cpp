@@ -384,6 +384,11 @@ MonoObject * ModuleScripting::CreateMonoObject(MonoAssemblyName * assembly, cons
 
 MonoObject * ModuleScripting::CreateMonoObjectFromScriptResource(ResourceScript * res)
 {
+	if (res->GetAssembly() == nullptr)
+	{
+		return nullptr;
+	}
+
 	App->fs->GetUnformatedFileNameFromPath(res->GetOwnFile(), &usable_str);
 
 	return MonoScripting::CreateMonoObject(res->GetAssembly(), usable_str.c_str(), "");

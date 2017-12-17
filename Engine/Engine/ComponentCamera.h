@@ -26,7 +26,7 @@ private:
 	bool			frustum_culling = false;
 	bool			is_main = false;
 	bool			draw_frustrum = true;
-
+	bool			is_init = false;
 	//Queue to apply frustum culling to all childs
 	std::queue<GameObject*>	remaining_childs;
 

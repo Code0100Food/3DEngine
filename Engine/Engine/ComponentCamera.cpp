@@ -33,22 +33,27 @@ ComponentCamera::~ComponentCamera()
 // Game Loop ====================================
 bool ComponentCamera::Start()
 {
-	frustum.type = math::PerspectiveFrustum;
+	if (!is_init)
+	{
+		frustum.type = math::PerspectiveFrustum;
 
-	frustum.nearPlaneDistance = 0.01;
-	frustum.farPlaneDistance = 15;
+		frustum.nearPlaneDistance = 0.01;
+		frustum.farPlaneDistance = 15;
+
+		//Set frustum looking to GameObject Z axis
+		const ComponentTransform* parent_transform = (ComponentTransform*)this->parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
+
+		frustum.pos = parent_transform->GetPosition();
+		frustum.front = parent_transform->GetTransform().Col3(2);
+		frustum.up = parent_transform->GetTransform().Col3(1);
+
+		frustum.verticalFov = 90 * DEGTORAD;
+		frustum.horizontalFov = (2 * math::Atan(math::Tan(frustum.verticalFov / 2) * App->window->GetAspectRatio()));
+
+		App->renderer3D->AddGameCamera(this);
+		is_init = true;
+	}
 	
-	//Set frustum looking to GameObject Z axis
-	const ComponentTransform* parent_transform = (ComponentTransform*)this->parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
-
-	frustum.pos = parent_transform->GetPosition();
-	frustum.front = parent_transform->GetTransform().Col3(2);
-	frustum.up = parent_transform->GetTransform().Col3(1);
-
-	frustum.verticalFov = 90 * DEGTORAD;
-	frustum.horizontalFov = (2 * math::Atan(math::Tan(frustum.verticalFov / 2) * App->window->GetAspectRatio()));
-
-	App->renderer3D->AddGameCamera(this);
 
 	return true;
 }
@@ -104,12 +109,12 @@ void ComponentCamera::UpdateFrustumTransform()
 	const ComponentTransform* parent_transform = (ComponentTransform*)this->parent->FindComponent(COMPONENT_TYPE::COMP_TRANSFORMATION);
 
 	//Z axis of the transform
-	frustum.front = parent_transform->GetTransform().Col3(2).Normalized();
+	frustum.front = parent_transform->GetInheritedTransform().Transposed().Col3(2).Normalized();
 
 	//Y axis of the transform
-	frustum.up = parent_transform->GetTransform().Col3(1).Normalized();
+	frustum.up = parent_transform->GetInheritedTransform().Transposed().Col3(1).Normalized();
 
-	frustum.pos = parent_transform->GetPosition();
+	frustum.pos = parent_transform->GetInheritedTransform().Transposed().TranslatePart();
 }
 
 void ComponentCamera::DrawFrustum() const

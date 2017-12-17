@@ -261,14 +261,31 @@ void ComponentTransform::UpdateRotationPositionScale()
 
 void ComponentTransform::RotateFromEulerAngles(float x, float y, float z)
 {
-	inherited_transform.Transpose();
+
+	/*inherited_transform.Transpose();
 	math::float4x4 tmp = math::float4x4::FromEulerXYZ(DEGTORAD * x, DEGTORAD * y, DEGTORAD * z);
 	tmp = math::float4x4::Scale(transform_matrix.GetScale(), math::float3(0, 0, 0)) * tmp;
 	tmp.SetTranslatePart(transform_matrix.TranslatePart());
-	inherited_transform = tmp.Inverted();
+	inherited_transform = tmp;
 	inherited_transform.Transpose();
 	
-	UpdateRotationPositionScale();
+	UpdateRotationPositionScale();*/
+	rotation_euler_angles.x += x;
+	rotation_euler_angles.y += y;
+	rotation_euler_angles.z += z;
+
+	has_been_modified = true;
+
+	/*math::float4x4 tmp = math::float4x4::FromEulerXYZ(DEGTORAD * rotation_euler_angles.x , DEGTORAD * y, DEGTORAD * z);
+	tmp = math::float4x4::Scale(transform_matrix.GetScale(), math::float3(0, 0, 0)) * tmp;
+	tmp.SetTranslatePart(transform_matrix.TranslatePart());
+	transform_matrix = tmp;
+
+	if (parent->GetParent()->IsRoot())
+	{
+		inherited_transform = transform_matrix.Transposed();
+		parent->GetBoundingBox()->Scale(parent->GetBoundingBox()->CenterPoint(), scale);
+	}*/
 }
 
 bool ComponentTransform::Save(Serializer & array_root) const

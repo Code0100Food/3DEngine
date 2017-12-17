@@ -50,6 +50,13 @@ namespace FiestaEngine
 			z = _z;
 		}
 
+		public FiestaVector3(FiestaVector3 other_vector)
+		{
+			x = other_vector.x;
+			y = other_vector.y;
+			z = other_vector.z;
+		}
+
 		public void Set(float _x, float _y, float _z)
 		{
 			x = _x;
@@ -282,10 +289,6 @@ namespace FiestaEngine
 	public class Festejo
 	{
 		
-		public void ChangeInt(ref int val)
-    		{
-        		val = val + 1;
-    		}	
 	}
 
 }

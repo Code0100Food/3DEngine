@@ -29,6 +29,12 @@ bool ComponentScript::Start()
 {
 	SendFieldsValuesToScript();
 	
+	if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::PLAY_SCENE_STATE)
+	{
+		App->scripting->SetCurrentScript(this);
+		App->scripting->ExecuteMethod(script_object, "Start");
+	}
+
 	return true;
 }
 
@@ -38,7 +44,7 @@ bool ComponentScript::Update(float dt)
 	if (App->scene->GetSceneState() == SCENE_UPDATE_STATE::PLAY_SCENE_STATE)
 	{
 		App->scripting->SetCurrentScript(this);
-		App->scripting->ExecuteMethod(script_object, "whatthehellman");
+		App->scripting->ExecuteMethod(script_object, "Update");
 	}
 
 	return true;
