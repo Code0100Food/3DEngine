@@ -92,7 +92,10 @@ public:
 	//Transform
 	static MonoObject*											GetLocalPosition();
 	static void													SetLocalPosition(MonoObject* vector);
+	static void													RotateFromEulerAngles(MonoObject* e_angles);
 
+	static MonoObject*											GetForwardDirection();
+	static MonoObject*											GetRightDirection();
 
 };
 #endif // !_MODULE_SCRIPTING_

@@ -68,6 +68,8 @@ bool ModuleInput::Start()
 	App->scripting->AddInternalCall("FiestaEngine.FiestaInput::GetKeyUp", GetKeyUp);
 	App->scripting->AddInternalCall("FiestaEngine.FiestaInput::GetKeyRepeat", GetKeyRepeat);
 
+	App->scripting->AddInternalCall("FiestaEngine.FiestaInput::GetMouseXAxis", GetMouseXMotionNormalized);
+	App->scripting->AddInternalCall("FiestaEngine.FiestaInput::GetMouseYAxis", GetMouseYMotionNormalized);
 	return true;
 }
 
@@ -232,6 +234,9 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			mouse_motion_x = event.motion.xrel / SCREEN_SIZE;
 			mouse_motion_y = event.motion.yrel / SCREEN_SIZE;
+
+			//LOG("%i, %i, %i, %i", mouse_x, mouse_y, mouse_motion_x, mouse_motion_y);
+
 			break;
 
 		case SDL_WINDOWEVENT:
@@ -396,6 +401,41 @@ bool ModuleInput::GetKeyUp(int id)
 bool ModuleInput::GetKeyRepeat(int id)
 {
 	return (App->input->keyboard[id] == KEY_REPEAT);
+}
+
+int ModuleInput::GetMouseXMotionNormalized()
+{
+	int x_motion = App->input->GetMouseXMotion();
+	
+	if (x_motion > 0)
+	{
+		return 1;
+	}
+
+	if (x_motion < 0)
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+int ModuleInput::GetMouseYMotionNormalized()
+{
+	int y_motion = App->input->GetMouseYMotion();
+
+	if (y_motion > 0)
+	{
+		return 1;
+	}
+
+	if (y_motion < 0)
+	{
+		return -1;
+	}
+
+	return 0;
+
 }
 
 void ModuleInput::ResetInputMaps()

@@ -41,6 +41,7 @@ public:
 	float GetGameTimeSinceStartup()const;
 	float GetGameTimeScale()const;
 	float GetGameDT();
+	static float GetScriptingDT();
 
 	//Set Methods -----------
 	void SetGameTimeSinceStartup(float val);

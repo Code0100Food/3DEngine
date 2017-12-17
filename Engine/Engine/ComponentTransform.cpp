@@ -95,8 +95,10 @@ void ComponentTransform::SetTransformation(math::float4x4 trans)
 
 void ComponentTransform::SetPosition(float x, float y, float z)
 {
-	transform_matrix.SetTranslatePart(x, y, z);
-	position.Set(x, y, z);
+	inherited_transform.Transpose();
+	inherited_transform.SetTranslatePart(x, y, z);
+	inherited_transform.Transpose();
+	UpdateRotationPositionScale();
 }
 
 // Get Methods ==================================
@@ -255,6 +257,18 @@ void ComponentTransform::UpdateRotationPositionScale()
 			rotation_euler_angles = rotation_quaternion.ToEulerXYZ() * RADTODEG;
 		}	
 	}
+}
+
+void ComponentTransform::RotateFromEulerAngles(float x, float y, float z)
+{
+	inherited_transform.Transpose();
+	math::float4x4 tmp = math::float4x4::FromEulerXYZ(DEGTORAD * x, DEGTORAD * y, DEGTORAD * z);
+	tmp = math::float4x4::Scale(transform_matrix.GetScale(), math::float3(0, 0, 0)) * tmp;
+	tmp.SetTranslatePart(transform_matrix.TranslatePart());
+	inherited_transform = tmp.Inverted();
+	inherited_transform.Transpose();
+	
+	UpdateRotationPositionScale();
 }
 
 bool ComponentTransform::Save(Serializer & array_root) const

@@ -47,7 +47,6 @@ public:
 	void SetTransformation(aiMatrix4x4 trans);
 	void SetTransformation(math::float4x4 trans);
 	void SetPosition(float x, float y, float z);
-	
 
 	//Get Methods -----------
 	math::float3	GetPosition()const;
@@ -70,6 +69,10 @@ public:
 
 	void DrawOrientationAxis();
 	void UpdateRotationPositionScale();
+
+	void RotateFromEulerAngles(float x, float y, float z);
+	void RotateFromAngleAxis(float x, float y, float z, float angle);
+
 
 	//Save/Load Methods -----
 	bool Save(Serializer& array_root)const;

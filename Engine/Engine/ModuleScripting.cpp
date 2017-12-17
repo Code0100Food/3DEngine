@@ -9,6 +9,7 @@
 #include "FileSystem.h"
 #include "GameObject.h"
 #include "ModuleScene.h"
+#include "TimeManager.h"
 
 #include "ComponentScript.h"
 
@@ -55,8 +56,15 @@ bool ModuleScripting::Start()
 	//Add Internal all methods
 
 	//Transform
-	AddInternalCall("FiestaEngine.Transform::GetLocalPosition", GetLocalPosition);
+	AddInternalCall("FiestaEngine.Transform::GetPosition", GetLocalPosition);
 	AddInternalCall("FiestaEngine.Transform::SetPosition", SetLocalPosition);
+	AddInternalCall("FiestaEngine.Transform::ToEulerAngles", RotateFromEulerAngles);
+
+	AddInternalCall("FiestaEngine.Transform::GetForward", GetForwardDirection);
+	AddInternalCall("FiestaEngine.Transform::GetRight", GetRightDirection);
+
+	//Time
+	AddInternalCall("FiestaEngine.Time::GetDeltaTime", App->time_manager->GetScriptingDT);
 
 	return true;
 }
@@ -500,4 +508,19 @@ MonoObject* ModuleScripting::GetLocalPosition()
 void ModuleScripting::SetLocalPosition(MonoObject* vector)
 {
 	App->scripting->active_script->SetPosition(vector);
+}
+
+void ModuleScripting::RotateFromEulerAngles(MonoObject* e_angles)
+{
+	App->scripting->active_script->RotateFromEulerAngles(e_angles);
+}
+
+MonoObject * ModuleScripting::GetForwardDirection()
+{
+	return App->scripting->active_script->GetForwardDirection();
+}
+
+MonoObject * ModuleScripting::GetRightDirection()
+{
+	return App->scripting->active_script->GetRightDirection();
 }

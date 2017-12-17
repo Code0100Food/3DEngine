@@ -1,9 +1,11 @@
 #include "TimeManager.h"
+#include "Application.h"
+#include "ModuleScripting.h"
 
 // Constructors =================================
 TimeManager::TimeManager()
 {
-
+	
 }
 
 // Destructors ==================================
@@ -26,6 +28,11 @@ float TimeManager::GetGameTimeScale() const
 float TimeManager::GetGameDT()
 {
 	return game_dt = this->real_time_dt * game_time_scale;
+}
+
+float TimeManager::GetScriptingDT()
+{
+	return App->time_manager->game_dt;
 }
 
 // Set Methods ==================================

@@ -84,6 +84,9 @@ public:
 	static bool	GetKeyUp(int id);
 	static bool	GetKeyRepeat(int id);
 
+	static int	GetMouseXMotionNormalized();
+	static int	GetMouseYMotionNormalized();
+
 	// Reset all input states
 	void		ResetInputMaps();
 

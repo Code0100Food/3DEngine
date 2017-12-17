@@ -6,6 +6,22 @@ using System.Runtime.CompilerServices;
 namespace FiestaEngine
 {
 
+	public class Time
+	{
+		public static float delta_time
+		{
+			get
+			{
+				return GetDeltaTime();
+			}
+		}
+
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+        	public static extern float GetDeltaTime();
+		
+	}
+
 	//GameObject
 	public class GameObject
 	{
@@ -41,6 +57,48 @@ namespace FiestaEngine
 			z = _z;
 		}
 
+		public FiestaVector3 Normalized
+		{
+			get
+			{
+				return Normalize(this);
+			}
+		}
+
+		public static FiestaVector3 operator *(FiestaVector3 vector, float value)
+       		{
+            		return new FiestaVector3(vector.x * value, vector.y * value, vector.z * value);
+        	}
+	
+		public static FiestaVector3 Normalize(FiestaVector3 vector)
+       		{
+			FiestaVector3 ret;
+			float magnitude = (float)System.Math.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+			
+			if(magnitude > 0.0001f)
+			{
+				ret = vector / magnitude;
+			}
+			else
+			{
+
+				ret = new FiestaVector3();
+			}
+
+
+            		return ret;
+        	}
+
+		public static FiestaVector3 operator /(FiestaVector3 vector, float value)
+        	{
+            		return new FiestaVector3 (vector.x / value, vector.y / value, vector.z / value);
+        	}
+
+			public static FiestaVector3 operator +(FiestaVector3 vector_1, FiestaVector3 vector_2 )
+        	{
+            		return new FiestaVector3 (vector_2.x + vector_1.x, vector_2.y + vector_1.y, vector_2.z + vector_1.z);
+        	}
+
 	}
 
 //Transform
@@ -51,7 +109,7 @@ namespace FiestaEngine
 		{
 			get
 			{
-				return GetLocalPosition();
+				return GetPosition();
 			}
 			set
 			{
@@ -60,11 +118,45 @@ namespace FiestaEngine
 
 		}
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-        	public static extern FiestaVector3 GetLocalPosition();
+		public FiestaVector3 euler_angles
+		{
+			set
+			{
+				ToEulerAngles(value);
+			}
+		}
+
+		public FiestaVector3 forward
+		{
+			get
+			{
+			  return GetForward();
+			}
+		}
+
+		public FiestaVector3 right
+		{
+			get
+			{
+			  return GetRight();
+			}
+		}
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-	     public static extern void SetPosition(FiestaVector3 value);
+        public static extern FiestaVector3 GetPosition();
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+	    public static extern void SetPosition(FiestaVector3 value);
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+	    public static extern void ToEulerAngles(FiestaVector3 value);
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern FiestaVector3 GetForward();
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern FiestaVector3 GetRight();
+		
 	}
 
 
@@ -179,6 +271,12 @@ namespace FiestaEngine
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool GetKeyRepeat(FiestaKeyCode key);
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern int GetMouseXAxis();
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern int GetMouseYAxis();
 	}
 
 	public class Festejo
